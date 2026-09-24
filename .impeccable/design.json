@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T21:30:00Z",
+  "title": "Design System: socIA",
+  "extensions": {
+    "colorMeta": {
+      "plum": { "role": "primary", "displayName": "Ameixa profundo" },
+      "wine": { "role": "secondary", "displayName": "Vinho" },
+      "paper": { "role": "neutral", "displayName": "Papel mineral" },
+      "warm-white": { "role": "neutral", "displayName": "Branco quente" },
+      "ink": { "role": "neutral", "displayName": "Tinta" },
+      "gold": { "role": "tertiary", "displayName": "Ouro envelhecido" },
+      "blush": { "role": "tertiary", "displayName": "Rosa pálido" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Editorial", "purpose": "Títulos curtos e preços de destaque" },
+      "body": { "displayName": "Interface", "purpose": "Formulários, navegação e explicações" }
+    },
+    "shadows": [
+      { "name": "card-ambient", "value": "0 1px 0 rgba(36,25,31,.05), 0 18px 44px -28px rgba(36,25,31,.35)", "purpose": "Separar cards do papel sem halo" }
+    ],
+    "motion": [
+      { "name": "control-state", "value": "180ms ease", "purpose": "Estados de botão e navegação" }
+    ],
+    "breakpoints": [
+      { "name": "compact", "value": "640px" },
+      { "name": "workspace-stack", "value": "900px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal sobre papel claro.",
+      "html": "<button class=\"ds-btn-primary\">Explorar demonstração</button>",
+      "css": ".ds-btn-primary{background:#24191f;color:#fcfaf6;border:1px solid transparent;border-radius:999px;padding:.8rem 1.6rem;font:600 1rem Avenir Next,Arial,sans-serif;min-height:48px;cursor:pointer}.ds-btn-primary:hover{background:#4d1f2d}.ds-btn-primary:focus-visible{outline:2px solid #b99a62;outline-offset:3px}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "description": "Entrada operacional com rótulo sempre presente.",
+      "html": "<label class=\"ds-field\">Custo da peça <input value=\"48\"></label>",
+      "css": ".ds-field{display:grid;gap:.35rem;color:#272326;font:600 .85rem Avenir Next,Arial,sans-serif}.ds-field input{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:10px;padding:.7rem .85rem;font:400 1rem Avenir Next,Arial,sans-serif}.ds-field input:focus-visible{outline:2px solid #b99a62;outline-offset:1px}"
+    },
+    {
+      "name": "Card de resultado",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Uma tarefa ou resultado por superfície.",
+      "html": "<div class=\"ds-card\">Preço sugerido <strong>R$ 142,70</strong></div>",
+      "css": ".ds-card{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:14px;padding:1.4rem;box-shadow:0 1px 0 rgba(36,25,31,.05),0 18px 44px -28px rgba(36,25,31,.35);font:400 1rem Avenir Next,Arial,sans-serif}.ds-card strong{display:block;color:#24191f;font:500 2rem Bodoni Moda,Georgia,serif}"
+    }
+  ],
+  "narrative": {
+    "northStar": "A bancada de avaliação",
+    "overview": "A peça e seus números pertencem ao mesmo espaço. A landing usa fotografia de joia, papel mineral e tipografia editorial; o workspace conserva as cores e reduz a ornamentação para facilitar decisões frequentes.",
+    "keyCharacteristics": ["Fotografia tátil de produto", "Valores alinhados como instrumento de trabalho", "Ouro apenas como detalhe de precisão"],
+    "rules": [
+      { "name": "The Metal Rule", "body": "Use ouro em marca, foco e pequenas medições; ações principais usam ameixa sólido.", "section": "colors" },
+      { "name": "The Two Registers Rule", "body": "A voz editorial apresenta a proposta; a voz de interface explica custos e ações sem floreio.", "section": "typography" },
+      { "name": "The Price In View Rule", "body": "A primeira tela da landing mostra uma peça e um resumo de preço; a primeira tela do workspace mostra uma ação de trabalho.", "section": "layout" }
+    ],
+    "dos": ["Use dados de exemplo com identificação visível de demonstração.", "Preserve contraste, foco visível e leitura no celular."],
+    "donts": ["Não apresente integrações planejadas como ativas.", "Não substitua a fotografia por gradientes genéricos ou uma grade de cards de ícones."]
+  }
+}

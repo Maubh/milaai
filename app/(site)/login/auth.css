@@ -1,0 +1,13 @@
+.auth-wrap { padding: 3rem 0 4rem; }
+.auth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+.auth-title { font-size: clamp(2rem, 4vw, 3rem); margin: 0.8rem 0; }
+.auth-lede { color: rgba(39,35,38,0.8); max-width: 44ch; margin-bottom: 1.2rem; }
+.auth-points { margin: 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; font-size: 0.94rem; color: rgba(39,35,38,0.8); }
+.auth-card { padding: 1.6rem; display: grid; gap: 1rem; }
+.optional { font-weight: 500; color: rgba(39,35,38,0.6); }
+.auth-existing { font-size: 0.9rem; }
+.link-btn { background: none; border: none; padding: 0; color: var(--wine); font: inherit; font-weight: 700; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; }
+
+@media (max-width: 900px) {
+  .auth-grid { grid-template-columns: 1fr; }
+}

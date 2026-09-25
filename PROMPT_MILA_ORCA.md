@@ -13,9 +13,9 @@ Atualize a Landing Page substituindo o nome do produto e refinando os detalhes d
    - Subtítulo: "Sua parceira de negócios no WhatsApp. Precificação com lucro real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal."
 
 2. **Simulação do Celular (Chat WhatsApp Interativo):**
-   - Nome no topo do WhatsApp: "Mila ✨ (Assistente Oficial)"
+   - Nome no topo do WhatsApp: "mila. ✨ (Assistente Oficial)"
    - Diálogo focado no fluxo real de e-commerce e gestão:
-     - Lojista: "Mila, chegou reposição da argola frontal cravejada ✨ Paguei R$ 22,00. Me passa o preço ideal e a descrição pro meu site?"
+     - Lojista: "mila, chegou reposição da argola frontal cravejada ✨ Paguei R$ 22,00. Me passa o preço ideal e a descrição pro meu site?"
      - Mila: 
        "✨ Sugestão de Preço: R$ 119,90
        (Sua margem limpa no bolso: R$ 38,40 | 32%)

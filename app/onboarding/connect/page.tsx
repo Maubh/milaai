@@ -23,7 +23,7 @@ export default function ConnectPage() {
       </p>
       <h1 className="auth-minimal-title">Conecte-se à prévia</h1>
       <p className="auth-minimal-lede">
-        Na versão final, este seria o encontro com a socIA no seu aplicativo de mensagens.
+        Na versão final, este seria o encontro com a mila. no seu aplicativo de mensagens.
         Aqui o QR é conceitual. Ilustra a etapa, não é escaneável.
       </p>
       {faltaEtapa ? (

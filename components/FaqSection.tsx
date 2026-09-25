@@ -9,34 +9,37 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Preciso instalar algum aplicativo no computador ou celular?",
     answer:
-      "Não. A socIA funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.",
+      "Não. A mila. funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.",
   },
   {
     question: "Estou começando agora e ainda não tenho Instagram nem site. Serve para mim?",
     answer:
-      "Com certeza! A socIA te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda te ajuda a criar o nome e a Bio do seu Instagram do zero.",
+      "Com certeza! A mila. te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.",
+  },
+  {
+    question: "A descrição serve para qual plataforma de e-commerce?",
+    answer:
+      "Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Bling e Olist). É só copiar e colar a ficha técnica já formatada.",
+  },
+  {
+    question: "Como funciona o caderno de fornecedores e o alerta de carência?",
+    answer:
+      "Você registra seus fornecedores no chat e a mila. te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.",
   },
   {
     question: "Preciso cadastrar cartão de crédito para começar?",
     answer:
       "Não. Você entra com seu número de WhatsApp e já começa a testar na hora sem compromisso.",
   },
-  {
-    question: "Como funciona o radar de concorrentes?",
-    answer:
-      "Toda vez que você envia uma foto ou descrição da peça, a socIA pesquisa em tempo real o preço médio praticado no Google Shopping e nas lojas virtuais da sua região.",
-  },
 ];
 
 export default function FaqSection() {
   return (
-    <section id="faq" className="faq-section" aria-label="Perguntas Frequentes">
+    <section id="faq" className="faq-section" aria-label="Dúvidas Frequentes">
       <div className="wrap">
         <div className="faq-header">
           <span className="faq-eyebrow">Dúvidas frequentes</span>
-          <h2 className="faq-title">
-            Tudo o que você precisa saber antes de começar.
-          </h2>
+          <h2 className="faq-title">Dúvidas Frequentes</h2>
         </div>
 
         <div className="faq-list">

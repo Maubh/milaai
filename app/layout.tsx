@@ -3,10 +3,10 @@ import "./globals.css";
 import "./site.css";
 
 export const metadata: Metadata = {
-  title: "socIA — Sua sócia de negócios no WhatsApp e no Telegram",
+  title: "mila. — A inteligência por trás da sua loja de semijoias",
   description:
-    "A sócia de negócios inteligente no WhatsApp para lojistas de semijoias e moda. Precificação determinística, controle de margem, inteligência de estoque e marketing pronto para vender.",
-  metadataBase: new URL("https://socia.example"),
+    "Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
+  metadataBase: new URL("https://milaai.example"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

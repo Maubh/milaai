@@ -27,15 +27,15 @@ export default function LandingPage() {
   return (
     <div ref={root} className="minimal">
       {/* Hero com a cópia e o mockup de alta fidelidade */}
-      <section className="wrap minimal-grid" aria-label="Apresentação da socIA">
+      <section className="wrap minimal-grid" aria-label="Apresentação da mila.">
         <div className="minimal-copy">
           <h1 className="minimal-anim minimal-title">
-            A sua sócia de negócios no seu bolso.
+            A inteligência por trás da sua loja de semijoias.
           </h1>
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">
-              A socIA ajuda você a entender os custos de cada peça, chegar a um preço com margem e
-              de olho no mercado. Tudo em uma conversa, no ritmo da sua loja.
+              Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para
+              e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.
             </p>
             <p className="minimal-text">
               Envie foto, nota fiscal ou pergunta e receba orientação na mesma conversa: custo, preço
@@ -43,7 +43,7 @@ export default function LandingPage() {
             </p>
             <p className="minimal-cta-row">
               <Link href="/login" className="minimal-cta">
-                Começar com a socIA <span aria-hidden="true">→</span>
+                Começar com a mila. <span aria-hidden="true">→</span>
               </Link>
             </p>
             <p className="minimal-micro">

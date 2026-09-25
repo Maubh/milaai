@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Termos de Uso — socIA",
-  description: "Termos de Uso da prévia interativa da socIA.",
+  title: "Termos de Uso — mila.",
+  description: "Termos de Uso da prévia interativa da mila.",
 };
 
 export default function TermosPage() {
@@ -13,12 +13,12 @@ export default function TermosPage() {
       </p>
       <h1 className="auth-minimal-title">Termos de Uso</h1>
       <p className="auth-minimal-lede">
-        Estes termos valem para a prévia interativa da socIA, em fase de demonstração.
+        Estes termos valem para a prévia interativa da mila., em fase de demonstração.
       </p>
       <div className="legal-body">
         <h2>1. O que é esta prévia</h2>
         <p>
-          A socIA é uma assistente de negócios para lojistas, em desenvolvimento. O site atual é
+          A mila. é uma assistente de negócios para lojistas, em desenvolvimento. O site atual é
           uma demonstração navegável: onboarding, conversa e workspace funcionam com dados de
           exemplo, salvos apenas no seu navegador. Nenhuma mensagem é enviada de verdade.
         </p>
@@ -39,7 +39,7 @@ export default function TermosPage() {
         </p>
         <h2>5. Mudanças</h2>
         <p>
-          Estes termos podem mudar quando a socIA sair da fase de prévia. A versão vigente estará
+          Estes termos podem mudar quando a mila. sair da fase de prévia. A versão vigente estará
           sempre nesta página.
         </p>
       </div>

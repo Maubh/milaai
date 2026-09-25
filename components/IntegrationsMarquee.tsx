@@ -4,55 +4,49 @@ import React from "react";
 
 interface IntegrationItem {
   id: string;
-  name: string;
-  sub?: string;
-  badge?: string;
+  name?: string;
+  showName?: boolean;
+  color: string;
   icon: React.ReactNode;
 }
 
+/* Wordmarks do Bling e da Olist são os SVGs distribuídos pelas próprias marcas,
+   mantidos localmente para não depender do carregamento de terceiros. */
 const INTEGRATIONS: IntegrationItem[] = [
   {
     id: "bling",
-    name: "Bling ERP",
+    name: "Bling",
+    showName: false,
+    color: "#002726",
     icon: (
-      /* Ícone oficial do Bling ('b' geométrico oficial de bling.com.br) */
-      <svg viewBox="0 0 28 38" width="16" height="22" fill="currentColor" aria-hidden="true">
-        <path d="M13.4112 10.6507C10.8699 10.6507 8.33026 11.406 6.19416 12.7837V0.725177C6.19416 0.319149 5.87737 0 5.4721 0H0.722062C0.318557 0 0 0.319149 0 0.725177V5.17908C0 6.28191 0 8.67553 0 8.67553V12.461C0 12.461 0 14.3936 0 15.4805V24.7819L0.0867182 25.5071C0.88134 33.3865 8.50192 39.2181 16.6871 37.1879C21.8123 35.9255 25.796 31.5727 26.6331 26.3351C27.9764 17.9344 21.522 10.6507 13.4095 10.6507H13.4112ZM13.4112 31.3688C9.42751 31.3688 6.19416 28.1046 6.19416 24.1135C6.19416 20.1223 9.42751 16.8582 13.4112 16.8582C17.395 16.8582 20.6301 20.1082 20.6301 24.1135C20.6301 28.1188 17.3967 31.3688 13.4112 31.3688Z" />
-      </svg>
+      <img src="/integrations/bling-ink.svg" alt="" />
     ),
   },
   {
-    id: "tiny",
-    name: "Olist / Tiny",
+    id: "olist",
+    name: "Olist",
+    showName: false,
+    color: "#0A4EE4",
     icon: (
-      /* Logotipo e símbolo oficial do Olist (de olist.com) */
-      <svg viewBox="0 0 80 39" width="38" height="19" fill="currentColor" aria-hidden="true">
-        <path d="M11.8259 14.4463C5.29409 14.4463 0 19.7404 0 26.2722C0 32.8041 5.29409 38.0982 11.8259 38.0982C18.3578 38.0982 23.6519 32.8041 23.6519 26.2722C23.6519 19.7404 18.3578 14.4463 11.8259 14.4463ZM11.8259 32.077C8.61946 32.077 6.02115 29.4787 6.02115 26.2722C6.02115 23.0657 8.61946 20.4674 11.8259 20.4674C15.0324 20.4674 17.6307 23.0657 17.6307 26.2722C17.6307 29.4787 15.0324 32.077 11.8259 32.077Z" />
-        <path d="M32.6922 36.6948L32.7059 5.75477C32.7059 5.45264 32.4622 5.20898 32.1601 5.20898H26.8114C26.5093 5.20898 26.2656 5.45264 26.2656 5.75477V36.6948C26.2656 36.9969 26.5093 37.2406 26.8114 37.2406H32.1464C32.4486 37.2406 32.6922 36.9969 32.6922 36.6948Z" />
-        <path d="M42.5212 14.8066H37.0927C36.7912 14.8066 36.5469 15.051 36.5469 15.3524V36.6945C36.5469 36.9959 36.7912 37.2402 37.0927 37.2402H42.5212C42.8227 37.2402 43.067 36.9959 43.067 36.6945V15.3524C43.067 15.051 42.8227 14.8066 42.5212 14.8066Z" />
-        <path d="M39.8054 7.42062C37.8445 7.42062 36.2539 5.83006 36.2539 3.86914V7.61749C36.2539 9.57841 37.8445 11.169 39.8054 11.169C41.7663 11.169 43.3569 9.57841 43.3569 7.61749V3.86914C43.3569 5.83006 41.7663 7.42062 39.8054 7.42062Z" />
-        <path d="M61.2526 24.6068C59.6153 23.9909 57.4438 23.527 55.5239 23.2112C54.5726 23.0435 53.8144 22.7999 53.2667 22.4841C52.3291 22.0066 52.3154 20.5251 53.2394 19.9872C54.288 19.2757 56.8493 19.342 57.9311 20.1412C58.3463 20.3868 58.6777 20.837 58.9155 21.375C58.9954 21.5563 59.1962 21.6498 59.3853 21.5933L64.2037 20.1256C64.5254 20.0281 64.6794 19.6655 64.5351 19.3615C63.9289 18.0769 62.9835 16.9854 61.6951 16.1219C58.549 13.851 52.0581 13.8841 49.0446 16.2388C46.3469 17.9795 45.6744 22.7434 47.7582 25.2013C49.5222 27.3065 52.3681 28.0608 55.1262 28.6417L55.1535 28.6476C56.3523 28.8347 58.4029 29.2382 59.0519 29.7177C60.0772 30.3297 59.97 31.7468 58.9876 32.4057C58.436 32.813 57.5452 33.0197 56.3386 33.0197C54.0074 33.0158 52.4499 32.1679 51.7463 30.2089C51.68 30.0257 51.4714 29.9126 51.2823 29.9633L46.4268 31.2205C46.1267 31.2985 45.9493 31.6104 46.0389 31.9067C46.5847 33.6746 47.6393 35.1404 49.185 36.1735C54.3758 39.6607 65.9541 38.766 65.7846 30.5948C65.7846 29.0004 65.3674 27.7119 64.541 26.7607C63.732 25.8309 62.6249 25.1058 61.2487 24.6068H61.2526Z" />
-        <path d="M79.4559 21.0679H74.3684L74.3489 28.1826C74.3489 31.6035 77.2689 32.2993 79.4832 32.3929C79.7736 32.4046 80.0017 32.6463 80.0017 32.9387V37.5486C80.0017 37.8585 79.7483 38.1022 79.4383 38.0944C75.6062 38.0028 72.4133 36.9658 70.509 35.0107C67.8444 32.274 67.9067 29.1455 67.9262 28.8707L67.9828 9.20301C67.9828 8.90283 68.2284 8.65918 68.5286 8.65918H73.8675C74.1696 8.65918 74.4152 8.90673 74.4133 9.20886L74.3684 15.6744H79.4559C79.758 15.6744 80.0017 15.9181 80.0017 16.2202V20.5221C80.0017 20.8243 79.758 21.0679 79.4559 21.0679Z" />
-      </svg>
+      <img src="/integrations/olist.svg" alt="" />
     ),
   },
   {
     id: "google-workspace",
     name: "Google Workspace",
-    sub: "Drive & Sheets",
+    showName: false,
+    color: "#5F6368",
     icon: (
-      /* Ícone oficial do Google Drive (Simple Icons) */
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
-        <path d="M12.01 1.485c-2.082 0-3.754.02-3.743.047.01.02 1.708 3.001 3.774 6.62l3.76 6.574h3.76c2.081 0 3.753-.02 3.742-.047-.005-.02-1.708-3.001-3.775-6.62l-3.76-6.574zm-4.76 1.73a789.828 789.861 0 0 0-3.63 6.319L0 15.868l1.89 3.298 1.885 3.297 3.62-6.335 3.618-6.33-1.88-3.287C8.1 4.704 7.255 3.22 7.25 3.214zm2.259 12.653-.203.348c-.114.198-.96 1.672-1.88 3.287a423.93 423.948 0 0 1-1.698 2.97c-.01.026 3.24.042 7.222.042h7.244l1.796-3.157c.992-1.734 1.85-3.23 1.906-3.323l.104-.167h-7.249z" />
-      </svg>
+      <img src="/integrations/google-workspace.svg" alt="" />
     ),
   },
   {
     id: "notion",
     name: "Notion",
+    color: "#111111",
     icon: (
       /* Ícone oficial do Notion (cubo isométrico 3D com 'N' chanfrado do Simple Icons) */
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
         <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z" />
       </svg>
     ),
@@ -60,90 +54,46 @@ const INTEGRATIONS: IntegrationItem[] = [
   {
     id: "outlook",
     name: "Outlook",
+    color: "#0078D4",
     icon: (
       /* Ícone oficial do Microsoft Outlook (Fluent Design / Simple Icons v11) */
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
         <path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6.5V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72h.01q.1.07.18.18.07.12.07.25zm-6-8.25v3h3v-3zm0 4.5v3h3v-3zm0 4.5v1.83l3.05-1.83zm-5.25-9v3h3.75v-3zm0 4.5v3h3.75v-3zm0 4.5v2.03l2.41 1.5 1.34-.8v-2.73zM9 3.75V6h2l.13.01.12.04v-2.3zM5.98 15.98q.9 0 1.6-.3.7-.32 1.19-.86.48-.55.73-1.28.25-.74.25-1.61 0-.83-.25-1.55-.24-.71-.71-1.24t-1.15-.83q-.68-.3-1.55-.3-.92 0-1.64.3-.71.3-1.2.85-.5.54-.75 1.3-.25.74-.25 1.63 0 .85.26 1.56.26.72.74 1.23.48.52 1.17.81.69.3 1.56.3zM7.5 21h12.39L12 16.08V17q0 .41-.3.7-.29.3-.7.3H7.5zm15-.13v-7.24l-5.9 3.54Z" />
-      </svg>
-    ),
-  },
-  {
-    id: "nuvemshop",
-    name: "Nuvemshop",
-    badge: "Em breve",
-    icon: (
-      /* Símbolo oficial da Nuvemshop (as duas alças entrelaçadas do logo oficial de nuvemshop.com.br) */
-      <svg viewBox="0 0 37 26" width="22" height="16" fill="currentColor" aria-hidden="true">
-        <path d="M23.3462 0H23.3314C23.3314 0 23.3233 0 23.3184 0C19.9256 0.00490751 16.6932 1.33812 14.2804 3.68391C13.0453 3.16044 11.7154 2.88889 10.3413 2.88889C4.76469 2.88889 0.228516 7.42507 0.228516 13C0.228516 18.5749 4.76469 23.1111 10.3396 23.1111C11.6925 23.1111 13.0306 22.8347 14.2689 22.3145C16.6114 24.5932 19.8062 26 23.3249 26C30.4931 26 36.3249 20.1682 36.3249 13C36.3249 5.83176 30.5046 0.0114509 23.3462 0ZM23.3249 23.1111C17.75 23.1111 13.2138 18.5749 13.2138 13H10.3249C10.3249 15.5503 11.0659 17.9288 12.3386 19.9376C11.6908 20.1241 11.0185 20.2222 10.3396 20.2222C6.358 20.2222 3.1174 16.9816 3.1174 13C3.1174 9.01837 6.358 5.77778 10.3396 5.77778C11.9166 5.77778 13.415 6.27671 14.6713 7.22059C16.5084 8.5996 17.5618 10.7066 17.5618 13H20.4507C20.4507 9.97534 19.1404 7.18296 16.8388 5.25595C18.6464 3.73952 20.9382 2.89052 23.3314 2.88889C28.9031 2.89216 33.4344 7.4267 33.4344 13C33.4344 18.5733 28.8982 23.1111 23.3233 23.1111H23.3249Z" />
       </svg>
     ),
   },
 ];
 
+function BrandMark({ item }: { item: IntegrationItem }) {
+  const label = item.name ?? item.id;
+
+  return (
+    <div className={`marquee-mark integration-${item.id}`} aria-label={label}>
+      <span className="marquee-mark-logo" style={{ color: item.color }}>{item.icon}</span>
+      {item.showName !== false ? <span className="marquee-mark-name">{item.name}</span> : null}
+    </div>
+  );
+}
+
+function BrandGroup({ hidden = false }: { hidden?: boolean }) {
+  // Lista duplicada dentro do grupo: garante cobertura total em telas ultrawide
+  // sem quebrar o loop contínuo (grupos idênticos, deslocamento de -1/3).
+  const items = [...INTEGRATIONS, ...INTEGRATIONS];
+  return (
+    <div className="marquee-group" aria-hidden={hidden || undefined}>
+      {items.map((item, i) => <BrandMark key={`${item.id}-${i}`} item={item} />)}
+    </div>
+  );
+}
+
 export default function IntegrationsMarquee() {
   return (
-    <section className="marquee-section" aria-label="Integrações e conexões do negócio">
-      <div className="wrap">
-        <p className="marquee-title">
-          Conecte em 1 clique com as ferramentas do seu negócio:
-        </p>
-      </div>
-
-      <div className="marquee-viewport" tabIndex={0} aria-label="Lista contínua de conectores">
+    <section className="marquee-section" aria-label="Integrações demonstrativas">
+      <div className="marquee-viewport" tabIndex={0} aria-label="Marcas integradas à mila.">
         <div className="marquee-track">
-          {/* Primeira cópia */}
-          <div className="marquee-group">
-            {INTEGRATIONS.map((item) => (
-              <div key={`g1-${item.id}`} className="marquee-card">
-                <span className="marquee-card-icon">{item.icon}</span>
-                <span className="marquee-card-text">
-                  <strong className="marquee-card-name">{item.name}</strong>
-                  {item.sub ? (
-                    <small className="marquee-card-sub">{item.sub}</small>
-                  ) : null}
-                </span>
-                {item.badge ? (
-                  <span className="marquee-card-badge">{item.badge}</span>
-                ) : null}
-              </div>
-            ))}
-          </div>
-
-          {/* Segunda cópia para loop contínuo sem quebras */}
-          <div className="marquee-group" aria-hidden="true">
-            {INTEGRATIONS.map((item) => (
-              <div key={`g2-${item.id}`} className="marquee-card">
-                <span className="marquee-card-icon">{item.icon}</span>
-                <span className="marquee-card-text">
-                  <strong className="marquee-card-name">{item.name}</strong>
-                  {item.sub ? (
-                    <small className="marquee-card-sub">{item.sub}</small>
-                  ) : null}
-                </span>
-                {item.badge ? (
-                  <span className="marquee-card-badge">{item.badge}</span>
-                ) : null}
-              </div>
-            ))}
-          </div>
-
-          {/* Terceira cópia para telas ultra-wide */}
-          <div className="marquee-group" aria-hidden="true">
-            {INTEGRATIONS.map((item) => (
-              <div key={`g3-${item.id}`} className="marquee-card">
-                <span className="marquee-card-icon">{item.icon}</span>
-                <span className="marquee-card-text">
-                  <strong className="marquee-card-name">{item.name}</strong>
-                  {item.sub ? (
-                    <small className="marquee-card-sub">{item.sub}</small>
-                  ) : null}
-                </span>
-                {item.badge ? (
-                  <span className="marquee-card-badge">{item.badge}</span>
-                ) : null}
-              </div>
-            ))}
-          </div>
+          <BrandGroup />
+          <BrandGroup hidden />
+          <BrandGroup hidden />
         </div>
       </div>
     </section>

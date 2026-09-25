@@ -9,7 +9,7 @@ interface Props {
   showIntegrationLink?: boolean;
 }
 
-export default function ChatPanel({ lines, title = "socIA · simulação", showIntegrationLink }: Props) {
+export default function ChatPanel({ lines, title = "mila. · simulação", showIntegrationLink }: Props) {
   return (
     <div className="chat-panel" role="log" aria-label={`${title}: conversa simulada`} aria-live="polite">
       <div className="chat-panel-head">

@@ -88,7 +88,7 @@ export default function LoginPage() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Entrar na socIA</h1>
+      <h1 className="auth-minimal-title">Entrar na mila.</h1>
       <p className="auth-minimal-lede">
         Vamos gerar um código para você entrar na prévia. Ele aparece na próxima tela. Nada é
         enviado de verdade.
@@ -175,7 +175,7 @@ export default function LoginPage() {
         <p className="auth-consent">
           Ao clicar em “Continuar para o código”, você concorda com os{" "}
           <Link href="/termos">Termos de Uso</Link> e a{" "}
-          <Link href="/privacidade">Política de Privacidade</Link> da socIA.
+          <Link href="/privacidade">Política de Privacidade</Link> da mila.
         </p>
         {SITE_KEY ? (
           <div className="field">

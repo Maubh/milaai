@@ -4,7 +4,7 @@ export default function SiteFooter() {
   return (
     <footer className="site-footer-minimal">
       <div className="wrap footer-minimal-inner">
-        <p>@socIA</p>
+        <p>© 2026 mila. Todos os direitos reservados. · @usemila.ai</p>
         <nav aria-label="Legal">
           <Link href="/privacidade">Política de Privacidade</Link>
           <Link href="/termos">Termos de Uso</Link>

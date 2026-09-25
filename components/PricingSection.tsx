@@ -19,57 +19,57 @@ interface PlanItem {
 const PLANS: PlanItem[] = [
   {
     id: "essencial",
-    name: "Plano Essencial",
+    name: "Essencial",
     tagline: "Essencial",
     price: "39",
     period: "/mês",
-    description: "Para precificar sem erro e vigiar a concorrência",
+    description: "Precificação com lucro real desde a primeira peça",
     features: [
-      "Precificação determinística ilimitada",
-      "Radar de preços de concorrentes no Google",
-      "Leitura de notas fiscais (XML/PDF) avulsas",
-      "Legenda anti-robô nativa (gancho nos primeiros 125 chars)",
-      "Diagnóstico inicial de perfil do Instagram (1x)",
+      "Precificação Ilimitada com Raio-X e Margem Real",
+      "Radar de Concorrentes no Google Shopping",
+      "Descrições Técnicas Prontas para Loja Virtual",
+      "Caderno de Fornecedores Validados no WhatsApp",
+      "Leitor de Notas Fiscais de Compra (XML e PDF)",
     ],
     ctaLabel: "Começar no Essencial",
-    ctaHref: "/login?plano=essencial",
+    ctaHref: "/login",
     featured: false,
   },
   {
     id: "pro",
-    name: "Plano Pro / Sócia",
+    name: "Pro",
     tagline: "Destaque",
     badge: "Recomendado",
     price: "69",
     period: "/mês",
-    description: "A sua sócia completa de vendas, estoque e marketing",
+    description: "A parceira completa de vendas, estoque e marketing",
     features: [
       "Tudo do Essencial",
-      "Conexão Direta Bling ou Olist (entrada de NF-e e estoque no zap)",
-      "Suíte Completa de Instagram (carrosséis, ganchos 2026, calendário)",
-      "Consultoria de Perfil & Bio (diagnóstico + nova bio pronta + roteiro de destaques)",
-      "Ajuda para criar o perfil do zero (para quem está começando)",
-      "Integração Google Workspace + Notion",
+      "Balanço Mensal de Compras e Projeção de Faturamento no WhatsApp",
+      "Alertas Ativos de Carência de Fornecedores (aviso antes de perder pedido sem mínimo)",
+      "Integração Direta Bling e Olist (entrada de notas e estoque)",
+      "Sincronização opcional com Google Sheets e Notion",
+      "Suíte Completa de Marketing para Instagram (9 ferramentas)",
     ],
     ctaLabel: "Assinar o Pro",
-    ctaHref: "/login?plano=pro",
+    ctaHref: "/login",
     featured: true,
   },
   {
-    id: "vip",
-    name: "Plano VIP / Escala",
+    id: "escala",
+    name: "Escala",
     tagline: "Escala",
     price: "119",
     period: "/mês",
-    description: "Para operações consolidadas com múltiplos estoques",
+    description: "Para operações consolidadas com múltiplas lojas",
     features: [
       "Tudo do Pro",
-      "Múltiplos CNPJs/contas ERP conectadas",
-      "Alertas ativos de peças paradas no estoque",
-      "Revisão contínua de perfil para datas comemorativas",
+      "Múltiplos CNPJs e Lojas Conectadas",
+      "Alerta Inteligente de Giro de Estoque Encalhado",
+      "Consultoria Proativa para Datas Comerciais (Mães, Namorados, Black Friday)",
     ],
-    ctaLabel: "Falar com o VIP",
-    ctaHref: "/login?plano=vip",
+    ctaLabel: "Falar com o Escala",
+    ctaHref: "/login",
     featured: false,
   },
 ];
@@ -81,7 +81,7 @@ export default function PricingSection() {
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>
           <h2 className="pricing-title">
-            Tenha uma sócia dedicada pelo valor de uma única peça.
+            Tenha a mila. pelo valor de uma única peça.
           </h2>
           <p className="pricing-subtitle">
             Sem fidelidade ou custos ocultos. Ativação direta no seu WhatsApp em menos de 2 minutos.

@@ -74,6 +74,7 @@ a { color: inherit; }
 }
 .brand .brand-ia { color: var(--gold); font-weight: 700; }
 .on-dark .brand .brand-ia { color: #d3b47e; }
+.brand .brand-dot { color: var(--gold); font-weight: 700; }
 
 .btn {
   display: inline-flex;

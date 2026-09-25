@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Política de Privacidade — socIA",
-  description: "Política de Privacidade da prévia interativa da socIA.",
+  title: "Política de Privacidade — mila.",
+  description: "Política de Privacidade da prévia interativa da mila.",
 };
 
 export default function PrivacidadePage() {
@@ -13,7 +13,7 @@ export default function PrivacidadePage() {
       </p>
       <h1 className="auth-minimal-title">Política de Privacidade</h1>
       <p className="auth-minimal-lede">
-        Como tratamos seus dados na prévia interativa da socIA.
+        Como tratamos seus dados na prévia interativa da mila.
       </p>
       <div className="legal-body">
         <h2>1. O que coletamos</h2>

@@ -1,12 +1,40 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import "@/app/site.css";
 
 export default function SiteHeader() {
+  const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        buttonRef.current?.focus();
+      }
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointer);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointer);
+    };
+  }, [open ]);
+
   return (
     <header className="site-header site-header-minimal">
       <div className="wrap site-header-inner">
-        <Link href="/" className="brand brand-small" aria-label="socIA — início">
-          socIA
+        <Link href="/" className="brand brand-small" aria-label="mila. — início">
+          mila<span className="brand-dot" aria-hidden="true">.</span>
         </Link>
         <nav className="site-header-nav" aria-label="Navegação principal">
           <Link href="#planos" className="site-header-link">
@@ -16,6 +44,34 @@ export default function SiteHeader() {
             Dúvidas
           </Link>
           <Link href="/login" className="site-header-btn">
+            Entrar
+          </Link>
+        </nav>
+        <button
+          ref={buttonRef}
+          type="button"
+          className="site-header-toggle"
+          aria-expanded={open}
+          aria-controls="site-header-menu"
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span aria-hidden="true" className={open ? "is-open" : ""}>
+            <i />
+            <i />
+            <i />
+          </span>
+        </button>
+      </div>
+      <div ref={panelRef} className="site-header-menuwrap" hidden={!open}>
+        <nav id="site-header-menu" className="site-header-menu" aria-label="Menu móvel">
+          <Link href="#planos" className="site-header-menu-link" onClick={() => setOpen(false)}>
+            Planos
+          </Link>
+          <Link href="#faq" className="site-header-menu-link" onClick={() => setOpen(false)}>
+            Dúvidas
+          </Link>
+          <Link href="/login" className="site-header-menu-btn" onClick={() => setOpen(false)}>
             Entrar
           </Link>
         </nav>

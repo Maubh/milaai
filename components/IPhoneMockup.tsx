@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Interface do WhatsApp da socIA.
- * Demonstração da conversa em tempo real com Raio-X de Custos Transparente,
- * precificação determinística e geração de legendas de alta conversão.
+ * Interface do WhatsApp da mila.
+ * Demonstração e-commerce: argola frontal cravejada com Raio-X de Custos,
+ * descrição pronta pro site e legenda pro Instagram, em mensagens animadas.
  */
 import { useEffect, useReducer, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
@@ -25,13 +25,14 @@ const SCRIPT: ChatMsg[] = [
   { id: 2, from: "lojista", time: "10:13" },
   { id: 3, from: "socia", time: "10:13" },
   { id: 4, from: "lojista", time: "10:14" },
+  { id: 5, from: "socia", time: "10:14" },
 ];
 
 const INITIAL_DELAY = 600;
 const STEP_DELAY = 1200;
 const TYPING_MS = 1300;
-const HOLD_MS = 6800; // Tempo generoso para leitura confortável do Raio-X
-const LOOP_GAP_MS = 1000;
+const HOLD_MS = 7200;
+const LOOP_GAP_MS = 1200;
 
 function usePrefersReducedMotion(): boolean {
   const [reduced, setReduced] = useState(false);
@@ -46,8 +47,9 @@ function usePrefersReducedMotion(): boolean {
 }
 
 export default function IPhoneMockup() {
-  // Passos: vazio(-1), msg0(0), typing(1), msg1_raiox(2), msg2(3), typing(4), msg3_legenda(5), msg4(6), done(7)
-  const MAX_STEP = 7;
+  // Passos: vazio(-1), msg0(0), typing(1), msg1_raiox(2), typing(3), msg2_ecommerce(4),
+  // msg3(5), typing(6), msg4_legenda(7), msg5(8), done(9)
+  const MAX_STEP = 9;
   const [step, advance] = useReducer(
     (s: number, a: "next" | "reset" | "complete") => {
       if (a === "reset") return -1;
@@ -67,7 +69,7 @@ export default function IPhoneMockup() {
     }
     let timer: ReturnType<typeof setTimeout>;
     const last = step === MAX_STEP;
-    const typingStep = step === 1 || step === 4;
+    const typingStep = step === 1 || step === 3 || step === 6;
     const delay = last
       ? HOLD_MS + LOOP_GAP_MS
       : typingStep
@@ -75,8 +77,10 @@ export default function IPhoneMockup() {
         : step === -1
           ? INITIAL_DELAY
           : step === 2
-            ? 3200 // Pausa após o Raio-X para leitura antes da lojista responder
-            : STEP_DELAY;
+            ? 3200 // Pausa após o Raio-X para leitura antes da descrição
+            : step === 4
+              ? 2400 // Pausa após a descrição e-commerce
+              : STEP_DELAY;
     timer = setTimeout(() => advance(last ? "reset" : "next"), delay);
     return () => clearTimeout(timer);
   }, [step, reduced]);
@@ -94,12 +98,16 @@ export default function IPhoneMockup() {
     if (step === 1) visible.push({ kind: "typing" });
     else visible.push({ kind: "msg", id: 1 });
   }
-  if (step >= 3) visible.push({ kind: "msg", id: 2 });
-  if (step >= 4) {
-    if (step === 4) visible.push({ kind: "typing" });
-    else visible.push({ kind: "msg", id: 3 });
+  if (step >= 3) {
+    if (step === 3) visible.push({ kind: "typing" });
+    else visible.push({ kind: "msg", id: 2 });
   }
-  if (step >= 6) visible.push({ kind: "msg", id: 4 });
+  if (step >= 5) visible.push({ kind: "msg", id: 3 });
+  if (step >= 6) {
+    if (step === 6) visible.push({ kind: "typing" });
+    else visible.push({ kind: "msg", id: 4 });
+  }
+  if (step >= 8) visible.push({ kind: "msg", id: 5 });
 
   const done = step === MAX_STEP;
   const msgs = visible.filter((s): s is { kind: "msg"; id: number } => s.kind === "msg");
@@ -111,7 +119,7 @@ export default function IPhoneMockup() {
         <div
           className="iphone15"
           role="img"
-          aria-label="Demonstração da socIA no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de Custos Transparente, sugestão de preço com margem protegida e análise de concorrência local."
+          aria-label="Demonstração da mila. no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de Custos Transparente, descrição pronta para o e-commerce e legenda para o Instagram."
         >
           <svg
             className="iphone15-frame"
@@ -173,10 +181,10 @@ export default function IPhoneMockup() {
               <svg className="gx-icon" viewBox="0 0 24 24" width="16" height="16" focusable="false">
                 <path d="M19 12H5M12 19l-7-7 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="gx-avatar">S</span>
+              <span className="gx-avatar">m</span>
               <span className="gx-id">
-                <strong>socIA</strong>
-                <small>online</small>
+                <strong>mila. ✨</strong>
+                <small>sua assistente de negócios</small>
               </span>
               <span className="gx-actions">
                 <svg className="gx-icon" viewBox="0 0 24 24" width="16" height="16" focusable="false">
@@ -209,34 +217,17 @@ export default function IPhoneMockup() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.97 }}
                     transition={{ duration: 0.28, ease: "easeOut" }}
-                    data-testid={done && s.id === 4 ? "mockup-final" : `mockup-msg-${s.id}`}
+                    data-testid={done && s.id === 5 ? "mockup-final" : `mockup-msg-${s.id}`}
                   >
                     {s.id === 0 ? (
                       <>
-                        <svg className="gx-photo" viewBox="0 0 220 116" focusable="false">
-                          <rect width="220" height="116" rx="8" fill="url(#wa-photo-bg)" />
-                          <circle cx="110" cy="58" r="42" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="1" />
-                          {/* Sombra da argola */}
-                          <ellipse cx="110" cy="98" rx="36" ry="6" fill="#000" opacity="0.38" />
-                          {/* Argola frontal estilizada com pedras cravadas */}
-                          <ellipse cx="110" cy="56" rx="28" ry="34" fill="none" stroke="url(#gold-ring-metal)" strokeWidth="6" />
-                          {/* Cravejado frontal */}
-                          <g fill="#fff" opacity="0.95">
-                            <circle cx="110" cy="90" r="2.2" />
-                            <circle cx="98" cy="88" r="2" />
-                            <circle cx="122" cy="88" r="2" />
-                            <circle cx="87" cy="80" r="1.8" />
-                            <circle cx="133" cy="80" r="1.8" />
-                            <circle cx="83" cy="68" r="1.8" />
-                            <circle cx="137" cy="68" r="1.8" />
-                            <circle cx="82" cy="54" r="1.8" />
-                            <circle cx="138" cy="54" r="1.8" />
-                          </g>
-                          {/* Brilho da zircônia central */}
-                          <path d="M110 86 L111.5 90 L110 94 L108.5 90 Z" fill="#ffffff" />
-                        </svg>
+                        <img
+                          className="gx-photo"
+                          src="/products/argola-frontal-cravejada.png"
+                          alt="Argola frontal cravejada em zircônias, com pino e fecho click visíveis"
+                        />
                         <span className="gx-text">
-                          Chegou hoje: argola frontal cravejada ✨ Paguei R$&nbsp;22,00. Quanto devo cobrar?
+                          mila, chegou reposição da argola frontal cravejada ✨ Paguei R$&nbsp;22,00 na fábrica. Me passa o preço ideal e a descrição pro meu site?
                         </span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
@@ -269,11 +260,24 @@ export default function IPhoneMockup() {
                           <span className="gx-raiox-market-note">(Seu preço está perfeito e protege sua margem!)</span>
                         </div>
 
+                        <div className="gx-raiox-commerce">
+                          <div className="gx-raiox-title">🛍️ Descrição Pronta para seu E-commerce:</div>
+                          <p className="gx-raiox-commerce-text">
+                            Argola Frontal Cravejada em Zircônias (Banho Ouro 18k). Design frontal
+                            anatômico que valoriza o visual, cravação delicada com microzircônias
+                            cristal e fecho de encaixe seguro. Hipoalergênica, níquel-free e com
+                            verniz protetor de alta durabilidade. Perfeita para protagonizar o
+                            primeiro furo ou compor mix elegantes.
+                          </p>
+                        </div>
+
+                        <span className="gx-raiox-insta">📱 (Se quiser, também tenho a legenda pronta para postar no Instagram dessa peça!)</span>
+
                         <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </div>
                     ) : s.id === 2 ? (
                       <>
-                        <span className="gx-text">Perfeita essa conta! Já gera a legenda pro meu Instagram? ✨</span>
+                        <span className="gx-text">Amei a descrição! Manda a legenda do Instagram? 📱</span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
                           <svg viewBox="0 0 18 12" width="15" height="10" focusable="false">
@@ -284,20 +288,26 @@ export default function IPhoneMockup() {
                     ) : s.id === 3 ? (
                       <>
                         <span className="gx-text">
-                          Para o Instagram: “A clássica argola frontal cravejada ✨ Brilho delicado,
-                          fecho click seguro e banho antialérgico 18k. Envie direct para garantir a sua! 📲💛”
+                          Tem sim ✨ “Brilho novo por aqui: argola frontal cravejada em zircônias, leve e elegante pro dia a dia. Chama na direct pra garantir a sua! 📲💛”
                         </span>
                         <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </>
-                    ) : (
+                    ) : s.id === 4 ? (
                       <>
-                        <span className="gx-text">Aprovado, vou postar hoje! 👍💛</span>
+                        <span className="gx-text">Aprovado, vou publicar hoje! 👍💛</span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
                           <svg viewBox="0 0 18 12" width="15" height="10" focusable="false">
                             <path d="M1 6.5l3.2 3.2L10 3M7 6.8l3.2 3.2L16 3.5" fill="none" stroke="#53bdeb" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="gx-text">
+                          Combinado 💛 Quando chegar novidade, me chama que eu precifico na hora!
+                        </span>
+                        <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </>
                     )}
                   </motion.div>
@@ -352,7 +362,7 @@ export default function IPhoneMockup() {
           </div>
         </div>
         <figcaption className="iphone-caption">
-          socIA no WhatsApp · Inteligência comercial em tempo real
+          mila. no WhatsApp · Inteligência comercial em tempo real
         </figcaption>
       </figure>
     </MotionConfig>

@@ -7,3 +7,5 @@ out/
 .impeccable/review/
 .env*.local
 .env
+.vercel
+.env*

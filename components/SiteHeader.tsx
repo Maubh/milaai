@@ -12,6 +12,9 @@ export default function SiteHeader() {
           <Link href="#planos" className="site-header-link">
             Planos
           </Link>
+          <Link href="#faq" className="site-header-link">
+            Dúvidas
+          </Link>
           <Link href="/login" className="site-header-btn">
             Entrar
           </Link>

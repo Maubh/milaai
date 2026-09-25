@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import IPhoneMockup from "@/components/IPhoneMockup";
 import IntegrationsMarquee from "@/components/IntegrationsMarquee";
 import PricingSection from "@/components/PricingSection";
+import FaqSection from "@/components/FaqSection";
 
 export default function LandingPage() {
   const root = useRef<HTMLDivElement>(null);
@@ -60,6 +61,9 @@ export default function LandingPage() {
 
       {/* Tabela de Preços Minimalista */}
       <PricingSection />
+
+      {/* Seção minimalista de Perguntas Frequentes (FAQ) */}
+      <FaqSection />
     </div>
   );
 }

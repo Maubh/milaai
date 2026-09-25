@@ -16,7 +16,7 @@ Este documento define como a **mila.** conecta sistemas complexos (Bling, Olist,
    - Lojista diz: *"mila., quero conectar meu Bling"* (ou Olist / Notion / Google).
    - A `mila.` responde com um deep link direto assinado:
      > *"Perfeito! Para conectar seu Bling com segurança em 1 clique, acesse:*  
-     > *👉 `https://app.milaai.com.br/integrations/bling?session=xyz789`"*
+     > *👉 `https://milaai.com.br/integrations/bling?session=xyz789`"*
 
 2. **Na Web (Tela Intermediária Estilo Instinct):**
    - A lojista vê uma tela minimalista com o logo da `mila.` e do Bling lado a lado:
@@ -39,7 +39,7 @@ Este documento define como a **mila.** conecta sistemas complexos (Bling, Olist,
    - Lojista diz: *"mila., quero conectar com o Jueri"*.
    - A `mila.` responde com o link:
      > *"Maravilha! O Jueri cuida das suas peças e revendedoras. Para ativar a conexão guiada, abra aqui:*  
-     > *👉 `https://app.milaai.com.br/integrations/jueri?session=xyz789`"*
+     > *👉 `https://milaai.com.br/integrations/jueri?session=xyz789`"*
 
 2. **Na Web (Página Guiada com GIF Passo a Passo):**
    - A página mostra uma animação/GIF de 4 segundos gravada da tela do Jueri:
@@ -62,5 +62,5 @@ Este documento define como a **mila.** conecta sistemas complexos (Bling, Olist,
 | Camada | Responsabilidade |
 |---|---|
 | **Profile Hermes (`mila`)** | **Instrução e Conversa:** Sabe quando enviar o link `/integrations/[app]`, entende comandos de áudio/texto e consulta a API após conectada. Nunca pede senha ou token no chat do WhatsApp. |
-| **Frontend Web (`app.milaai.com.br`)** | **Interface Limpa:** Páginas Next.js minimalistas para `/integrations/bling`, `/integrations/olist`, `/integrations/jueri` e `/integrations/notion`. |
+| **Frontend Web (`milaai.com.br`)** | **Interface Limpa:** Páginas Next.js minimalistas para `/integrations/bling`, `/integrations/olist`, `/integrations/jueri` e `/integrations/notion`. |
 | **Backend / Webhook (`FastAPI`)** | **Segurança:** Recebe o callback OAuth ou a chave do Jueri, testa a conexão, criptografa a credencial no SQLite e dispara o webhook avisando a `mila.` no WhatsApp. |

@@ -34,4 +34,4 @@ Operando primariamente no **WhatsApp** com suporte a Telegram e um Workspace min
 ## 🌐 Presença Digital Oficial
 - **Site Oficial:** `https://milaai.com.br`
 - **Instagram:** `@usemila.ai`
-- **Área Logada / Conectores:** `https://app.milaai.com.br` (estilo Instinct, links diretos de OAuth)
+- **Área Logada / Conectores:** `https://milaai.com.br` (estilo Instinct, links diretos de OAuth)

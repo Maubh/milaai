@@ -24,6 +24,7 @@ export default function LoginPage() {
   const [listaAberta, setListaAberta] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [captchaOk, setCaptchaOk] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaErro, setCaptchaErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
 
@@ -50,13 +51,34 @@ export default function LoginPage() {
       setErro(`Digite um número válido para ${pais.nome}.`);
       return;
     }
-    if (SITE_KEY && !captchaOk) {
+    if (SITE_KEY && !captchaToken) {
       setCaptchaErro("Confirme que você não é um robô para continuar.");
       return;
     }
     setErro(null);
     setCaptchaErro(null);
     setEnviando(true);
+    if (SITE_KEY && captchaToken) {
+      try {
+        const res = await fetch("/api/turnstile", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token: captchaToken }),
+        });
+        const data = await res.json();
+        if (!data?.ok) {
+          setCaptchaErro("A verificação expirou. Confirme novamente que você não é um robô.");
+          setCaptchaOk(false);
+          setCaptchaToken(null);
+          setEnviando(false);
+          return;
+        }
+      } catch {
+        setCaptchaErro("Não foi possível verificar. Tente de novo.");
+        setEnviando(false);
+        return;
+      }
+    }
     saveTelefone(toInternational(numero, iso));
     router.push("/login/verify");
   }
@@ -159,11 +181,15 @@ export default function LoginPage() {
           <div className="field">
             <TurnstileWidget
               siteKey={SITE_KEY}
-              onVerify={() => {
+              onVerify={(token) => {
                 setCaptchaOk(true);
+                setCaptchaToken(token);
                 setCaptchaErro(null);
               }}
-              onExpire={() => setCaptchaOk(false)}
+              onExpire={() => {
+                setCaptchaOk(false);
+                setCaptchaToken(null);
+              }}
             />
             {captchaErro ? (
               <p role="alert" className="error">

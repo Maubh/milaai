@@ -37,10 +37,6 @@ export default function LandingPage() {
               Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para
               e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.
             </p>
-            <p className="minimal-text">
-              Envie foto, nota fiscal ou pergunta e receba orientação na mesma conversa: custo, preço
-              sugerido e os dois textos prontos, legenda para o Instagram e descrição para o site.
-            </p>
             <p className="minimal-cta-row">
               <Link href="/login" className="minimal-cta">
                 Começar com a mila. <span aria-hidden="true">→</span>

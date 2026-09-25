@@ -5,7 +5,7 @@ import "./site.css";
 export const metadata: Metadata = {
   title: "socIA — Sua sócia de negócios no WhatsApp e no Telegram",
   description:
-    "Simulação navegável da assistente socIA no WhatsApp e no Telegram para lojistas de semijoias e moda: onboarding de teste, conversa simulada e workspace de apoio.",
+    "A sócia de negócios inteligente no WhatsApp para lojistas de semijoias e moda. Precificação determinística, controle de margem, inteligência de estoque e marketing pronto para vender.",
   metadataBase: new URL("https://socia.example"),
 };
 

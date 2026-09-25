@@ -5,6 +5,8 @@ import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import IPhoneMockup from "@/components/IPhoneMockup";
+import IntegrationsMarquee from "@/components/IntegrationsMarquee";
+import PricingSection from "@/components/PricingSection";
 
 export default function LandingPage() {
   const root = useRef<HTMLDivElement>(null);
@@ -23,30 +25,41 @@ export default function LandingPage() {
 
   return (
     <div ref={root} className="minimal">
+      {/* Hero com a cópia e o mockup de alta fidelidade */}
       <section className="wrap minimal-grid" aria-label="Apresentação da socIA">
         <div className="minimal-copy">
-          <h1 className="minimal-anim minimal-title">A sua sócia de negócios no seu bolso.</h1>
+          <h1 className="minimal-anim minimal-title">
+            A sua sócia de negócios no seu bolso.
+          </h1>
           <div className="minimal-anim minimal-body">
-          <p className="minimal-text">
-            A socIA ajuda você a entender os custos de cada peça, chegar a um preço com margem e
-            de olho no mercado. Tudo em uma conversa, no ritmo da sua loja.
-          </p>
-          <p className="minimal-text">
-            Envie foto, nota fiscal ou pergunta e receba orientação na mesma conversa: custo, preço
-            sugerido e os dois textos prontos, legenda para o Instagram e descrição para o site.
-          </p>
-          <p className="minimal-cta-row">
-            <Link href="/login" className="minimal-cta">
-              Começar com a socIA <span aria-hidden="true">→</span>
-            </Link>
-          </p>
-          <p className="minimal-micro">Prévia interativa · nenhuma mensagem é enviada.</p>
+            <p className="minimal-text">
+              A socIA ajuda você a entender os custos de cada peça, chegar a um preço com margem e
+              de olho no mercado. Tudo em uma conversa, no ritmo da sua loja.
+            </p>
+            <p className="minimal-text">
+              Envie foto, nota fiscal ou pergunta e receba orientação na mesma conversa: custo, preço
+              sugerido e os dois textos prontos, legenda para o Instagram e descrição para o site.
+            </p>
+            <p className="minimal-cta-row">
+              <Link href="/login" className="minimal-cta">
+                Começar com a socIA <span aria-hidden="true">→</span>
+              </Link>
+            </p>
+            <p className="minimal-micro">
+              Disponível direto no WhatsApp · Configuração guiada em 2 minutos.
+            </p>
           </div>
         </div>
         <div className="minimal-anim minimal-phone">
           <IPhoneMockup />
         </div>
       </section>
+
+      {/* Marquee infinito de integrações e conectores */}
+      <IntegrationsMarquee />
+
+      {/* Tabela de Preços Minimalista */}
+      <PricingSection />
     </div>
   );
 }

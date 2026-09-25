@@ -594,6 +594,7 @@
 .marquee-mark-logo img, .marquee-mark-logo svg { display: block; height: 28px; width: auto; max-height: 28px; }
 .marquee-mark-logo img { max-width: 132px; }
 .marquee-mark-name { font-size: 0.96rem; font-weight: 700; letter-spacing: -0.01em; color: var(--plum); }
+.marquee-mark.integration-jueri .marquee-mark-logo img { height: 26px; max-width: 80px; }
 .marquee-mark.integration-bling .marquee-mark-logo img { height: 28px; max-width: 82px; }
 .marquee-mark.integration-google-workspace .marquee-mark-logo img { width: 162px; max-width: 162px; }
 @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-100% / 3)); } }

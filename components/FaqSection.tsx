@@ -19,7 +19,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "A descrição serve para qual plataforma de e-commerce?",
     answer:
-      "Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Bling e Olist). É só copiar e colar a ficha técnica já formatada.",
+      "Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Jueri, Bling e Olist). É só copiar e colar a ficha técnica já formatada.",
   },
   {
     question: "Como funciona o caderno de fornecedores e o alerta de carência?",

@@ -14,6 +14,15 @@ interface IntegrationItem {
    mantidos localmente para não depender do carregamento de terceiros. */
 const INTEGRATIONS: IntegrationItem[] = [
   {
+    id: "jueri",
+    name: "Jueri",
+    showName: false,
+    color: "#EA580C",
+    icon: (
+      <img src="/integrations/jueri.png" alt="Jueri" />
+    ),
+  },
+  {
     id: "bling",
     name: "Bling",
     showName: false,

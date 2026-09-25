@@ -5,6 +5,7 @@ import { use } from "react";
 import "../../workspace/workspace.css";
 
 const KNOWN: Record<string, { nome: string; desc: string }> = {
+  jueri: { nome: "Jueri", desc: "Gestão completa de semijoias, consignados, estoque e custos." },
   bling: { nome: "Bling", desc: "Notas, estoque e custos organizados por peça." },
   olist: { nome: "Olist", desc: "Estoque e custos organizados por peça." },
   google: { nome: "Google", desc: "Fotos e planilhas que você já usa, lado a lado com o preço." },

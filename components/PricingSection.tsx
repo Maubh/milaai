@@ -47,7 +47,7 @@ const PLANS: PlanItem[] = [
       "Tudo do Essencial",
       "Balanço Mensal de Compras e Projeção de Faturamento no WhatsApp",
       "Alertas Ativos de Carência de Fornecedores (aviso antes de perder pedido sem mínimo)",
-      "Integração Direta Bling e Olist (entrada de notas e estoque)",
+      "Integração Direta Jueri, Bling e Olist (entrada de notas e estoque)",
       "Sincronização opcional com Google Sheets e Notion",
       "Suíte Completa de Marketing para Instagram (9 ferramentas)",
     ],

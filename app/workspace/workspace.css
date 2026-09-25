@@ -111,3 +111,122 @@
   .work-grid-2 { grid-template-columns: minmax(0, 1fr); }
   .base-costs { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Card Passo a Passo Jueri & Conectores */
+.integration-card-guided {
+  background: var(--warm-white);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  box-shadow: 0 8px 30px rgba(36, 25, 31, 0.04);
+}
+.integration-brand-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--line);
+}
+.integration-brand-badge img {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+.integration-badge-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(185, 154, 98, 0.15);
+  color: var(--plum);
+}
+.integration-steps {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.25rem;
+  display: grid;
+  gap: 0.75rem;
+}
+.integration-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(36, 25, 31, 0.88);
+}
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(36, 25, 31, 0.08);
+  color: var(--plum);
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.integration-field {
+  margin: 1.25rem 0 1rem;
+  display: grid;
+  gap: 0.4rem;
+}
+.integration-field label {
+  font-size: 0.88rem;
+  font-weight: 650;
+  color: var(--plum);
+}
+.integration-field input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  background: var(--paper);
+  color: var(--plum);
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.integration-field input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(185, 154, 98, 0.2);
+}
+.integration-success-card {
+  text-align: center;
+  padding: 2.2rem 1.25rem;
+  display: grid;
+  gap: 1.2rem;
+  justify-items: center;
+}
+.integration-success-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(37, 211, 102, 0.15);
+  color: #25D366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+.integration-success-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--plum);
+  margin: 0;
+}
+.integration-success-text {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: rgba(36, 25, 31, 0.85);
+  max-width: 44ch;
+  margin: 0;
+}
+

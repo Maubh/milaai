@@ -98,6 +98,8 @@ a { color: inherit; }
 .btn-paper:hover { background: var(--warm-white); }
 .btn-ghost { background: transparent; color: inherit; border-color: currentColor; }
 .btn-ghost:hover { background: rgba(185, 154, 98, 0.14); }
+.btn-whatsapp { background: #25D366; color: #FFFFFF; border-color: #25D366; font-weight: 700; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28); }
+.btn-whatsapp:hover { background: #20BA5A; border-color: #20BA5A; color: #FFFFFF; }
 .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
 
 .tag {

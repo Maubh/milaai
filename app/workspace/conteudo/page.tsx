@@ -31,7 +31,7 @@ export default function ConteudoPage() {
       <p className="tag">Texto demonstrativo · sem geração automática</p>
       <h1 className="display work-title">Conteúdo da peça</h1>
       <p className="work-lede">
-        Uma legenda de exemplo por peça, pronta para editar e copiar. O texto é demonstrativo — não há
+        Uma legenda de exemplo por peça, pronta para editar e copiar. O texto é demonstrativo. Não há
         geração por IA real aqui.
       </p>
       <div className="work-actions" role="group" aria-label="Escolher peça" style={{ marginBottom: "1.2rem" }}>
@@ -81,11 +81,11 @@ export default function ConteudoPage() {
           </button>
         </div>
         <div className="work-actions">
+          <Link href="/conversa" className="btn btn-plum btn-sm">
+            Continuar conversa simulada
+          </Link>
           <Link href="/workspace/precificacao" className="btn btn-ghost btn-sm">
             Revisar preço
-          </Link>
-          <Link href="/workspace/integracoes" className="btn btn-ghost btn-sm">
-            Ver integrações
           </Link>
         </div>
       </section>

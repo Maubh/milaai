@@ -2,14 +2,14 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { getSession } from "@/lib/session";
 import { CUSTOS_BASE, PECAS } from "@/lib/demo-data";
 import { brl, calculatePrice } from "@/lib/pricing";
+import { getTelefone } from "@/lib/onboarding";
 
 export default function WorkspaceHome() {
   const [pecaId, setPecaId] = useState(PECAS[0].id);
   const [custos, setCustos] = useState(CUSTOS_BASE);
-  const session = typeof window !== "undefined" ? getSession() : null;
+  const telefone = typeof window !== "undefined" ? getTelefone() : "";
 
   const peca = PECAS.find((p) => p.id === pecaId) ?? PECAS[0];
   const resumo = useMemo(
@@ -30,11 +30,16 @@ export default function WorkspaceHome() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Demonstração · dados de exemplo</p>
-      <h1 className="display work-title">Boa hora para olhar os números{session ? `, ${session.nome}` : ""}.</h1>
+      <p className="tag">Workspace de apoio · simulação</p>
+      <h1 className="work-title">Custos base e resumo</h1>
       <p className="work-lede">
-        Escolha uma peça de exemplo, ajuste os custos base e veja o resumo se atualizar. Tudo roda neste
-        navegador — nenhuma integração real está ligada.
+        Este painel guarda os custos que a conversa usa nos exemplos{telefone ? ` (sessão ${telefone})` : ""}.
+        Ajuste aqui e volte à conversa simulada. Tudo local, nenhuma integração real ligada.
+      </p>
+      <p style={{ marginBottom: "1.2rem" }}>
+        <Link href="/conversa" className="btn btn-plum btn-sm">
+          Continuar conversa simulada
+        </Link>
       </p>
 
       <div className="work-grid-2">
@@ -66,7 +71,7 @@ export default function WorkspaceHome() {
 
         <section className="card work-card" aria-live="polite" aria-label="Resumo de preço">
           <h2>Resumo de preço</h2>
-          <p className="calc-price display num" style={{ fontSize: "2.4rem" }}>
+          <p className="calc-price num" style={{ fontSize: "2.4rem" }}>
             {resumo.erro ? "—" : brl(resumo.precoSugerido)}
           </p>
           <p style={{ fontSize: "0.93rem" }}>
@@ -115,8 +120,8 @@ export default function WorkspaceHome() {
             </div>
           </div>
           <div className="work-actions">
-            <Link href="/workspace/precificacao" className="btn btn-plum btn-sm">
-              Abrir precificação
+            <Link href="/conversa" className="btn btn-plum btn-sm">
+              Continuar conversa simulada
             </Link>
             <Link href="/workspace/conteudo" className="btn btn-ghost btn-sm">
               Preparar legenda

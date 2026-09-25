@@ -96,7 +96,7 @@ export default function PriceCalculator({ variant = "landing", initial, onChange
             </ul>
             <p className="calc-note">
               Custo direto de <strong className="num">{brl(result.custoTotal)}</strong> por peça. Simulação
-              local com dados de exemplo — não é o resultado da sua loja.
+              local com dados de exemplo. Não é o resultado da sua loja.
             </p>
           </>
         )}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { clearSession, getSession, type DemoSession } from "@/lib/session";
+import { clearOnboarding, getTelefone, isVerified as isVerifiedPhone } from "@/lib/onboarding";
 import "./workspace.css";
 
 const LINKS = [
@@ -11,26 +11,27 @@ const LINKS = [
   { href: "/workspace/precificacao", label: "Precificação" },
   { href: "/workspace/conteudo", label: "Conteúdo" },
   { href: "/workspace/integracoes", label: "Integrações" },
+  { href: "/conversa", label: "Conversa" },
 ];
 
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [session, setSession] = useState<DemoSession | null>(null);
+  const [telefone, setTelefone] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const s = getSession();
-    if (!s) {
+    const t = getTelefone();
+    if (!t || !isVerifiedPhone()) {
       router.replace("/login");
       return;
     }
-    setSession(s);
+    setTelefone(t);
     setReady(true);
   }, [router]);
 
   function sair() {
-    clearSession();
+    clearOnboarding();
     router.push("/login");
   }
 
@@ -49,8 +50,8 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           soc<span className="brand-ia">IA</span>
         </p>
         <p className="work-hello">
-          Olá, <strong>{session?.nome}</strong>
-          <span>Workspace de demonstração</span>
+          Número simulado <strong className="num">{telefone}</strong>
+          <span>Workspace de apoio · simulação</span>
         </p>
         <nav>
           {LINKS.map((l) => {
@@ -63,8 +64,11 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           })}
         </nav>
         <div className="work-side-foot">
+          <Link href="/conversa" className="btn btn-plum btn-sm">
+            Continuar conversa simulada
+          </Link>
           <button type="button" className="btn btn-ghost btn-sm" onClick={sair}>
-            Sair da demonstração
+            Sair da simulação
           </button>
           <Link href="/" className="work-back">
             ← Voltar à landing

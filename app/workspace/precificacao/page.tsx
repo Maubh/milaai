@@ -23,10 +23,10 @@ export default function PrecificacaoPage() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Ferramenta de trabalho · exemplo</p>
+      <p className="tag">Ferramenta auxiliar · exemplo</p>
       <h1 className="display work-title">Precificação</h1>
       <p className="work-lede">
-        A mesma lógica da landing, agora como rotina: escolha a peça, ajuste cada campo e leia a
+        A mesma lógica que a conversa usa, aqui como apoio: escolha a peça, ajuste cada campo e leia a
         decomposição. Valores de exemplo, calculados localmente.
       </p>
       <div className="work-actions" role="group" aria-label="Escolher peça de exemplo" style={{ marginBottom: "1.2rem" }}>
@@ -48,8 +48,8 @@ export default function PrecificacaoPage() {
         initial={{ ...initial, taxaPagamento: 4.5, imposto: 6, margemDesejada: 45 }}
       />
       <div className="work-actions">
-        <Link href="/workspace/conteudo" className="btn btn-plum btn-sm">
-          Preparar legenda desta peça
+        <Link href="/conversa" className="btn btn-plum btn-sm">
+          Continuar conversa simulada
         </Link>
         <Link href="/workspace" className="btn btn-ghost btn-sm">
           Voltar à visão geral

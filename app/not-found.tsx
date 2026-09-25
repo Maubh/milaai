@@ -8,15 +8,15 @@ export default function NotFound() {
         Essa bancada não existe.
       </h1>
       <p style={{ marginBottom: "1.5rem", maxWidth: "52ch" }}>
-        A demonstração cobre a landing, o login e as quatro telas do workspace. Siga por um desses
-        caminhos — todos funcionam.
+        A simulação cobre a landing, o onboarding, a conversa simulada e o workspace de apoio. Siga por
+        um desses caminhos. Todos funcionam.
       </p>
       <p style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap" }}>
         <Link href="/" className="btn btn-plum">
           Voltar à landing
         </Link>
-        <Link href="/login" className="btn btn-ghost">
-          Entrar na demonstração
+        <Link href="/conversa" className="btn btn-ghost">
+          Abrir conversa simulada
         </Link>
       </p>
     </div>

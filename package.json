@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "framer-motion": "^13.4.3",
     "gsap": "^3.12.5",
     "next": "^15.1.6",
     "react": "^19.0.0",

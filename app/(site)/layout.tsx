@@ -3,10 +3,10 @@ import SiteFooter from "@/components/SiteFooter";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <div className="site-shell">
       <SiteHeader />
-      {children}
+      <div className="site-main">{children}</div>
       <SiteFooter />
-    </>
+    </div>
   );
 }

@@ -9,6 +9,7 @@
   --line: rgba(39, 35, 38, 0.16);
   --line-light: rgba(252, 250, 246, 0.22);
   --sans: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --display: "Manrope", "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --radius: 14px;
 }
 
@@ -22,6 +23,7 @@ html:focus-within {
   html:focus-within { scroll-behavior: auto; }
 }
 
+html, body { overflow-x: clip; }
 body {
   margin: 0;
   font-family: var(--sans);
@@ -38,10 +40,10 @@ body {
 }
 
 .display {
-  font-family: "Bodoni Moda", "Didot", "Bodoni MT", "Playfair Display", Georgia, serif;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  line-height: 1.04;
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
   text-wrap: balance;
 }
 

@@ -1,27 +1,27 @@
 # Revisão do plano original — socIA
 
+## Centro da solução (correção WhatsApp-first)
+
+O README e os specs descrevem uma assistente de negócios **no WhatsApp**. A lojista envia foto, nota ou pergunta; a socIA devolve orientação de preço, leitura de custos e conteúdo na conversa. O site é porta de entrada e onboarding. O workspace é apoio para custos base e integrações. A primeira implementação errou ao transformar a calculadora e o painel web no produto principal e ao substituir o onboarding de telefone/OTP por entrada de nome. A correção desta entrega recoloca a conversa no centro: landing com conversa no hero, onboarding Instinct simulado em três rotas, simulador `/conversa` com roteiros e workspace reposicionado como apoio.
+
 ## O que manter
 
-- Público e cenário claros: uma lojista de semijoias ou moda que precisa precificar e divulgar uma peça.
-- O Raio-X do Preço é o centro mais forte da proposta. Ele dá ao produto uma demonstração concreta.
-- A experiência no celular e a linguagem próxima são coerentes com o uso pretendido no WhatsApp.
+- Público definido: lojistas de semijoias e moda.
+- Raio-X do preço como resposta forte da assistente, com cálculo transparente — agora dentro da conversa.
+- Onboarding inspirado no Instinct: telefone → código → conexão, com código de teste 123456 local.
+- Integrações por telas de transição demonstrativas a partir da conversa.
+- Linguagem visual editorial ligada a joalheria contemporânea, sem foto de hero e com títulos em sans legível.
 
-## O que corrigir nesta etapa
+## O que foi corrigido no plano e no protótipo
 
-1. **Escopo mistura produto final e protótipo.** OTP oficial, webhook, JWT, OAuth, ERP, Google Shopping, leitura de NF-e e IA real exigem serviços e credenciais ausentes. A primeira versão deve ser uma demonstração navegável com estados mockados, sem telas que afirmem conexão real.
-2. **A landing promete demais antes de provar.** O texto atual enumera muitos módulos e integrações; o visitante precisa primeiro entender o custo invisível de uma peça e ver o cálculo em uso.
-3. **Há afirmações sem evidência.** “30 segundos”, “tempo real”, “mais escolhido”, “criptografia ponta a ponta”, “sem cartão”, logos e sucesso de conexão não podem aparecer como fatos confirmados. Preços vêm do material de planejamento e devem ser identificados como previstos.
-4. **O design prescrito é genérico.** Creme, serifada clássica, cartões brancos e dourado em cada CTA criariam uma landing previsível. A direção nova usa uma fotografia de joia com presença, ameixa profundo, papel mineral e dourado apenas como detalhe de precisão.
-5. **A área logada está subespecificada.** Apenas status de conexões e custos base não mostram uma rotina. O workspace precisa conter visão geral, calculadora utilizável, prévia de conteúdo e conectores em estado demonstrativo.
-6. **Falta uma passagem honesta entre landing e workspace.** Sem WhatsApp oficial, a CTA deve convidar a explorar a demonstração. Um login demonstrativo curto substitui o OTP, identificado como simulação.
+1. **Promessa e realidade:** API do WhatsApp, número oficial, OTP, webhooks e OAuth ainda não existem. Telas e simulador de conversa com estado explícito, sem fingir envio ou conexão.
+2. **Ordem da narrativa:** a assistente respondendo dentro de uma conversa aparece primeiro. O cálculo é evidência dessa resposta, não ferramenta web protagonista.
+3. **Onboarding visível:** três URLs próprias (`/login`, `/login/verify`, `/onboarding/connect`) e links claros desde a landing. Código de teste local para navegar pelo fluxo.
+4. **Workspace com papel correto:** custos base, resumo de preço e retorno à conversa; preço e conteúdo como apoio.
+5. **Alegações sem evidência:** retirados “30 segundos”, “tempo real”, “criptografia ponta a ponta”, “mais escolhido”, “teste grátis” e plano ativo.
+6. **Telegram:** não consta nos quatro documentos originais desta branch. Decisão futura; sem disponibilidade atual.
+7. **Visual:** foto do hero e Bodoni Moda rejeitadas pelo usuário; a conversa ocupa o palco principal com títulos em Manrope.
 
-## Recorte de entrega
+## Recorte desta entrega
 
-- Landing completa, responsiva, com narrativa e interação no Raio-X do Preço.
-- Login de demonstração e workspace navegável com dados locais de exemplo.
-- Integrações em estado demonstrativo, sem redirecionamentos OAuth ou chamadas externas.
-- Nenhuma dependência de API de WhatsApp, backend, banco de dados ou credenciais.
-
-## Fora desta entrega
-
-Autenticação real, cobrança, sincronização de estoque, leitura de NF-e, pesquisa de concorrentes, geração por IA e mensagens WhatsApp. Esses módulos pedem especificação de dados, segurança e provedores antes da implementação.
+Landing centrada no WhatsApp, onboarding navegável e simulado, conversa com roteiros úteis, workspace de configuração e transições de integração demonstrativas. Nenhuma dependência de API, backend, banco de dados ou credenciais.

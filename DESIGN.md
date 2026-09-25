@@ -1,93 +1,55 @@
----
-name: socIA
-description: Sistema visual da demonstração web para lojistas de semijoias e moda
-colors:
-  plum: "#24191f"
-  wine: "#4d1f2d"
-  paper: "#f5f1ea"
-  warm-white: "#fcfaf6"
-  ink: "#272326"
-  gold: "#b99a62"
-  blush: "#e8d6d7"
-typography:
-  display:
-    fontFamily: "Bodoni Moda, Didot, Georgia, serif"
-    fontWeight: 500
-    lineHeight: 1.04
-    letterSpacing: "-0.02em"
-  body:
-    fontFamily: "Avenir Next, Segoe UI, Helvetica Neue, Arial, sans-serif"
-    fontSize: "1rem"
-    lineHeight: 1.65
-rounded:
-  small: "10px"
-  surface: "14px"
-  pill: "999px"
-spacing:
-  control: "0.8rem 1.6rem"
-  section: "clamp(4rem, 8vw, 7rem)"
-components:
-  button-primary:
-    backgroundColor: "{colors.plum}"
-    textColor: "{colors.warm-white}"
-    rounded: "{rounded.pill}"
-    padding: "{spacing.control}"
-  card:
-    backgroundColor: "{colors.warm-white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.surface}"
----
+# Direção de design — socIA (minimalista, 2026-09)
 
-# Design System: socIA
+Revisão do usuário em 24/09/2026, registrada em `MINIMAL_LANDING_BRIEF.md`. Referência
+estrutural: disciplina de conteúdo e espaço de instinct.com — marca discreta, uma afirmação
+clara, dois parágrafos curtos, um CTA. Nada de cópia visual, tipográfica ou textual do Instinct.
 
-## Overview
+## Tese
 
-**Creative North Star: "A bancada de avaliação"**
+**Uma afirmação, um CTA, uma conversa.** A landing diz o que a socIA é em um olhar: a sócia
+de negócios da lojista no WhatsApp e no Telegram. O único elemento de profundidade é um mockup de iPhone
+(moldura leve em React/CSS, sem Vue) com uma troca curta simulada sobre uma peça de semijoia.
 
-A peça e seus números pertencem ao mesmo espaço. A landing usa fotografia de joia, papel mineral e tipografia editorial para atrair; o workspace conserva as cores e reduz a ornamentação para facilitar decisões frequentes.
+## Mundo próprio
 
-**Key Characteristics:**
+Papel quente `#F5F1EA`, tinta ameixa `#24191F`, vinho `#4D1F2D`, ouro `#B99A62` só no detalhe
+da marca ou no traço do CTA. Títulos e corpo em Manrope legível; sem grandes gradientes,
+pílulas, labels em caixa alta, card boxes ou sombras decorativas. Header só com a palavra
+`socIA` pequena, à esquerda, sem nav e sem CTA competindo com o principal. Footer mínimo:
+marca, estado de prévia, copyright — nenhum link.
 
-- Fotografia tátil de produto com escala suficiente para mostrar material e acabamento.
-- Valores monetários alinhados e apresentados como instrumento de trabalho.
-- Ouro como detalhe de precisão, nunca como brilho decorativo geral.
+## História e forma
 
-## Colors
+Landing `/`: H1 “A sua sócia de negócios no seu bolso.”, dois parágrafos de produto, um CTA
+tipográfico (“Começar com a socIA” → `/login`) e microtexto “Prévia interativa · nenhuma
+mensagem é enviada.” À direita (desktop) / abaixo do CTA (mobile), um único iPhone
+(moldura SVG + CSS original, proporções inspiradas no iPhone 15 Pro do Magic UI, MIT, sem
+dependência instalada) com conversa animada autoral em estilo neutro/escuro: moldura prata,
+tela quase preta, balões azul (lojista) e cinza (socIA), foto da peça em SVG inline; sequência
+com framer-motion — foto/pergunta, indicador de digitação, Raio-X (custo R$ 63,50 → preço
+R$ 142,70; margem R$ 64,21), legenda pronta, confirmação — com loop e botão Rever;
+compositor visual com ícones de emoji/anexo/câmera/mic (nada clicável) e home bar sempre
+dentro da moldura. Comportamento inspirado no Great UI Mobile Mockup (Saurabh Sharma, MIT,
+21st.dev) e no estilo do Solace Chat Messages 2, sem dependência instalada de nenhum dos
+dois. Com `prefers-reduced-motion`, a conversa aparece completa sem autoplay,
+rotulada “Conversa simulada”. Sem formulário de telefone, preços,
+FAQ, cards, seção “como funciona”, integrações ou âncoras.
 
-O ameixa sustenta ações e regiões de contraste; o papel mineral mantém leitura calma; vinho e ouro sinalizam profundidade e detalhe.
+Onboarding `/login`, `/login/verify`, `/onboarding/connect`: mesma contenção — largura de
+leitura curta, marca pequena, título simples, um parágrafo, um controle, um CTA principal,
+retorno textual. Progresso discreto (“simulação” perto do controle, sem dominar). Fluxo
+local preservado: telefone BR → código de teste 123456 visível → QR conceitual não
+escaneável / “Abrir conversa simulada” → `/conversa`. Acesso direto a cada rota mostra a
+tela e orienta quando faltar etapa anterior, sem redireciono automático confuso.
 
-**The Metal Rule.** Use ouro em marca, foco e pequenas medições; ações principais usam ameixa sólido.
+## Movimento
 
-## Typography
+Uma entrada GSAP sutil da coluna da landing, conteúdo visível por padrão,
+`prefers-reduced-motion` respeitado. Sem motion em cascata de seções (não há mais seções).
 
-**Display Font:** Bodoni Moda (Didot, Georgia como fallback).
-**Body Font:** Avenir Next (Segoe UI e sans de sistema como fallback).
+## Acabamento
 
-A display aparece em títulos curtos e preços de destaque. Texto operacional, formulários e números usam a sans; valores usam numerais tabulares.
-
-**The Two Registers Rule.** A voz editorial apresenta a proposta; a voz de interface explica custos e ações sem floreio.
-
-## Layout
-
-Landing: abertura dividida e assimétrica, seções com mudanças de densidade, container de até 1200px. Em telas estreitas, o conteúdo empilha, a fotografia aparece cedo e a calculadora mantém campos e resultado legíveis. Workspace: navegação lateral no desktop e faixa de navegação horizontal contida no viewport no mobile.
-
-**The Price In View Rule.** A primeira tela da landing mostra uma peça e um resumo de preço; a primeira tela do workspace mostra uma ação de trabalho.
-
-## Elevation & Depth
-
-Superfícies são separadas por tom e linhas finas. Cards usam uma sombra ambiente baixa e deslocada; a fotografia fornece a maior profundidade visual.
-
-## Shapes
-
-Superfícies têm cantos discretos de 14px e campos de 10px. Pílulas são reservadas a controles compactos e estados; o CTA editorial da abertura tem canto quase reto.
-
-## Components
-
-Botões primários usam ameixa e texto claro; os secundários são contornados. Campos têm rótulo visível, borda fina e foco dourado. Cards contêm uma tarefa ou resultado, com números e descrições hierarquizados. O recibo do hero usa linhas de medição e valores alinhados.
-
-## Do's and Don'ts
-
-- Use dados de exemplo com identificação visível de demonstração.
-- Preserve contraste, foco visível e leitura no celular.
-- Não apresente integrações planejadas como ativas.
-- Não substitua a fotografia por gradientes genéricos ou uma grade de cards de ícones.
+Contraste ≥4.5:1 no corpo, foco visível, labels em todos os campos, OTP operável por
+teclado, alvos ≥48px, 390px e 1440px sem overflow horizontal (`overflow-x: clip` global,
+grades com `minmax(0, 1fr)`). Toda simulação rotulada; nenhum botão decorativo ou link sem
+destino. Simulador `/conversa` e workspace preservados com suas funções.

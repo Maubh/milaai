@@ -12,15 +12,13 @@ export default function IntegracoesPage() {
       </p>
       <ul className="integra-list">
         {INTEGRACOES.map((i) => (
-          <li key={i.nome} className="card">
-            <strong>{i.nome}</strong>
-            <span style={{ fontSize: "0.92rem", color: "rgba(39,35,38,0.78)" }}>{i.desc}</span>
+          <li key={i.id} className="card">
+            <strong>
+              {i.nome} <span className="integra-status">({i.status})</span>
+            </strong>
+            <span style={{ fontSize: "0.92rem", color: "rgba(30,43,40,0.78)" }}>{i.desc}</span>
             <span style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
-              <span className="tag">{i.estado}</span>
-              <Link
-                href={`/integrations/${i.nome.toLowerCase()}`}
-                className="btn btn-ghost btn-sm"
-              >
+              <Link href={`/integrations/${i.id}`} className="btn btn-ghost btn-sm">
                 Ver fluxo
               </Link>
             </span>

@@ -47,10 +47,45 @@ export const CUSTOS_BASE = {
   margemDesejada: 45,
 };
 
-export const INTEGRACOES = [
-  { nome: "Jueri", desc: "Gestão especializada de joias e semijoias, consignados, estoque e custos.", estado: "Disponível em breve" },
-  { nome: "Bling", desc: "Trazer notas, estoque e custos sem digitar tudo de novo.", estado: "Disponível em breve" },
-  { nome: "Olist", desc: "Mesma ideia: estoque e custos organizados por peça.", estado: "Disponível em breve" },
-  { nome: "Google", desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — lado a lado com o preço.", estado: "Previsto" },
-  { nome: "Notion", desc: "Catálogo e diretrizes de marca num só lugar.", estado: "Previsto" },
+export type Integracao = {
+  /** slug da rota /integrations/[app] */
+  id: string;
+  nome: string;
+  /** status curto no estilo Instinct — vai entre parênteses no nome */
+  status: string;
+  desc: string;
+};
+
+/** Conectores da área logada. Parêntese = status/variante (Instinct), não a descrição. */
+export const INTEGRACOES: Integracao[] = [
+  {
+    id: "jueri",
+    nome: "Jueri",
+    status: "em breve",
+    desc: "Gestão especializada de joias e semijoias, consignados, estoque e custos.",
+  },
+  {
+    id: "bling",
+    nome: "Bling",
+    status: "em breve",
+    desc: "Trazer notas, estoque e custos sem digitar tudo de novo.",
+  },
+  {
+    id: "olist",
+    nome: "Olist",
+    status: "em breve",
+    desc: "Mesma ideia: estoque e custos organizados por peça.",
+  },
+  {
+    id: "google",
+    nome: "Google Workspace",
+    status: "em breve",
+    desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — lado a lado com o preço.",
+  },
+  {
+    id: "notion",
+    nome: "Notion",
+    status: "em breve",
+    desc: "Catálogo e diretrizes de marca num só lugar.",
+  },
 ];

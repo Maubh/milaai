@@ -74,6 +74,10 @@
 .copy-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 0.8rem; align-items: center; }
 .integra-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.8rem; }
 .integra-list li { padding: 1rem 1.1rem; display: grid; gap: 0.25rem; }
+.integra-status {
+  font-weight: 500;
+  color: rgba(30, 43, 40, 0.55);
+}
 
 @media (max-width: 900px) {
   .work-shell { grid-template-columns: minmax(0, 1fr); min-height: 0; }

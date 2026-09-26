@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 import "@/app/site.css";
 
 export default function SiteHeader() {
@@ -38,7 +39,7 @@ export default function SiteHeader() {
     <header className="site-header site-header-minimal">
       <div className="wrap site-header-inner">
         <Link href="/" className="brand brand-small" aria-label="mila.ai — início">
-          mila<span className="brand-dot" aria-hidden="true">.ai</span>
+          <BrandLogo height={24} alt="" />
         </Link>
         <nav className="site-header-nav" aria-label="Navegação principal">
           <Link href="#planos" className="site-header-link">

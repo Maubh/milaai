@@ -1,15 +1,22 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import LocalQr from "@/components/LocalQr";
 import { CUSTOS_BASE, PECAS } from "@/lib/demo-data";
 import { brl, calculatePrice } from "@/lib/pricing";
-import { getTelefone } from "@/lib/onboarding";
+import { getTelefone, getVerifiedWaLink } from "@/lib/onboarding";
 
 export default function WorkspaceHome() {
   const [pecaId, setPecaId] = useState(PECAS[0].id);
   const [custos, setCustos] = useState(CUSTOS_BASE);
-  const telefone = typeof window !== "undefined" ? getTelefone() : "";
+  const [telefone, setTelefone] = useState("");
+  const [waLink, setWaLink] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTelefone(getTelefone());
+    setWaLink(getVerifiedWaLink());
+  }, []);
 
   const peca = PECAS.find((p) => p.id === pecaId) ?? PECAS[0];
   const resumo = useMemo(
@@ -30,23 +37,51 @@ export default function WorkspaceHome() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Workspace de apoio · simulação</p>
-      <h1 className="work-title">Custos base e resumo</h1>
+      <p className="tag">Área logada · piloto</p>
+      <h1 className="work-title">Olá{telefone ? `, ${telefone}` : ""}</h1>
       <p className="work-lede">
-        Este painel guarda os custos que a conversa usa nos exemplos{telefone ? ` (sessão ${telefone})` : ""}.
-        Ajuste aqui e volte à conversa simulada. Tudo local, nenhuma integração real ligada.
+        Aqui você vê status, integrações e custos. O dia a dia com a mila. continua no WhatsApp — o
+        mesmo contato que te mandou o código.
       </p>
-      <p style={{ marginBottom: "1.2rem" }}>
-        <Link href="/conversa" className="btn btn-plum btn-sm">
-          Continuar conversa simulada
-        </Link>
-      </p>
+
+      {waLink ? (
+        <section className="card work-card" aria-label="Abrir conversa no WhatsApp" style={{ marginBottom: "1.4rem" }}>
+          <h2>Falar com a mila.</h2>
+          <p style={{ fontSize: "0.93rem", color: "rgba(39,35,38,0.72)" }}>
+            Abra a conversa no celular. A mensagem já vem pronta: “Oi, mila.”
+          </p>
+          <div className="work-actions" style={{ marginTop: "0.85rem" }}>
+            <a
+              href={waLink}
+              className="btn btn-plum btn-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Abrir WhatsApp
+            </a>
+            <Link href="/workspace/integracoes" className="btn btn-ghost btn-sm">
+              Ver integrações
+            </Link>
+          </div>
+          <div className="handoff-qr" style={{ marginTop: "1rem" }}>
+            <LocalQr
+              className="qr-concept"
+              value={waLink}
+              size={160}
+              alt="QR Code para abrir a conversa com a mila. no WhatsApp"
+            />
+            <p className="hint" style={{ margin: 0, fontSize: "0.82rem", color: "rgba(39,35,38,0.68)" }}>
+              No computador: escaneie com o celular
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <div className="work-grid-2">
         <section className="card work-card" aria-label="Peças de exemplo">
           <h2>Peças de exemplo</h2>
           <p style={{ fontSize: "0.9rem", color: "rgba(39,35,38,0.7)" }}>
-            Três peças fictícias para exercitar o Raio-X. Escolha uma para ver o resumo.
+            Três peças para exercitar o Raio-X. Escolha uma para ver o resumo.
           </p>
           <ul className="peca-list">
             {PECAS.map((p) => (
@@ -120,8 +155,8 @@ export default function WorkspaceHome() {
             </div>
           </div>
           <div className="work-actions">
-            <Link href="/conversa" className="btn btn-plum btn-sm">
-              Continuar conversa simulada
+            <Link href="/workspace/precificacao" className="btn btn-plum btn-sm">
+              Abrir precificação
             </Link>
             <Link href="/workspace/conteudo" className="btn btn-ghost btn-sm">
               Preparar legenda

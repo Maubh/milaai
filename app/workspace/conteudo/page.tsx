@@ -28,11 +28,11 @@ export default function ConteudoPage() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Texto demonstrativo · sem geração automática</p>
+      <p className="tag">Área logada · piloto</p>
       <h1 className="display work-title">Conteúdo da peça</h1>
       <p className="work-lede">
-        Uma legenda de exemplo por peça, pronta para editar e copiar. O texto é demonstrativo. Não há
-        geração por IA real aqui.
+        Uma legenda de exemplo por peça, pronta para editar e copiar. Ainda sem geração por IA aqui —
+        use como rascunho.
       </p>
       <div className="work-actions" role="group" aria-label="Escolher peça" style={{ marginBottom: "1.2rem" }}>
         {PECAS.map((p) => (
@@ -64,7 +64,7 @@ export default function ConteudoPage() {
             }}
             rows={8}
           />
-          <p className="hint">{texto.length} caracteres · texto demonstrativo.</p>
+          <p className="hint">{texto.length} caracteres · rascunho editável.</p>
         </div>
         <div className="copy-row">
           <button type="button" className="btn btn-plum btn-sm" onClick={copiar}>
@@ -81,8 +81,8 @@ export default function ConteudoPage() {
           </button>
         </div>
         <div className="work-actions">
-          <Link href="/conversa" className="btn btn-plum btn-sm">
-            Continuar conversa simulada
+          <Link href="/workspace" className="btn btn-plum btn-sm">
+            Voltar à visão geral
           </Link>
           <Link href="/workspace/precificacao" className="btn btn-ghost btn-sm">
             Revisar preço

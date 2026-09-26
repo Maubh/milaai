@@ -58,6 +58,18 @@
 .base-costs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem; margin-top: 1rem; min-width: 0; }
 .base-costs .field input { background: var(--paper); }
 .work-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 1.2rem; }
+.work-card .handoff-qr { display: grid; gap: 0.55rem; justify-items: start; }
+.work-card .handoff-qr .qr-concept {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+@media (max-width: 640px) {
+  .work-card .handoff-qr { display: none; }
+}
 .caption-box { width: 100%; min-height: 180px; font: inherit; }
 .copy-row { display: flex; gap: 0.7rem; flex-wrap: wrap; margin-top: 0.8rem; align-items: center; }
 .integra-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.8rem; }

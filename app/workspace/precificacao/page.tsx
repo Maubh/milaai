@@ -48,10 +48,7 @@ export default function PrecificacaoPage() {
         initial={{ ...initial, taxaPagamento: 4.5, imposto: 6, margemDesejada: 45 }}
       />
       <div className="work-actions">
-        <Link href="/conversa" className="btn btn-plum btn-sm">
-          Continuar conversa simulada
-        </Link>
-        <Link href="/workspace" className="btn btn-ghost btn-sm">
+        <Link href="/workspace" className="btn btn-plum btn-sm">
           Voltar à visão geral
         </Link>
       </div>

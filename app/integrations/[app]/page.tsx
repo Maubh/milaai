@@ -126,7 +126,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 ) : (
                   <span style={{ fontWeight: 700 }}>{info.nome}</span>
                 )}
-                <span className="integration-badge-tag">Passo a Passo</span>
+                <span className="integration-badge-tag">Passo a passo</span>
               </div>
 
               <ol className="integration-steps">
@@ -145,7 +145,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </ol>
 
               <div className="integration-field">
-                <label htmlFor="jueri-api-key">Chave de Conexão do Jueri</label>
+                <label htmlFor="jueri-api-key">Chave de conexão do Jueri</label>
                 <input
                   id="jueri-api-key"
                   type="text"

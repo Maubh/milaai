@@ -34,7 +34,7 @@ export default function LandingPage() {
           </h1>
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">
-              Tenha a mila no seu WhatsApp. Precificação com margem real, descrições prontas para
+              Tenha a <span className="mila-highlight">mila</span> no seu WhatsApp. Precificação com margem real, descrições prontas para
               e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.
             </p>
             <p className="minimal-cta-row">

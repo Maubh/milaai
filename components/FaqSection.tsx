@@ -1,35 +1,52 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 interface FaqItem {
   question: string;
-  answer: string;
+  answer: ReactNode;
 }
 
 const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Preciso instalar algum aplicativo no computador ou celular?",
-    answer:
-      "Não. A mila funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.",
+    answer: (
+      <>
+        Não. A <span className="mila-highlight">mila</span> funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.
+      </>
+    ),
   },
   {
     question: "Estou começando agora e ainda não tenho Instagram nem site. Serve para mim?",
-    answer:
-      "Com certeza! A mila te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.",
+    answer: (
+      <>
+        Com certeza! A <span className="mila-highlight">mila</span> te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.
+      </>
+    ),
   },
   {
     question: "A descrição serve para qual plataforma de e-commerce?",
-    answer:
-      "Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Jueri, Bling e Olist). É só copiar e colar a ficha técnica já formatada.",
+    answer: (
+      <>
+        Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Jueri, Bling e Olist). É só copiar e colar a ficha técnica já formatada.
+      </>
+    ),
   },
   {
     question: "Como funciona o caderno de fornecedores e o alerta de carência?",
-    answer:
-      "Você registra seus fornecedores no chat e a mila te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.",
+    answer: (
+      <>
+        Você registra seus fornecedores no chat e a <span className="mila-highlight">mila</span> te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.
+      </>
+    ),
   },
   {
     question: "Preciso cadastrar cartão de crédito para começar?",
-    answer:
-      "Não. Você entra com seu número de WhatsApp e já começa a testar na hora sem compromisso.",
+    answer: (
+      <>
+        Não. Você entra com seu número de WhatsApp e já começa a testar na hora sem compromisso.
+      </>
+    ),
   },
 ];
 

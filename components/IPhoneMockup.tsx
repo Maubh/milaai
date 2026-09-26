@@ -183,7 +183,7 @@ export default function IPhoneMockup() {
               </svg>
               <span className="gx-avatar">m</span>
               <span className="gx-id">
-                <strong>mila ✨</strong>
+                <strong>mila.ai ✨</strong>
                 <small>sua assistente de negócios</small>
               </span>
               <span className="gx-actions">
@@ -362,7 +362,7 @@ export default function IPhoneMockup() {
           </div>
         </div>
         <figcaption className="iphone-caption">
-          mila no WhatsApp · Inteligência comercial em tempo real
+          mila.ai no WhatsApp · Inteligência comercial em tempo real
         </figcaption>
       </figure>
     </MotionConfig>

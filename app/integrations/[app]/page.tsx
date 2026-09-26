@@ -37,7 +37,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
   google: {
     nome: "Google Workspace",
     title: "Conectar Google Workspace",
-    desc: "Fotos e planilhas que você já usa, lado a lado com o preço com a mila.",
+    desc: "Gmail, Calendar, Tasks, Drive, Docs, Sheets e Slides — a suíte que você já usa, lado a lado com a mila.",
     logo: "/integrations/google-workspace.svg",
     isApiKeyGuided: false,
   },

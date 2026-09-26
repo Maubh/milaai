@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { TEST_CODE } from "@/lib/conversation";
 import { getTelefone, isVerified, markVerified } from "@/lib/onboarding";
 import "../auth.css";
 
@@ -17,6 +16,8 @@ export default function VerifyPage() {
   const [telefone, setTelefone] = useState("");
   const [alreadyVerified] = useState(() => isVerified());
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
+  const [enviando, setEnviando] = useState(false);
+  const [reenviando, setReenviando] = useState(false);
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -55,21 +56,90 @@ export default function VerifyPage() {
     inputsRef.current[Math.min(nums.length, CODE_LEN - 1)]?.focus();
   }
 
-  function submit(e: React.FormEvent) {
+  async function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (digits.join("") === TEST_CODE) {
-      setErro(null);
-      markVerified();
+    const code = digits.join("");
+    if (code.length !== CODE_LEN) {
+      setErro("Digite os 6 dígitos do código.");
+      return;
+    }
+    const phone = getTelefone();
+    if (!phone) {
+      setErro("Número não encontrado. Volte e informe seu WhatsApp.");
+      return;
+    }
+    setEnviando(true);
+    setErro(null);
+    try {
+      const res = await fetch("/api/auth/otp/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, code }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 400 && data?.detail === "expired") {
+        setErro("Código expirado. Peça um novo.");
+        return;
+      }
+      if (res.status === 400 && data?.detail === "mismatch") {
+        setErro("Código incorreto. Confira e tente de novo.");
+        return;
+      }
+      if (res.status === 429) {
+        setErro("Muitas tentativas. Peça um novo código.");
+        return;
+      }
+      if (!res.ok || data?.ok === false) {
+        setErro("Não foi possível verificar. Tente de novo.");
+        return;
+      }
+      markVerified({
+        waLink: typeof data?.wa_link === "string" ? data.wa_link : undefined,
+        plan: typeof data?.plan === "string" ? data.plan : undefined,
+      });
       router.push("/onboarding/connect");
-    } else {
-      setErro(`Código diferente do teste. Digite ${TEST_CODE}.`);
+    } catch {
+      setErro("Falha de conexão. Tente de novo.");
+    } finally {
+      setEnviando(false);
     }
   }
 
-  function resend() {
-    setSecondsLeft(RESEND_SECONDS);
+  async function resend() {
+    const phone = getTelefone();
+    if (!phone) {
+      setErro("Número não encontrado. Volte e informe seu WhatsApp.");
+      return;
+    }
+    setReenviando(true);
     setErro(null);
-    inputsRef.current[0]?.focus();
+    try {
+      const res = await fetch("/api/auth/otp/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 403 || data?.detail === "not_allowlisted") {
+        setErro("Acesso piloto. Peça um convite para entrar agora.");
+        return;
+      }
+      if (res.status === 429) {
+        setErro("Aguarde um instante antes de pedir outro código.");
+        return;
+      }
+      if (!res.ok || data?.ok === false) {
+        setErro("Não foi possível reenviar. Tente de novo.");
+        return;
+      }
+      setSecondsLeft(RESEND_SECONDS);
+      setDigits(Array(CODE_LEN).fill(""));
+      inputsRef.current[0]?.focus();
+    } catch {
+      setErro("Falha de conexão no reenvio.");
+    } finally {
+      setReenviando(false);
+    }
   }
 
   return (
@@ -79,20 +149,29 @@ export default function VerifyPage() {
       </p>
       <h1 className="auth-minimal-title">Digite o código</h1>
       <p className="auth-minimal-lede">
-        O código de teste é <strong className="num">{TEST_CODE}</strong>. Mostramos ele aqui de
-        propósito, sem envio real.
+        Enviamos um código de 6 dígitos no WhatsApp
+        {telefone ? (
+          <>
+            {" "}
+            de <strong className="num">{telefone}</strong>
+          </>
+        ) : null}
+        .
         {alreadyVerified ? (
-          <> Esta etapa já foi concluída neste navegador. Pode ver de novo ou seguir adiante.</>
+          <>
+            {" "}
+            Esta etapa já foi concluída neste navegador.{" "}
+            <Link href="/onboarding/connect">Seguir para o WhatsApp</Link>.
+          </>
         ) : null}
       </p>
       {!telefone ? (
         <p className="auth-prereq" role="note">
-          Sem número na prévia ainda. <Link href="/login">Informe seu número</Link> para
-          percorrer o fluxo completo, ou explore o código abaixo à vontade. Nada é enviado.
+          Sem número ainda. <Link href="/login">Informe seu WhatsApp</Link> para receber o código.
         </p>
       ) : null}
-      <form className="auth-minimal-form" onSubmit={submit} aria-label="Verificar código de teste">
-        <fieldset className="otp-fieldset" onPaste={onPaste}>
+      <form className="auth-minimal-form" onSubmit={submit} aria-label="Verificar código">
+        <fieldset className="otp-fieldset" onPaste={onPaste} disabled={!telefone}>
           <legend>Seis dígitos do código</legend>
           <div className="otp-row">
             {digits.map((d, i) => (
@@ -107,6 +186,7 @@ export default function VerifyPage() {
                 aria-label={`Dígito ${i + 1} de 6`}
                 maxLength={1}
                 value={d}
+                disabled={!telefone}
                 onChange={(e) => setDigit(i, e.target.value)}
                 onKeyDown={(e) => onKeyDown(i, e)}
               />
@@ -118,15 +198,19 @@ export default function VerifyPage() {
             {erro}
           </p>
         ) : null}
-        <button type="submit" className="btn btn-plum auth-minimal-cta">
-          Verificar e continuar
+        <button
+          type="submit"
+          className="btn btn-plum auth-minimal-cta"
+          disabled={enviando || !telefone}
+        >
+          {enviando ? "Verificando…" : "Verificar e continuar"}
         </button>
         <p className="auth-minimal-back">
-          {secondsLeft > 0 ? (
-            <>Reenvio simulado em {secondsLeft}s</>
+          {!telefone ? null : secondsLeft > 0 ? (
+            <>Reenviar em {secondsLeft}s</>
           ) : (
-            <button type="button" className="link-btn" onClick={resend}>
-              Reenviar código de teste
+            <button type="button" className="link-btn" onClick={resend} disabled={reenviando}>
+              {reenviando ? "Reenviando…" : "Reenviar código"}
             </button>
           )}
         </p>

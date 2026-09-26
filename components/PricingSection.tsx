@@ -32,7 +32,7 @@ const PLANS: PlanItem[] = [
       "Caderno de Fornecedores Validados no WhatsApp",
       "Leitor de Notas Fiscais de Compra (XML e PDF)",
       "Google Workspace (Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações)",
-      "Notion (Documentos, Wiki, Páginas e Databases)",
+      "Notion (Documentos, Wiki, Páginas e Bancos de dados)",
     ],
     ctaLabel: "Começar no Essencial",
     ctaHref: "/login",

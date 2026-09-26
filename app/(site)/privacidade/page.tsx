@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Política de Privacidade — mila",
-  description: "Política de Privacidade da prévia interativa da mila.",
+  title: "Política de privacidade — mila",
+  description: "Política de privacidade da prévia interativa da mila.",
 };
 
 export default function PrivacidadePage() {
@@ -11,7 +11,7 @@ export default function PrivacidadePage() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/login">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Política de Privacidade</h1>
+      <h1 className="auth-minimal-title">Política de privacidade</h1>
       <p className="auth-minimal-lede">
         Como tratamos seus dados na prévia interativa da mila.
       </p>

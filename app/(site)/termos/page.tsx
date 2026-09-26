@@ -1,8 +1,8 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Termos de Uso — mila",
-  description: "Termos de Uso da prévia interativa da mila.",
+  title: "Termos de uso — mila",
+  description: "Termos de uso da prévia interativa da mila.",
 };
 
 export default function TermosPage() {
@@ -11,7 +11,7 @@ export default function TermosPage() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/login">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Termos de Uso</h1>
+      <h1 className="auth-minimal-title">Termos de uso</h1>
       <p className="auth-minimal-lede">
         Estes termos valem para a prévia interativa da mila, em fase de demonstração.
       </p>

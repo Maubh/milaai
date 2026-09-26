@@ -200,8 +200,8 @@ export default function LoginPage() {
         </div>
         <p className="auth-consent">
           Ao clicar em “Continuar para o WhatsApp”, você concorda com os{" "}
-          <Link href="/termos">Termos de Uso</Link> e a{" "}
-          <Link href="/privacidade">Política de Privacidade</Link> da <span className="mila-highlight">mila</span>.
+          <Link href="/termos">Termos de uso</Link> e a{" "}
+          <Link href="/privacidade">Política de privacidade</Link> da <span className="mila-highlight">mila</span>.
         </p>
         {SITE_KEY ? (
           <div className="field">

@@ -119,7 +119,7 @@ export default function IPhoneMockup() {
         <div
           className="iphone15"
           role="img"
-          aria-label="Demonstração da mila no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de Custos Transparente, descrição pronta para o e-commerce e legenda para o Instagram."
+          aria-label="Demonstração da mila no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de custos transparente, descrição pronta para o e-commerce e legenda para o Instagram."
         >
           <svg
             className="iphone15-frame"
@@ -239,19 +239,19 @@ export default function IPhoneMockup() {
                     ) : s.id === 1 ? (
                       <div className="gx-raiox">
                         <div className="gx-raiox-header">
-                          <span className="gx-raiox-badge">✨ Sugestão de Preço: <strong>R$&nbsp;119,90</strong></span>
+                          <span className="gx-raiox-badge">✨ Sugestão de preço: <strong>R$&nbsp;119,90</strong></span>
                           <span className="gx-raiox-sub">(Sua margem limpa no bolso: <strong>R$&nbsp;38,40 | 32%</strong>)</span>
                         </div>
 
                         <div className="gx-raiox-section">
-                          <div className="gx-raiox-title">📋 Raio-X da sua Conta:</div>
+                          <div className="gx-raiox-title">📋 Raio-X da sua conta:</div>
                           <ul className="gx-raiox-items">
-                            <li><span>• Custo da Peça:</span> <strong>R$&nbsp;22,00</strong></li>
+                            <li><span>• Custo da peça:</span> <strong>R$&nbsp;22,00</strong></li>
                             <li><span>• Embalagem:</span> <strong>R$&nbsp;6,50</strong></li>
-                            <li><span>• Rateio Custos Fixos:</span> <span><strong>R$&nbsp;10,00</strong> <small>(aluguel/luz diluído)</small></span></li>
-                            <li><span>• Taxa Cartão + Impostos:</span> <strong>R$&nbsp;13,19</strong></li>
-                            <li className="gx-raiox-line-cost"><span>• Custo Total da Operação:</span> <strong>R$&nbsp;51,69</strong></li>
-                            <li className="gx-raiox-line-profit"><span>• Seu Lucro Real:</span> <strong>R$&nbsp;68,21</strong></li>
+                            <li><span>• Rateio custos fixos:</span> <span><strong>R$&nbsp;10,00</strong> <small>(aluguel/luz diluído)</small></span></li>
+                            <li><span>• Taxa cartão + impostos:</span> <strong>R$&nbsp;13,19</strong></li>
+                            <li className="gx-raiox-line-cost"><span>• Custo total da operação:</span> <strong>R$&nbsp;51,69</strong></li>
+                            <li className="gx-raiox-line-profit"><span>• Seu lucro real:</span> <strong>R$&nbsp;68,21</strong></li>
                           </ul>
                         </div>
 

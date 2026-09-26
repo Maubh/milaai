@@ -52,11 +52,11 @@ const FAQ_ITEMS: FaqItem[] = [
 
 export default function FaqSection() {
   return (
-    <section id="faq" className="faq-section" aria-label="Dúvidas Frequentes">
+    <section id="faq" className="faq-section" aria-label="Dúvidas frequentes">
       <div className="wrap">
         <div className="faq-header">
           <span className="faq-eyebrow">Dúvidas frequentes</span>
-          <h2 className="faq-title">Dúvidas Frequentes</h2>
+          <h2 className="faq-title">Dúvidas frequentes</h2>
         </div>
 
         <div className="faq-list">

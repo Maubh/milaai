@@ -26,11 +26,11 @@ const PLANS: PlanItem[] = [
     period: "/mês",
     description: "Precificação com lucro real desde a primeira peça",
     features: [
-      "Precificação Ilimitada com Raio-X e Margem Real",
-      "Radar de Concorrentes no Google Shopping",
-      "Descrições Técnicas Prontas para Loja Virtual",
-      "Caderno de Fornecedores Validados no WhatsApp",
-      "Leitor de Notas Fiscais de Compra (XML e PDF)",
+      "Precificação ilimitada com Raio-X e margem real",
+      "Radar de concorrentes no Google Shopping",
+      "Descrições técnicas prontas para loja virtual",
+      "Caderno de fornecedores validados no WhatsApp",
+      "Leitor de notas fiscais de compra (XML e PDF)",
       "Google Workspace (Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações)",
       "Notion (Documentos, Wiki, Páginas e Bancos de dados)",
     ],
@@ -48,10 +48,10 @@ const PLANS: PlanItem[] = [
     description: "A parceira completa de vendas, estoque e marketing",
     features: [
       "Tudo do Essencial",
-      "Balanço Mensal de Compras e Projeção de Faturamento no WhatsApp",
-      "Alertas Ativos de Carência de Fornecedores (aviso antes de perder pedido sem mínimo)",
-      "Integração Direta Jueri, Bling e Olist (entrada de notas e estoque)",
-      "Suíte Completa de Marketing para Instagram (9 ferramentas)",
+      "Balanço mensal de compras e projeção de faturamento no WhatsApp",
+      "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
+      "Integração direta Jueri, Bling e Olist (entrada de notas e estoque)",
+      "Suíte completa de marketing para Instagram (9 ferramentas)",
     ],
     ctaLabel: "Assinar o Pro",
     ctaHref: "/login",
@@ -61,7 +61,7 @@ const PLANS: PlanItem[] = [
 
 export default function PricingSection() {
   return (
-    <section id="planos" className="pricing-section" aria-label="Planos e Preços">
+    <section id="planos" className="pricing-section" aria-label="Planos e preços">
       <div className="wrap">
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>

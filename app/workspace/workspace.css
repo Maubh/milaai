@@ -207,7 +207,7 @@
 }
 .integration-field input:focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: var(--mineral);
   box-shadow: 0 0 0 3px rgba(185, 154, 98, 0.2);
 }
 .integration-success-card {

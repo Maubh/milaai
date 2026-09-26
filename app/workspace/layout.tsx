@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import BrandLogo from "@/components/BrandLogo";
 import {
   clearOnboarding,
   getTelefone,
@@ -53,7 +54,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
     <div className="work-shell">
       <aside className="work-side" aria-label="Navegação do workspace">
         <p className="brand">
-          mila<span className="brand-dot">.ai</span>
+          <BrandLogo height={26} />
         </p>
         <p className="work-hello">
           WhatsApp <strong className="num">{telefone}</strong>

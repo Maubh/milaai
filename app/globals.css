@@ -1,14 +1,23 @@
 :root {
-  --plum: #24191f;
-  --wine: #4d1f2d;
-  --paper: #f5f1ea;
-  --warm-white: #fcfaf6;
-  --ink: #272326;
-  --gold: #b99a62;
-  --blush: #e8d6d7;
-  --line: rgba(39, 35, 38, 0.16);
-  --line-light: rgba(252, 250, 246, 0.22);
-  --sans: "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  /* mila.ai — identidade mineral (brand kit) */
+  --mineral: #173f3b;
+  --ivory: #f6f3ed;
+  --sand: #d9cbb8;
+  --ink: #1e2b28;
+  --sage: #8fa89b;
+  --white: #ffffff;
+
+  /* aliases legados → nova paleta (sem vinho/dourado) */
+  --plum: var(--mineral);
+  --wine: var(--mineral);
+  --paper: var(--ivory);
+  --warm-white: var(--white);
+  --gold: var(--sand);
+  --blush: var(--sand);
+  --line: rgba(30, 43, 40, 0.16);
+  --line-light: rgba(246, 243, 237, 0.22);
+
+  --sans: "Manrope", "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --display: "Manrope", "Avenir Next", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --radius: 14px;
 }
@@ -35,13 +44,13 @@ body {
 }
 
 ::selection {
-  background: var(--wine);
-  color: var(--warm-white);
+  background: var(--mineral);
+  color: var(--ivory);
 }
 
 .display {
   font-family: var(--display);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.015em;
   line-height: 1.12;
   text-wrap: balance;
@@ -53,7 +62,7 @@ p { margin: 0; }
 a { color: inherit; }
 
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--mineral);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -71,10 +80,27 @@ a { color: inherit; }
   font-size: 1.35rem;
   letter-spacing: -0.01em;
   text-decoration: none;
+  color: var(--mineral);
+  display: inline-flex;
+  align-items: center;
 }
-.brand .brand-ia { color: var(--gold); font-weight: 700; }
-.on-dark .brand .brand-ia { color: #d3b47e; }
-.brand .brand-dot { color: var(--gold); font-weight: 700; }
+.brand .brand-ia,
+.brand .brand-dot { color: var(--mineral); font-weight: 700; }
+.on-dark .brand,
+.on-dark .brand .brand-ia,
+.on-dark .brand .brand-dot { color: var(--ivory); }
+
+.brand-logo {
+  display: block;
+  height: 28px;
+  width: auto;
+}
+.brand-small .brand-logo { height: 24px; }
+.brand-mark {
+  display: block;
+  height: 28px;
+  width: auto;
+}
 
 .btn {
   display: inline-flex;
@@ -84,7 +110,7 @@ a { color: inherit; }
   min-height: 48px;
   padding: 0.8rem 1.6rem;
   border-radius: 999px;
-  font-weight: 650;
+  font-weight: 600;
   font-size: 0.98rem;
   text-decoration: none;
   border: 1px solid transparent;
@@ -92,12 +118,12 @@ a { color: inherit; }
   transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
 .btn:active { transform: translateY(1px); }
-.btn-plum { background: var(--plum); color: var(--warm-white); }
-.btn-plum:hover { background: var(--wine); }
-.btn-paper { background: var(--paper); color: var(--plum); }
+.btn-plum { background: var(--mineral); color: var(--ivory); }
+.btn-plum:hover { background: #12403b; filter: brightness(1.08); }
+.btn-paper { background: var(--paper); color: var(--mineral); }
 .btn-paper:hover { background: var(--warm-white); }
 .btn-ghost { background: transparent; color: inherit; border-color: currentColor; }
-.btn-ghost:hover { background: rgba(185, 154, 98, 0.14); }
+.btn-ghost:hover { background: rgba(23, 63, 59, 0.08); }
 .btn-whatsapp { background: #25D366; color: #FFFFFF; border-color: #25D366; font-weight: 700; box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28); }
 .btn-whatsapp:hover { background: #20BA5A; border-color: #20BA5A; color: #FFFFFF; }
 .btn[disabled] { opacity: 0.55; cursor: not-allowed; }
@@ -113,17 +139,17 @@ a { color: inherit; }
   padding: 0.38rem 0.8rem;
   border: 1px solid var(--line);
   border-radius: 999px;
-  color: var(--wine);
-  background: rgba(252, 250, 246, 0.6);
+  color: var(--mineral);
+  background: rgba(246, 243, 237, 0.6);
 }
-.on-dark .tag { border-color: var(--line-light); color: var(--blush); background: rgba(252, 250, 246, 0.06); }
+.on-dark .tag { border-color: var(--line-light); color: var(--sand); background: rgba(246, 243, 237, 0.06); }
 
 .measure { border-top: 1px solid var(--line); }
 .measure-ticks {
   display: flex;
   justify-content: space-between;
   font-size: 0.72rem;
-  color: rgba(39, 35, 38, 0.55);
+  color: rgba(30, 43, 40, 0.55);
   padding-top: 0.35rem;
 }
 
@@ -141,28 +167,28 @@ a { color: inherit; }
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 0.7rem 0.85rem;
-  caret-color: var(--wine);
+  caret-color: var(--mineral);
 }
-.field input::placeholder, .field textarea::placeholder { color: rgba(39, 35, 38, 0.5); }
+.field input::placeholder, .field textarea::placeholder { color: rgba(30, 43, 40, 0.5); }
 .field input:focus, .field textarea:focus, .field select:focus {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--mineral);
   outline-offset: 1px;
-  border-color: var(--gold);
+  border-color: var(--mineral);
 }
-.field .hint { font-size: 0.82rem; color: rgba(39, 35, 38, 0.68); margin-top: 0.3rem; }
+.field .hint { font-size: 0.82rem; color: rgba(30, 43, 40, 0.68); margin-top: 0.3rem; }
 .field .error { font-size: 0.82rem; color: #8d2233; margin-top: 0.3rem; font-weight: 600; }
 
 .card {
   background: var(--warm-white);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 1px 0 rgba(36, 25, 31, 0.05), 0 18px 44px -28px rgba(36, 25, 31, 0.35);
+  box-shadow: 0 1px 0 rgba(23, 63, 59, 0.05), 0 18px 44px -28px rgba(23, 63, 59, 0.35);
 }
 
 /* Scrollbar + selection carry the palette */
 ::-webkit-scrollbar { width: 12px; }
 ::-webkit-scrollbar-track { background: var(--paper); }
-::-webkit-scrollbar-thumb { background: var(--wine); border-radius: 8px; border: 3px solid var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--mineral); border-radius: 8px; border: 3px solid var(--paper); }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -176,7 +202,7 @@ a { color: inherit; }
 
 /* Destaque refinado para o nome mila em textos corridos */
 .mila-highlight {
-  color: var(--wine);
+  color: var(--mineral);
   font-weight: 700;
   letter-spacing: -0.01em;
 }

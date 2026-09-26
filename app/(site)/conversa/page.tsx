@@ -72,8 +72,8 @@ function SimulatorInner() {
             <Link href="/workspace" className="btn btn-plum btn-sm">
               Ajustar custos no workspace
             </Link>
-            <Link href="/onboarding/connect" className="btn btn-ghost btn-sm">
-              Voltar à conexão
+            <Link href="/login" className="btn btn-ghost btn-sm">
+              Voltar ao login
             </Link>
           </div>
         </div>

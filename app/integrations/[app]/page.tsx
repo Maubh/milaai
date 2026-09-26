@@ -44,7 +44,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
   notion: {
     nome: "Notion",
     title: "Conectar Notion",
-    desc: "Catálogo e diretrizes de marca num só lugar com a mila.",
+    desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
     isApiKeyGuided: false,
   },
 };

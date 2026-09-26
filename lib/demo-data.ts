@@ -86,6 +86,6 @@ export const INTEGRACOES: Integracao[] = [
     id: "notion",
     nome: "Notion",
     status: "em breve",
-    desc: "Catálogo e diretrizes de marca num só lugar.",
+    desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
   },
 ];

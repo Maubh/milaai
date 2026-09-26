@@ -8,6 +8,7 @@ export interface OnboardingState {
 }
 
 const KEY = "socia-onboarding";
+const DEFAULT_WA = "5531936187463";
 
 function read(): Partial<OnboardingState> {
   if (typeof window === "undefined") return {};
@@ -22,6 +23,23 @@ function write(next: Partial<OnboardingState>) {
   window.localStorage.setItem(KEY, JSON.stringify({ ...read(), ...next }));
 }
 
+export function isSafeWaLink(link: unknown): link is string {
+  if (typeof link !== "string" || !link) return false;
+  try {
+    const u = new URL(link);
+    if (u.protocol !== "https:") return false;
+    if (u.hostname !== "wa.me" && u.hostname !== "api.whatsapp.com") return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function defaultWaLink(): string {
+  const wa = process.env.NEXT_PUBLIC_MILA_WA_E164?.replace(/\D+/g, "") || DEFAULT_WA;
+  return `https://wa.me/${wa}?text=${encodeURIComponent("Oi, mila.")}`;
+}
+
 export function getTelefone(): string {
   const t = read().telefone;
   return typeof t === "string" ? t : "";
@@ -32,19 +50,20 @@ export function saveTelefone(telefone: string) {
 }
 
 export function markVerified(extra?: { waLink?: string; plan?: string }) {
+  const waLink = isSafeWaLink(extra?.waLink) ? extra?.waLink : defaultWaLink();
   write({
     verificado: true,
-    waLink: extra?.waLink,
+    waLink,
     plan: extra?.plan,
   });
 }
 
-export function getWaLink(): string {
+/** Only returns a link when the user is verified. No unverified fallback. */
+export function getVerifiedWaLink(): string | null {
+  if (!isVerified()) return null;
   const link = read().waLink;
-  if (typeof link === "string" && link) return link;
-  const wa =
-    process.env.NEXT_PUBLIC_MILA_WA_E164?.replace(/\D+/g, "") || "5531936187463";
-  return `https://wa.me/${wa}?text=${encodeURIComponent("Oi, mila.")}`;
+  if (isSafeWaLink(link)) return link;
+  return defaultWaLink();
 }
 
 export function isVerified(): boolean {

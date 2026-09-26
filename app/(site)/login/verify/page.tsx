@@ -79,22 +79,18 @@ export default function VerifyPage() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 400 && data?.detail === "expired") {
         setErro("Código expirado. Peça um novo.");
-        setEnviando(false);
         return;
       }
       if (res.status === 400 && data?.detail === "mismatch") {
         setErro("Código incorreto. Confira e tente de novo.");
-        setEnviando(false);
         return;
       }
       if (res.status === 429) {
         setErro("Muitas tentativas. Peça um novo código.");
-        setEnviando(false);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível verificar. Tente de novo.");
-        setEnviando(false);
         return;
       }
       markVerified({
@@ -104,6 +100,7 @@ export default function VerifyPage() {
       router.push("/onboarding/connect");
     } catch {
       setErro("Falha de conexão. Tente de novo.");
+    } finally {
       setEnviando(false);
     }
   }
@@ -123,14 +120,16 @@ export default function VerifyPage() {
         body: JSON.stringify({ phone }),
       });
       const data = await res.json().catch(() => ({}));
+      if (res.status === 403 || data?.detail === "not_allowlisted") {
+        setErro("Acesso piloto. Peça um convite para entrar agora.");
+        return;
+      }
       if (res.status === 429) {
         setErro("Aguarde um instante antes de pedir outro código.");
-        setReenviando(false);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível reenviar. Tente de novo.");
-        setReenviando(false);
         return;
       }
       setSecondsLeft(RESEND_SECONDS);
@@ -159,7 +158,11 @@ export default function VerifyPage() {
         ) : null}
         .
         {alreadyVerified ? (
-          <> Esta etapa já foi concluída neste navegador. Pode ver de novo ou seguir adiante.</>
+          <>
+            {" "}
+            Esta etapa já foi concluída neste navegador.{" "}
+            <Link href="/onboarding/connect">Seguir para o WhatsApp</Link>.
+          </>
         ) : null}
       </p>
       {!telefone ? (
@@ -168,7 +171,7 @@ export default function VerifyPage() {
         </p>
       ) : null}
       <form className="auth-minimal-form" onSubmit={submit} aria-label="Verificar código">
-        <fieldset className="otp-fieldset" onPaste={onPaste}>
+        <fieldset className="otp-fieldset" onPaste={onPaste} disabled={!telefone}>
           <legend>Seis dígitos do código</legend>
           <div className="otp-row">
             {digits.map((d, i) => (
@@ -183,6 +186,7 @@ export default function VerifyPage() {
                 aria-label={`Dígito ${i + 1} de 6`}
                 maxLength={1}
                 value={d}
+                disabled={!telefone}
                 onChange={(e) => setDigit(i, e.target.value)}
                 onKeyDown={(e) => onKeyDown(i, e)}
               />
@@ -194,11 +198,15 @@ export default function VerifyPage() {
             {erro}
           </p>
         ) : null}
-        <button type="submit" className="btn btn-plum auth-minimal-cta" disabled={enviando}>
+        <button
+          type="submit"
+          className="btn btn-plum auth-minimal-cta"
+          disabled={enviando || !telefone}
+        >
           {enviando ? "Verificando…" : "Verificar e continuar"}
         </button>
         <p className="auth-minimal-back">
-          {secondsLeft > 0 ? (
+          {!telefone ? null : secondsLeft > 0 ? (
             <>Reenviar em {secondsLeft}s</>
           ) : (
             <button type="button" className="link-btn" onClick={resend} disabled={reenviando}>

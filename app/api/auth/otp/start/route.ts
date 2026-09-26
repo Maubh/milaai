@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
-import { proxyMilaAuth } from "@/lib/server/mila-auth";
+import {
+  normalizePhoneE164,
+  proxyMilaAuth,
+  sanitizeStartResponse,
+} from "@/lib/server/mila-auth";
 
 export async function POST(req: Request) {
-  let phone = "";
+  let phoneRaw = "";
   try {
     const body = await req.json();
-    phone = typeof body?.phone === "string" ? body.phone : "";
+    phoneRaw = typeof body?.phone === "string" ? body.phone : "";
   } catch {
     return NextResponse.json({ ok: false, detail: "invalid_body" }, { status: 400 });
   }
-  if (!phone.trim()) {
+  const phone = normalizePhoneE164(phoneRaw);
+  if (!phone) {
     return NextResponse.json({ ok: false, detail: "invalid_phone" }, { status: 400 });
   }
 
@@ -17,5 +22,5 @@ export async function POST(req: Request) {
     method: "POST",
     body: JSON.stringify({ phone }),
   });
-  return NextResponse.json(data, { status });
+  return NextResponse.json(sanitizeStartResponse(data), { status });
 }

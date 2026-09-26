@@ -91,23 +91,21 @@ export default function LoginPage() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 403 || data?.detail === "not_allowlisted") {
         setErro("Acesso piloto. Peça um convite para entrar agora.");
-        setEnviando(false);
         return;
       }
       if (res.status === 429) {
         setErro("Aguarde um instante antes de pedir outro código.");
-        setEnviando(false);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível enviar o código. Tente de novo em instantes.");
-        setEnviando(false);
         return;
       }
       saveTelefone(phone);
       router.push("/login/verify");
     } catch {
       setErro("Falha de conexão. Verifique a internet e tente de novo.");
+    } finally {
       setEnviando(false);
     }
   }

@@ -9,7 +9,7 @@ export default function TermosPage() {
   return (
     <div className="wrap auth-minimal">
       <p className="auth-minimal-back auth-minimal-back-top">
-        <Link href="/login">← Voltar ao login</Link>
+        <Link href="/login">← Voltar</Link>
       </p>
       <h1 className="auth-minimal-title">Termos de Uso</h1>
       <p className="auth-minimal-lede">

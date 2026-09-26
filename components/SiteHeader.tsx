@@ -48,7 +48,7 @@ export default function SiteHeader() {
             Dúvidas
           </Link>
           <Link href="/login" className="site-header-btn">
-            Entrar
+            Começar
           </Link>
         </nav>
         <button
@@ -76,7 +76,7 @@ export default function SiteHeader() {
             Dúvidas
           </Link>
           <Link href="/login" className="site-header-menu-btn" onClick={() => setOpen(false)}>
-            Entrar
+            Começar
           </Link>
         </nav>
       </div>

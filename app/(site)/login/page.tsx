@@ -88,14 +88,13 @@ export default function LoginPage() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Entrar na <span className="mila-highlight">mila</span></h1>
+      <h1 className="auth-minimal-title">Começar com a <span className="mila-highlight">mila</span></h1>
       <p className="auth-minimal-lede">
-        Vamos gerar um código para você entrar na prévia. Ele aparece na próxima tela. Nada é
-        enviado de verdade.
+        Informe o WhatsApp da sua loja para receber o código e ativar sua assistente em 2 minutos.
       </p>
-      <form className="auth-minimal-form" onSubmit={submit} aria-label="Informar celular">
+      <form className="auth-minimal-form" onSubmit={submit} aria-label="Informar WhatsApp">
         <div className="field">
-          <label htmlFor="login-tel">Celular</label>
+          <label htmlFor="login-tel">WhatsApp da sua loja</label>
           <div className="phone-row">
             <div className="country-pick">
               <button
@@ -173,9 +172,9 @@ export default function LoginPage() {
           )}
         </div>
         <p className="auth-consent">
-          Ao clicar em “Continuar para o código”, você concorda com os{" "}
+          Ao clicar em “Continuar para o WhatsApp”, você concorda com os{" "}
           <Link href="/termos">Termos de Uso</Link> e a{" "}
-          <Link href="/privacidade">Política de Privacidade</Link> da mila.
+          <Link href="/privacidade">Política de Privacidade</Link> da <span className="mila-highlight">mila</span>.
         </p>
         {SITE_KEY ? (
           <div className="field">
@@ -203,7 +202,7 @@ export default function LoginPage() {
           className="btn btn-plum auth-minimal-cta"
           disabled={enviando || (!!SITE_KEY && !captchaOk)}
         >
-          {enviando ? "Continuando…" : "Continuar para o código"}
+          {enviando ? "Avançando…" : "Continuar para o WhatsApp"}
         </button>
       </form>
     </div>

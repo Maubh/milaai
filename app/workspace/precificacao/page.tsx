@@ -23,11 +23,11 @@ export default function PrecificacaoPage() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Ferramenta auxiliar · exemplo</p>
+      <p className="tag">Área logada · piloto</p>
       <h1 className="display work-title">Precificação</h1>
       <p className="work-lede">
-        A mesma lógica que a conversa usa, aqui como apoio: escolha a peça, ajuste cada campo e leia a
-        decomposição. Valores de exemplo, calculados localmente.
+        A mesma lógica que a mila. usa no WhatsApp, aqui como apoio: escolha a peça, ajuste cada campo e
+        leia a decomposição. Valores de exemplo, calculados localmente.
       </p>
       <div className="work-actions" role="group" aria-label="Escolher peça de exemplo" style={{ marginBottom: "1.2rem" }}>
         {PECAS.map((p) => (

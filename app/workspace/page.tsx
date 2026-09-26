@@ -5,16 +5,14 @@ import Link from "next/link";
 import LocalQr from "@/components/LocalQr";
 import { CUSTOS_BASE, PECAS } from "@/lib/demo-data";
 import { brl, calculatePrice } from "@/lib/pricing";
-import { getTelefone, getVerifiedWaLink } from "@/lib/onboarding";
+import { getVerifiedWaLink } from "@/lib/onboarding";
 
 export default function WorkspaceHome() {
   const [pecaId, setPecaId] = useState(PECAS[0].id);
   const [custos, setCustos] = useState(CUSTOS_BASE);
-  const [telefone, setTelefone] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);
 
   useEffect(() => {
-    setTelefone(getTelefone());
     setWaLink(getVerifiedWaLink());
   }, []);
 
@@ -38,7 +36,7 @@ export default function WorkspaceHome() {
   return (
     <div className="work-wrap">
       <p className="tag">Área logada · piloto</p>
-      <h1 className="work-title">Olá{telefone ? `, ${telefone}` : ""}</h1>
+      <h1 className="work-title">Olá</h1>
       <p className="work-lede">
         Aqui você vê status, integrações e custos. O dia a dia com a mila. continua no WhatsApp — o
         mesmo contato que te mandou o código.
@@ -53,7 +51,7 @@ export default function WorkspaceHome() {
           <div className="work-actions" style={{ marginTop: "0.85rem" }}>
             <a
               href={waLink}
-              className="btn btn-plum btn-sm"
+              className="btn btn-plum"
               target="_blank"
               rel="noopener noreferrer"
             >

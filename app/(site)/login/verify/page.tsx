@@ -84,18 +84,22 @@ export default function VerifyPage() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 400 && data?.detail === "expired") {
         setErro("Código expirado. Peça um novo.");
+        setEnviando(false);
         return;
       }
       if (res.status === 400 && data?.detail === "mismatch") {
         setErro("Código incorreto. Confira e tente de novo.");
+        setEnviando(false);
         return;
       }
       if (res.status === 429) {
         setErro("Muitas tentativas. Peça um novo código.");
+        setEnviando(false);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível verificar. Tente de novo.");
+        setEnviando(false);
         return;
       }
       markVerified({
@@ -103,9 +107,10 @@ export default function VerifyPage() {
         plan: typeof data?.plan === "string" ? data.plan : undefined,
       });
       router.replace("/workspace");
+      // keep enviando=true until navigate unmounts — evita double-submit
+      return;
     } catch {
       setErro("Falha de conexão. Tente de novo.");
-    } finally {
       setEnviando(false);
     }
   }

@@ -72,7 +72,7 @@ function SimulatorInner() {
             <Link href="/workspace" className="btn btn-plum btn-sm">
               Ajustar custos no workspace
             </Link>
-            <Link href="/login/verify" className="btn btn-ghost btn-sm">
+            <Link href="/login" className="btn btn-ghost btn-sm">
               Voltar ao login
             </Link>
           </div>

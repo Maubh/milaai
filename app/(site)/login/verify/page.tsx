@@ -18,6 +18,7 @@ export default function VerifyPage() {
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
   const [telefone, setTelefone] = useState("");
+  const [checking, setChecking] = useState(true);
   const [done, setDone] = useState(false);
   const [waLink, setWaLink] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
@@ -31,6 +32,7 @@ export default function VerifyPage() {
       setDone(true);
       setWaLink(getVerifiedWaLink());
     }
+    setChecking(false);
   }, []);
 
   useEffect(() => {
@@ -150,6 +152,14 @@ export default function VerifyPage() {
     } finally {
       setReenviando(false);
     }
+  }
+
+  if (checking) {
+    return (
+      <div className="wrap auth-minimal">
+        <p className="auth-minimal-lede" role="status">Carregando…</p>
+      </div>
+    );
   }
 
   if (done && waLink) {

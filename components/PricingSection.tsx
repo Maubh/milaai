@@ -16,6 +16,7 @@ interface PlanItem {
   badge?: string;
 }
 
+/** VIP/Escala fora da oferta atual. */
 const PLANS: PlanItem[] = [
   {
     id: "essencial",
@@ -30,6 +31,8 @@ const PLANS: PlanItem[] = [
       "Descrições Técnicas Prontas para Loja Virtual",
       "Caderno de Fornecedores Validados no WhatsApp",
       "Leitor de Notas Fiscais de Compra (XML e PDF)",
+      "Google Workspace (Sheets, Docs e Drive)",
+      "Notion (catálogo e diretrizes de marca)",
     ],
     ctaLabel: "Começar no Essencial",
     ctaHref: "/login",
@@ -48,29 +51,11 @@ const PLANS: PlanItem[] = [
       "Balanço Mensal de Compras e Projeção de Faturamento no WhatsApp",
       "Alertas Ativos de Carência de Fornecedores (aviso antes de perder pedido sem mínimo)",
       "Integração Direta Jueri, Bling e Olist (entrada de notas e estoque)",
-      "Sincronização opcional com Google Sheets e Notion",
       "Suíte Completa de Marketing para Instagram (9 ferramentas)",
     ],
     ctaLabel: "Assinar o Pro",
     ctaHref: "/login",
     featured: true,
-  },
-  {
-    id: "escala",
-    name: "Escala",
-    tagline: "Escala",
-    price: "119",
-    period: "/mês",
-    description: "Para operações consolidadas com múltiplas lojas",
-    features: [
-      "Tudo do Pro",
-      "Múltiplos CNPJs e Lojas Conectadas",
-      "Alerta Inteligente de Giro de Estoque Encalhado",
-      "Consultoria Proativa para Datas Comerciais (Mães, Namorados, Black Friday)",
-    ],
-    ctaLabel: "Falar com o Escala",
-    ctaHref: "/login",
-    featured: false,
   },
 ];
 
@@ -88,7 +73,7 @@ export default function PricingSection() {
           </p>
         </div>
 
-        <div className="pricing-grid">
+        <div className="pricing-grid pricing-grid-2">
           {PLANS.map((plan) => (
             <article
               key={plan.id}

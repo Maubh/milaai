@@ -19,7 +19,7 @@
 }
 .site-header .brand {
   font-family: var(--display);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.5rem;
   letter-spacing: -0.01em;
 }
@@ -54,7 +54,7 @@
 .formula {
   margin-top: 1.1rem;
   font-size: 0.85rem;
-  color: rgba(39,35,38,0.72);
+  color: rgba(30, 43, 40,0.72);
   border-top: 1px solid var(--line);
   padding-top: 0.9rem;
 }
@@ -66,7 +66,7 @@
 .calc-bar-row span:last-child { flex-shrink: 0; }
 .calc-bar-track { height: 6px; background: var(--blush); border-radius: 999px; overflow: hidden; }
 .calc-bar-track span { display: block; height: 100%; background: var(--wine); border-radius: 999px; }
-.calc-note { margin-top: 1.1rem; font-size: 0.88rem; color: rgba(39,35,38,0.75); }
+.calc-note { margin-top: 1.1rem; font-size: 0.88rem; color: rgba(30, 43, 40,0.75); }
 .calc-error {
   background: #f9e9eb;
   border: 1px solid #d9a3ab;
@@ -158,7 +158,7 @@
   min-width: 0;
 }
 .routine-list li:last-child { border-bottom: 1px solid var(--line-light); }
-.routine-n { font-family: var(--display); font-weight: 800; font-size: 1.4rem; color: var(--sand); }
+.routine-n { font-family: var(--display); font-weight: 700; font-size: 1.4rem; color: var(--sand); }
 .routine-list h3 { font-size: 1.08rem; margin-bottom: 0.25rem; }
 .routine-list p { color: rgba(252,250,246,0.8); font-size: 0.95rem; max-width: 62ch; }
 .module-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
@@ -186,16 +186,16 @@
 .plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; min-width: 0; }
 .plan { padding: 1.6rem; display: flex; flex-direction: column; gap: 0.6rem; min-width: 0; }
 .plan h3 { font-size: 1.25rem; }
-.plan .price { font-family: var(--display); font-weight: 800; font-size: 2rem; }
+.plan .price { font-family: var(--display); font-weight: 700; font-size: 2rem; }
 .plan ul { margin: 0.4rem 0 1rem; padding-left: 1.1rem; display: grid; gap: 0.35rem; font-size: 0.93rem; }
 .plan .btn { margin-top: auto; }
-.plans-note { margin-top: 1.2rem; font-size: 0.88rem; color: rgba(39,35,38,0.72); }
+.plans-note { margin-top: 1.2rem; font-size: 0.88rem; color: rgba(30, 43, 40,0.72); }
 
 /* FAQ */
 .faq { display: grid; gap: 0.7rem; max-width: 46rem; }
 .faq details { background: var(--warm-white); border: 1px solid var(--line); border-radius: 12px; padding: 0.4rem 1rem; }
 .faq summary { cursor: pointer; font-weight: 650; padding: 0.7rem 0; min-height: 48px; }
-.faq details p { padding-bottom: 0.9rem; font-size: 0.95rem; color: rgba(39,35,38,0.82); }
+.faq details p { padding-bottom: 0.9rem; font-size: 0.95rem; color: rgba(30, 43, 40,0.82); }
 
 /* Footer */
 .site-footer { background: var(--plum); color: var(--warm-white); padding: 3rem 0 1.5rem; }
@@ -262,14 +262,14 @@
   padding: 0.85rem 1.9rem;
   border-radius: 999px;
   text-decoration: none;
-  box-shadow: 0 4px 18px rgba(36, 25, 31, 0.2);
+  box-shadow: 0 4px 18px rgba(23, 63, 59, 0.2);
   transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 .minimal-cta:hover {
   background: var(--wine);
   color: var(--warm-white);
   transform: translateY(-1px);
-  box-shadow: 0 8px 24px rgba(36, 25, 31, 0.28);
+  box-shadow: 0 8px 24px rgba(23, 63, 59, 0.28);
 }
 .minimal-cta:active {
   transform: translateY(1px);
@@ -284,7 +284,7 @@
   position: relative;
   width: min(100%, 17rem);
   aspect-ratio: 433 / 882;
-  filter: drop-shadow(0 30px 44px rgba(36, 25, 31, 0.28));
+  filter: drop-shadow(0 30px 44px rgba(23, 63, 59, 0.28));
 }
 .iphone15-frame { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .iphone15-screen {
@@ -325,7 +325,7 @@
   border-radius: 50%;
   background: var(--sand);
   color: var(--mineral);
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.9rem;
   display: inline-flex;
   align-items: center;
@@ -471,7 +471,7 @@
 }
 .gx-raiox-badge strong {
   color: #7ee2a8;
-  font-weight: 800;
+  font-weight: 700;
 }
 .gx-raiox-sub {
   display: block;
@@ -527,7 +527,7 @@
   border-radius: 5px;
   background: rgba(126, 226, 168, 0.12);
   color: #7ee2a8 !important;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.67rem;
 }
 .gx-raiox-market {
@@ -573,10 +573,10 @@
 /* Minimal auth: same vertical space as home grid; shifted up to match home copy start */
 .wrap.auth-minimal { width: min(35rem, 100% - 2.5rem); margin-inline: auto; min-height: calc(100svh - 220px); display: flex; flex-direction: column; justify-content: center; padding: clamp(1.5rem, 4vh, 3rem) 0; transform: translateY(-31px); }
 .auth-minimal-title { font-family: var(--display); font-weight: 700; letter-spacing: -0.01em; font-size: clamp(1.7rem, 3.4vw, 2.3rem); margin: 0 0 0.7rem; line-height: 1.15; }
-.auth-minimal-lede { color: rgba(39,35,38,0.78); margin-bottom: 1.6rem; }
+.auth-minimal-lede { color: rgba(30, 43, 40,0.78); margin-bottom: 1.6rem; }
 .auth-minimal-form { display: grid; gap: 1.1rem; }
 .auth-minimal-cta { width: 100%; }
-.auth-minimal-back { font-size: 0.9rem; margin-top: 1.4rem; color: rgba(39,35,38,0.72); }
+.auth-minimal-back { font-size: 0.9rem; margin-top: 1.4rem; color: rgba(30, 43, 40,0.72); }
 .auth-minimal-back a { color: var(--wine); font-weight: 650; }
 .handoff-card { display: grid; gap: 0.85rem; justify-items: stretch; max-width: 22rem; }
 .handoff-card .hint { margin: 0; font-size: 0.82rem; color: rgba(30, 43, 40, 0.68); }
@@ -638,7 +638,7 @@
 .pricing-title {
   font-family: var(--display);
   font-size: clamp(2rem, 3.8vw, 2.9rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.02em;
   color: var(--plum);
@@ -670,17 +670,17 @@
 .pricing-card:hover {
   border-color: rgba(30, 43, 40, 0.24);
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px -18px rgba(36, 25, 31, 0.1);
+  box-shadow: 0 16px 36px -18px rgba(23, 63, 59, 0.1);
 }
 .pricing-card-featured {
   border-color: var(--wine);
   border-width: 1.5px;
-  background: #fffdf9;
-  box-shadow: 0 20px 48px -20px rgba(77, 31, 45, 0.18);
+  background: var(--ivory);
+  box-shadow: 0 20px 48px -20px rgba(23, 63, 59, 0.18);
 }
 .pricing-card-featured:hover {
   border-color: var(--wine);
-  box-shadow: 0 24px 56px -20px rgba(77, 31, 45, 0.26);
+  box-shadow: 0 24px 56px -20px rgba(23, 63, 59, 0.26);
 }
 .pricing-card-badge-wrap {
   position: absolute;
@@ -690,14 +690,14 @@
 }
 .pricing-card-badge {
   font-size: 0.72rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.3rem 0.9rem;
   border-radius: 999px;
   background: var(--wine);
   color: var(--warm-white);
-  box-shadow: 0 4px 12px rgba(77, 31, 45, 0.25);
+  box-shadow: 0 4px 12px rgba(23, 63, 59, 0.25);
   white-space: nowrap;
 }
 .pricing-card-top {
@@ -732,7 +732,7 @@
 .pricing-amount {
   font-family: var(--display);
   font-size: 2.6rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1;
   color: var(--plum);
   letter-spacing: -0.02em;
@@ -837,7 +837,7 @@
 .faq-title {
   font-family: var(--display);
   font-size: clamp(1.8rem, 3.2vw, 2.4rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.015em;
   color: var(--plum);
@@ -861,8 +861,8 @@
   border-color: rgba(30, 43, 40, 0.2);
 }
 .faq-item[open] {
-  border-color: rgba(77, 31, 45, 0.25);
-  box-shadow: 0 4px 16px -8px rgba(36, 25, 31, 0.08);
+  border-color: rgba(23, 63, 59, 0.25);
+  box-shadow: 0 4px 16px -8px rgba(23, 63, 59, 0.08);
 }
 .faq-summary {
   display: flex;

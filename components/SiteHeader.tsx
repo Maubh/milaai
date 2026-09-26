@@ -39,7 +39,7 @@ export default function SiteHeader() {
     <header className="site-header site-header-minimal">
       <div className="wrap site-header-inner">
         <Link href="/" className="brand brand-small" aria-label="mila.ai — início">
-          <BrandLogo height={24} />
+          <BrandLogo height={24} alt="" />
         </Link>
         <nav className="site-header-nav" aria-label="Navegação principal">
           <Link href="#planos" className="site-header-link">

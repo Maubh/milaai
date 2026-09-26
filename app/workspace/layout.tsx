@@ -53,8 +53,8 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
   return (
     <div className="work-shell">
       <aside className="work-side" aria-label="Navegação do workspace">
-        <p className="brand">
-          <BrandLogo height={26} />
+        <p className="brand" aria-label="mila.ai">
+          <BrandLogo height={26} alt="" />
         </p>
         <p className="work-hello">
           WhatsApp <strong className="num">{telefone}</strong>

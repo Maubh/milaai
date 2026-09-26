@@ -51,6 +51,6 @@ export const INTEGRACOES = [
   { nome: "Jueri", desc: "Gestão especializada de joias e semijoias, consignados, estoque e custos.", estado: "Disponível em breve" },
   { nome: "Bling", desc: "Trazer notas, estoque e custos sem digitar tudo de novo.", estado: "Disponível em breve" },
   { nome: "Olist", desc: "Mesma ideia: estoque e custos organizados por peça.", estado: "Disponível em breve" },
-  { nome: "Google", desc: "Gmail, Calendar, Tasks, Drive, Docs, Sheets e Slides — lado a lado com o preço.", estado: "Previsto" },
+  { nome: "Google", desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — lado a lado com o preço.", estado: "Previsto" },
   { nome: "Notion", desc: "Catálogo e diretrizes de marca num só lugar.", estado: "Previsto" },
 ];

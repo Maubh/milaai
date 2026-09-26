@@ -31,7 +31,7 @@ const PLANS: PlanItem[] = [
       "Descrições Técnicas Prontas para Loja Virtual",
       "Caderno de Fornecedores Validados no WhatsApp",
       "Leitor de Notas Fiscais de Compra (XML e PDF)",
-      "Google Workspace (Gmail, Calendar, Tasks, Drive, Docs, Sheets e Slides)",
+      "Google Workspace (Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações)",
       "Notion (catálogo e diretrizes de marca)",
     ],
     ctaLabel: "Começar no Essencial",

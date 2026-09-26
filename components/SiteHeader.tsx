@@ -37,8 +37,8 @@ export default function SiteHeader() {
   return (
     <header className="site-header site-header-minimal">
       <div className="wrap site-header-inner">
-        <Link href="/" className="brand brand-small" aria-label="mila. — início">
-          mila<span className="brand-dot" aria-hidden="true">.</span>
+        <Link href="/" className="brand brand-small" aria-label="mila.ai — início">
+          mila<span className="brand-dot" aria-hidden="true">.ai</span>
         </Link>
         <nav className="site-header-nav" aria-label="Navegação principal">
           <Link href="#planos" className="site-header-link">

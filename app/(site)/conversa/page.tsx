@@ -38,7 +38,7 @@ function SimulatorInner() {
   return (
     <div className="wrap conversa-wrap">
       <p className="tag">Simulação da conversa · nenhuma mensagem enviada</p>
-      <h1 className="conversa-title">Conversa simulada com a mila.</h1>
+      <h1 className="conversa-title">Conversa simulada com a mila</h1>
       <p className="conversa-lede">
         Escolha uma pergunta do roteiro e leia a resposta com dados de exemplo. O Raio-X do Preço aparece
         dentro da conversa: custo, taxa, embalagem, rateio e margem explicados por mensagem.

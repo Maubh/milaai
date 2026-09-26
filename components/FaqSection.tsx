@@ -9,12 +9,12 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Preciso instalar algum aplicativo no computador ou celular?",
     answer:
-      "Não. A mila. funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.",
+      "Não. A mila funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.",
   },
   {
     question: "Estou começando agora e ainda não tenho Instagram nem site. Serve para mim?",
     answer:
-      "Com certeza! A mila. te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.",
+      "Com certeza! A mila te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.",
   },
   {
     question: "A descrição serve para qual plataforma de e-commerce?",
@@ -24,7 +24,7 @@ const FAQ_ITEMS: FaqItem[] = [
   {
     question: "Como funciona o caderno de fornecedores e o alerta de carência?",
     answer:
-      "Você registra seus fornecedores no chat e a mila. te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.",
+      "Você registra seus fornecedores no chat e a mila te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.",
   },
   {
     question: "Preciso cadastrar cartão de crédito para começar?",

@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Interface do WhatsApp da mila.
+ * Interface do WhatsApp da mila
  * Demonstração e-commerce: argola frontal cravejada com Raio-X de Custos,
  * descrição pronta pro site e legenda pro Instagram, em mensagens animadas.
  */
@@ -119,7 +119,7 @@ export default function IPhoneMockup() {
         <div
           className="iphone15"
           role="img"
-          aria-label="Demonstração da mila. no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de Custos Transparente, descrição pronta para o e-commerce e legenda para o Instagram."
+          aria-label="Demonstração da mila no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de Custos Transparente, descrição pronta para o e-commerce e legenda para o Instagram."
         >
           <svg
             className="iphone15-frame"
@@ -183,7 +183,7 @@ export default function IPhoneMockup() {
               </svg>
               <span className="gx-avatar">m</span>
               <span className="gx-id">
-                <strong>mila. ✨</strong>
+                <strong>mila ✨</strong>
                 <small>sua assistente de negócios</small>
               </span>
               <span className="gx-actions">
@@ -362,7 +362,7 @@ export default function IPhoneMockup() {
           </div>
         </div>
         <figcaption className="iphone-caption">
-          mila. no WhatsApp · Inteligência comercial em tempo real
+          mila no WhatsApp · Inteligência comercial em tempo real
         </figcaption>
       </figure>
     </MotionConfig>

@@ -98,7 +98,7 @@ function BrandGroup({ hidden = false }: { hidden?: boolean }) {
 export default function IntegrationsMarquee() {
   return (
     <section className="marquee-section" aria-label="Integrações demonstrativas">
-      <div className="marquee-viewport" tabIndex={0} aria-label="Marcas integradas à mila.">
+      <div className="marquee-viewport" tabIndex={0} aria-label="Marcas integradas à mila">
         <div className="marquee-track">
           <BrandGroup />
           <BrandGroup hidden />

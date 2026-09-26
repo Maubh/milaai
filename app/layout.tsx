@@ -3,10 +3,10 @@ import "./globals.css";
 import "./site.css";
 
 export const metadata: Metadata = {
-  title: "mila. — A inteligência por trás da sua loja de semijoias",
+  title: "mila.ai — A inteligência por trás da sua loja de semijoias",
   description:
-    "Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
-  metadataBase: new URL("https://milaai.example"),
+    "Tenha a mila no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
+  metadataBase: new URL("https://milaai.com.br"),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

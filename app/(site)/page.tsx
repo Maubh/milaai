@@ -27,19 +27,19 @@ export default function LandingPage() {
   return (
     <div ref={root} className="minimal">
       {/* Hero com a cópia e o mockup de alta fidelidade */}
-      <section className="wrap minimal-grid" aria-label="Apresentação da mila.">
+      <section className="wrap minimal-grid" aria-label="Apresentação da mila">
         <div className="minimal-copy">
           <h1 className="minimal-anim minimal-title">
             A inteligência por trás da sua loja de semijoias.
           </h1>
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">
-              Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para
+              Tenha a <span className="mila-highlight">mila</span> no seu WhatsApp. Precificação com margem real, descrições prontas para
               e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.
             </p>
             <p className="minimal-cta-row">
               <Link href="/login" className="minimal-cta">
-                Começar com a mila. <span aria-hidden="true">→</span>
+                Começar com a mila <span aria-hidden="true">→</span>
               </Link>
             </p>
             <p className="minimal-micro">

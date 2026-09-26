@@ -115,7 +115,7 @@ export default function LoginPage() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Entrar na mila.</h1>
+      <h1 className="auth-minimal-title">Entrar na <span className="mila-highlight">mila</span></h1>
       <p className="auth-minimal-lede">
         Digite seu WhatsApp. Vamos enviar um código de 6 dígitos pra você entrar.
       </p>

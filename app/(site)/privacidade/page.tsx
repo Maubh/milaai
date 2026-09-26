@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Política de Privacidade — mila.",
+  title: "Política de Privacidade — mila",
   description: "Política de Privacidade da prévia interativa da mila.",
 };
 

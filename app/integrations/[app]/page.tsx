@@ -92,11 +92,11 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     <div className="wrap auth-wrap">
       <div className="auth-grid">
         <div>
-          <p className="tag">Conector Oficial · mila.</p>
+          <p className="tag">Conector Oficial · mila.ai</p>
           <h1 className="auth-title">{info.title}</h1>
           <p className="auth-lede">{info.desc}</p>
           <p className="hint">
-            Integração segura com a mila. Seus dados permanecem criptografados e protegidos.
+            Integração segura com a <span className="mila-highlight">mila</span>. Seus dados permanecem criptografados e protegidos.
           </p>
         </div>
 
@@ -108,7 +108,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </div>
               <h2 className="integration-success-title">Conectado com sucesso!</h2>
               <p className="integration-success-text">
-                Pronto! Conexão realizada com sucesso. Pode voltar para sua conversa com a mila. no WhatsApp.
+                Pronto! Conexão realizada com sucesso. Pode voltar para sua conversa com a <span className="mila-highlight">mila</span> no WhatsApp.
               </p>
               <Link href="/conversa" className="btn btn-whatsapp" style={{ width: "100%", textDecoration: "none" }}>
                 Voltar para o WhatsApp
@@ -163,7 +163,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                   disabled={connecting}
                   style={{ width: "100%" }}
                 >
-                  {connecting ? "Testando conexão…" : "Conectar com a mila."}
+                  {connecting ? "Testando conexão…" : "Conectar com a mila"}
                 </button>
                 <Link
                   href="/workspace/integracoes"
@@ -187,7 +187,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </div>
 
               <p style={{ fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.25rem" }}>
-                Autorize a <strong>mila.</strong> a sincronizar pedidos, notas fiscais e estoque da sua conta {info.nome}.
+                Autorize a <strong className="mila-highlight">mila</strong> a sincronizar pedidos, notas fiscais e estoque da sua conta {info.nome}.
               </p>
 
               <div style={{ display: "grid", gap: "0.75rem" }}>
@@ -197,7 +197,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                   disabled={connecting}
                   style={{ width: "100%" }}
                 >
-                  {connecting ? "Conectando…" : "Conectar com a mila."}
+                  {connecting ? "Conectando…" : "Conectar com a mila"}
                 </button>
                 <Link
                   href="/workspace/integracoes"

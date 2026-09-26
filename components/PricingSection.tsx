@@ -81,7 +81,7 @@ export default function PricingSection() {
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>
           <h2 className="pricing-title">
-            Tenha a mila. pelo valor de uma única peça.
+            Tenha a <span className="mila-highlight">mila</span> pelo valor de uma única peça.
           </h2>
           <p className="pricing-subtitle">
             Sem fidelidade ou custos ocultos. Ativação direta no seu WhatsApp em menos de 2 minutos.

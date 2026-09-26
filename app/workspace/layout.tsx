@@ -47,7 +47,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
     <div className="work-shell">
       <aside className="work-side" aria-label="Navegação do workspace">
         <p className="brand">
-          mila<span className="brand-dot">.</span>
+          mila<span className="brand-dot">.ai</span>
         </p>
         <p className="work-hello">
           Número simulado <strong className="num">{telefone}</strong>

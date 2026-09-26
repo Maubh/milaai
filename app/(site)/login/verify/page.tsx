@@ -2,25 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import LocalQr from "@/components/LocalQr";
-import {
-  getTelefone,
-  getVerifiedWaLink,
-  isVerified,
-  markVerified,
-} from "@/lib/onboarding";
+import { useRouter } from "next/navigation";
+import { getTelefone, isVerified, markVerified } from "@/lib/onboarding";
 import "../auth.css";
 
 const CODE_LEN = 6;
 const RESEND_SECONDS = 30;
 
 export default function VerifyPage() {
+  const router = useRouter();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
   const [telefone, setTelefone] = useState("");
   const [checking, setChecking] = useState(true);
-  const [done, setDone] = useState(false);
-  const [waLink, setWaLink] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [enviando, setEnviando] = useState(false);
   const [reenviando, setReenviando] = useState(false);
@@ -29,17 +23,17 @@ export default function VerifyPage() {
   useEffect(() => {
     setTelefone(getTelefone());
     if (isVerified()) {
-      setDone(true);
-      setWaLink(getVerifiedWaLink());
+      router.replace("/workspace");
+      return;
     }
     setChecking(false);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
-    if (done || secondsLeft <= 0) return;
+    if (secondsLeft <= 0) return;
     const id = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearTimeout(id);
-  }, [secondsLeft, done]);
+  }, [secondsLeft]);
 
   function setDigit(index: number, raw: string) {
     const d = raw.replace(/\D/g, "").slice(-1);
@@ -90,29 +84,33 @@ export default function VerifyPage() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 400 && data?.detail === "expired") {
         setErro("Código expirado. Peça um novo.");
+        setEnviando(false);
         return;
       }
       if (res.status === 400 && data?.detail === "mismatch") {
         setErro("Código incorreto. Confira e tente de novo.");
+        setEnviando(false);
         return;
       }
       if (res.status === 429) {
         setErro("Muitas tentativas. Peça um novo código.");
+        setEnviando(false);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível verificar. Tente de novo.");
+        setEnviando(false);
         return;
       }
       markVerified({
         waLink: typeof data?.wa_link === "string" ? data.wa_link : undefined,
         plan: typeof data?.plan === "string" ? data.plan : undefined,
       });
-      setWaLink(getVerifiedWaLink());
-      setDone(true);
+      router.replace("/workspace");
+      // keep enviando=true until navigate unmounts — evita double-submit
+      return;
     } catch {
       setErro("Falha de conexão. Tente de novo.");
-    } finally {
       setEnviando(false);
     }
   }
@@ -157,50 +155,9 @@ export default function VerifyPage() {
   if (checking) {
     return (
       <div className="wrap auth-minimal">
-        <p className="auth-minimal-lede" role="status">Carregando…</p>
-      </div>
-    );
-  }
-
-  if (done && waLink) {
-    return (
-      <div className="wrap auth-minimal">
-        <p className="auth-minimal-back auth-minimal-back-top">
-          <Link href="/login">← Trocar número</Link>
+        <p className="auth-minimal-lede" role="status">
+          Carregando…
         </p>
-        <h1 className="auth-minimal-title">Pronto ✅</h1>
-        <p className="auth-minimal-lede">
-          É o mesmo contato que te mandou o código
-          {telefone ? (
-            <>
-              {" "}
-              em <strong className="num">{telefone}</strong>
-            </>
-          ) : null}
-          . Toque abaixo pra continuar a conversa com a mila.
-        </p>
-
-        <div className="handoff-card">
-          <a
-            href={waLink}
-            className="btn btn-plum auth-minimal-cta"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Abrir WhatsApp
-          </a>
-          <p className="hint">Mensagem pronta: “Oi, mila.”</p>
-
-          <div className="handoff-qr">
-            <LocalQr
-              className="qr-concept"
-              value={waLink}
-              size={180}
-              alt="QR Code para abrir a conversa com a mila. no WhatsApp"
-            />
-            <p className="hint">No computador: escaneie com o celular</p>
-          </div>
-        </div>
       </div>
     );
   }
@@ -259,7 +216,7 @@ export default function VerifyPage() {
           className="btn btn-plum auth-minimal-cta"
           disabled={enviando || !telefone}
         >
-          {enviando ? "Verificando…" : "Verificar"}
+          {enviando ? "Verificando…" : "Verificar e entrar"}
         </button>
         <p className="auth-minimal-back">
           {!telefone ? null : secondsLeft > 0 ? (

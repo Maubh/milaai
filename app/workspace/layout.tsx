@@ -3,7 +3,12 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { clearOnboarding, getTelefone, isVerified as isVerifiedPhone } from "@/lib/onboarding";
+import {
+  clearOnboarding,
+  getTelefone,
+  getVerifiedWaLink,
+  isVerified as isVerifiedPhone,
+} from "@/lib/onboarding";
 import "./workspace.css";
 
 const LINKS = [
@@ -11,13 +16,13 @@ const LINKS = [
   { href: "/workspace/precificacao", label: "Precificação" },
   { href: "/workspace/conteudo", label: "Conteúdo" },
   { href: "/workspace/integracoes", label: "Integrações" },
-  { href: "/conversa", label: "Conversa" },
 ];
 
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
   const [telefone, setTelefone] = useState<string | null>(null);
+  const [waLink, setWaLink] = useState<string | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -27,6 +32,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
       return;
     }
     setTelefone(t);
+    setWaLink(getVerifiedWaLink());
     setReady(true);
   }, [router]);
 
@@ -38,7 +44,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
   if (!ready) {
     return (
       <div className="wrap work-wrap">
-        <p>Carregando demonstração…</p>
+        <p>Carregando…</p>
       </div>
     );
   }
@@ -50,25 +56,37 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           mila<span className="brand-dot">.ai</span>
         </p>
         <p className="work-hello">
-          Número simulado <strong className="num">{telefone}</strong>
-          <span>Workspace de apoio · simulação</span>
+          WhatsApp <strong className="num">{telefone}</strong>
+          <span>Sua área · piloto</span>
         </p>
         <nav>
           {LINKS.map((l) => {
             const active = pathname === l.href;
             return (
-              <Link key={l.href} href={l.href} aria-current={active ? "page" : undefined} className={active ? "active" : ""}>
+              <Link
+                key={l.href}
+                href={l.href}
+                aria-current={active ? "page" : undefined}
+                className={active ? "active" : ""}
+              >
                 {l.label}
               </Link>
             );
           })}
         </nav>
         <div className="work-side-foot">
-          <Link href="/conversa" className="btn btn-plum btn-sm">
-            Continuar conversa simulada
-          </Link>
+          {waLink ? (
+            <a
+              href={waLink}
+              className="btn btn-plum btn-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Abrir WhatsApp
+            </a>
+          ) : null}
           <button type="button" className="btn btn-ghost btn-sm" onClick={sair}>
-            Sair da simulação
+            Sair
           </button>
           <Link href="/" className="work-back">
             ← Voltar à landing

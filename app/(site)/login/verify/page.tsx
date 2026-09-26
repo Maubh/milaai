@@ -2,19 +2,24 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { getTelefone, isVerified, markVerified } from "@/lib/onboarding";
+import LocalQr from "@/components/LocalQr";
+import {
+  getTelefone,
+  getVerifiedWaLink,
+  isVerified,
+  markVerified,
+} from "@/lib/onboarding";
 import "../auth.css";
 
 const CODE_LEN = 6;
 const RESEND_SECONDS = 30;
 
 export default function VerifyPage() {
-  const router = useRouter();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
   const [telefone, setTelefone] = useState("");
-  const [alreadyVerified] = useState(() => isVerified());
+  const [done, setDone] = useState(false);
+  const [waLink, setWaLink] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [enviando, setEnviando] = useState(false);
   const [reenviando, setReenviando] = useState(false);
@@ -22,13 +27,17 @@ export default function VerifyPage() {
 
   useEffect(() => {
     setTelefone(getTelefone());
+    if (isVerified()) {
+      setDone(true);
+      setWaLink(getVerifiedWaLink());
+    }
   }, []);
 
   useEffect(() => {
-    if (secondsLeft <= 0) return;
+    if (done || secondsLeft <= 0) return;
     const id = setTimeout(() => setSecondsLeft((s) => s - 1), 1000);
     return () => clearTimeout(id);
-  }, [secondsLeft]);
+  }, [secondsLeft, done]);
 
   function setDigit(index: number, raw: string) {
     const d = raw.replace(/\D/g, "").slice(-1);
@@ -97,7 +106,8 @@ export default function VerifyPage() {
         waLink: typeof data?.wa_link === "string" ? data.wa_link : undefined,
         plan: typeof data?.plan === "string" ? data.plan : undefined,
       });
-      router.push("/onboarding/connect");
+      setWaLink(getVerifiedWaLink());
+      setDone(true);
     } catch {
       setErro("Falha de conexão. Tente de novo.");
     } finally {
@@ -142,6 +152,49 @@ export default function VerifyPage() {
     }
   }
 
+  if (done && waLink) {
+    return (
+      <div className="wrap auth-minimal">
+        <p className="auth-minimal-back auth-minimal-back-top">
+          <Link href="/login">← Trocar número</Link>
+        </p>
+        <h1 className="auth-minimal-title">Pronto ✅</h1>
+        <p className="auth-minimal-lede">
+          É o mesmo contato que te mandou o código
+          {telefone ? (
+            <>
+              {" "}
+              em <strong className="num">{telefone}</strong>
+            </>
+          ) : null}
+          . Toque abaixo pra continuar a conversa com a mila.
+        </p>
+
+        <div className="handoff-card">
+          <a
+            href={waLink}
+            className="btn btn-plum auth-minimal-cta"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Abrir WhatsApp
+          </a>
+          <p className="hint">Mensagem pronta: “Oi, mila.”</p>
+
+          <div className="handoff-qr">
+            <LocalQr
+              className="qr-concept"
+              value={waLink}
+              size={180}
+              alt="QR Code para abrir a conversa com a mila. no WhatsApp"
+            />
+            <p className="hint">No computador: escaneie com o celular</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="wrap auth-minimal">
       <p className="auth-minimal-back auth-minimal-back-top">
@@ -157,13 +210,6 @@ export default function VerifyPage() {
           </>
         ) : null}
         .
-        {alreadyVerified ? (
-          <>
-            {" "}
-            Esta etapa já foi concluída neste navegador.{" "}
-            <Link href="/onboarding/connect">Seguir para o WhatsApp</Link>.
-          </>
-        ) : null}
       </p>
       {!telefone ? (
         <p className="auth-prereq" role="note">
@@ -203,7 +249,7 @@ export default function VerifyPage() {
           className="btn btn-plum auth-minimal-cta"
           disabled={enviando || !telefone}
         >
-          {enviando ? "Verificando…" : "Verificar e continuar"}
+          {enviando ? "Verificando…" : "Verificar"}
         </button>
         <p className="auth-minimal-back">
           {!telefone ? null : secondsLeft > 0 ? (

@@ -657,6 +657,11 @@
   gap: 1.5rem;
   align-items: stretch;
 }
+.pricing-grid-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 52rem;
+  margin-inline: auto;
+}
 .pricing-card {
   position: relative;
   background: var(--warm-white);
@@ -1069,9 +1074,10 @@
   .calc, .conversa-grid { grid-template-columns: minmax(0, 1fr); }
   .prompt-list { position: static; }
   .site-header-minimal .site-header-inner { justify-content: space-between; }
-  .pricing-grid {
+  .pricing-grid,
+  .pricing-grid-2 {
     grid-template-columns: minmax(0, 1fr);
     max-width: 32rem;
-    margin: 0 auto;
+    margin-inline: auto;
   }
 }

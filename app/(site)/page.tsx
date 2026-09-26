@@ -30,7 +30,7 @@ export default function LandingPage() {
       <section className="wrap minimal-grid" aria-label="Apresentação da mila">
         <div className="minimal-copy">
           <h1 className="minimal-anim minimal-title">
-            A inteligência por trás da sua loja de semijoias.
+            A inteligência por trás da sua loja de joias ou semijoias.
           </h1>
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">

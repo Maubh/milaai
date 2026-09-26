@@ -15,7 +15,7 @@ interface IntegrationConfig {
 const KNOWN: Record<string, IntegrationConfig> = {
   jueri: {
     nome: "Jueri",
-    title: "Conectar Jueri Semijoias",
+    title: "Conectar Jueri",
     desc: "Sincronize seu estoque, tabelas de atacado/varejo e maletas de consignado com a mila.",
     logo: "/integrations/jueri.png",
     isApiKeyGuided: true,

@@ -92,7 +92,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     <div className="wrap auth-wrap">
       <div className="auth-grid">
         <div>
-          <p className="tag">Conector Oficial · mila.ai</p>
+          <p className="tag">Conector oficial · mila.ai</p>
           <h1 className="auth-title">{info.title}</h1>
           <p className="auth-lede">{info.desc}</p>
           <p className="hint">
@@ -183,7 +183,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 ) : (
                   <span style={{ fontWeight: 700 }}>{info.nome}</span>
                 )}
-                <span className="integration-badge-tag">OAuth Seguro</span>
+                <span className="integration-badge-tag">OAuth seguro</span>
               </div>
 
               <p style={{ fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.25rem" }}>

@@ -261,9 +261,9 @@ export default function IPhoneMockup() {
                         </div>
 
                         <div className="gx-raiox-commerce">
-                          <div className="gx-raiox-title">🛍️ Descrição Pronta para seu E-commerce:</div>
+                          <div className="gx-raiox-title">🛍️ Descrição pronta para seu e-commerce:</div>
                           <p className="gx-raiox-commerce-text">
-                            Argola Frontal Cravejada em Zircônias (Banho Ouro 18k). Design frontal
+                            Argola frontal cravejada em zircônias (banho ouro 18k). Design frontal
                             anatômico que valoriza o visual, cravação delicada com microzircônias
                             cristal e fecho de encaixe seguro. Hipoalergênica, níquel-free e com
                             verniz protetor de alta durabilidade. Perfeita para protagonizar o

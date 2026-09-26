@@ -16,8 +16,6 @@ const BASE = defaultInputs();
 const RAIO = calculatePrice(BASE);
 const CUSTO_DIRETO = BASE.custoPeca + BASE.embalagem + BASE.rateio;
 
-export const TEST_CODE = "123456";
-
 const RAIO_LINES: ChatLine[] = [
   { from: "lojista", text: "Quanto devo cobrar por esta peça?" },
   {

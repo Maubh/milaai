@@ -3,6 +3,8 @@
 export interface OnboardingState {
   telefone: string;
   verificado: boolean;
+  waLink?: string;
+  plan?: string;
 }
 
 const KEY = "socia-onboarding";
@@ -16,17 +18,33 @@ function read(): Partial<OnboardingState> {
   }
 }
 
+function write(next: Partial<OnboardingState>) {
+  window.localStorage.setItem(KEY, JSON.stringify({ ...read(), ...next }));
+}
+
 export function getTelefone(): string {
   const t = read().telefone;
   return typeof t === "string" ? t : "";
 }
 
 export function saveTelefone(telefone: string) {
-  window.localStorage.setItem(KEY, JSON.stringify({ ...read(), telefone, verificado: false }));
+  write({ telefone, verificado: false, waLink: undefined, plan: undefined });
 }
 
-export function markVerified() {
-  window.localStorage.setItem(KEY, JSON.stringify({ ...read(), verificado: true }));
+export function markVerified(extra?: { waLink?: string; plan?: string }) {
+  write({
+    verificado: true,
+    waLink: extra?.waLink,
+    plan: extra?.plan,
+  });
+}
+
+export function getWaLink(): string {
+  const link = read().waLink;
+  if (typeof link === "string" && link) return link;
+  const wa =
+    process.env.NEXT_PUBLIC_MILA_WA_E164?.replace(/\D+/g, "") || "5531936187463";
+  return `https://wa.me/${wa}?text=${encodeURIComponent("Oi, mila.")}`;
 }
 
 export function isVerified(): boolean {

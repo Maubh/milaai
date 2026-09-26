@@ -58,6 +58,7 @@ export default function LoginPage() {
     setErro(null);
     setCaptchaErro(null);
     setEnviando(true);
+
     if (SITE_KEY && captchaToken) {
       try {
         const res = await fetch("/api/turnstile", {
@@ -79,8 +80,36 @@ export default function LoginPage() {
         return;
       }
     }
-    saveTelefone(toInternational(numero, iso));
-    router.push("/login/verify");
+
+    const phone = toInternational(numero, iso);
+    try {
+      const res = await fetch("/api/auth/otp/start", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 403 || data?.detail === "not_allowlisted") {
+        setErro("Acesso piloto. Peça um convite para entrar agora.");
+        setEnviando(false);
+        return;
+      }
+      if (res.status === 429) {
+        setErro("Aguarde um instante antes de pedir outro código.");
+        setEnviando(false);
+        return;
+      }
+      if (!res.ok || data?.ok === false) {
+        setErro("Não foi possível enviar o código. Tente de novo em instantes.");
+        setEnviando(false);
+        return;
+      }
+      saveTelefone(phone);
+      router.push("/login/verify");
+    } catch {
+      setErro("Falha de conexão. Verifique a internet e tente de novo.");
+      setEnviando(false);
+    }
   }
 
   return (
@@ -90,8 +119,7 @@ export default function LoginPage() {
       </p>
       <h1 className="auth-minimal-title">Entrar na mila.</h1>
       <p className="auth-minimal-lede">
-        Vamos gerar um código para você entrar na prévia. Ele aparece na próxima tela. Nada é
-        enviado de verdade.
+        Digite seu WhatsApp. Vamos enviar um código de 6 dígitos pra você entrar.
       </p>
       <form className="auth-minimal-form" onSubmit={submit} aria-label="Informar celular">
         <div className="field">
@@ -168,7 +196,7 @@ export default function LoginPage() {
             </p>
           ) : (
             <p id="login-tel-ajuda" className="hint">
-              Simulação. Nenhum código real será enviado.
+              O código chega no WhatsApp deste número.
             </p>
           )}
         </div>
@@ -203,7 +231,7 @@ export default function LoginPage() {
           className="btn btn-plum auth-minimal-cta"
           disabled={enviando || (!!SITE_KEY && !captchaOk)}
         >
-          {enviando ? "Continuando…" : "Continuar para o código"}
+          {enviando ? "Enviando código…" : "Continuar para o código"}
         </button>
       </form>
     </div>

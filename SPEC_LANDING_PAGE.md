@@ -1,6 +1,6 @@
-# Especificação de UI/UX — Landing Page (socIA)
+# Especificação de UI/UX — Landing Page (mila.)
 
-Esta especificação orienta a geração completa da Landing Page de alta conversão da **socIA** para o Orca / Next.js.
+Esta especificação orienta a geração completa da Landing Page de alta conversão da **mila.** para o Orca / Next.js.
 
 ---
 
@@ -10,7 +10,7 @@ Esta especificação orienta a geração completa da Landing Page de alta conver
   - `Background`: Creme suave / Alabaster (`#FBFBF9`) e Branco Puro (`#FFFFFF`).
   - `Cards / Superfícies`: Branco com bordas ultra sutis (`#EAEAE5` / `border-stone-200`).
   - `Tipografia Principal`: Cinza profundo / Grafite (`#1A1A1A` e `#4A4A48`).
-  - `Accent / IA Brand`: Dourado Champagne / Ouro Nobre (`#D4AF37` / `#C5A059`) para destacar o **IA** em `socIA` e botões de conversão.
+  - `Accent Brand`: Dourado Champagne / Ouro Nobre (`#D4AF37` / `#C5A059`) para o ponto final de `mila.` e botões de conversão.
 - **Tipografia**:
   - Headings: Serif elegante (ex: *Playfair Display*, *Cinzel* ou *Cormorant Garamond*).
   - Body / Dados numéricos: Sans-serif moderna e clean (*Plus Jakarta Sans* ou *Inter*).
@@ -32,12 +32,12 @@ Esta especificação orienta a geração completa da Landing Page de alta conver
   - Campo: `[ 🇧🇷 (00) 00000-0000 | Digite seu WhatsApp ]`
   - Botão CTA: `[ Começar Teste Grátis ]`
   - Subtexto: *"Sem cartão de crédito • Configuração em 30 segundos"*
-- **Prova Social Visual**: Mockup flutuante de um card de WhatsApp com a mensagem da socIA mostrando o **Raio-X do Preço** e o gancho da legenda.
+- **Prova Social Visual**: Mockup flutuante de um card de WhatsApp com a mensagem da mila. mostrando o **Raio-X do Preço** e o gancho da legenda.
 
 ### 3. O "Raio-X da Peça" (Comparativo Interativo)
-- Seção interativa destacando a diferença entre precificar "no chute" vs. precificar com a socIA:
+- Seção interativa destacando a diferença entre precificar "no chute" vs. precificar com a mila.:
   - *Antes (No Chute)*: Preço multiplicado por 2 ou 3 na intuição ➔ Prejuízo invisível na taxa de cartão, embalagem e aluguel.
-  - *Com a socIA*: Cálculo exato dos custos fixos diluídos, taxa de maquininha, DAS/MEI e comparação em tempo real com lojas da mesma cidade.
+  - *Com a mila.*: Cálculo exato dos custos fixos diluídos, taxa de maquininha, DAS/MEI e comparação em tempo real com lojas da mesma cidade.
 
 ### 4. Conectores & Integrações (Padrão Instinct)
 - Título: *"Trabalha conectada com as ferramentas que você já usa"*
@@ -56,7 +56,7 @@ Esta especificação orienta a geração completa da Landing Page de alta conver
 
 ### 6. FAQ (Quebra de Objeções)
 - *"Preciso de computador para usar?"* ➔ Não, 100% da rotina é no WhatsApp.
-- *"Se eu não tiver Instagram ainda, consigo usar?"* ➔ Sim! A socIA te ajuda a escolher o nome, criar sua bio e escrever os textos para o WhatsApp.
+- *"Se eu não tiver Instagram ainda, consigo usar?"* ➔ Sim! A mila. te ajuda a escolher o nome, criar sua bio e escrever os textos para o WhatsApp.
 - *"O que acontece com os dados das minhas notas e custos?"* ➔ Criptografia ponta a ponta e isolamento seguro por sessão.
 
 ### 7. Footer

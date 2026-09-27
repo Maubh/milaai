@@ -7,13 +7,26 @@ export interface OnboardingState {
   plan?: string;
 }
 
-const KEY = "socia-onboarding";
+const KEY = "mila-onboarding";
+/** Chave anterior à troca de marca; mantida apenas para migrar quem já entrou. */
+const LEGACY_KEY = "socia-onboarding";
 const DEFAULT_WA = "5531936187463";
 
 function read(): Partial<OnboardingState> {
   if (typeof window === "undefined") return {};
   try {
-    return JSON.parse(window.localStorage.getItem(KEY) ?? "{}") as Partial<OnboardingState>;
+    const raw = window.localStorage.getItem(KEY);
+    if (raw === null) {
+      const legacy = window.localStorage.getItem(LEGACY_KEY);
+      if (legacy !== null) {
+        // migra uma vez e remove a chave antiga
+        window.localStorage.setItem(KEY, legacy);
+        window.localStorage.removeItem(LEGACY_KEY);
+        return JSON.parse(legacy) as Partial<OnboardingState>;
+      }
+      return {};
+    }
+    return JSON.parse(raw) as Partial<OnboardingState>;
   } catch {
     return {};
   }

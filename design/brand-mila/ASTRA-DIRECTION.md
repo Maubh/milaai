@@ -103,6 +103,6 @@ Elementos gráficos derivados dos arcos do `m` podem aparecer em recortes discre
 
 Recomendo uma atualização visual coordenada: aplicar o SVG fiel, substituir os tokens de vinho/ameixa pelo sistema mineral, unificar títulos e corpo em Manrope, revisar contraste, reduzir o destaque das integrações e harmonizar calculadora, preços e FAQ. O mockup de conversa deve continuar funcionando como evidência, sem se tornar um objeto decorativo maior que a proposta de valor.
 
-A avaliação aqui é uma recomendação de direção baseada no código da landing e nos documentos existentes; não substitui uma revisão responsiva em navegador. O `DESIGN.md` e `PRODUCT.md` ainda contêm trechos da marca socIA e não descrevem integralmente o código atual. Devem ser atualizados quando a direção da mila. for aprovada, preservando as restrições reais de produto.
+A avaliação aqui é uma recomendação de direção baseada no código da landing e nos documentos existentes; não substitui uma revisão responsiva em navegador. O `DESIGN.md` e o `PRODUCT.md` já usam a marca mila. e descrevem o produto; ainda assim, revisar quando a direção da mila. for aprovada, preservando as restrições reais de produto.
 
 Nenhum arquivo da aplicação ou CSS de produção foi alterado nesta entrega de identidade.

@@ -1,4 +1,4 @@
-# Direção de design e implementação — socIA (minimalista, 2026-09)
+# Direção de design e implementação — mila. (minimalista, 2026-09)
 
 Este documento substitui a direção anterior como referência vigente. Leia `README.md`,
 `SPEC_LANDING_PAGE.md`, `SPEC_ONBOARDING_WORKFLOW.md` e `PLAN_REVIEW.md` como referência
@@ -7,7 +7,7 @@ em 24/09/2026, referência estrutural instinct.com apenas para disciplina de con
 
 ## Tese do produto
 
-A socIA é uma assistente de negócios **no WhatsApp e no Telegram** para lojistas de semijoias e moda. A
+A mila. é uma assistente de negócios **no WhatsApp e no Telegram** para lojistas de semijoias e moda. A
 conversa é o produto. A landing minimalista apresenta a proposta em um viewport e inicia o
 onboarding local; a **conversa simulada** (`/conversa`) mostra o valor enquanto não há número
 oficial nem API. O workspace web serve para configurar custos base e conexões e voltar à
@@ -18,7 +18,7 @@ conversa. Não há Telegram no plano atual.
 **Uma afirmação, um CTA, uma conversa.** Paleta editorial preservada (ameixa `#24191F`,
 papel `#F5F1EA`, vinho `#4D1F2D`, ouro discreto `#B99A62` só no detalhe). Sem fotografia,
 sem gradientes grandes, pílulas, labels em caixa alta, card boxes ou sombras decorativas.
-Títulos e corpo em Manrope legível. Header só com a palavra `socIA` pequena, sem nav e sem
+Títulos e corpo em Manrope legível. Header só com a palavra `mila.` pequena, sem nav e sem
 CTA competindo com o principal. Footer mínimo: marca, estado de prévia, copyright.
 
 A moldura do iPhone (moldura leve em React/CSS, sem Vue ou biblioteca dedicada) pode ter
@@ -29,7 +29,7 @@ da página; preservar grandes áreas de respiro ao redor.
 
 1. **Landing `/`**: H1 “A sua sócia de negócios no seu bolso.”, dois parágrafos de produto
    (custos/preço/divulgação; foto, nota ou pergunta na mesma conversa), um CTA tipográfico
-   “Começar com a socIA” → `/login`, microtexto “Prévia interativa · nenhuma mensagem é
+   “Começar com a mila.” → `/login`, microtexto “Prévia interativa · nenhuma mensagem é
    enviada.” Um único iPhone à direita (desktop) / depois do CTA (mobile) com troca curta
    simulada rotulada “Conversa simulada”. Sem formulário, preços, FAQ, cards, “como
    funciona”, integrações, âncoras ou footer grande.

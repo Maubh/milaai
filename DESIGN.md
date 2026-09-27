@@ -1,4 +1,4 @@
-# Direção de design — socIA (minimalista, 2026-09)
+# Direção de design — mila. (minimalista, 2026-09)
 
 Revisão do usuário em 24/09/2026, registrada em `MINIMAL_LANDING_BRIEF.md`. Referência
 estrutural: disciplina de conteúdo e espaço de instinct.com — marca discreta, uma afirmação
@@ -6,7 +6,7 @@ clara, dois parágrafos curtos, um CTA. Nada de cópia visual, tipográfica ou t
 
 ## Tese
 
-**Uma afirmação, um CTA, uma conversa.** A landing diz o que a socIA é em um olhar: a sócia
+**Uma afirmação, um CTA, uma conversa.** A landing diz o que a mila. é em um olhar: a sócia
 de negócios da lojista no WhatsApp e no Telegram. O único elemento de profundidade é um mockup de iPhone
 (moldura leve em React/CSS, sem Vue) com uma troca curta simulada sobre uma peça de semijoia.
 
@@ -15,17 +15,17 @@ de negócios da lojista no WhatsApp e no Telegram. O único elemento de profundi
 Papel quente `#F5F1EA`, tinta ameixa `#24191F`, vinho `#4D1F2D`, ouro `#B99A62` só no detalhe
 da marca ou no traço do CTA. Títulos e corpo em Manrope legível; sem grandes gradientes,
 pílulas, labels em caixa alta, card boxes ou sombras decorativas. Header só com a palavra
-`socIA` pequena, à esquerda, sem nav e sem CTA competindo com o principal. Footer mínimo:
+`mila.` pequena, à esquerda, sem nav e sem CTA competindo com o principal. Footer mínimo:
 marca, estado de prévia, copyright — nenhum link.
 
 ## História e forma
 
 Landing `/`: H1 “A sua sócia de negócios no seu bolso.”, dois parágrafos de produto, um CTA
-tipográfico (“Começar com a socIA” → `/login`) e microtexto “Prévia interativa · nenhuma
+tipográfico (“Começar com a mila.” → `/login`) e microtexto “Prévia interativa · nenhuma
 mensagem é enviada.” À direita (desktop) / abaixo do CTA (mobile), um único iPhone
 (moldura SVG + CSS original, proporções inspiradas no iPhone 15 Pro do Magic UI, MIT, sem
 dependência instalada) com conversa animada autoral em estilo neutro/escuro: moldura prata,
-tela quase preta, balões azul (lojista) e cinza (socIA), foto da peça em SVG inline; sequência
+tela quase preta, balões azul (lojista) e cinza (mila.), foto da peça em SVG inline; sequência
 com framer-motion — foto/pergunta, indicador de digitação, Raio-X (custo R$ 63,50 → preço
 R$ 142,70; margem R$ 64,21), legenda pronta, confirmação — com loop e botão Rever;
 compositor visual com ícones de emoji/anexo/câmera/mic (nada clicável) e home bar sempre

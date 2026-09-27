@@ -1,18 +1,18 @@
-# Direção final — socIA minimalista
+# Direção final — mila. minimalista
 
 Revisão do usuário em 24/09/2026. Referência estrutural: https://instinct.com/ (visitada pela coordenadora). Usar apenas a disciplina de conteúdo e espaço: marca discreta, uma afirmação clara sobre o produto, dois parágrafos curtos e um CTA. Não copiar logo, tipografia, copy, layout pixel a pixel ou detalhes decorativos do Instinct.
 
 ## Decisão de produto
 
-A socIA é uma assistente para lojistas de semijoias e moda que será usada no WhatsApp. A landing deve dizer o que ela é e o que ajuda a fazer. O CTA inicia o onboarding local. Não existe API/número oficial; o fluxo de telefone, OTP e conversa continua mockado e explicitamente identificado como prévia. O simulador `/conversa`, as três telas de onboarding e o workspace de apoio continuam acessíveis; apenas a landing perde as seções e controles promocionais.
+A mila. é uma assistente para lojistas de semijoias e moda que será usada no WhatsApp. A landing deve dizer o que ela é e o que ajuda a fazer. O CTA inicia o onboarding local. Não existe API/número oficial; o fluxo de telefone, OTP e conversa continua mockado e explicitamente identificado como prévia. O simulador `/conversa`, as três telas de onboarding e o workspace de apoio continuam acessíveis; apenas a landing perde as seções e controles promocionais.
 
 ## Landing `/`
 
 - Uma página curta, idealmente um viewport em desktop e uma rolagem curta no mobile. Sem fotografia, formulário de telefone, tabela de preços, FAQ, cards, seção “como funciona”, lista de integrações ou nav de âncoras.
-- Palavra `socIA` pequena no topo esquerdo. Conteúdo principal numa coluna legível, alinhada à esquerda, com espaço generoso. H1 proposto: “A sua sócia de negócios no WhatsApp.”
+- Palavra `mila.` pequena no topo esquerdo. Conteúdo principal numa coluna legível, alinhada à esquerda, com espaço generoso. H1 proposto: “A sua sócia de negócios no WhatsApp.”
 - Dois parágrafos de produto em português natural. Primeiro: ajuda a entender custos, chegar a um preço com margem e preparar a divulgação de cada peça. Segundo: a lojista poderá enviar foto, nota fiscal ou pergunta e receber orientação na mesma conversa. Não prometer automação ativa nem resultados ainda inexistentes.
-- Um CTA principal, em tratamento tipográfico elegante (link com sublinhado autoral ou botão muito contido): “Começar com a socIA” → `/login`. Abaixo, microtexto discreto: “Prévia interativa · nenhuma mensagem é enviada.”
-- Um único mockup de iPhone à direita do texto no desktop e depois do CTA no mobile. Referência de forma: https://inspira-ui.com/docs/en/components/device-mocks/iphone-mockup. A referência é Vue/Nuxt; construir a moldura de modo leve em React/CSS ou SVG, sem incorporar Vue ou uma biblioteca só para isso. Dentro, mostrar uma troca curta de mensagens sobre uma peça de semijoia: pergunta da lojista, resposta da socIA com custo, preço e margem de exemplo. Rotular “Conversa simulada” dentro ou junto do telefone. O mockup serve de evidência visual, sem virá-lo uma demonstração interativa na landing. Não mostrar controles falsos de câmera, teclado ou envio.
+- Um CTA principal, em tratamento tipográfico elegante (link com sublinhado autoral ou botão muito contido): “Começar com a mila.” → `/login`. Abaixo, microtexto discreto: “Prévia interativa · nenhuma mensagem é enviada.”
+- Um único mockup de iPhone à direita do texto no desktop e depois do CTA no mobile. Referência de forma: https://inspira-ui.com/docs/en/components/device-mocks/iphone-mockup. A referência é Vue/Nuxt; construir a moldura de modo leve em React/CSS ou SVG, sem incorporar Vue ou uma biblioteca só para isso. Dentro, mostrar uma troca curta de mensagens sobre uma peça de semijoia: pergunta da lojista, resposta da mila. com custo, preço e margem de exemplo. Rotular “Conversa simulada” dentro ou junto do telefone. O mockup serve de evidência visual, sem virá-lo uma demonstração interativa na landing. Não mostrar controles falsos de câmera, teclado ou envio.
 - Footer mínimo com marca/copyright e estado de prévia. Nenhum link morto. Não usar o nome Instinct no produto.
 - Paleta clara, papel quente e tinta ameixa; ouro apenas no detalhe da marca ou traço do CTA. Títulos em Manrope, legíveis. Evitar grandes gradientes, pílulas, labels em caixa alta, card boxes e sombras decorativas.
 - A moldura do telefone pode ter grafite/ameixa escuro, com dimensão realista e cantos contidos. O telefone é a única peça de profundidade da página; preservar grandes áreas de respiro ao redor.

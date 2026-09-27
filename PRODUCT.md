@@ -1,4 +1,4 @@
-# Produto socIA
+# Produto mila.
 
 <!-- impeccable:product-schema 1 -->
 
@@ -16,11 +16,11 @@ Empreendedoras e lojistas de semijoias, joias e moda que precisam decidir preço
 
 ## Product Purpose
 
-A socIA é uma assistente de negócios **no WhatsApp e no Telegram**: a lojista envia foto, nota ou pergunta e recebe orientação de preço, leitura de custos e rascunhos de conteúdo na conversa. Nesta versão, a landing minimalista apresenta a proposta em um viewport (afirmação, dois parágrafos, um CTA para `/login`) com um mockup de iPhone mostrando uma troca simulada; o onboarding simulado (telefone → código 123456 → conexão) leva à **conversa simulada** navegável enquanto não há número oficial nem API. O workspace web é apoio: guarda custos base e mostra conectores em estado demonstrativo.
+A mila. é uma assistente de negócios **no WhatsApp e no Telegram**: a lojista envia foto, nota ou pergunta e recebe orientação de preço, leitura de custos e rascunhos de conteúdo na conversa. Nesta versão, a landing minimalista apresenta a proposta em um viewport (afirmação, dois parágrafos, um CTA para `/login`) com um mockup de iPhone mostrando uma troca simulada; o onboarding simulado (telefone → código 123456 → conexão) leva à **conversa simulada** navegável enquanto não há número oficial nem API. O workspace web é apoio: guarda custos base e mostra conectores em estado demonstrativo.
 
 ## Positioning
 
-A conversa é o produto. Na landing, ela aparece como um iPhone estático com pergunta da lojista e resposta da socIA (custo, preço, margem de exemplo). No simulador `/conversa`, o Raio-X do Preço aparece como resposta da assistente: decomposição legível de custo da peça, embalagem, taxas, rateio e margem, com dados de exemplo. A calculadora web e o painel existem como apoio, nunca como centro da experiência.
+A conversa é o produto. Na landing, ela aparece como um iPhone estático com pergunta da lojista e resposta da mila. (custo, preço, margem de exemplo). No simulador `/conversa`, o Raio-X do Preço aparece como resposta da assistente: decomposição legível de custo da peça, embalagem, taxas, rateio e margem, com dados de exemplo. A calculadora web e o painel existem como apoio, nunca como centro da experiência.
 
 ## Operating Context
 
@@ -36,7 +36,7 @@ A lojista trabalha com fotos de peças, notas fiscais, estoque, custos de venda 
 
 ## Brand Commitments
 
-Nome socIA; tom de sócia experiente, claro e próximo. Direção visual minimalista (revisão 2026-09): ameixa `#24191F`, papel `#F5F1EA`, vinho `#4D1F2D`, ouro discreto `#B99A62` só no detalhe. Títulos e corpo em Manrope legível. Header só com a palavra `socIA`; footer mínimo com estado de prévia. Ainda não há logotipo, fotos de produto ou número oficial de WhatsApp.
+Nome mila.; tom de sócia experiente, claro e próximo. Direção visual minimalista (revisão 2026-09): ameixa `#24191F`, papel `#F5F1EA`, vinho `#4D1F2D`, ouro discreto `#B99A62` só no detalhe. Títulos e corpo em Manrope legível. Header só com a palavra `mila.`; footer mínimo com estado de prévia. Ainda não há logotipo, fotos de produto ou número oficial de WhatsApp.
 
 ## Evidence on Hand
 

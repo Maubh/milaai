@@ -15,7 +15,7 @@ Refine a Landing Page (`app/page.tsx` ou layout principal) mantendo a estética 
 Na conversa simulada dentro do mockup do celular, substitua a resposta genérica pelo nosso "Raio-X de Custos Transparente":
 - Mensagem da Lojista:
   "Chegou hoje: argola frontal cravejada ✨ Paguei R$ 22,00. Quanto devo cobrar?"
-- Resposta da socIA (Visual limpo e espaçado):
+- Resposta da mila. (Visual limpo e espaçado):
   "✨ Sugestão de Preço: R$ 119,90
   (Sua margem limpa no bolso: R$ 38,40 | 32%)
 

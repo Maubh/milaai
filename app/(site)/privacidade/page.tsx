@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Política de privacidade — mila",
+  title: "Política de privacidade — mila.",
   description:
     "Como a mila. trata dados no piloto: WhatsApp, site, OTP e subprocessadores.",
 };
@@ -15,7 +15,7 @@ export default function PrivacidadePage() {
       <h1 className="auth-minimal-title">Política de privacidade</h1>
       <p className="auth-minimal-lede">
         Como tratamos informações no piloto da mila. — assistente de negócios no
-        WhatsApp para lojas de joias e semijoias. Última atualização: 26 de
+        WhatsApp para lojas de joias e semijoias. Última atualização: 27 de
         setembro de 2026.
       </p>
       <div className="legal-body">
@@ -23,30 +23,34 @@ export default function PrivacidadePage() {
         <p>
           Esta política descreve o tratamento de dados no site{" "}
           <strong>milaai.com.br</strong>, no workspace web e no canal WhatsApp
-          da <strong>mila.</strong> (mila.ai). Neste piloto, o serviço é
-          operado pela equipe fundadora sob a marca mila.; razão social e CNPJ
-          serão atualizados aqui quando a empresa estiver constituída.
+          da <strong>mila.</strong> Neste piloto, o serviço é operado pela
+          equipe fundadora sob a marca mila.; razão social e CNPJ serão
+          atualizados aqui quando a empresa estiver constituída. Não há
+          encarregado (DPO) nomeado nesta fase: o contato de privacidade é a
+          própria equipe fundadora.
         </p>
         <p>
-          Contato de privacidade:{" "}
-          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>.
+          Contato:{" "}
+          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>{" "}
+          (encaminhado à equipe). Instagram: @usemila.ai.
         </p>
 
         <h2>2. Escopo deste piloto</h2>
         <p>
-          O acesso está limitado a founders e números na allowlist. Partes do
-          site ainda são demonstrativas (por exemplo, mockups e alguns
-          conectores “em breve”). O login com OTP por WhatsApp, quando ativo
-          para o seu número, é um fluxo real: o telefone chega aos nossos
-          servidores e ao provedor de mensagem.
+          O acesso é restrito a founders e números autorizados (lista
+          controlada). Partes do site ainda são demonstrativas (mockups e
+          conectores “em breve”). O login com código por WhatsApp, quando
+          liberado para o seu número, é um fluxo real: o telefone chega aos
+          nossos servidores e ao provedor de mensagem.
         </p>
 
         <h2>3. O que coletamos</h2>
         <p>Dependendo de como você usa a mila., podemos tratar:</p>
         <ul>
           <li>
-            <strong>Dados de conta e contato</strong> — número de WhatsApp
-            (E.164), código OTP, plano/allowlist e status de verificação.
+            <strong>Dados de conta e contato</strong> — número de WhatsApp,
+            código de verificação de vida curta, indicação de plano/autorização
+            e status de verificação.
           </li>
           <li>
             <strong>Conteúdo que você envia no WhatsApp</strong> — mensagens,
@@ -55,25 +59,42 @@ export default function PrivacidadePage() {
           </li>
           <li>
             <strong>Dados de uso do site</strong> — páginas visitadas, eventos
-            técnicos de login, IP e sinais de dispositivo na medida necessária
-            para segurança (incluindo verificação anti-robô).
+            técnicos de login, IP e sinais do navegador na medida necessária
+            para segurança, inclusive verificação anti-robô da Cloudflare
+            (Turnstile) no login.
           </li>
           <li>
-            <strong>Dados de integrações (quando você conectar)</strong> —
-            tokens e metadados necessários para agir na sua conta (Google
-            Workspace, Notion, Jueri, Olist, Bling etc.). Tokens ficam em cofre
-            server-side; a interface só mostra status de conexão.
+            <strong>Dados de integrações (quando o recurso estiver ligado e
+            você conectar)</strong>{" "}
+            — metadados e credenciais necessárias para agir na sua conta
+            (Google Workspace, Notion, Jueri, Olist, Bling etc.). A intenção de
+            produto é guardar essas credenciais só nos nossos servidores e
+            mostrar na interface apenas o status de conexão; isso ainda está em
+            implantação.
           </li>
         </ul>
+        <p>
+          Sobre notas fiscais: a loja é a controladora dos dados fiscais e dos
+          dados de clientes/fornecedores que aparecem no documento. A mila. trata
+          esse conteúdo como operadora, para prestar o serviço que você pediu.
+        </p>
 
-        <h2>4. Para que usamos</h2>
+        <h2>4. Para que usamos (bases)</h2>
+        <p>
+          Em regra, tratamos dados para executar o que você pediu (prestação do
+          serviço e autenticação), para segurança anti-abuso e, quando couber,
+          para cumprir obrigação legal. Em detalhe:
+        </p>
         <ul>
-          <li>Autenticar o acesso (OTP) e manter sua sessão de loja.</li>
+          <li>Autenticar o acesso (código por WhatsApp) e reconhecer sua loja.</li>
           <li>
             Prestar o serviço: precificação, leitura de notas, respostas no
-            WhatsApp e funções do plano contratado/piloto.
+            WhatsApp e funções liberadas no piloto.
           </li>
-          <li>Segurança: anti-abuso, rate limit, auditoria mínima e suporte.</li>
+          <li>
+            Segurança: anti-abuso, limite de tentativas e suporte aos
+            autorizados.
+          </li>
           <li>Cumprir obrigações legais e pedidos legítimos de autoridade.</li>
           <li>
             Melhorar o produto com métricas agregadas ou dados desidentificados,
@@ -81,11 +102,12 @@ export default function PrivacidadePage() {
           </li>
         </ul>
         <p>
-          <strong>Treino de modelos:</strong> não usamos o conteúdo da sua loja
-          (mensagens, NF-e, fotos, custos) para treinar modelos de fundação de
-          terceiros, na medida do que o contrato e as configurações do provedor
-          de IA permitirem. O provedor específico de LLM ainda pode ser
-          definido; quando for escolhido, atualizaremos esta página.
+          <strong>Treino de modelos:</strong> a mila. não treina modelo próprio
+          com o conteúdo da sua loja (mensagens, NF-e, fotos, custos). Como
+          política de produto, não enviamos esse conteúdo a terceiros para
+          treinar modelos de fundação. O provedor de modelo de IA ainda será
+          escolhido; quando for definido, nomearemos nesta página. Configurações
+          e contratos desse provedor serão alinhados a esta política.
         </p>
 
         <h2>5. Com quem compartilhamos (subprocessadores)</h2>
@@ -96,19 +118,20 @@ export default function PrivacidadePage() {
         <ul>
           <li>
             <strong>Provedor de modelo de IA (LLM) — a definir</strong> —
-            recebe trechos necessários do prompt (texto, descrição de imagem ou
-            dados já minimizados) para gerar a resposta.
+            recebe trechos necessários do pedido (texto, descrição de imagem ou
+            dados já reduzidos) para gerar a resposta.
           </li>
           <li>
-            <strong>MegaAPI</strong> — transporte da mensagem WhatsApp (texto e
-            mídia).
+            <strong>MegaAPI</strong> — transporte da mensagem no WhatsApp (texto
+            e mídia). O app WhatsApp / Meta também participa do transporte da
+            mensagem que você envia e recebe.
           </li>
           <li>
             <strong>Vercel</strong> — hospedagem do site e do workspace.
           </li>
           <li>
-            <strong>Cloudflare</strong> — DNS, túnel e proteção do endpoint de
-            autenticação/WhatsApp.
+            <strong>Cloudflare</strong> — DNS, túnel, proteção do endpoint de
+            autenticação/WhatsApp e verificação anti-robô no login.
           </li>
           <li>
             <strong>Provedores de busca/visão</strong> (quando ligados, ex.:
@@ -116,29 +139,38 @@ export default function PrivacidadePage() {
           </li>
         </ul>
         <p>
-          Quando você autorizar um conector (Google, Notion, ERP etc.), a mila.
-          acessa essa conta <em>em seu nome</em>, nos limites da permissão que
-          você conceder. Isso é distinto de um subprocessador nosso: é a sua
-          integração.
+          Esses prestadores podem processar dados fora do Brasil. Usamos
+          contratos e configurações compatíveis com a prestação do serviço e com
+          a legislação aplicável, na medida do piloto.
+        </p>
+        <p>
+          Quando um conector estiver disponível e você autorizar (Google,
+          Notion, ERP etc.), a mila. acessa essa conta <em>em seu nome</em>, nos
+          limites da permissão concedida. Isso é a sua integração — distinto dos
+          subprocessadores acima.
         </p>
 
-        <h2>6. Isolamento entre lojas</h2>
+        <h2>6. Separação entre lojas</h2>
         <p>
-          Tratamos cada loja como um espaço separado. Telefones de operadores da
-          mesma loja podem compartilhar o mesmo ambiente; lojas diferentes não
-          devem ver dados umas das outras. Pedidos de suporte feitos pelos
-          founders, se precisarem acessar uma conta, devem ser auditáveis.
+          A meta do produto é tratar cada loja como um espaço separado:
+          operadores da mesma loja podem compartilhar o ambiente; lojas
+          diferentes não devem ver dados umas das outras. Esse isolamento está
+          sendo reforçado no piloto. Acesso excepcional de suporte pela equipe
+          fundadora, se necessário, deve ser registrado.
         </p>
 
         <h2>7. Retenção</h2>
         <p>Enquanto o piloto estiver ativo, a proposta de guarda é:</p>
         <ul>
-          <li>Hashes de OTP: minutos.</li>
+          <li>Código de verificação (OTP): minutos (vida curta).</li>
           <li>Histórico operacional de chat: até cerca de 90 dias, ou até exclusão.</li>
           <li>NF-e / XML processados: até cerca de 180 dias, ou até exclusão.</li>
           <li>Fotos de peça: até cerca de 90 dias, ou até exclusão.</li>
-          <li>Logs técnicos já redigidos: até cerca de 30 dias.</li>
-          <li>Tokens de integração: até você desconectar ou pedirmos revogação.</li>
+          <li>Logs técnicos: até cerca de 30 dias, com o mínimo necessário.</li>
+          <li>
+            Credenciais de integração (quando existirem): até você desconectar
+            ou pedirmos revogação.
+          </li>
         </ul>
         <p>
           A mila. não substitui a obrigação da loja de guardar documentos
@@ -152,16 +184,19 @@ export default function PrivacidadePage() {
           informação sobre compartilhamentos. No piloto, esses pedidos são
           atendidos pela equipe fundadora pelo e-mail{" "}
           <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>, em
-          prazo razoável. Também é possível reclamar à ANPD.
+          até 15 dias, prorrogáveis na forma da LGPD. Também é possível
+          reclamar à ANPD.
         </p>
 
         <h2>9. Segurança</h2>
         <p>
-          Aplicamos controles proporcionais ao piloto: segredos fora do
-          navegador, allowlist, confirmação antes de ações que alteram dados,
-          redação de informações sensíveis em logs e respostas, e menor
-          privilégio por plano. Nenhum sistema é perfeito; agentes de IA podem
-          errar ou interpretar mal um pedido — confirme ações importantes.
+          No piloto de hoje aplicamos controles proporcionais: segredos de
+          autenticação fora do navegador, acesso por lista de números
+          autorizados e limite de tentativas. Estamos implantando confirmação
+          antes de ações que alteram dados, redução de dados sensíveis em logs e
+          respostas, e privilégio mínimo por plano. Nenhum sistema é perfeito;
+          respostas de IA podem errar — revise preço, estoque e textos
+          importantes antes de usar.
         </p>
 
         <h2>10. Crianças</h2>

@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Termos de uso — mila",
+  title: "Termos de uso — mila.",
   description:
     "Termos de uso do piloto da mila.: WhatsApp, site, responsabilidades e limites.",
 };
@@ -15,14 +15,14 @@ export default function TermosPage() {
       <h1 className="auth-minimal-title">Termos de uso</h1>
       <p className="auth-minimal-lede">
         Regras do piloto da mila. — assistente de negócios no WhatsApp para
-        lojas de joias e semijoias. Última atualização: 26 de setembro de 2026.
+        lojas de joias e semijoias. Última atualização: 27 de setembro de 2026.
       </p>
       <div className="legal-body">
         <h2>1. Aceite</h2>
         <p>
-          Ao acessar milaai.com.br, solicitar OTP, usar o WhatsApp da mila. ou
-          o workspace, você concorda com estes termos e com a{" "}
-          <Link href="/privacidade">política de privacidade</Link>. Se não
+          Ao acessar milaai.com.br, solicitar código de verificação, usar o
+          WhatsApp da mila. ou o workspace, você concorda com estes termos e com
+          a <Link href="/privacidade">política de privacidade</Link>. Se não
           concordar, não use o serviço.
         </p>
 
@@ -35,8 +35,8 @@ export default function TermosPage() {
           status de plano e conectores).
         </p>
         <p>
-          Neste momento o serviço opera em <strong>piloto / prévia</strong>,
-          com acesso preferencialmente por allowlist. Recursos marcados como “em
+          Neste momento o serviço opera em <strong>piloto / prévia</strong>. O
+          acesso é restrito a números autorizados. Recursos marcados como “em
           breve” ou demonstrativos não devem ser tratados como funcionalidade
           ativa.
         </p>
@@ -46,7 +46,7 @@ export default function TermosPage() {
           <li>Você declara ter 18 anos ou mais e capacidade para contratar.</li>
           <li>
             Se usa a mila. em nome de uma loja, declara ter autorização para
-            vincular o número e os conectores dessa loja.
+            vincular o número e, quando existirem, os conectores dessa loja.
           </li>
           <li>
             Você é responsável por quem tem acesso ao WhatsApp e ao workspace
@@ -56,10 +56,10 @@ export default function TermosPage() {
 
         <h2>4. Entradas, saídas e ações</h2>
         <p>
-          Você pode enviar textos, imagens, arquivos e autorizar integrações
-          (“entradas”). A mila. pode gerar respostas (“saídas”) e, com a sua
-          permissão e confirmação quando exigido, executar ações em ferramentas
-          conectadas (por exemplo, consultar ou gravar dados em um ERP).
+          Você pode enviar textos, imagens e arquivos (“entradas”). A mila. pode
+          gerar respostas (“saídas”) e, quando um conector estiver disponível e
+          você autorizar — com confirmação quando exigirmos — executar ações nas
+          ferramentas conectadas.
         </p>
         <ul>
           <li>
@@ -72,9 +72,9 @@ export default function TermosPage() {
             loja.
           </li>
           <li>
-            Ações que alteram dados relevantes pedem confirmação (por exemplo,
-            um “sim” ligado ao preview). Um “sim” solto no chat sobre outro
-            assunto não conta como autorização.
+            Quando houver ações que alteram dados, pediremos confirmação ligada
+            à prévia da ação. Um “sim” solto no chat sobre outro assunto não
+            conta como autorização.
           </li>
           <li>
             Conteúdo do mockup do site e da rota de conversa simulada é
@@ -99,7 +99,8 @@ export default function TermosPage() {
             tentar acessar conta, dados ou loja de outra pessoa sem autorização;
           </li>
           <li>
-            contornar allowlist, OTP, rate limit ou proteções anti-abuso;
+            contornar a lista de números autorizados, o código de verificação,
+            limites de tentativa ou proteções anti-abuso;
           </li>
           <li>
             enviar malware, spam ou conteúdo ilícito pelo canal da mila.;
@@ -116,10 +117,11 @@ export default function TermosPage() {
 
         <h2>7. Integrações de terceiros</h2>
         <p>
-          Conectores (Google, Notion, Jueri, Olist, Bling etc.) são serviços de
-          terceiros. Ao conectar, você autoriza a mila. a agir nos limites da
-          permissão concedida e aceita os termos desses provedores. A mila. não
-          controla indisponibilidade, mudança de API ou políticas deles.
+          Conectores (Google, Notion, Jueri, Olist, Bling etc.), quando
+          disponíveis, são serviços de terceiros. Ao conectar, você autoriza a
+          mila. a agir nos limites da permissão concedida e aceita os termos
+          desses provedores. A mila. não controla indisponibilidade, mudança de
+          API ou políticas deles. Itens “em breve” no site não estão ativos.
         </p>
 
         <h2>8. Propriedade intelectual</h2>
@@ -136,12 +138,14 @@ export default function TermosPage() {
         <p>
           O piloto é oferecido “como está”, com esforço razoável de
           disponibilidade e segurança, sem garantia de resultado comercial
-          específico (lucro, conversão, aprovação de anúncio etc.). Na máxima
-          extensão permitida pela lei brasileira, a responsabilidade da mila. por
-          danos decorrentes do uso do piloto limita-se ao que for obrigatório e,
-          quando houver pagamento, ao valor efetivamente pago por você nos 3
-          meses anteriores ao evento — salvo dolo ou hipótese legal
-          inafastável.
+          específico (lucro, conversão, aprovação de anúncio etc.).
+        </p>
+        <p>
+          Na máxima extensão permitida pela lei brasileira: (a) no piloto sem
+          cobrança, a responsabilidade da mila. limita-se às hipóteses
+          inafastáveis por lei; (b) se houver pagamento, limita-se ao valor
+          efetivamente pago por você nos 3 meses anteriores ao evento — salvo
+          dolo ou outra hipótese legal inafastável.
         </p>
         <p>
           A mila. não é consultoria jurídica, contábil ou fiscal. Decisões de

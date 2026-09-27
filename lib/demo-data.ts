@@ -30,14 +30,14 @@ export const PECAS: PecaExemplo[] = [
       "Exemplo de legenda: corrente fina para usar sozinha ou em mix. regulagem em três alturas e acabamento que não escurece com o uso do dia a dia. Peça para presente — vai em caixinha pronta.",
   },
   {
-    id: "anel-liso",
-    nome: "Anel Liso Dourado",
-    categoria: "Semijoia · exemplo",
-    custoPeca: 35,
-    embalagem: 5,
-    rateio: 8,
+    id: "anel-aurora",
+    nome: "Anel Aurora",
+    categoria: "Joia em prata 925 · exemplo fictício",
+    custoPeca: 280,
+    embalagem: 18,
+    rateio: 32,
     legenda:
-      "Exemplo de legenda: o anel que combina com todos os outros. Liso, confortável e com presença na medida. Numeração do 14 ao 22 — me conta o seu que eu separo.",
+      "Exemplo fictício de legenda: Anel Aurora em prata 925, com linhas suaves e acabamento polido. Uma peça para acompanhar momentos especiais e o dia a dia. Confirme material, medidas e disponibilidade antes de publicar.",
   },
 ];
 

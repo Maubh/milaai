@@ -3,9 +3,9 @@ import "./globals.css";
 import "./site.css";
 
 export const metadata: Metadata = {
-  title: "mila.ai — A inteligência por trás da sua loja de joias ou semijoias",
+  title: "mila.ai — Para quem vende joias e semijoias",
   description:
-    "Tenha a mila no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
+    "Conheça a mila.ai, assistente de negócios para quem vende joias e semijoias. Veja uma prévia da análise de custos, margens e descrições de peças na conversa.",
   metadataBase: new URL("https://milaai.com.br"),
   icons: {
     icon: [

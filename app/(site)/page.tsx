@@ -30,12 +30,13 @@ export default function LandingPage() {
       <section className="wrap minimal-grid" aria-label="Apresentação da mila">
         <div className="minimal-copy">
           <h1 className="minimal-anim minimal-title">
-            A inteligência por trás da sua loja de joias ou semijoias.
+            A inteligência por trás de quem vende joias e semijoias.
           </h1>
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">
-              Tenha a <span className="mila-highlight">mila</span> no seu WhatsApp. Precificação com margem real, descrições prontas para
-              e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.
+              Tenha a <span className="mila-highlight">mila</span> no seu WhatsApp para analisar custos e margens,
+              organizar informações das peças e preparar descrições para venda. Na proposta do Pro,
+              essa conversa se amplia para estoque, fornecedores, faturamento e conteúdo.
             </p>
             <p className="minimal-cta-row">
               <Link href="/login" className="minimal-cta">
@@ -43,7 +44,7 @@ export default function LandingPage() {
               </Link>
             </p>
             <p className="minimal-micro">
-              Disponível direto no WhatsApp · Configuração guiada em 2 minutos.
+              Conheça a prévia da jornada da peça à operação.
             </p>
           </div>
         </div>

@@ -9,10 +9,31 @@ interface FaqItem {
 
 const FAQ_ITEMS: FaqItem[] = [
   {
+    question: "A mila serve para quem vende joias e semijoias?",
+    answer: (
+      <>
+        Sim. A proposta considera os dois segmentos. Ao analisar uma peça, informe a categoria,
+        os materiais e os custos reais: uma joia e uma semijoia podem exigir composições de custo
+        e descrições diferentes.
+      </>
+    ),
+  },
+  {
+    question: "O que muda quando eu vou para o Pro?",
+    answer: (
+      <>
+        Nos planos previstos, o Essencial começa pela peça: custos, margem, pesquisa de mercado e
+        descrição. O Pro foi pensado para a rotina da loja, com visão de compras e faturamento,
+        alertas de fornecedores, integrações de estoque e notas, além de ferramentas de conteúdo.
+        A disponibilidade desses recursos será confirmada no lançamento.
+      </>
+    ),
+  },
+  {
     question: "Preciso instalar algum aplicativo no computador ou celular?",
     answer: (
       <>
-        Não. A <span className="mila-highlight">mila</span> funciona 100% dentro do seu WhatsApp (e Telegram), exatamente como conversar com uma sócia.
+        Não para explorar a prévia no site. A proposta da <span className="mila-highlight">mila</span> é conversar com você pelo WhatsApp, sem exigir outro aplicativo.
       </>
     ),
   },

@@ -24,7 +24,7 @@ const PLANS: PlanItem[] = [
     tagline: "Essencial",
     price: "39",
     period: "/mês",
-    description: "Precificação com lucro real desde a primeira peça",
+    description: "Base prevista para precificação, margem e descrição de peças",
     features: [
       "Precificação ilimitada com Raio-X e margem real",
       "Radar de concorrentes no Google Shopping",
@@ -34,7 +34,7 @@ const PLANS: PlanItem[] = [
       "Google Workspace (Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações)",
       "Notion (Documentos, Wiki, Páginas e Bancos de dados)",
     ],
-    ctaLabel: "Começar no Essencial",
+    ctaLabel: "Conhecer o Essencial",
     ctaHref: "/login",
     featured: false,
   },
@@ -45,7 +45,7 @@ const PLANS: PlanItem[] = [
     badge: "Recomendado",
     price: "69",
     period: "/mês",
-    description: "A parceira completa de vendas, estoque e marketing",
+    description: "Evolução prevista para estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
@@ -53,7 +53,7 @@ const PLANS: PlanItem[] = [
       "Integração direta Jueri, Bling e Olist (entrada de notas e estoque)",
       "Suíte completa de marketing para Instagram (9 ferramentas)",
     ],
-    ctaLabel: "Assinar o Pro",
+    ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",
     featured: true,
   },
@@ -66,10 +66,10 @@ export default function PricingSection() {
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>
           <h2 className="pricing-title">
-            Tenha a <span className="mila-highlight">mila</span> pelo valor de uma única peça.
+            Da peça à operação — na proposta do Pro.
           </h2>
           <p className="pricing-subtitle">
-            Sem fidelidade ou custos ocultos. Ativação direta no seu WhatsApp em menos de 2 minutos.
+            O Essencial começa por custo, margem e descrição. A proposta do Pro leva essas decisões para a rotina da loja.
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function PricingSection() {
 
         <div className="pricing-guarantee">
           <p>
-            🔒 Teste sem risco por 7 dias · Cancele quando quiser com 1 clique · Ativação imediata no WhatsApp
+            Prévia de planos · escopo, disponibilidade e condições serão confirmados no lançamento.
           </p>
         </div>
       </div>

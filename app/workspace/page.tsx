@@ -79,7 +79,7 @@ export default function WorkspaceHome() {
         <section className="card work-card" aria-label="Peças de exemplo">
           <h2>Peças de exemplo</h2>
           <p style={{ fontSize: "0.9rem", color: "rgba(39,35,38,0.7)" }}>
-            Três peças para exercitar o Raio-X. Escolha uma para ver o resumo.
+            Duas semijoias e uma joia fictícias para exercitar o Raio-X. Escolha uma para ver o resumo.
           </p>
           <ul className="peca-list">
             {PECAS.map((p) => (

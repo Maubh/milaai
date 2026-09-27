@@ -35,8 +35,8 @@ export default function LandingPage() {
           <div className="minimal-anim minimal-body">
             <p className="minimal-text">
               Tenha a <span className="mila-highlight">mila</span> no seu WhatsApp para analisar custos e margens,
-              organizar informações das peças e preparar descrições para venda. Na proposta do Pro,
-              essa conversa se amplia para estoque, fornecedores, faturamento e conteúdo.
+              organizar informações das peças e preparar descrições para venda. No Pro, a conversa
+              também acompanha estoque, fornecedores, faturamento e conteúdo.
             </p>
             <p className="minimal-cta-row">
               <Link href="/login" className="minimal-cta">
@@ -44,7 +44,7 @@ export default function LandingPage() {
               </Link>
             </p>
             <p className="minimal-micro">
-              Conheça a prévia da jornada da peça à operação.
+              Comece pela peça. Evolua para uma visão da operação no Pro.
             </p>
           </div>
         </div>

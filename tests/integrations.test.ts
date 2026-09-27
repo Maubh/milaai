@@ -294,6 +294,11 @@ test("gate do workspace: só o cookie autoriza, e o destino explica o motivo", (
   assert.equal(shouldRedirectToLogin("token-opaco"), false);
 
   // O destino carrega a causa, então a tela de login explica em vez de ficar muda.
-  assert.equal(WORKSPACE_LOGIN_REDIRECT, "/login?erro=sessao_expirada");
+  assert.equal(WORKSPACE_LOGIN_REDIRECT, "/login?erro=sessao_necessaria");
   assert.match(WORKSPACE_LOGIN_REDIRECT, /^\/login\?erro=/);
+  // E a causa tem texto próprio: quem bate no workspace vindo de um link não
+  // leu "para conectar a integração", que é de outro fluxo.
+  const texto = integrationErrorText("sessao_necessaria");
+  assert.match(texto, /abrir sua área/i);
+  assert.doesNotMatch(texto, /integra/i);
 });

@@ -8,7 +8,7 @@
  */
 
 /** Para onde vai quem não tem crachá. O `?erro=` faz a tela explicar por quê. */
-export const WORKSPACE_LOGIN_REDIRECT = "/login?erro=sessao_expirada";
+export const WORKSPACE_LOGIN_REDIRECT = "/login?erro=sessao_necessaria";
 
 export function shouldRedirectToLogin(token: string | null | undefined): boolean {
   // Cookie vazio (`mila_session=`) conta como ausente: um Set-Cookie de logout

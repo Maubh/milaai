@@ -14,7 +14,6 @@ export default function VerifyPage() {
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
   const [telefone, setTelefone] = useState("");
-  const [checking, setChecking] = useState(true);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [enviando, setEnviando] = useState(false);
   const [reenviando, setReenviando] = useState(false);
@@ -29,7 +28,8 @@ export default function VerifyPage() {
     // entrava e as chamadas voltavam "sessão expirada". Não redireciona mais
     // por storage; se um dia quiserem o atalho de "já logada", ele lê o cookie
     // no servidor, que é o critério do gate do workspace.
-    setChecking(false);
+    // Sem estado de "carregando": o efeito não espera nada, então não há o que
+    // bloquear — o formulário fica visível desde o primeiro render de servidor.
   }, []);
 
   useEffect(() => {
@@ -153,16 +153,6 @@ export default function VerifyPage() {
     } finally {
       setReenviando(false);
     }
-  }
-
-  if (checking) {
-    return (
-      <div className="wrap auth-minimal">
-        <p className="auth-minimal-lede" role="status">
-          Carregando…
-        </p>
-      </div>
-    );
   }
 
   return (

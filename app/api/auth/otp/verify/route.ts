@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
 import {
+  SESSION_COOKIE,
   normalizePhoneE164,
   proxyMilaAuth,
   sanitizeVerifyResponse,
+  splitSession,
 } from "@/lib/server/mila-auth";
 
 export async function POST(req: Request) {
@@ -25,5 +27,19 @@ export async function POST(req: Request) {
     method: "POST",
     body: JSON.stringify({ phone, code: digits }),
   });
-  return NextResponse.json(sanitizeVerifyResponse(data), { status });
+
+  const { publicData, sessionToken } = splitSession(data as Record<string, unknown>);
+  const res = NextResponse.json(sanitizeVerifyResponse(publicData), { status });
+
+  if (res.status === 200 && sessionToken) {
+    // Cookie HttpOnly: o browser nunca lê a identidade da loja.
+    res.cookies.set(SESSION_COOKIE, sessionToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 14,
+    });
+  }
+  return res;
 }

@@ -12,6 +12,8 @@ const ALLOWED_START_KEYS = [
   "wa_number",
 ] as const;
 
+export const SESSION_COOKIE = "mila_session";
+
 const ALLOWED_VERIFY_KEYS = [
   "ok",
   "detail",
@@ -23,7 +25,24 @@ const ALLOWED_VERIFY_KEYS = [
   "wa_number",
   "wa_link",
   "wa_prefill",
+  "plan",
+  "tenant_id",
 ] as const;
+
+/** Campos da resposta de verify que viram cookie; o resto é descartado. */
+export function splitSession(data: Record<string, unknown>): {
+  publicData: Record<string, unknown>;
+  sessionToken: string | null;
+  cookie: Record<string, unknown> | null;
+} {
+  const { session_token: token, cookie, ...rest } = data as Record<string, unknown>;
+  return {
+    publicData: rest,
+    sessionToken: typeof token === "string" && token.length > 20 ? token : null,
+    cookie: (cookie as Record<string, unknown>) ?? null,
+  };
+}
+
 
 export function milaAuthBase(): string {
   // Server-only. Do NOT fall back to NEXT_PUBLIC_*.
@@ -83,7 +102,7 @@ export function sanitizeVerifyResponse(data: Record<string, unknown>): Record<st
 
 export async function proxyMilaAuth(
   path: string,
-  init?: RequestInit,
+  init?: RequestInit & { sessionToken?: string | null },
 ): Promise<{ status: number; data: Record<string, unknown> }> {
   const secret = milaAuthSecret();
   if (!secret) {
@@ -95,6 +114,10 @@ export async function proxyMilaAuth(
   headers.set("Accept", "application/json");
   headers.set("X-Mila-Auth-Secret", secret);
   headers.set("User-Agent", "milaai-next-proxy/0.1");
+  if (init?.sessionToken) {
+    // identidade da loja viaja server-to-server, nunca pelo browser
+    headers.set("X-Mila-Session", init.sessionToken);
+  }
 
   try {
     const res = await fetch(url, {

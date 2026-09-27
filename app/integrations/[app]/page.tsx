@@ -57,6 +57,65 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   const [apiKey, setApiKey] = useState("");
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
+  const [erro, setErro] = useState("");
+
+  const ERROS: Record<string, string> = {
+    app_nao_configurado:
+      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
+    app_not_configured:
+      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
+    provider_not_configured:
+      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
+    sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
+    estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",
+    loja_divergente: "A conta autorizada não é a desta loja. Nada foi conectado.",
+    chave_curta: "A chave parece curta demais. Confira e cole novamente.",
+    no_session: "Entre com seu telefone antes de conectar uma integração.",
+  };
+
+  /** Conectores sem OAuth (Jueri, Notion): a lojista cola a chave. */
+  async function handleGuidedKey(e: React.FormEvent) {
+    e.preventDefault();
+    setErro("");
+    setConnecting(true);
+    try {
+      const res = await fetch(`/api/oauth/${key}/key`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: apiKey.trim() }),
+      });
+      const data = (await res.json()) as { ok?: boolean; detail?: string };
+      if (res.ok && data.ok) {
+        setConnected(true);
+      } else {
+        setErro(ERROS[data.detail ?? ""] ?? "Não foi possível conectar. Tente novamente.");
+      }
+    } catch {
+      setErro("Não foi possível falar com a mila agora. Tente novamente.");
+    } finally {
+      setConnecting(false);
+    }
+  }
+
+  /** Conectores OAuth: pede a URL de autorização e sai para o provedor. */
+  async function handleOAuth(e: React.FormEvent) {
+    e.preventDefault();
+    setErro("");
+    setConnecting(true);
+    try {
+      const res = await fetch(`/api/oauth/${key}/start`, { method: "GET" });
+      const data = (await res.json()) as { ok?: boolean; authorize_url?: string; detail?: string };
+      if (res.ok && data.authorize_url) {
+        window.location.href = data.authorize_url;
+        return;
+      }
+      setErro(ERROS[data.detail ?? ""] ?? "Não foi possível iniciar a conexão. Tente novamente.");
+    } catch {
+      setErro("Não foi possível falar com a mila agora. Tente novamente.");
+    } finally {
+      setConnecting(false);
+    }
+  }
 
   if (!info) {
     return (
@@ -77,15 +136,6 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
         </p>
       </div>
     );
-  }
-
-  function handleConnect(e: React.FormEvent) {
-    e.preventDefault();
-    setConnecting(true);
-    setTimeout(() => {
-      setConnecting(false);
-      setConnected(true);
-    }, 600);
   }
 
   return (
@@ -119,7 +169,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
             </div>
           ) : info.isApiKeyGuided ? (
             /* Layout Guiado Específico do Jueri */
-            <form onSubmit={handleConnect}>
+            <form onSubmit={handleGuidedKey}>
               <div className="integration-brand-badge">
                 {info.logo ? (
                   <img src={info.logo} alt={info.nome} />
@@ -156,6 +206,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 />
               </div>
 
+              {erro ? (
+                <p className="hint" role="alert" style={{ color: "#b3261e" }}>
+                  {erro}
+                </p>
+              ) : null}
+
               <div style={{ display: "grid", gap: "0.75rem", marginTop: "1.25rem" }}>
                 <button
                   type="submit"
@@ -176,7 +232,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
             </form>
           ) : (
             /* Conectores OAuth padrão (Bling, Olist, Google, Notion) */
-            <form onSubmit={handleConnect}>
+            <form onSubmit={handleOAuth}>
               <div className="integration-brand-badge">
                 {info.logo ? (
                   <img src={info.logo} alt={info.nome} />
@@ -189,6 +245,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               <p style={{ fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.25rem" }}>
                 Autorize a <strong className="mila-highlight">mila</strong> a sincronizar pedidos, notas fiscais e estoque da sua conta {info.nome}.
               </p>
+
+              {erro ? (
+                <p className="hint" role="alert" style={{ color: "#b3261e" }}>
+                  {erro}
+                </p>
+              ) : null}
 
               <div style={{ display: "grid", gap: "0.75rem" }}>
                 <button

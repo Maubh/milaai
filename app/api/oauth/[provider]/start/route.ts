@@ -1,14 +1,19 @@
 import { NextResponse } from "next/server";
 import { isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import { isGuidedProvider, isKnownProvider, proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+import { requireSameOrigin } from "@/lib/server/same-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ provider: string }> },
 ) {
+  // GET cria `state` no serviço de auth: exige same-origin para não virar
+  // CSRF de início de fluxo a partir de outro site.
+  const blocked = requireSameOrigin(req);
+  if (blocked) return blocked;
   const { provider } = await params;
   const slug = provider.toLowerCase();
   if (!isKnownProvider(slug)) {

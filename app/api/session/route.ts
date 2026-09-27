@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -19,14 +19,12 @@ export async function GET() {
       { status, headers: { "Cache-Control": "private, no-store" } },
     );
   }
-  const providers: ProviderStatus[] = Array.isArray(data.providers)
-    ? (data.providers as ProviderStatus[])
-    : [];
+  const providers: ProviderStatus[] = sanitizeProviderList(data.providers);
   return NextResponse.json(
     {
       ok: true,
       logged: true,
-      tenant: data.tenant ?? null,
+      tenant: typeof data.tenant === "string" ? data.tenant : null,
       connected: providers.filter((p) => p.connected).map((p) => p.id),
     },
     { headers: { "Cache-Control": "private, no-store" } },

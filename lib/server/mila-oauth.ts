@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { SESSION_COOKIE, proxyMilaAuth } from "@/lib/server/mila-auth";
+import { sanitizeProviderList as projectProviderList } from "@/lib/provider-status";
 
 /** Lê o cookie HttpOnly da sessão (server-only). */
 export async function currentSessionToken(): Promise<string | null> {
@@ -36,17 +37,8 @@ export async function proxyOAuth(
   return proxyMilaAuth(path, { ...init, sessionToken: token });
 }
 
-/**
- * Repassa a chamada para o VPS mesmo sem cookie (ex.: logout idempotente),
- * mandando a sessão quando ela existir.
- */
-export async function proxyOAuthOptional(
-  path: string,
-  init?: RequestInit,
-): Promise<{ status: number; data: Record<string, unknown> }> {
-  const token = await currentSessionToken();
-  return proxyMilaAuth(path, { ...init, sessionToken: token });
-}
+/** Campos que o browser pode ver de um item da lista de conectores. */
+export { PROVIDER_PUBLIC_KEYS, sanitizeProviderList, sanitizeProviderStatus } from "@/lib/provider-status";
 
 /** Campos que o browser pode ver numa resposta de integração. */
 export function sanitizeOAuthResponse(
@@ -56,7 +48,9 @@ export function sanitizeOAuthResponse(
   const allowed = ["ok", "detail", "provider", "authorize_url", "removed", ...extraKeys];
   const out: Record<string, unknown> = {};
   for (const k of allowed) {
-    if (k in data) out[k] = data[k];
+    if (!(k in data)) continue;
+    // `providers` é lista de status: projeta item a item, nunca repassa cru.
+    out[k] = k === "providers" ? projectProviderList(data[k]) : data[k];
   }
   return out;
 }

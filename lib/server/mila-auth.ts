@@ -1,3 +1,7 @@
+import "server-only";
+
+import { cookieDomainFor as cookieDomainForHost } from "@/lib/cookie-domain";
+
 const DEFAULT_BASE = "https://wa.milaai.com.br";
 
 const ALLOWED_START_KEYS = [
@@ -47,16 +51,8 @@ export interface SessionCookieOptions {
  * `MILA_COOKIE_DOMAIN="-"` força host-only; um valor explícito sobrepõe tudo.
  */
 export function cookieDomainFor(hostHeader: string | null | undefined): string | undefined {
-  const explicit = (process.env.MILA_COOKIE_DOMAIN ?? "").trim();
-  if (explicit === "-") return undefined;
-  if (explicit) return explicit;
-  const host = String(hostHeader || "")
-    .split(":")[0]
-    .trim()
-    .toLowerCase();
-  if (!host) return undefined;
-  if (host === "milaai.com.br" || host.endsWith(".milaai.com.br")) return ".milaai.com.br";
-  return undefined;
+  // Regra pura em @/lib/cookie-domain (testável fora do Next).
+  return cookieDomainForHost(hostHeader, process.env.MILA_COOKIE_DOMAIN);
 }
 
 export function sessionCookieOptions(

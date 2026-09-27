@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { isKnownProvider, proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+import { requireSameOrigin } from "@/lib/server/same-origin";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ provider: string }> },
 ) {
+  const blocked = requireSameOrigin(req);
+  if (blocked) return blocked;
   const { provider } = await params;
   const slug = provider.toLowerCase();
   // Allowlist também no revoke: o slug vai interpolado no path do VPS.

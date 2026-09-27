@@ -1,8 +1,9 @@
 import Link from "next/link";
+import DisconnectButton from "@/components/DisconnectButton";
 import { INTEGRACOES } from "@/lib/demo-data";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
-import { proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -35,7 +36,7 @@ export default async function IntegracoesPage({
     if (status === 200) {
       consultou = true;
       const safe = sanitizeOAuthResponse(data, ["providers"]);
-      providers = Array.isArray(safe.providers) ? (safe.providers as ProviderStatus[]) : [];
+      providers = sanitizeProviderList(safe.providers) as unknown as ProviderStatus[];
     }
   }
 
@@ -45,6 +46,10 @@ export default async function IntegracoesPage({
   const erroParam = typeof sp.erro === "string" ? sp.erro : null;
 
   const byId = new Map(providers.map((p) => [p.id, p]));
+  // ?ok= só vira recado de sucesso se o vault da loja confirmar a conexão:
+  // um parâmetro na URL não é prova de credencial gravada.
+  const okConectado = okParam ? byId.get(okParam)?.connected === true : false;
+  const okPendente = !!okParam && !okConectado && consultou;
 
   return (
     <div className="work-wrap">
@@ -55,9 +60,16 @@ export default async function IntegracoesPage({
         peças organizadas com a mila.
       </p>
 
-      {okParam ? (
+      {okConectado ? (
         <p className="hint" role="status">
-          <strong>{byId.get(okParam)?.name ?? okParam}</strong> conectado a esta loja.
+          <strong>{byId.get(okParam as string)?.name ?? okParam}</strong> conectado a esta loja.
+        </p>
+      ) : null}
+
+      {okPendente ? (
+        <p className="hint" role="status">
+          Recebemos o retorno do <strong>{byId.get(okParam as string)?.name ?? okParam}</strong>, mas
+          a credencial ainda não aparece nesta loja. Conecte de novo ou fale com a mila.
         </p>
       ) : null}
 
@@ -98,6 +110,9 @@ export default async function IntegracoesPage({
                 <Link href={`/integrations/${i.id}`} className="btn btn-ghost btn-sm">
                   {live?.connected ? "Reconectar" : "Conectar"}
                 </Link>
+                {live?.connected ? (
+                  <DisconnectButton provider={i.id} providerName={i.nome} />
+                ) : null}
               </span>
             </li>
           );

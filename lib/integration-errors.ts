@@ -32,6 +32,8 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
     "Este conector usa chave colada em vez de login. Abra a tela do conector para colar a chave.",
   // Chave colada
   chave_curta: "A chave parece curta demais. Confira e cole novamente.",
+  chave_longa: "A chave é longa demais para ser válida. Confira e cole novamente.",
+  origem_invalida: "A solicitação veio de um endereço inesperado. Abra a mila em milaai.com.br e tente de novo.",
   invalid_body: "Não recebemos os dados da conexão. Tente de novo.",
   invalid_upstream_json: "A mila respondeu em um formato inesperado. Tente de novo.",
   upstream_timeout: "A mila demorou para responder. Tente de novo em instantes.",

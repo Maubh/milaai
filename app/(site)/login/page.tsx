@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   COUNTRIES,
   findCountry,
@@ -11,22 +11,30 @@ import {
   toInternational,
 } from "@/lib/countries";
 import { saveTelefone } from "@/lib/onboarding";
+import { integrationErrorText } from "@/lib/integration-errors";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import "./auth.css";
 
 const SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
 
-export default function LoginPage() {
+function LoginInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [iso, setIso] = useState("BR");
   const [numero, setNumero] = useState("");
   const [busca, setBusca] = useState("");
   const [listaAberta, setListaAberta] = useState(false);
-  const [erro, setErro] = useState<string | null>(null);
   const [captchaOk, setCaptchaOk] = useState(false);
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaErro, setCaptchaErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+
+  // O callback do OAuth volta para cá como /login?erro=sessao_expirada quando o
+  // cookie não chegou. Sem ler o parâmetro, a lojista cai num login mudo.
+  const erroParam = searchParams.get("erro");
+  const [erro, setErro] = useState<string | null>(() =>
+    erroParam ? integrationErrorText(erroParam) : null,
+  );
 
   const pais = findCountry(iso);
   const filtrados = useMemo(() => {
@@ -233,5 +241,22 @@ export default function LoginPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  // useSearchParams exige Suspense boundary no build de produção.
+  return (
+    <Suspense
+      fallback={
+        <div className="wrap auth-minimal">
+          <p className="auth-minimal-lede" role="status">
+            Carregando…
+          </p>
+        </div>
+      }
+    >
+      <LoginInner />
+    </Suspense>
   );
 }

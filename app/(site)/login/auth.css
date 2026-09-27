@@ -96,6 +96,15 @@
 .legal-body { display: grid; gap: 0.4rem; max-width: 44rem; }
 .legal-body h2 { font-size: 1.05rem; margin: 1.1rem 0 0; }
 .legal-body p { color: rgba(30, 43, 40, 0.8); margin: 0; }
+.legal-body ul {
+  margin: 0.25rem 0 0;
+  padding-left: 1.2rem;
+  color: rgba(30, 43, 40, 0.8);
+  display: grid;
+  gap: 0.35rem;
+}
+.legal-body li { line-height: 1.45; }
+.legal-body a { text-decoration: underline; text-underline-offset: 2px; }
 .auth-prereq {
   font-size: 0.9rem;
   color: rgba(30, 43, 40, 0.78);

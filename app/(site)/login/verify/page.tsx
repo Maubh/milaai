@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getTelefone, markVerified } from "@/lib/onboarding";
+import { shouldShowMissingPhoneNote } from "@/lib/verify-ui";
 import "../auth.css";
 
 const CODE_LEN = 6;
@@ -13,7 +14,13 @@ export default function VerifyPage() {
   const router = useRouter();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
-  const [telefone, setTelefone] = useState("");
+  // `null` = ainda não li o storage; `""` = li e não tem número. Sem essa
+  // distinção a tela pisca "Sem número ainda. Informe seu WhatsApp" antes do
+  // efeito preencher — um recado falso no caminho feliz de quem acabou de
+  // digitar o número. O HTML de servidor e o primeiro render do cliente usam
+  // `null` (batem entre si, sem mismatch de hidratação); o efeito troca para o
+  // valor real.
+  const [telefone, setTelefone] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [enviando, setEnviando] = useState(false);
   const [reenviando, setReenviando] = useState(false);
@@ -171,7 +178,7 @@ export default function VerifyPage() {
         ) : null}
         .
       </p>
-      {!telefone ? (
+      {shouldShowMissingPhoneNote(telefone) ? (
         <p className="auth-prereq" role="note">
           Sem número ainda. <Link href="/login">Informe seu WhatsApp</Link> para receber o código.
         </p>

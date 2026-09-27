@@ -28,6 +28,7 @@ import { integrationErrorText, isSafeAuthorizeUrl } from "../lib/integration-err
 import { isSameOriginRequest, requestHost, sameOriginDenial } from "../lib/request-origin.ts";
 import { readJsonBounded } from "../lib/bounded-json.ts";
 import { WORKSPACE_LOGIN_REDIRECT, shouldRedirectToLogin } from "../lib/workspace-gate.ts";
+import { shouldShowMissingPhoneNote } from "../lib/verify-ui.ts";
 
 test("cookie: apex e www emitem cookie de produção", () => {
   assert.equal(cookieDomainFor("milaai.com.br"), ".milaai.com.br");
@@ -301,4 +302,14 @@ test("gate do workspace: só o cookie autoriza, e o destino explica o motivo", (
   const texto = integrationErrorText("sessao_necessaria");
   assert.match(texto, /abrir sua área/i);
   assert.doesNotMatch(texto, /integra/i);
+});
+
+test("tela do código: só acusa 'sem número' depois de ler o storage", () => {
+  // `null` é o primeiro render (servidor + hidratação), antes de ler o
+  // localStorage. Avisar aí produzia um recado falso no caminho feliz: quem
+  // acabou de informar o número via "Sem número ainda. Informe seu WhatsApp".
+  assert.equal(shouldShowMissingPhoneNote(null), false);
+  // `""` é leitura concluída e nada guardado — aí o aviso é verdadeiro.
+  assert.equal(shouldShowMissingPhoneNote(""), true);
+  assert.equal(shouldShowMissingPhoneNote("31999999999"), false);
 });

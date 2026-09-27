@@ -8,6 +8,9 @@
  *
  * Requisições sem `Origin` (curl, testes, chamadas server-to-server) são
  * aceitas: a sessão continua sendo a única credencial real.
+ *
+ * Módulo puro (nenhum import) para o teste poder construir `Request` de verdade
+ * e conferir o 403 sem carregar o runtime do Next.
  */
 
 const SITE_HOSTS = ["milaai.com.br", "www.milaai.com.br"];
@@ -40,4 +43,24 @@ export function isSameOriginRequest(
   if (originHost === host) return true;
   // Apex e www são o mesmo site para a lojista.
   return SITE_HOSTS.includes(originHost) && SITE_HOSTS.includes(host);
+}
+
+/** Negativa de same-origin já resolvida, pronta para virar resposta HTTP. */
+export interface SameOriginDenial {
+  status: 403;
+  body: { ok: false; detail: "origem_invalida" };
+}
+
+/**
+ * Aplica a checagem a uma `Request` de verdade.
+ *
+ * Devolve a negativa (para o chamador virar 403) ou `null` para seguir. Fica
+ * aqui, e não junto do wrapper do Next, para o teste exercitar o caminho
+ * completo — cabeçalhos reais entrando, 403 saindo.
+ */
+export function sameOriginDenial(req: Request): SameOriginDenial | null {
+  if (isSameOriginRequest(req.headers.get("origin"), req.headers.get("host"))) {
+    return null;
+  }
+  return { status: 403, body: { ok: false, detail: "origem_invalida" } };
 }

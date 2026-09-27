@@ -34,3 +34,54 @@ export function cookieDomainFor(
   if ((PRODUCTION_COOKIE_HOSTS as readonly string[]).includes(host)) return ".milaai.com.br";
   return undefined;
 }
+
+export interface SessionCookieOptions {
+  httpOnly: boolean;
+  secure: boolean;
+  sameSite: "lax";
+  path: string;
+  maxAge: number;
+  domain?: string;
+}
+
+/**
+ * Opções do cookie de sessão — regra pura, sem `next/headers`, para o teste
+ * conseguir cobrir name/path/domain/secure/SameSite e o `Set-Cookie` que sai
+ * no login e no logout.
+ *
+ * `domain` sai como `undefined` (e não como chave ausente) quando host-only:
+ * é o que o `cookies().set` do Next espera.
+ */
+export function sessionCookieOptionsFor(
+  hostHeader: string | null | undefined,
+  maxAgeSeconds: number,
+  explicitOverride?: string,
+): SessionCookieOptions {
+  const options: SessionCookieOptions = {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: maxAgeSeconds,
+  };
+  const domain = cookieDomainFor(hostHeader, explicitOverride);
+  if (domain) options.domain = domain;
+  return options;
+}
+
+/**
+ * Serializa o `Set-Cookie` como o browser recebe. Serve para o teste verificar
+ * que login e logout mandam exatamente o mesmo cookie (o logout precisa expirar
+ * o que o login gravou; nome/path/domain divergentes deixariam sessão órfã).
+ */
+export function sessionCookieHeader(
+  options: SessionCookieOptions,
+  value: string,
+): string {
+  const parts = [`mila_session=${value}`, `Path=${options.path}`, `Max-Age=${options.maxAge}`];
+  if (options.domain) parts.push(`Domain=${options.domain}`);
+  parts.push(`SameSite=Lax`);
+  if (options.httpOnly) parts.push("HttpOnly");
+  if (options.secure) parts.push("Secure");
+  return parts.join("; ");
+}

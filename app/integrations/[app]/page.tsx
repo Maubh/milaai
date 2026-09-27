@@ -92,7 +92,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     setErro("");
     setConnecting(true);
     try {
-      const res = await fetch(`/api/oauth/${key}/start`, { method: "GET" });
+      const res = await fetch(`/api/oauth/${key}/start`, { method: "POST" });
       const data = (await res.json()) as { ok?: boolean; authorize_url?: string; detail?: string };
       if (res.ok && data.ok && isSafeAuthorizeUrl(data.authorize_url)) {
         window.location.assign(data.authorize_url);

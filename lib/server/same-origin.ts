@@ -1,19 +1,22 @@
 import { NextResponse } from "next/server";
-import { isSameOriginRequest } from "@/lib/request-origin";
+import { sameOriginDenial } from "@/lib/request-origin";
 
 /**
- * Guarda de same-origin para os POSTs autenticados só por cookie
- * (key, revoke, logout). Junto com `SameSite=Lax`, fecha o caso de um
- * subdomínio same-site (`wa.`) tentando POST com o cookie da loja.
+ * Guarda de same-origin para as rotas autenticadas só por cookie
+ * (key, revoke, logout, start).
  *
- * Devolve a resposta 403 quando a origem não confere, ou `null` para seguir.
+ * Junto com `SameSite=Lax`, fecha o caso de um subdomínio same-site (`wa.`, o
+ * VPS) chamando a rota com o cookie da loja: o browser manda `Origin`, que não
+ * confere com o host do site, e a chamada morre em 403.
+ *
+ * A decisão fica em `@/lib/request-origin` (testável, sem Next); aqui só vira
+ * resposta HTTP.
  */
 export function requireSameOrigin(req: Request): NextResponse | null {
-  if (isSameOriginRequest(req.headers.get("origin"), req.headers.get("host"))) {
-    return null;
-  }
-  return NextResponse.json(
-    { ok: false, detail: "origem_invalida" },
-    { status: 403, headers: { "Cache-Control": "private, no-store" } },
-  );
+  const denial = sameOriginDenial(req);
+  if (!denial) return null;
+  return NextResponse.json(denial.body, {
+    status: denial.status,
+    headers: { "Cache-Control": "private, no-store" },
+  });
 }

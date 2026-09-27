@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { readJsonBounded } from "@/lib/bounded-json";
 import { GUIDED_PROVIDERS, proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
 import { requireSameOrigin } from "@/lib/server/same-origin";
 
@@ -19,13 +20,15 @@ export async function POST(
   if (!(GUIDED_PROVIDERS as readonly string[]).includes(slug)) {
     return NextResponse.json({ ok: false, detail: "not_a_guided_provider" }, { status: 404 });
   }
-  let key = "";
-  try {
-    const body = await req.json();
-    key = typeof body?.key === "string" ? body.key : "";
-  } catch {
-    return NextResponse.json({ ok: false, detail: "invalid_body" }, { status: 400 });
+  const parsed = await readJsonBounded(req, KEY_MAX_LEN);
+  if (!parsed.ok) {
+    // Body acima do teto é recusado antes de parsear (o `req.json()` carregaria
+    // o payload inteiro na memória à toa); JSON quebrado é 400.
+    const detail = parsed.reason === "too_large" ? "chave_longa" : "invalid_body";
+    const status = parsed.reason === "too_large" ? 413 : 400;
+    return NextResponse.json({ ok: false, detail }, { status });
   }
+  const key = typeof parsed.data.key === "string" ? parsed.data.key : "";
   const trimmed = key.trim();
   if (trimmed.length < 8) {
     return NextResponse.json({ ok: false, detail: "chave_curta" }, { status: 400 });

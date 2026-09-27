@@ -4,22 +4,29 @@
  * Rodam com o test runner do Node (type stripping nativo), sem Next:
  *   npm test
  *
- * Cobrem exatamente os pontos que o review apontou como risco silencioso:
- * domínio do cookie (o callback do OAuth depende dele), projeção do status de
- * conector (nunca vazar campo cru do upstream) e vocabulário de erro.
+ * Cobrem os pontos que o review apontou como risco silencioso: domínio do
+ * cookie (o callback do OAuth depende dele), o `Set-Cookie` real do login e do
+ * logout, a projeção do status de conector (nunca vazar campo cru do upstream),
+ * o 403 do same-origin numa `Request` de verdade e o teto de body.
  */
 
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { cookieDomainFor, PRODUCTION_COOKIE_HOSTS } from "../lib/cookie-domain.ts";
+import {
+  cookieDomainFor,
+  sessionCookieOptionsFor,
+  sessionCookieHeader,
+  PRODUCTION_COOKIE_HOSTS,
+} from "../lib/cookie-domain.ts";
 import {
   sanitizeProviderList,
   sanitizeProviderStatus,
   PROVIDER_PUBLIC_KEYS,
 } from "../lib/provider-status.ts";
 import { integrationErrorText, isSafeAuthorizeUrl } from "../lib/integration-errors.ts";
-import { isSameOriginRequest, requestHost } from "../lib/request-origin.ts";
+import { isSameOriginRequest, requestHost, sameOriginDenial } from "../lib/request-origin.ts";
+import { readJsonBounded } from "../lib/bounded-json.ts";
 
 test("cookie: apex e www emitem cookie de produção", () => {
   assert.equal(cookieDomainFor("milaai.com.br"), ".milaai.com.br");
@@ -48,6 +55,39 @@ test("cookie: override explícito vence; '-' força host-only", () => {
 
 test("cookie: a lista de hosts de produção é fechada", () => {
   assert.deepEqual([...PRODUCTION_COOKIE_HOSTS], ["milaai.com.br", "www.milaai.com.br"]);
+});
+
+test("Set-Cookie: login grava a sessão com as flags certas", () => {
+  const header = sessionCookieHeader(sessionCookieOptionsFor("milaai.com.br", 1209600), "tok123");
+  assert.match(header, /^mila_session=tok123;/);
+  assert.match(header, /Domain=\.milaai\.com\.br/);
+  assert.match(header, /Path=\//);
+  assert.match(header, /Max-Age=1209600/);
+  assert.match(header, /HttpOnly/);
+  assert.match(header, /Secure/);
+  assert.match(header, /SameSite=Lax/);
+});
+
+test("Set-Cookie: logout expira exatamente o mesmo cookie que o login gravou", () => {
+  // Regressão real: se o logout mudasse Domain/Path, o cookie de produção
+  // continuaria vivo no browser por 14 dias ("logout" que não desloga).
+  // Max-Age é a única diferença esperada (0 = expira agora).
+  for (const host of ["milaai.com.br", "www.milaai.com.br"]) {
+    const login = sessionCookieHeader(sessionCookieOptionsFor(host, 1209600), "tok");
+    const logout = sessionCookieHeader(sessionCookieOptionsFor(host, 0), "");
+    const identity = (h: string) =>
+      h
+        .split("; ")
+        .slice(1)
+        .filter((attr) => !attr.startsWith("Max-Age="))
+        .sort();
+    assert.deepEqual(identity(logout), identity(login));
+    assert.match(logout, /Max-Age=0/);
+  }
+  // Preview/local: host-only nos dois, e sem Domain no header.
+  const local = sessionCookieHeader(sessionCookieOptionsFor("preview.vercel.app", 0), "");
+  assert.doesNotMatch(local, /Domain=/);
+  assert.equal(sessionCookieOptionsFor("preview.vercel.app", 60, "-").domain, undefined);
 });
 
 test("providers: projeta só os campos públicos", () => {
@@ -89,6 +129,7 @@ test("erros: detail conhecido vira PT; desconhecido não vaza texto cru", () => 
   assert.doesNotMatch(integrationErrorText("erro_interno_xyz"), /erro_interno_xyz/);
   assert.match(integrationErrorText(undefined), /Não foi possível conectar/);
   assert.match(integrationErrorText("chave_longa"), /longa demais/i);
+  assert.match(integrationErrorText("origem_invalida"), /endereço inesperado/i);
 });
 
 test("authorize_url: só https em host oficial de provedor", () => {
@@ -116,8 +157,68 @@ test("same-origin: sem Origin passa (clientes que não são browser)", () => {
   assert.equal(isSameOriginRequest("", "milaai.com.br"), true);
 });
 
+test("same-origin: 403 numa Request real, e liberado quando é o próprio site", () => {
+  const postFromVps = new Request("https://milaai.com.br/api/oauth/olist/revoke", {
+    method: "POST",
+    headers: { origin: "https://wa.milaai.com.br", host: "milaai.com.br" },
+  });
+  const denial = sameOriginDenial(postFromVps);
+  assert.equal(denial?.status, 403);
+  assert.deepEqual(denial?.body, { ok: false, detail: "origem_invalida" });
+
+  const fromSite = new Request("https://milaai.com.br/api/oauth/olist/revoke", {
+    method: "POST",
+    headers: { origin: "https://milaai.com.br", host: "milaai.com.br" },
+  });
+  assert.equal(sameOriginDenial(fromSite), null);
+
+  const fromCurl = new Request("https://milaai.com.br/api/oauth/olist/revoke", { method: "POST" });
+  assert.equal(sameOriginDenial(fromCurl), null);
+});
+
 test("requestHost normaliza porta e caixa", () => {
   assert.equal(requestHost("MILAAI.com.br:443"), "milaai.com.br");
   assert.equal(requestHost("localhost:3000"), "localhost");
   assert.equal(requestHost(null), "");
+});
+
+test("body: chave dentro do teto passa; acima do teto corta antes de parsear", async () => {
+  const okReq = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body: JSON.stringify({ key: "x".repeat(64) }),
+  });
+  const ok = await readJsonBounded(okReq, 8192);
+  assert.equal(ok.ok, true);
+  if (ok.ok) assert.equal((ok.data.key as string).length, 64);
+
+  // Content-Length declarado já barra: nem lê o corpo.
+  const huge = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body: JSON.stringify({ key: "x".repeat(20_000) }),
+  });
+  const tooBig = await readJsonBounded(huge, 8192);
+  assert.deepEqual(tooBig, { ok: false, reason: "too_large" });
+});
+
+test("body: JSON quebrado, vazio e escalar viram invalid_json", async () => {
+  const broken = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body: "{nao-e-json",
+  });
+  assert.deepEqual(await readJsonBounded(broken, 8192), { ok: false, reason: "invalid_json" });
+
+  const empty = new Request("https://milaai.com.br/api/oauth/jueri/key", { method: "POST" });
+  assert.deepEqual(await readJsonBounded(empty, 8192), { ok: false, reason: "invalid_json" });
+
+  const array = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body: '["a"]',
+  });
+  assert.deepEqual(await readJsonBounded(array, 8192), { ok: false, reason: "invalid_json" });
+
+  const scalar = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body: '"chave"',
+  });
+  assert.deepEqual(await readJsonBounded(scalar, 8192), { ok: false, reason: "invalid_json" });
 });

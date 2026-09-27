@@ -1,6 +1,12 @@
 import "server-only";
 
-import { cookieDomainFor as cookieDomainForHost } from "@/lib/cookie-domain";
+import {
+  cookieDomainFor as cookieDomainForHost,
+  sessionCookieOptionsFor,
+  type SessionCookieOptions,
+} from "@/lib/cookie-domain";
+
+export type { SessionCookieOptions };
 
 const DEFAULT_BASE = "https://wa.milaai.com.br";
 
@@ -32,15 +38,6 @@ const ALLOWED_VERIFY_KEYS = [
   "wa_prefill",
 ] as const;
 
-export interface SessionCookieOptions {
-  httpOnly: boolean;
-  secure: boolean;
-  sameSite: "lax";
-  path: string;
-  maxAge: number;
-  domain?: string;
-}
-
 /**
  * Domínio do cookie de sessão.
  *
@@ -55,18 +52,20 @@ export function cookieDomainFor(hostHeader: string | null | undefined): string |
   return cookieDomainForHost(hostHeader, process.env.MILA_COOKIE_DOMAIN);
 }
 
+/**
+ * Opções do cookie a partir da `Request`. A regra (nome/path/domain/secure/
+ * SameSite) vive em `@/lib/cookie-domain`, para o teste cobrir o `Set-Cookie`
+ * do login e do logout sem o runtime do Next.
+ */
 export function sessionCookieOptions(
   req: Request,
   maxAgeSeconds: number,
 ): SessionCookieOptions {
-  return {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: maxAgeSeconds,
-    domain: cookieDomainFor(req.headers.get("host")),
-  };
+  return sessionCookieOptionsFor(
+    req.headers.get("host"),
+    maxAgeSeconds,
+    process.env.MILA_COOKIE_DOMAIN,
+  );
 }
 
 /** Campos da resposta de verify que viram cookie; o resto é descartado. */

@@ -19,7 +19,6 @@ export async function POST(req: Request) {
   if (blocked) return blocked;
   const token = await currentSessionToken();
   let revoked = false;
-  let revokeOk = true;
 
   if (token) {
     // O serviço de auth lê o token pelo cookie (mesmo nome) — mandamos no header
@@ -32,13 +31,13 @@ export async function POST(req: Request) {
         "X-Mila-Session": token,
       },
     });
+    // `revoked` só é true com 200 do serviço de auth confirmando a revogação.
     revoked = status === 200 && data.revoked === true;
-    revokeOk = status === 200;
   }
 
   // O cookie sai de qualquer forma: deixar a sessão viva no browser é pior.
   // Mas não afirmamos que revogou no servidor se a chamada falhou.
-  const res = NextResponse.json({ ok: true, revoked, server_revoked: revoked && revokeOk });
+  const res = NextResponse.json({ ok: true, revoked });
   res.cookies.set(SESSION_COOKIE, "", {
     ...sessionCookieOptions(req, 0),
     maxAge: 0,

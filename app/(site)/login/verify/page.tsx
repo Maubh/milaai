@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getTelefone, isVerified, markVerified } from "@/lib/onboarding";
+import { getTelefone, markVerified } from "@/lib/onboarding";
+import { shouldShowMissingPhoneNote } from "@/lib/verify-ui";
 import "../auth.css";
 
 const CODE_LEN = 6;
@@ -13,8 +14,13 @@ export default function VerifyPage() {
   const router = useRouter();
   const [digits, setDigits] = useState<string[]>(Array(CODE_LEN).fill(""));
   const [erro, setErro] = useState<string | null>(null);
-  const [telefone, setTelefone] = useState("");
-  const [checking, setChecking] = useState(true);
+  // `null` = ainda não li o storage; `""` = li e não tem número. Sem essa
+  // distinção a tela pisca "Sem número ainda. Informe seu WhatsApp" antes do
+  // efeito preencher — um recado falso no caminho feliz de quem acabou de
+  // digitar o número. O HTML de servidor e o primeiro render do cliente usam
+  // `null` (batem entre si, sem mismatch de hidratação); o efeito troca para o
+  // valor real.
+  const [telefone, setTelefone] = useState<string | null>(null);
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS);
   const [enviando, setEnviando] = useState(false);
   const [reenviando, setReenviando] = useState(false);
@@ -22,12 +28,16 @@ export default function VerifyPage() {
 
   useEffect(() => {
     setTelefone(getTelefone());
-    if (isVerified()) {
-      router.replace("/workspace");
-      return;
-    }
-    setChecking(false);
-  }, [router]);
+    // Antes daqui saía `if (isVerified()) router.replace("/workspace")`, que
+    // mandava para o workspace com base no localStorage — a mesma fonte que
+    // qualquer um escreve à mão — enquanto o cookie HttpOnly (a sessão de
+    // verdade) podia estar morto. Era a semente do split-brain: a lojista
+    // entrava e as chamadas voltavam "sessão expirada". Não redireciona mais
+    // por storage; se um dia quiserem o atalho de "já logada", ele lê o cookie
+    // no servidor, que é o critério do gate do workspace.
+    // Sem estado de "carregando": o efeito não espera nada, então não há o que
+    // bloquear — o formulário fica visível desde o primeiro render de servidor.
+  }, []);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;
@@ -152,16 +162,6 @@ export default function VerifyPage() {
     }
   }
 
-  if (checking) {
-    return (
-      <div className="wrap auth-minimal">
-        <p className="auth-minimal-lede" role="status">
-          Carregando…
-        </p>
-      </div>
-    );
-  }
-
   return (
     <div className="wrap auth-minimal">
       <p className="auth-minimal-back auth-minimal-back-top">
@@ -178,7 +178,7 @@ export default function VerifyPage() {
         ) : null}
         .
       </p>
-      {!telefone ? (
+      {shouldShowMissingPhoneNote(telefone) ? (
         <p className="auth-prereq" role="note">
           Sem número ainda. <Link href="/login">Informe seu WhatsApp</Link> para receber o código.
         </p>

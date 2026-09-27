@@ -14,6 +14,9 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // Sessão
   no_session: "Entre com seu telefone antes de conectar uma integração.",
   sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
+  // Mesma causa, outra porta: aqui a lojista bateu no workspace (link direto,
+  // sessão que nunca existiu), não no meio de uma conexão de integração.
+  sessao_necessaria: "Entre com seu telefone para abrir sua área.",
   loja_divergente: "A conta autorizada não é a desta loja. Nada foi conectado.",
   // State do OAuth
   estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",

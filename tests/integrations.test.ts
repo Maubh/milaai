@@ -200,6 +200,64 @@ test("body: chave dentro do teto passa; acima do teto corta antes de parsear", a
   assert.deepEqual(tooBig, { ok: false, reason: "too_large" });
 });
 
+/** Corpo em stream, sem Content-Length — força o caminho getReader()/cancel(). */
+function streamedRequest(chunks: string[]): Request {
+  const encoder = new TextEncoder();
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      for (const c of chunks) controller.enqueue(encoder.encode(c));
+      controller.close();
+    },
+  });
+  return new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body,
+    // @ts-expect-error duplex é exigido pelo Node para body em stream
+    duplex: "half",
+  });
+}
+
+test("body: stream sem Content-Length respeita o teto e corta no meio", async () => {
+  // O teste acima cai no atalho do Content-Length; este exercita o laço de
+  // leitura, que é o que protege quando o tamanho não vem declarado.
+  const big = await readJsonBounded(streamedRequest(["x".repeat(6_000), "y".repeat(6_000)]), 8192);
+  assert.deepEqual(big, { ok: false, reason: "too_large" });
+
+  // Stream partido bem na borda do teto, terminando dentro dele: passa.
+  const edges = await readJsonBounded(
+    streamedRequest(['{"key":"', "a".repeat(4_000), "b".repeat(4_000), '"}']),
+    8192,
+  );
+  assert.equal(edges.ok, true);
+  if (edges.ok) assert.equal((edges.data.key as string).length, 8_000);
+
+  // UTF-8 multibyte partido entre chunks não corrompe o decode.
+  const multi = await readJsonBounded(
+    streamedRequest(['{"key":"', "ção".repeat(1_000), '"}']),
+    8192,
+  );
+  assert.equal(multi.ok, true);
+  if (multi.ok) assert.equal(multi.data.key, "ção".repeat(1_000));
+});
+
+test("body: stream quebrado é invalid_json, não too_large", async () => {
+  // Erro de leitura não é corpo grande: o detalhe devolvido ao cliente precisa
+  // dizer a verdade (antes virava 413 chave_longa).
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new TextEncoder().encode('{"key":"abc'));
+      controller.error(new Error("conexão caiu no meio"));
+    },
+  });
+  const req = new Request("https://milaai.com.br/api/oauth/jueri/key", {
+    method: "POST",
+    body,
+    // @ts-expect-error duplex é exigido pelo Node para body em stream
+    duplex: "half",
+  });
+  assert.deepEqual(await readJsonBounded(req, 8192), { ok: false, reason: "invalid_json" });
+});
+
 test("body: JSON quebrado, vazio e escalar viram invalid_json", async () => {
   const broken = new Request("https://milaai.com.br/api/oauth/jueri/key", {
     method: "POST",

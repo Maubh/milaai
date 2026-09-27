@@ -14,16 +14,24 @@ export type BoundedJsonResult =
   | { ok: true; data: Record<string, unknown> }
   | { ok: false; reason: "too_large" | "invalid_json" };
 
+/** Resultado da leitura crua, antes do parse. */
+type RawRead = { ok: true; text: string } | { ok: false; reason: "too_large" | "invalid_json" };
+
 /**
  * Lê o corpo como texto respeitando `maxBytes`.
- * Devolve `null` quando o corpo passa do teto (corte antes de decodificar).
+ *
+ * `too_large` é só para corpo de fato grande; erro de stream é `invalid_json`
+ * (body que não dá para ler não é body grande — e o detalhe exposto ao cliente
+ * precisa dizer a verdade).
  */
-async function readTextBounded(req: Request, maxBytes: number): Promise<string | null> {
+async function readTextBounded(req: Request, maxBytes: number): Promise<RawRead> {
   // Atalho: se o cliente declarou o tamanho, nem começa a ler.
   const declared = Number(req.headers.get("content-length") ?? "");
-  if (Number.isFinite(declared) && declared > maxBytes) return null;
+  if (Number.isFinite(declared) && declared > maxBytes) {
+    return { ok: false, reason: "too_large" };
+  }
 
-  if (!req.body) return "";
+  if (!req.body) return { ok: true, text: "" };
 
   const reader = req.body.getReader();
   const chunks: Uint8Array[] = [];
@@ -36,12 +44,13 @@ async function readTextBounded(req: Request, maxBytes: number): Promise<string |
       total += value.byteLength;
       if (total > maxBytes) {
         await reader.cancel();
-        return null;
+        return { ok: false, reason: "too_large" };
       }
       chunks.push(value);
     }
   } catch {
-    return null; // stream quebrado: trata como grande demais, não vaza detalhe
+    // Stream quebrado no meio da leitura: corpo ilegível, não grande demais.
+    return { ok: false, reason: "invalid_json" };
   } finally {
     reader.releaseLock?.();
   }
@@ -52,23 +61,20 @@ async function readTextBounded(req: Request, maxBytes: number): Promise<string |
     merged.set(chunk, offset);
     offset += chunk.byteLength;
   }
-  try {
-    return new TextDecoder("utf-8", { fatal: false }).decode(merged);
-  } catch {
-    return "";
-  }
+  // Decode no buffer inteiro: UTF-8 partido entre chunks é remontado antes.
+  return { ok: true, text: new TextDecoder("utf-8").decode(merged) };
 }
 
 export async function readJsonBounded(
   req: Request,
   maxBytes: number,
 ): Promise<BoundedJsonResult> {
-  const text = await readTextBounded(req, maxBytes);
-  if (text === null) return { ok: false, reason: "too_large" };
-  if (!text.trim()) return { ok: false, reason: "invalid_json" };
+  const raw = await readTextBounded(req, maxBytes);
+  if (!raw.ok) return raw;
+  if (!raw.text.trim()) return { ok: false, reason: "invalid_json" };
   let parsed: unknown;
   try {
-    parsed = JSON.parse(text);
+    parsed = JSON.parse(raw.text);
   } catch {
     return { ok: false, reason: "invalid_json" };
   }

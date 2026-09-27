@@ -37,9 +37,15 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
     setReady(true);
   }, [router]);
 
-  function sair() {
-    clearOnboarding();
-    router.push("/login");
+  async function sair() {
+    // A sessão é HttpOnly: limpar só o localStorage não a encerra.
+    // Chamamos a rota BFF que revoga no auth server e expira o cookie.
+    try {
+      await fetch("/api/auth/logout", { method: "POST", keepalive: true });
+    } finally {
+      clearOnboarding();
+      router.replace("/login");
+    }
   }
 
   if (!ready) {

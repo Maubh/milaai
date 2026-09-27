@@ -1,3 +1,13 @@
+import "server-only";
+
+import {
+  cookieDomainFor as cookieDomainForHost,
+  sessionCookieOptionsFor,
+  type SessionCookieOptions,
+} from "@/lib/cookie-domain";
+
+export type { SessionCookieOptions };
+
 const DEFAULT_BASE = "https://wa.milaai.com.br";
 
 const ALLOWED_START_KEYS = [
@@ -12,6 +22,9 @@ const ALLOWED_START_KEYS = [
   "wa_number",
 ] as const;
 
+export const SESSION_COOKIE = "mila_session";
+
+/** Campos do verify que podem ir para o browser (sem identidade de loja). */
 const ALLOWED_VERIFY_KEYS = [
   "ok",
   "detail",
@@ -24,6 +37,59 @@ const ALLOWED_VERIFY_KEYS = [
   "wa_link",
   "wa_prefill",
 ] as const;
+
+/**
+ * Domínio do cookie de sessão.
+ *
+ * O callback do OAuth mora em `wa.milaai.com.br` (só o VPS tem a credencial de
+ * app), então o cookie precisa valer para `.milaai.com.br` — sem isso o
+ * redirect do provedor chega sem sessão e todo callback cai em `sessao_expirada`.
+ * Em preview/local o cookie fica host-only (o navegador recusaria outro domínio).
+ * `MILA_COOKIE_DOMAIN="-"` força host-only; um valor explícito sobrepõe tudo.
+ */
+export function cookieDomainFor(hostHeader: string | null | undefined): string | undefined {
+  // Regra pura em @/lib/cookie-domain (testável fora do Next).
+  return cookieDomainForHost(hostHeader, process.env.MILA_COOKIE_DOMAIN);
+}
+
+/**
+ * Opções do cookie a partir da `Request`. A regra (nome/path/domain/secure/
+ * SameSite) vive em `@/lib/cookie-domain`, para o teste cobrir o `Set-Cookie`
+ * do login e do logout sem o runtime do Next.
+ */
+export function sessionCookieOptions(
+  req: Request,
+  maxAgeSeconds: number,
+): SessionCookieOptions {
+  return sessionCookieOptionsFor(
+    req.headers.get("host"),
+    maxAgeSeconds,
+    process.env.MILA_COOKIE_DOMAIN,
+  );
+}
+
+/** Campos da resposta de verify que viram cookie; o resto é descartado. */
+export function splitSession(data: Record<string, unknown>): {
+  publicData: Record<string, unknown>;
+  sessionToken: string | null;
+  cookie: Record<string, unknown> | null;
+} {
+  const { session_token: token, cookie, ...rest } = data as Record<string, unknown>;
+  return {
+    publicData: rest,
+    sessionToken: typeof token === "string" && token.length > 20 ? token : null,
+    cookie: (cookie as Record<string, unknown>) ?? null,
+  };
+}
+
+/** maxAge do cookie: o que o serviço de auth informar (fallback 14d). */
+export function cookieMaxAge(cookie: Record<string, unknown> | null): number {
+  const fallback = 60 * 60 * 24 * 14;
+  const raw = cookie?.max_age;
+  const value = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(value) || value <= 0) return fallback;
+  return Math.floor(value);
+}
 
 export function milaAuthBase(): string {
   // Server-only. Do NOT fall back to NEXT_PUBLIC_*.
@@ -83,10 +149,11 @@ export function sanitizeVerifyResponse(data: Record<string, unknown>): Record<st
 
 export async function proxyMilaAuth(
   path: string,
-  init?: RequestInit,
+  init?: RequestInit & { sessionToken?: string | null },
 ): Promise<{ status: number; data: Record<string, unknown> }> {
   const secret = milaAuthSecret();
   if (!secret) {
+    // fail-close: sem segredo não falamos com o serviço de auth
     return { status: 500, data: { ok: false, detail: "missing_auth_secret" } };
   }
   const url = `${milaAuthBase()}${path.startsWith("/") ? path : `/${path}`}`;
@@ -95,6 +162,10 @@ export async function proxyMilaAuth(
   headers.set("Accept", "application/json");
   headers.set("X-Mila-Auth-Secret", secret);
   headers.set("User-Agent", "milaai-next-proxy/0.1");
+  if (init?.sessionToken) {
+    // identidade da loja viaja server-to-server, nunca pelo browser
+    headers.set("X-Mila-Session", init.sessionToken);
+  }
 
   try {
     const res = await fetch(url, {

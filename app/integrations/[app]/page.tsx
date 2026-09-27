@@ -92,7 +92,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     <div className="wrap auth-wrap">
       <div className="auth-grid">
         <div>
-          <p className="tag">Conector oficial · mila.ai</p>
+          <p className="tag">Conector oficial · mila.</p>
           <h1 className="auth-title">{info.title}</h1>
           <p className="auth-lede">{info.desc}</p>
           <p className="hint">

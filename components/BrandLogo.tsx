@@ -11,9 +11,9 @@ export default function BrandLogo({
   variant = "mineral",
   className = "brand-logo",
   height = 28,
-  alt = "mila.ai",
+  alt = "mila.",
 }: BrandLogoProps) {
-  const width = Math.round((height * 844) / 224);
+  const width = Math.round((height * 614) / 224);
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img

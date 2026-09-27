@@ -1,4 +1,4 @@
-# mila.ai — direção de identidade
+# mila. — direção de identidade
 
 26 de setembro de 2026 · Desenvolvimento Astra · Proposta de marca para avaliação.
 
@@ -6,7 +6,7 @@
 
 Uma marca de negócios próxima e adulta, com o desenho arredondado já aprovado e uma assinatura verde mineral. O produto apoia quem vende **joias e semijoias** a tomar decisões concretas no WhatsApp; a identidade deve transmitir clareza, atenção e domínio dos números. A relação com os dois segmentos entra na qualidade dos materiais, no cuidado com fotografia e na composição editorial, sem representar a assistente como uma joalheria.
 
-A primeira logo foi mantida como autoridade visual. Seu `m` com dois arcos e pequena separação diagonal tem mais personalidade que a substituição por uma fonte pronta. O novo símbolo `m.` utiliza exatamente os mesmos dois caminhos do `m` do logotipo. O ponto deriva do ponto entre `mila` e `ai`, com o mesmo diâmetro. Funciona como assinatura compacta para avatar e ícone.
+A primeira logo foi mantida como autoridade visual. Seu `m` com dois arcos e pequena separação diagonal tem mais personalidade que a substituição por uma fonte pronta. O logotipo passa a ser `mila.`; seu ponto é parte da assinatura da marca, não um sufixo de domínio. O símbolo `m.` utiliza exatamente os mesmos dois caminhos do `m` do logotipo e funciona como assinatura compacta para avatar e ícone.
 
 ## Cor
 
@@ -70,7 +70,7 @@ Comparação entre as máscaras de alfa acima de 50% do original e do SVG render
 
 ## Tipografia de apoio
 
-**Manrope** em todo o sistema, em continuidade com os títulos atuais do site. Ela acompanha a geometria da marca, tem leitura confortável e evita introduzir uma segunda personalidade tipográfica desnecessária. O logotipo permanece um desenho independente: nunca escrever `mila.ai` em Manrope para tentar reproduzi-lo.
+**Manrope** em todo o sistema, em continuidade com os títulos atuais do site. Ela acompanha a geometria da marca, tem leitura confortável e evita introduzir uma segunda personalidade tipográfica desnecessária. O logotipo permanece um desenho independente: nunca escrever `mila.` em Manrope para tentar reproduzi-lo.
 
 - Títulos: Manrope 500 ou 600, entrelinha 1,06–1,15, entreletra levemente negativa quando grande.
 - Corpo: Manrope 400, 16–18 px no site, entrelinha 1,5–1,65.
@@ -90,12 +90,12 @@ Elementos gráficos derivados dos arcos do `m` podem aparecer em recortes discre
 
 ## Aplicações
 
-- Instagram e WhatsApp: `avatar-mineral.svg` é a opção principal. Em perfis pequenos, somente `m.`; o nome textual do perfil apresenta `mila.ai`.
+- Instagram e WhatsApp: `avatar-mineral.svg` é a opção principal. Em perfis pequenos, somente `m.`; o nome textual do perfil apresenta `mila.`. O endereço é sempre `milaai.com.br` — nunca apresentar `mila.ai` como URL.
 - Site claro: wordmark mineral no cabeçalho, marfim como fundo, tinta no corpo, CTA mineral. A marca deve ter espaço e aparecer uma vez por área de navegação.
 - Fundos escuros e capas: wordmark/símbolo marfim sobre mineral. Informação curta e bem hierarquizada, sem efeitos na assinatura.
 - Conteúdo social: grandes números ou uma decisão concreta como protagonista. Alternar marfim e mineral, com fotografias reais quando pertinentes. Não transformar cada post em uma grade de cartões iguais.
 - Relatórios: texto tinta em fundo branco/marfim, gráficos com poucos tons distinguíveis e labels diretos. Mineral destaca totais e próximos passos; sálvia/areia apoiam séries secundárias apenas quando o contraste permite.
-- ERP e integrações: logos de terceiros mantêm a reprodução permitida por seus próprios guias; evitar recolorir todos com a cor da mila.ai ou sugerir parceria não confirmada.
+- ERP e integrações: logos de terceiros mantêm a reprodução permitida por seus próprios guias; evitar recolorir todos com a cor da mila. ou sugerir parceria não confirmada.
 
 ## O layout atual precisa de redesign?
 
@@ -103,6 +103,6 @@ Elementos gráficos derivados dos arcos do `m` podem aparecer em recortes discre
 
 Recomendo uma atualização visual coordenada: aplicar o SVG fiel, substituir os tokens de vinho/ameixa pelo sistema mineral, unificar títulos e corpo em Manrope, revisar contraste, reduzir o destaque das integrações e harmonizar calculadora, preços e FAQ. O mockup de conversa deve continuar funcionando como evidência, sem se tornar um objeto decorativo maior que a proposta de valor.
 
-A avaliação aqui é uma recomendação de direção baseada no código da landing e nos documentos existentes; não substitui uma revisão responsiva em navegador. O `DESIGN.md` e `PRODUCT.md` ainda contêm trechos da marca socIA e não descrevem integralmente o código atual. Devem ser atualizados quando a direção da mila.ai for aprovada, preservando as restrições reais de produto.
+A avaliação aqui é uma recomendação de direção baseada no código da landing e nos documentos existentes; não substitui uma revisão responsiva em navegador. O `DESIGN.md` e `PRODUCT.md` ainda contêm trechos da marca socIA e não descrevem integralmente o código atual. Devem ser atualizados quando a direção da mila. for aprovada, preservando as restrições reais de produto.
 
 Nenhum arquivo da aplicação ou CSS de produção foi alterado nesta entrega de identidade.

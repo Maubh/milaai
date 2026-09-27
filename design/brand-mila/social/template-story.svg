@@ -1,15 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1920" viewBox="0 0 1080 1920">
 <rect width="1080" height="1920" fill="#F6F3ED"/>
-<svg x="84" y="270" width="310" height="90" viewBox="0 0 844 224" fill="#173F3B"><ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M1 219 L1 143 C1 103 31 70 69 70 C113 70 147 104 147 148 L147 207 C126 211 112 198 112 182 L112 147 C112 123 93 105 70 105 C50 105 37 120 37 140 L37 190 C37 208 24 220 1 219 Z" fill-rule="evenodd" />
+<svg x="84" y="270" width="310" height="90" viewBox="0 0 614 224" fill="#173F3B"><ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M1 219 L1 143 C1 103 31 70 69 70 C113 70 147 104 147 148 L147 207 C126 211 112 198 112 182 L112 147 C112 123 93 105 70 105 C50 105 37 120 37 140 L37 190 C37 208 24 220 1 219 Z" fill-rule="evenodd" />
   <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M125 83 C138 74 152 70 168 70 C209 70 240.5 104 240.5 148 L240.5 218.5 C218 221 205.5 208 205.5 190.5 L205 148 C205 123 188 105 167 105 C159 105 152 107 146 110.5 C140 100 133 90 125 83 Z" fill-rule="evenodd" />
   <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M269 73 C286 66 302.5 77 302.5 95 L302.5 218 L269 218 Z" fill-rule="evenodd" />
   <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M331 2 C349 -3 365.5 10 365.5 29 L365.5 218 L331 218 Z" fill-rule="evenodd" />
   <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M548.5 148 C548.5 104 517 68.5 469 68.5 C425 68.5 390.5 101 390.5 145 C390.5 187 421 220.5 462 220.5 C484 220.5 503 210 516 192 L516 218 L548.5 218 Z M514.5 144.5 C514.5 118 494 98.5 468.5 98.5 C442.5 98.5 421.5 118 421.5 144.5 C421.5 171 442.5 190.5 468.5 190.5 C494 190.5 514.5 171 514.5 144.5 Z" fill-rule="evenodd" />
-  <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M779.5 147 C779.5 103 748 67.5 700 67.5 C656 67.5 621.5 100 621.5 144 C621.5 186 652 219.5 693 219.5 C715 219.5 734 209 746 191 L746 218 L779.5 218 Z M745.5 144 C745.5 117.5 725 98 699.5 98 C673.5 98 653.5 117.5 653.5 144 C653.5 170.5 673.5 190 699.5 190 C725 190 745.5 170.5 745.5 144 Z" fill-rule="evenodd" />
-  <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M805.5 73 C822.5 66 839.5 77 839.5 95 L839.5 218 L805.5 218 Z" fill-rule="evenodd" />
   <ns0:circle xmlns:ns0="http://www.w3.org/2000/svg" cx="284.5" cy="35" r="20.75" />
   <ns0:circle xmlns:ns0="http://www.w3.org/2000/svg" cx="592.5" cy="198.5" r="20.75" />
-  <ns0:circle xmlns:ns0="http://www.w3.org/2000/svg" cx="820" cy="35" r="20.75" />
 </svg>
 <text x="84" y="620" font-family="Manrope, sans-serif" font-size="78" font-weight="600" fill="#173F3B">Sua peça merece</text>
 <text x="84" y="726" font-family="Manrope, sans-serif" font-size="78" font-weight="600" fill="#173F3B">um preço que</text>
@@ -18,7 +15,7 @@
 <text x="84" y="1048" font-family="Manrope, sans-serif" font-size="36" font-weight="400" fill="#1E2B28">Joias e semijoias.</text>
 <text x="84" y="1098" font-family="Manrope, sans-serif" font-size="36" font-weight="400" fill="#1E2B28">Custos e margens com clareza.</text>
 <rect x="84" y="1560" width="912" height="150" rx="12" fill="#173F3B"/>
-<text x="126" y="1648" font-family="Manrope, sans-serif" font-size="40" font-weight="600" fill="#F6F3ED">Conheça a mila.ai</text>
+<text x="126" y="1648" font-family="Manrope, sans-serif" font-size="40" font-weight="600" fill="#F6F3ED">Conheça a mila.</text>
 <text x="84" y="1820" font-family="Manrope, sans-serif" font-size="28" font-weight="400" fill="#1E2B28">milaai.com.br</text>
 <svg x="875" y="1742" width="121" height="84" viewBox="0 68 308 156" fill="#173F3B"><ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M1 219 L1 143 C1 103 31 70 69 70 C113 70 147 104 147 148 L147 207 C126 211 112 198 112 182 L112 147 C112 123 93 105 70 105 C50 105 37 120 37 140 L37 190 C37 208 24 220 1 219 Z" />
   <ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M125 83 C138 74 152 70 168 70 C209 70 240.5 104 240.5 148 L240.5 218.5 C218 221 205.5 208 205.5 190.5 L205 148 C205 123 188 105 167 105 C159 105 152 107 146 110.5 C140 100 133 90 125 83 Z" />

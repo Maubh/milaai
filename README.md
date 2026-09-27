@@ -1,4 +1,4 @@
-# mila.ai
+# mila.
 
 A mila é uma assistente de negócios para quem vende **joias e semijoias**. A proposta é apoiar, na conversa pelo WhatsApp, decisões sobre custos e margens, organização das informações de cada peça e preparação de textos para venda.
 
@@ -13,7 +13,7 @@ O fluxo de acesso e as integrações dependem da configuração dos serviços co
 - Na apresentação da marca, usar “para quem vende joias e semijoias”. Depois, preferir “peças”, “coleção” e “negócio” quando a distinção não for necessária.
 - Nomear corretamente materiais e categorias. Uma peça com banho não deve ser descrita como joia de metal precioso sem confirmação.
 - Usar exemplos de ambos os segmentos e sinalizar valores, características e legendas fictícios.
-- Manter o verde mineral e o símbolo `m.` como assinatura da Mila; não recorrer a dourado, brilhos ou imagens que a façam parecer uma joalheria.
+- Usar `mila.` como marca, `m.` como símbolo reduzido e `milaai.com.br` exclusivamente como endereço; não recorrer a dourado, brilhos ou imagens que a façam parecer uma joalheria.
 
 O kit de marca e seus arquivos vetoriais estão em [`design/brand-mila`](design/brand-mila). A direção editorial está em [`ASTRA-DIRECTION.md`](design/brand-mila/ASTRA-DIRECTION.md).
 

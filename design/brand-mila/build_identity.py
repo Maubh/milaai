@@ -1,4 +1,4 @@
-"""Build the mila.ai identity guide and practical exports from the Astra SVG masters."""
+"""Build the mila. identity guide and practical exports from the Astra SVG masters."""
 from pathlib import Path
 import sys
 import shutil
@@ -95,7 +95,7 @@ def create_social(kind):
     for i,line in enumerate(["Joias e semijoias.", "Custos e margens com clareza."]):
         parts.append(svg_text(line,margin,base+78+i*50,36,INK))
     parts.append(f'<rect x="84" y="{height-360}" width="912" height="150" rx="12" fill="{MINERAL}"/>')
-    parts.append(svg_text("Conheça a mila.ai",126,height-272,40,IVORY,600))
+    parts.append(svg_text("Conheça a mila.",126,height-272,40,IVORY,600))
     parts.append(svg_text("milaai.com.br",margin,height-100,28,INK))
     parts.append(nested_svg(V/"symbol-mineral.svg",875,height-178,121,84))
     parts.append('</svg>')
@@ -109,8 +109,8 @@ for kind in ["post", "story"]:
 
 PDF = OUT / "mila-ai-identidade-visual.pdf"
 c = canvas.Canvas(str(PDF), pagesize=(W,H))
-c.setTitle("mila.ai | Identidade visual - direção mineral")
-c.setAuthor("mila.ai - desenvolvimento com Astra")
+c.setTitle("mila. | Identidade visual - direção mineral")
+c.setAuthor("mila. - desenvolvimento com Astra")
 
 def rect(x,y,w,h,color,radius=0):
     c.setFillColor(HexColor(color))
@@ -151,7 +151,7 @@ def start(title,number,dark=False):
     bg,fg=(MINERAL,IVORY) if dark else (IVORY,MINERAL)
     rect(0,0,W,H,bg)
     if title: text(title,48,43,28,"SemiBold",fg)
-    text("mila.ai / identidade visual",48,608,10,"Medium",fg)
+    text("mila. / identidade visual",48,608,10,"Medium",fg)
     text(f"{number:02d}",885,608,10,"Medium",fg)
 
 def end(): c.showPage()
@@ -184,7 +184,7 @@ end()
 
 # 3 - Symbol and profile proof.
 start("m. é a assinatura curta da mila.",3)
-lines("O mesmo m da logo, acompanhado de um ponto na linha de base. Use em avatar, favicon e assinaturas pequenas; mantenha mila.ai por extenso quando a marca ainda precisar ser apresentada.",48,94,830,15)
+lines("O mesmo m da logo, acompanhado de um ponto na linha de base. Use em avatar, favicon e assinaturas pequenas; mantenha mila. por extenso quando a marca ainda precisar ser apresentada.",48,94,830,15)
 rect(48,184,285,285,MINERAL);symbol(88,278,205,102,True)
 c.setStrokeColor(HexColor(SAGE));c.setLineWidth(1);c.circle(190.5,H-326.5,128,stroke=1,fill=0)
 text("Avatar / margem para recorte circular",48,490,11,"Medium")
@@ -260,7 +260,7 @@ rect(80,415,186,42,MINERAL,8);text("Começar com a mila",98,430,12,"SemiBold",IV
 text("Prévia da conversa no WhatsApp",81,472,10,"Regular",INK)
 rect(605,179,224,324,INK,23);rect(614,191,206,300,"#E9EFEB",16)
 rect(614,191,206,41,MINERAL,0);symbol(627,202,27,16,True)
-text("mila.ai",663,203,11,"SemiBold",IVORY)
+text("mila.",663,203,11,"SemiBold",IVORY)
 rect(650,250,155,53,"#D6E2DB",7)
 lines("Quanto devo cobrar por esta peça?",661,263,134,11)
 rect(627,320,174,126,WHITE,7)
@@ -313,7 +313,7 @@ tokens={"colors":COLORS,"typography":{"family":"Manrope","weights":[400,500,600,
 css=":root {\n"+"".join(f"  --mila-{key}: {value};\n" for key,value in COLORS.items())+'  --mila-font: "Manrope", sans-serif;\n}\n'
 (ROOT/"brand-tokens.css").write_text(css,encoding="utf-8")
 
-readme="""# Identidade visual mila.ai - direção mineral
+readme="""# Identidade visual mila. - direção mineral
 
 Para uma assistente de negócios de quem vende joias e semijoias. A identidade comunica clareza e confiança sem se confundir com a marca de uma joalheria.
 

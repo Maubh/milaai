@@ -1,4 +1,4 @@
-# Identidade visual mila.ai - direção mineral
+# Identidade visual mila. - direção mineral
 
 Para uma assistente de negócios de quem vende joias e semijoias. A identidade comunica clareza e confiança sem se confundir com a marca de uma joalheria.
 

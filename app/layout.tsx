@@ -3,9 +3,9 @@ import "./globals.css";
 import "./site.css";
 
 export const metadata: Metadata = {
-  title: "mila.ai — Para quem vende joias e semijoias",
+  title: "mila. — Para quem vende joias e semijoias",
   description:
-    "Conheça a mila.ai, assistente de negócios para quem vende joias e semijoias. Veja uma prévia da análise de custos, margens e descrições de peças na conversa.",
+    "Conheça a mila., assistente de negócios para quem vende joias e semijoias. Veja uma prévia da análise de custos, margens e descrições de peças na conversa.",
   metadataBase: new URL("https://milaai.com.br"),
   icons: {
     icon: [

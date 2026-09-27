@@ -22,10 +22,9 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "O que muda quando eu vou para o Pro?",
     answer: (
       <>
-        Nos planos previstos, o Essencial começa pela peça: custos, margem, pesquisa de mercado e
-        descrição. O Pro foi pensado para a rotina da loja, com visão de compras e faturamento,
-        alertas de fornecedores, integrações de estoque e notas, além de ferramentas de conteúdo.
-        A disponibilidade desses recursos será confirmada no lançamento.
+        O Essencial começa pela peça: custos, margem, pesquisa de mercado e descrição. No Pro,
+        você amplia esse apoio para a rotina da loja, com visão de compras e faturamento, alertas
+        de fornecedores, integrações de estoque e notas, além de ferramentas de conteúdo.
       </>
     ),
   },

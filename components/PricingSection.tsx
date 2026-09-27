@@ -24,7 +24,7 @@ const PLANS: PlanItem[] = [
     tagline: "Essencial",
     price: "39",
     period: "/mês",
-    description: "Base prevista para precificação, margem e descrição de peças",
+    description: "Precificação, margem e descrição de peças desde o primeiro dia",
     features: [
       "Precificação ilimitada com Raio-X e margem real",
       "Radar de concorrentes no Google Shopping",
@@ -45,7 +45,7 @@ const PLANS: PlanItem[] = [
     badge: "Recomendado",
     price: "69",
     period: "/mês",
-    description: "Evolução prevista para estoque, fornecedores, faturamento e conteúdo",
+    description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
@@ -66,10 +66,10 @@ export default function PricingSection() {
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>
           <h2 className="pricing-title">
-            Da peça à operação — na proposta do Pro.
+            Comece pela peça. Evolua com a operação.
           </h2>
           <p className="pricing-subtitle">
-            O Essencial começa por custo, margem e descrição. A proposta do Pro leva essas decisões para a rotina da loja.
+            O Essencial resolve custos, margem e descrição. O Pro conecta as decisões de cada peça à rotina da loja.
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function PricingSection() {
 
         <div className="pricing-guarantee">
           <p>
-            Prévia de planos · escopo, disponibilidade e condições serão confirmados no lançamento.
+            A Mila começa na peça e acompanha a operação conforme sua loja cresce.
           </p>
         </div>
       </div>

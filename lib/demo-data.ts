@@ -61,31 +61,31 @@ export const INTEGRACOES: Integracao[] = [
   {
     id: "jueri",
     nome: "Jueri",
-    status: "em breve",
+    status: "disponível",
     desc: "Gestão especializada de joias e semijoias, consignados, estoque e custos.",
   },
   {
     id: "bling",
     nome: "Bling",
-    status: "em breve",
+    status: "disponível",
     desc: "Trazer notas, estoque e custos sem digitar tudo de novo.",
   },
   {
     id: "olist",
     nome: "Olist",
-    status: "em breve",
+    status: "disponível",
     desc: "Mesma ideia: estoque e custos organizados por peça.",
   },
   {
     id: "google",
     nome: "Google Workspace",
-    status: "em breve",
+    status: "disponível",
     desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — lado a lado com o preço.",
   },
   {
     id: "notion",
     nome: "Notion",
-    status: "em breve",
+    status: "disponível",
     desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
   },
 ];

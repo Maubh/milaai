@@ -38,8 +38,8 @@ export default function PrivacidadePage() {
         <h2>2. Escopo deste piloto</h2>
         <p>
           O acesso é restrito a founders e números autorizados (lista
-          controlada). Partes do site ainda são demonstrativas (mockups e
-          conectores “em breve”). O login com código por WhatsApp, quando
+          controlada). Partes do site ainda são demonstrativas, como os mockups.
+          O login com código por WhatsApp, quando
           liberado para o seu número, é um fluxo real: o telefone chega aos
           nossos servidores e ao provedor de mensagem.
         </p>

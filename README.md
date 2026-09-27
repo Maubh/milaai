@@ -6,7 +6,7 @@ A mila é uma assistente de negócios para quem vende **joias e semijoias**. A p
 
 O site apresenta a proposta e um mockup de conversa. O workspace permite explorar peças fictícias dos dois segmentos, ajustar custos em uma calculadora local e editar legendas de exemplo. O que aparece nessas demonstrações não deve ser interpretado como análise de uma peça real nem como validação de seus materiais.
 
-O fluxo de acesso e a disponibilidade das integrações dependem da configuração dos serviços correspondentes. Consulte a interface e a documentação técnica antes de divulgar recursos como ativos. Preços e planos exibidos no site são uma proposta comercial a confirmar.
+O fluxo de acesso e as integrações dependem da configuração dos serviços correspondentes e das permissões concedidas pela loja. A prévia técnica do repositório ainda usa dados locais em algumas telas; a experiência publicada deve ser conectada aos serviços antes da ativação comercial.
 
 ## Identidade e linguagem
 

@@ -121,7 +121,8 @@ export default function TermosPage() {
           disponíveis, são serviços de terceiros. Ao conectar, você autoriza a
           mila. a agir nos limites da permissão concedida e aceita os termos
           desses provedores. A mila. não controla indisponibilidade, mudança de
-          API ou políticas deles. Itens “em breve” no site não estão ativos.
+          API ou políticas deles. A disponibilidade de cada integração pode variar conforme o
+          serviço conectado e as permissões concedidas.
         </p>
 
         <h2>8. Propriedade intelectual</h2>

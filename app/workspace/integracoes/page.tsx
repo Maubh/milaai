@@ -7,8 +7,8 @@ export default function IntegracoesPage() {
       <p className="tag">Área logada · piloto</p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
-        Conectores disponíveis no piloto. OAuth real ainda não está ligado — cada nome abre a tela de
-        transição para você ver o fluxo.
+        Conecte as ferramentas que sua loja já usa e mantenha estoque, custos e informações das
+        peças organizados com a mila.
       </p>
       <ul className="integra-list">
         {INTEGRACOES.map((i) => (

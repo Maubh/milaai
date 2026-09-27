@@ -20,7 +20,7 @@ export default function ChatPanel({ lines, title = "mila · simulação", showIn
         {lines.map((line, i) => (
           <p key={i} className={line.from === "lojista" ? "bubble out" : "bubble in"}>
             {line.text}
-            {showIntegrationLink && line.from === "socia" && i === lines.length - 1 ? (
+            {showIntegrationLink && line.from === "mila" && i === lines.length - 1 ? (
               <>
                 {" "}
                 <Link href="/integrations/bling">Ver tela de conexão do Bling</Link>

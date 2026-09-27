@@ -1,23 +1,23 @@
 # Prompt Master para o Orca (Next.js 15 + Tailwind + Shadcn)
 
-Copie e cole o prompt abaixo no **Orca** para gerar a aplicação completa da **socIA**:
+Copie e cole o prompt abaixo no **Orca** para gerar a aplicação completa da **mila.**:
 
 ---
 
 ```markdown
 Você é um Engenheiro de Software Fullstack e Designer Especialista em Next.js 15, Tailwind CSS, Shadcn/ui e Lucide Icons.
 
-Sua missão é construir a aplicação completa da **socIA** (plataforma de inteligência e precificação para lojistas de semijoias e moda), com base nos arquivos README.md, SPEC_LANDING_PAGE.md e SPEC_ONBOARDING_WORKFLOW.md presentes neste repositório.
+Sua missão é construir a aplicação completa da **mila.** (plataforma de inteligência e precificação para lojistas de semijoias e moda), com base nos arquivos README.md, SPEC_LANDING_PAGE.md e SPEC_ONBOARDING_WORKFLOW.md presentes neste repositório.
 
 ### Diretrizes de Design & Estética:
-1. Siga uma estética de "Quiet Luxury" e joalheria moderna (tons neutros, alabaster/creme suave #FBFBF9, tipografia refinada e toques dourados champagne no logo socIA e botões principais).
+1. Siga uma estética de "Quiet Luxury" e joalheria moderna (tons neutros, alabaster/creme suave #FBFBF9, tipografia refinada e toques dourados champagne no logo mila. e botões principais).
 2. O logotipo é composto por "soc" em fonte elegante grafite e "IA" destacado em tom dourado/ouro nobre.
 3. Todas as interfaces devem ser mobile-first, fluidas, com transições suaves (Framer Motion) e componentes Shadcn/ui.
 
 ### Estrutura de Telas e Rotas a serem implementadas:
 
 1. **Landing Page (`app/page.tsx`)**:
-   - Navbar minimalista com logo "socIA", links para seções e botão "Testar no WhatsApp".
+   - Navbar minimalista com logo "mila.", links para seções e botão "Testar no WhatsApp".
    - Hero Section com formulário rápido para digitar o número de WhatsApp e botão "Começar Teste Grátis".
    - Card interativo simulando a conversa no WhatsApp mostrando o "Raio-X do Preço" de uma semijoia (custo, taxa, embalagem, aluguel rateado e lucro real).
    - Seção interativa dos 4 Conectores Principais (Bling, Olist, Google Workspace, Notion).

@@ -15,17 +15,17 @@ type Step =
 
 interface ChatMsg {
   id: number;
-  from: "lojista" | "socia";
+  from: "lojista" | "mila";
   time: string;
 }
 
 const SCRIPT: ChatMsg[] = [
   { id: 0, from: "lojista", time: "10:12" },
-  { id: 1, from: "socia", time: "10:12" },
+  { id: 1, from: "mila", time: "10:12" },
   { id: 2, from: "lojista", time: "10:13" },
-  { id: 3, from: "socia", time: "10:13" },
+  { id: 3, from: "mila", time: "10:13" },
   { id: 4, from: "lojista", time: "10:14" },
-  { id: 5, from: "socia", time: "10:14" },
+  { id: 5, from: "mila", time: "10:14" },
 ];
 
 const INITIAL_DELAY = 600;

@@ -1,8 +1,8 @@
-# Revisão do plano original — socIA
+# Revisão do plano original — mila.
 
 ## Centro da solução (correção WhatsApp-first)
 
-O README e os specs descrevem uma assistente de negócios **no WhatsApp**. A lojista envia foto, nota ou pergunta; a socIA devolve orientação de preço, leitura de custos e conteúdo na conversa. O site é porta de entrada e onboarding. O workspace é apoio para custos base e integrações. A primeira implementação errou ao transformar a calculadora e o painel web no produto principal e ao substituir o onboarding de telefone/OTP por entrada de nome. A correção desta entrega recoloca a conversa no centro: landing com conversa no hero, onboarding Instinct simulado em três rotas, simulador `/conversa` com roteiros e workspace reposicionado como apoio.
+O README e os specs descrevem uma assistente de negócios **no WhatsApp**. A lojista envia foto, nota ou pergunta; a mila. devolve orientação de preço, leitura de custos e conteúdo na conversa. O site é porta de entrada e onboarding. O workspace é apoio para custos base e integrações. A primeira implementação errou ao transformar a calculadora e o painel web no produto principal e ao substituir o onboarding de telefone/OTP por entrada de nome. A correção desta entrega recoloca a conversa no centro: landing com conversa no hero, onboarding Instinct simulado em três rotas, simulador `/conversa` com roteiros e workspace reposicionado como apoio.
 
 ## O que manter
 

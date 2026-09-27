@@ -22,7 +22,7 @@ function SimulatorInner() {
 
   const active = SCRIPTED_PROMPTS.find((p) => p.id === activeId) ?? SCRIPTED_PROMPTS[0];
   const lines: ChatLine[] = customNote
-    ? [...active.reply, { from: "socia", text: customNote }]
+    ? [...active.reply, { from: "mila", text: customNote }]
     : active.reply;
 
   useEffect(() => {

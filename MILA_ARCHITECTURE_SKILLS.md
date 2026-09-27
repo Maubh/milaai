@@ -1,12 +1,12 @@
-# mySocIA — Especificação de Arquitetura, Skills e Planos
+# mila. — Especificação de Arquitetura, Skills e Planos
 
-Este documento detalha o ecossistema oficial da **mySocIA** (Sócia), desenvolvido para apoiar lojistas e empresárias de semijoias, joias e moda.
+Este documento detalha o ecossistema oficial da **mila.** (Sócia), desenvolvido para apoiar lojistas e empresárias de semijoias, joias e moda.
 
 ---
 
-## 🏗️ 1. O Profile Oficial (`mysocia`)
-- **Profile no Hermes**: `mysocia`
-- **Diretório**: `/opt/data/profiles/mysocia/`
+## 🏗️ 1. O Profile Oficial (`mila`)
+- **Profile no Hermes**: `mila`
+- **Diretório**: `/opt/data/profiles/mila/`
 - **Ambiente**: 100% isolado de dados pessoais (Maurício/Keu/Casal) e da operação interna da Ritrovarsi.
 
 ---

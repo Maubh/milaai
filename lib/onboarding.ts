@@ -7,7 +7,7 @@ export interface OnboardingState {
   plan?: string;
 }
 
-const KEY = "socia-onboarding";
+const KEY = "mila-onboarding";
 const DEFAULT_WA = "5531936187463";
 
 function read(): Partial<OnboardingState> {

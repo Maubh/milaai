@@ -323,15 +323,11 @@
   width: 1.75rem;
   height: 1.75rem;
   border-radius: 50%;
-  background: var(--sand);
-  color: var(--mineral);
-  font-weight: 700;
-  font-size: 0.9rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--mineral);
+  overflow: hidden;
   flex-shrink: 0;
 }
+.gx-avatar img { display: block; width: 100%; height: 100%; }
 .gx-id { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
 .gx-id strong { font-size: 0.8rem; }
 .gx-id small { font-size: 0.62rem; color: #7ee2a8; }

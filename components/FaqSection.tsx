@@ -19,7 +19,7 @@ const FAQ_ITEMS: FaqItem[] = [
     ),
   },
   {
-    question: "O que muda quando eu vou para o Pro?",
+    question: "Qual plano combina com a minha loja?",
     answer: (
       <>
         O Essencial começa pela peça: custos, margem, pesquisa de mercado e descrição. No Pro,

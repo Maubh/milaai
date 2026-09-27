@@ -66,10 +66,10 @@ export default function PricingSection() {
         <div className="pricing-header">
           <span className="pricing-eyebrow">Planos transparentes</span>
           <h2 className="pricing-title">
-            Comece pela peça. Evolua com a operação.
+            Planos para o momento da sua loja.
           </h2>
           <p className="pricing-subtitle">
-            O Essencial resolve custos, margem e descrição. O Pro conecta as decisões de cada peça à rotina da loja.
+            Comece com o que sua operação precisa hoje. A Mila acompanha o próximo passo.
           </p>
         </div>
 

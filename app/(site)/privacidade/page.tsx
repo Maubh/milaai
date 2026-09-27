@@ -139,9 +139,9 @@ export default function PrivacidadePage() {
           </li>
         </ul>
         <p>
-          Esses prestadores podem processar dados fora do Brasil. Usamos
-          contratos e configurações compatíveis com a prestação do serviço e com
-          a legislação aplicável, na medida do piloto.
+          Esses prestadores podem processar dados fora do Brasil. Estamos
+          formalizando contratos e configurações alinhados a essa prestação
+          neste piloto.
         </p>
         <p>
           Quando um conector estiver disponível e você autorizar (Google,
@@ -155,8 +155,9 @@ export default function PrivacidadePage() {
           A meta do produto é tratar cada loja como um espaço separado:
           operadores da mesma loja podem compartilhar o ambiente; lojas
           diferentes não devem ver dados umas das outras. Esse isolamento está
-          sendo reforçado no piloto. Acesso excepcional de suporte pela equipe
-          fundadora, se necessário, deve ser registrado.
+          sendo reforçado no piloto. A intenção é registrar acessos
+          excepcionais de suporte pela equipe fundadora; o registro sistemático
+          ainda está em implantação.
         </p>
 
         <h2>7. Retenção</h2>
@@ -173,8 +174,9 @@ export default function PrivacidadePage() {
           </li>
         </ul>
         <p>
-          A mila. não substitui a obrigação da loja de guardar documentos
-          fiscais nos prazos legais.
+          Esses prazos são alvo do piloto; a exclusão neste momento é sob
+          pedido pelo e-mail de privacidade. A mila. não substitui a obrigação
+          da loja de guardar documentos fiscais nos prazos legais.
         </p>
 
         <h2>8. Seus direitos (LGPD)</h2>

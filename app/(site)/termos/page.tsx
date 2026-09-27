@@ -72,9 +72,9 @@ export default function TermosPage() {
             loja.
           </li>
           <li>
-            Quando houver ações que alteram dados, pediremos confirmação ligada
-            à prévia da ação. Um “sim” solto no chat sobre outro assunto não
-            conta como autorização.
+            Quando esse controle estiver disponível e houver ações que alteram
+            dados, pediremos confirmação ligada à prévia da ação. Um “sim”
+            solto no chat sobre outro assunto não conta como autorização.
           </li>
           <li>
             Conteúdo do mockup do site e da rota de conversa simulada é

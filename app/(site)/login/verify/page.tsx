@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getTelefone, isVerified, markVerified } from "@/lib/onboarding";
+import { getTelefone, markVerified } from "@/lib/onboarding";
 import "../auth.css";
 
 const CODE_LEN = 6;
@@ -22,12 +22,15 @@ export default function VerifyPage() {
 
   useEffect(() => {
     setTelefone(getTelefone());
-    if (isVerified()) {
-      router.replace("/workspace");
-      return;
-    }
+    // Antes daqui saía `if (isVerified()) router.replace("/workspace")`, que
+    // mandava para o workspace com base no localStorage — a mesma fonte que
+    // qualquer um escreve à mão — enquanto o cookie HttpOnly (a sessão de
+    // verdade) podia estar morto. Era a semente do split-brain: a lojista
+    // entrava e as chamadas voltavam "sessão expirada". Não redireciona mais
+    // por storage; se um dia quiserem o atalho de "já logada", ele lê o cookie
+    // no servidor, que é o critério do gate do workspace.
     setChecking(false);
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     if (secondsLeft <= 0) return;

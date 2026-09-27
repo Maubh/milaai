@@ -11,7 +11,7 @@ Sua missão é construir a aplicação completa da **mila.** (plataforma de inte
 
 ### Diretrizes de Design & Estética:
 1. Siga uma estética de "Quiet Luxury" e joalheria moderna (tons neutros, alabaster/creme suave #FBFBF9, tipografia refinada e toques dourados champagne no logo mila. e botões principais).
-2. O logotipo é composto por "soc" em fonte elegante grafite e "IA" destacado em tom dourado/ouro nobre.
+2. O logotipo é a palavra "mila." em fonte elegante grafite, com o ponto final em tom dourado/ouro nobre.
 3. Todas as interfaces devem ser mobile-first, fluidas, com transições suaves (Framer Motion) e componentes Shadcn/ui.
 
 ### Estrutura de Telas e Rotas a serem implementadas:

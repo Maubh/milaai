@@ -10,7 +10,7 @@ O telefone deve apoiar a landing minimalista com um CTA; não torná-lo protagon
 
 ## Implementação (2026-09, follow-up)
 
-Moldura SVG + CSS original em `components/IPhoneMockup.tsx`, proporções inspiradas no iPhone 15 Pro do Magic UI (MIT, sem dependência instalada). Conversa interna com os números fixos acima e compositor não clicável. Capturas `/tmp/socia-1440.png` e `/tmp/socia-390.png`: telefone fino e proporcional, sem overflow horizontal, sem erros de página.
+Moldura SVG + CSS original em `components/IPhoneMockup.tsx`, proporções inspiradas no iPhone 15 Pro do Magic UI (MIT, sem dependência instalada). Conversa interna com os números fixos acima e compositor não clicável. Capturas `/tmp/mila-1440.png` e `/tmp/mila-390.png`: telefone fino e proporcional, sem overflow horizontal, sem erros de página.
 
 Ajustes de onboarding incluídos a pedido da coordenadora: removida a marca mila. duplicada em `/login` e `/login/verify` (o header compartilhado já a mostra); `/login/verify` não redireciona mais visitantes verificados — mostra a tela com nota de etapa concluída; `/onboarding/connect` exibe estados de pré-requisito inline (sem telefone / sem verificação) em vez de redirecionar.
 

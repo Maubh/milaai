@@ -10,7 +10,7 @@ Esta especificação orienta a geração completa da Landing Page de alta conver
   - `Background`: Creme suave / Alabaster (`#FBFBF9`) e Branco Puro (`#FFFFFF`).
   - `Cards / Superfícies`: Branco com bordas ultra sutis (`#EAEAE5` / `border-stone-200`).
   - `Tipografia Principal`: Cinza profundo / Grafite (`#1A1A1A` e `#4A4A48`).
-  - `Accent / IA Brand`: Dourado Champagne / Ouro Nobre (`#D4AF37` / `#C5A059`) para destacar o **IA** em `mila.` e botões de conversão.
+  - `Accent Brand`: Dourado Champagne / Ouro Nobre (`#D4AF37` / `#C5A059`) para o ponto final de `mila.` e botões de conversão.
 - **Tipografia**:
   - Headings: Serif elegante (ex: *Playfair Display*, *Cinzel* ou *Cormorant Garamond*).
   - Body / Dados numéricos: Sans-serif moderna e clean (*Plus Jakarta Sans* ou *Inter*).

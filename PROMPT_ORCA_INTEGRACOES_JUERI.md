@@ -26,7 +26,7 @@ Como o Jueri utiliza chave de conexão direta gerada no painel, crie um card min
   - `[ Conectar com a mila. ]` (ao clicar, simula o teste de conexão bem-sucedido e exibe o botão verde *"Voltar para o WhatsApp"*).
 
 ### 3. Unificar Branding nas Telas de Integração
-- Substituir qualquer menção residual a "mila." nas telas de `/integrations/*` e `/workspace/*` por **mila.**.
+- Não deixar nenhuma menção residual a "socIA", "mySocIA" ou "sócia como marca" nas telas de `/integrations/*` e `/workspace/*`.
 - Mensagem de sucesso após conectar qualquer app:
   *"Pronto! Conexão realizada com sucesso. Pode voltar para sua conversa com a mila. no WhatsApp."*
 ```

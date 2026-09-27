@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { INTEGRACOES } from "@/lib/demo-data";
+import { integrationErrorText } from "@/lib/integration-errors";
+import { SESSION_COOKIE } from "@/lib/server/mila-auth";
+import { proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 interface ProviderStatus {
   id: string;
@@ -9,43 +15,36 @@ interface ProviderStatus {
   app_configured: boolean;
 }
 
-const BASE = process.env.MILA_AUTH_BASE || "https://wa.milaai.com.br";
-
-async function fetchStatus(
-  sessionToken: string,
-): Promise<{ tenant: string | null; providers: ProviderStatus[] } | null> {
-  try {
-    const res = await fetch(`${BASE}/api/oauth/providers`, {
-      headers: {
-        "X-Mila-Auth-Secret": process.env.MILA_AUTH_SECRET || "",
-        "X-Mila-Session": sessionToken,
-        Accept: "application/json",
-      },
-      cache: "no-store",
-      signal: AbortSignal.timeout(6_000),
-    });
-    if (!res.ok) return null;
-    const data = (await res.json()) as {
-      tenant?: string;
-      providers?: ProviderStatus[];
-    };
-    return { tenant: data.tenant ?? null, providers: data.providers ?? [] };
-  } catch {
-    return null;
-  }
-}
-
 /**
- * Status real de conexão. Só mostra "conectado" quando o vault da loja
- * tem credencial — o catálogo estático do repo nunca afirma conexão.
+ * Status real de conexão. Só mostra "conectado" quando o vault da loja tem
+ * credencial — o catálogo estático do repo nunca afirma conexão.
  */
-export default async function IntegracoesPage() {
+export default async function IntegracoesPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const { cookies } = await import("next/headers");
   const jar = await cookies();
-  const token = jar.get("mila_session")?.value ?? null;
-  const status = token ? await fetchStatus(token) : null;
+  const token = jar.get(SESSION_COOKIE)?.value ?? null;
 
-  const byId = new Map((status?.providers ?? []).map((p) => [p.id, p]));
+  let providers: ProviderStatus[] = [];
+  let consultou = false;
+  if (token) {
+    const { status, data } = await proxyOAuth("/api/oauth/providers");
+    if (status === 200) {
+      consultou = true;
+      const safe = sanitizeOAuthResponse(data, ["providers"]);
+      providers = Array.isArray(safe.providers) ? (safe.providers as ProviderStatus[]) : [];
+    }
+  }
+
+  // O provedor volta com ?ok=<provider> ou ?erro=<detail> no redirect do callback.
+  const sp = await searchParams;
+  const okParam = typeof sp.ok === "string" ? sp.ok : null;
+  const erroParam = typeof sp.erro === "string" ? sp.erro : null;
+
+  const byId = new Map(providers.map((p) => [p.id, p]));
 
   return (
     <div className="work-wrap">
@@ -56,11 +55,23 @@ export default async function IntegracoesPage() {
         peças organizadas com a mila.
       </p>
 
+      {okParam ? (
+        <p className="hint" role="status">
+          <strong>{byId.get(okParam)?.name ?? okParam}</strong> conectado a esta loja.
+        </p>
+      ) : null}
+
+      {erroParam ? (
+        <p className="hint" role="alert" style={{ color: "#b3261e" }}>
+          {integrationErrorText(erroParam)}
+        </p>
+      ) : null}
+
       {!token ? (
         <p className="hint" role="status">
           Entre com seu telefone para ver e conectar as integrações desta loja.
         </p>
-      ) : !status ? (
+      ) : !consultou ? (
         <p className="hint" role="status">
           Não conseguimos consultar suas integrações agora. Tente de novo em instantes.
         </p>
@@ -69,7 +80,14 @@ export default async function IntegracoesPage() {
       <ul className="integra-list">
         {INTEGRACOES.map((i) => {
           const live = byId.get(i.id);
-          const label = !token || !live ? i.status : live.connected ? "conectado" : live.app_configured ? "disponível" : "em breve";
+          // Sem status real do servidor não afirmamos nada sobre a conexão.
+          const label = live
+            ? live.connected
+              ? "conectado"
+              : live.app_configured
+                ? "disponível"
+                : "em breve"
+            : "—";
           return (
             <li key={i.id} className="card">
               <strong>

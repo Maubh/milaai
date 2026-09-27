@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { GUIDED_PROVIDERS, proxyOAuth } from "@/lib/server/mila-oauth";
+import { GUIDED_PROVIDERS, proxyOAuth, sanitizeOAuthResponse } from "@/lib/server/mila-oauth";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(
   req: Request,
@@ -7,7 +10,7 @@ export async function POST(
 ) {
   const { provider } = await params;
   const slug = provider.toLowerCase();
-  if (!GUIDED_PROVIDERS.includes(slug as (typeof GUIDED_PROVIDERS)[number])) {
+  if (!(GUIDED_PROVIDERS as readonly string[]).includes(slug)) {
     return NextResponse.json({ ok: false, detail: "not_a_guided_provider" }, { status: 404 });
   }
   let key = "";
@@ -24,5 +27,9 @@ export async function POST(
     method: "POST",
     body: JSON.stringify({ key: key.trim() }),
   });
-  return NextResponse.json(data, { status });
+  // A chave nunca volta para o browser; só o resultado da gravação.
+  return NextResponse.json(sanitizeOAuthResponse(data), {
+    status,
+    headers: { "Cache-Control": "private, no-store" },
+  });
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { use, useState } from "react";
+import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import "../../workspace/workspace.css";
 
 interface IntegrationConfig {
@@ -45,7 +46,9 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Notion",
     title: "Conectar Notion",
     desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
-    isApiKeyGuided: false,
+    // Enquanto a integração usa token de conexão no vault, ela segue o mesmo
+    // fluxo protegido de chave colada do Jueri (não inicia OAuth inválido).
+    isApiKeyGuided: true,
   },
 };
 
@@ -58,20 +61,6 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
   const [erro, setErro] = useState("");
-
-  const ERROS: Record<string, string> = {
-    app_nao_configurado:
-      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
-    app_not_configured:
-      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
-    provider_not_configured:
-      "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
-    sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
-    estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",
-    loja_divergente: "A conta autorizada não é a desta loja. Nada foi conectado.",
-    chave_curta: "A chave parece curta demais. Confira e cole novamente.",
-    no_session: "Entre com seu telefone antes de conectar uma integração.",
-  };
 
   /** Conectores sem OAuth (Jueri, Notion): a lojista cola a chave. */
   async function handleGuidedKey(e: React.FormEvent) {
@@ -88,7 +77,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
       if (res.ok && data.ok) {
         setConnected(true);
       } else {
-        setErro(ERROS[data.detail ?? ""] ?? "Não foi possível conectar. Tente novamente.");
+        setErro(integrationErrorText(data.detail));
       }
     } catch {
       setErro("Não foi possível falar com a mila agora. Tente novamente.");
@@ -105,11 +94,15 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     try {
       const res = await fetch(`/api/oauth/${key}/start`, { method: "GET" });
       const data = (await res.json()) as { ok?: boolean; authorize_url?: string; detail?: string };
-      if (res.ok && data.authorize_url) {
-        window.location.href = data.authorize_url;
+      if (res.ok && data.ok && isSafeAuthorizeUrl(data.authorize_url)) {
+        window.location.assign(data.authorize_url);
         return;
       }
-      setErro(ERROS[data.detail ?? ""] ?? "Não foi possível iniciar a conexão. Tente novamente.");
+      setErro(
+        res.ok && data.ok
+          ? "Não foi possível validar o endereço de autorização. Tente novamente."
+          : integrationErrorText(data.detail),
+      );
     } catch {
       setErro("Não foi possível falar com a mila agora. Tente novamente.");
     } finally {
@@ -182,11 +175,11 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               <ol className="integration-steps">
                 <li>
                   <span className="step-num">1</span>
-                  <span>No seu Jueri, acesse o menu <strong>Configurações &gt; API</strong>.</span>
+                  <span>No {info.nome}, acesse as configurações de <strong>Integrações / API</strong>.</span>
                 </li>
                 <li>
                   <span className="step-num">2</span>
-                  <span>Clique no botão <strong>&ldquo;Gerar / Copiar Chave&rdquo;</strong>.</span>
+                  <span>Crie ou copie a <strong>chave de conexão</strong> da integração.</span>
                 </li>
                 <li>
                   <span className="step-num">3</span>
@@ -195,11 +188,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </ol>
 
               <div className="integration-field">
-                <label htmlFor="jueri-api-key">Chave de conexão do Jueri</label>
+                <label htmlFor="integration-api-key">Chave de conexão do {info.nome}</label>
                 <input
-                  id="jueri-api-key"
-                  type="text"
-                  placeholder="Cole sua chave do Jueri aqui..."
+                  id="integration-api-key"
+                  type="password"
+                  autoComplete="off"
+                  placeholder={`Cole sua chave do ${info.nome} aqui...`}
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   required
@@ -231,7 +225,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </div>
             </form>
           ) : (
-            /* Conectores OAuth padrão (Bling, Olist, Google, Notion) */
+            /* Conectores OAuth padrão (Bling, Olist, Google) */
             <form onSubmit={handleOAuth}>
               <div className="integration-brand-badge">
                 {info.logo ? (

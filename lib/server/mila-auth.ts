@@ -14,6 +14,7 @@ const ALLOWED_START_KEYS = [
 
 export const SESSION_COOKIE = "mila_session";
 
+/** Campos do verify que podem ir para o browser (sem identidade de loja). */
 const ALLOWED_VERIFY_KEYS = [
   "ok",
   "detail",
@@ -25,9 +26,52 @@ const ALLOWED_VERIFY_KEYS = [
   "wa_number",
   "wa_link",
   "wa_prefill",
-  "plan",
-  "tenant_id",
 ] as const;
+
+export interface SessionCookieOptions {
+  httpOnly: boolean;
+  secure: boolean;
+  sameSite: "lax";
+  path: string;
+  maxAge: number;
+  domain?: string;
+}
+
+/**
+ * Domínio do cookie de sessão.
+ *
+ * O callback do OAuth mora em `wa.milaai.com.br` (só o VPS tem a credencial de
+ * app), então o cookie precisa valer para `.milaai.com.br` — sem isso o
+ * redirect do provedor chega sem sessão e todo callback cai em `sessao_expirada`.
+ * Em preview/local o cookie fica host-only (o navegador recusaria outro domínio).
+ * `MILA_COOKIE_DOMAIN="-"` força host-only; um valor explícito sobrepõe tudo.
+ */
+export function cookieDomainFor(hostHeader: string | null | undefined): string | undefined {
+  const explicit = (process.env.MILA_COOKIE_DOMAIN ?? "").trim();
+  if (explicit === "-") return undefined;
+  if (explicit) return explicit;
+  const host = String(hostHeader || "")
+    .split(":")[0]
+    .trim()
+    .toLowerCase();
+  if (!host) return undefined;
+  if (host === "milaai.com.br" || host.endsWith(".milaai.com.br")) return ".milaai.com.br";
+  return undefined;
+}
+
+export function sessionCookieOptions(
+  req: Request,
+  maxAgeSeconds: number,
+): SessionCookieOptions {
+  return {
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    path: "/",
+    maxAge: maxAgeSeconds,
+    domain: cookieDomainFor(req.headers.get("host")),
+  };
+}
 
 /** Campos da resposta de verify que viram cookie; o resto é descartado. */
 export function splitSession(data: Record<string, unknown>): {
@@ -43,6 +87,14 @@ export function splitSession(data: Record<string, unknown>): {
   };
 }
 
+/** maxAge do cookie: o que o serviço de auth informar (fallback 14d). */
+export function cookieMaxAge(cookie: Record<string, unknown> | null): number {
+  const fallback = 60 * 60 * 24 * 14;
+  const raw = cookie?.max_age;
+  const value = typeof raw === "number" ? raw : Number(raw);
+  if (!Number.isFinite(value) || value <= 0) return fallback;
+  return Math.floor(value);
+}
 
 export function milaAuthBase(): string {
   // Server-only. Do NOT fall back to NEXT_PUBLIC_*.
@@ -106,6 +158,7 @@ export async function proxyMilaAuth(
 ): Promise<{ status: number; data: Record<string, unknown> }> {
   const secret = milaAuthSecret();
   if (!secret) {
+    // fail-close: sem segredo não falamos com o serviço de auth
     return { status: 500, data: { ok: false, detail: "missing_auth_secret" } };
   }
   const url = `${milaAuthBase()}${path.startsWith("/") ? path : `/${path}`}`;

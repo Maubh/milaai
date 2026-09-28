@@ -15,6 +15,10 @@ interface IntegrationConfig {
   precisaClienteId?: boolean;
   clienteIdLabel?: string;
   chaveLabel?: string;
+  /** Onde a lojista gera a credencial (texto literal da doc do provedor). */
+  ondeGerar?: string;
+  /** O que é o código de cliente, em uma frase. */
+  oQueEClienteId?: string;
 }
 
 const KNOWN: Record<string, IntegrationConfig> = {
@@ -29,6 +33,11 @@ const KNOWN: Record<string, IntegrationConfig> = {
     precisaClienteId: true,
     clienteIdLabel: "Código de Cliente Jueri",
     chaveLabel: "Token de API",
+    // Caminho literal da doc oficial (jueri.com.br/sis/docs → Autenticação).
+    ondeGerar:
+      'No Jueri, menu lateral → "Configurações" → "API" → botão "Gerar token".',
+    oQueEClienteId:
+      "É o ID da sua empresa no Jueri (o mesmo número que aparece na doc da API).",
   },
   bling: {
     nome: "Bling",
@@ -201,6 +210,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 </li>
               </ol>
 
+              {info.ondeGerar ? (
+                <p className="hint" style={{ marginBottom: "0.9rem" }}>
+                  <strong>Onde gerar:</strong> {info.ondeGerar}
+                </p>
+              ) : null}
+
               {info.precisaClienteId ? (
                 <div className="integration-field">
                   <label htmlFor="integration-cliente-id">
@@ -210,11 +225,16 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                     id="integration-cliente-id"
                     type="text"
                     autoComplete="off"
-                    placeholder="Ex.: 12345"
+                    placeholder="Ex.: 1"
                     value={clienteId}
                     onChange={(e) => setClienteId(e.target.value)}
                     required
                   />
+                  {info.oQueEClienteId ? (
+                    <p className="hint" style={{ marginTop: "0.4rem" }}>
+                      {info.oQueEClienteId}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
 

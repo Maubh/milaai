@@ -51,7 +51,7 @@ const PLANS: PlanItem[] = [
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
       "Integração direta Jueri, Bling e Olist (entrada de notas e estoque)",
-      "Suíte completa de marketing para Instagram (9 ferramentas)",
+      "Marketing de Instagram: legenda, carrossel, hashtags, bio, plano de conteúdo e reaproveitamento",
     ],
     ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",

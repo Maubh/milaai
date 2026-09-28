@@ -36,6 +36,17 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // Chave colada
   chave_curta: "A chave parece curta demais. Confira e cole novamente.",
   chave_longa: "A chave é longa demais para ser válida. Confira e cole novamente.",
+  // Verificação contra o provedor (a mila CONFERE antes de dizer "conectado")
+  credencial_invalida:
+    "O provedor recusou esta credencial. Confira o token e tente de novo — nada foi conectado.",
+  cliente_invalido:
+    "O código de cliente não foi aceito pelo provedor. Confira o código e tente de novo.",
+  cliente_obrigatorio:
+    "Informe também o código de cliente do Jueri — só o token não basta.",
+  nao_verificavel_agora:
+    "Não conseguimos falar com o provedor para conferir sua credencial. Nada foi conectado — tente de novo em alguns minutos.",
+  sem_verificador:
+    "Este conector ainda não sabe conferir credenciais. Nada foi conectado — avisamos quando liberar.",
   origem_invalida: "A solicitação veio de um endereço inesperado. Abra a mila em milaai.com.br e tente de novo.",
   invalid_body: "Não recebemos os dados da conexão. Tente de novo.",
   invalid_upstream_json: "A mila respondeu em um formato inesperado. Tente de novo.",

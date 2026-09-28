@@ -354,3 +354,41 @@ test("tela do código: só acusa 'sem número' depois de ler o storage", () => {
   assert.equal(shouldShowMissingPhoneNote(""), true);
   assert.equal(shouldShowMissingPhoneNote("31999999999"), false);
 });
+
+test("chave colada: cada recusa do provedor tem o SEU texto", () => {
+  // Furo medido 2026-09-28: a tela dizia "Conectado com sucesso!" para qualquer
+  // chave de 8+ caracteres. Agora os motivos chegam à lojista — e cada um
+  // precisa ser distinguível, senão ela não sabe o que corrigir.
+  const recusada = integrationErrorText("credencial_invalida");
+  assert.match(recusada, /provedor recusou/i);
+  assert.match(recusada, /nada foi conectado/i);
+
+  const fora = integrationErrorText("nao_verificavel_agora");
+  assert.match(fora, /não conseguimos falar/i);
+  assert.match(fora, /nada foi conectado/i);
+  assert.notEqual(recusada, fora, "chave errada ≠ provedor fora do ar");
+
+  // Jueri precisa dos DOIS valores: confundir os dois faz a lojista trocar o
+  // token quando o problema era o código de cliente.
+  assert.match(integrationErrorText("cliente_obrigatorio"), /código de cliente/i);
+  assert.notEqual(
+    integrationErrorText("cliente_invalido"),
+    recusada,
+    "código de cliente inválido ≠ token inválido",
+  );
+
+  // Sem validador não há como dizer "conectado" — e a tela admite isso.
+  assert.match(integrationErrorText("sem_verificador"), /nada foi conectado/i);
+
+  // Nenhum desses pode cair no silêncio do genérico.
+  const generico = integrationErrorText(undefined);
+  for (const codigo of [
+    "credencial_invalida",
+    "nao_verificavel_agora",
+    "cliente_obrigatorio",
+    "cliente_invalido",
+    "sem_verificador",
+  ]) {
+    assert.notEqual(integrationErrorText(codigo), generico, codigo);
+  }
+});

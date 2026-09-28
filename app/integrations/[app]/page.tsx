@@ -11,6 +11,10 @@ interface IntegrationConfig {
   desc: string;
   logo?: string;
   isApiKeyGuided?: boolean;
+  /** Conectores que exigem DOIS valores (Jueri: código de cliente + token). */
+  precisaClienteId?: boolean;
+  clienteIdLabel?: string;
+  chaveLabel?: string;
 }
 
 const KNOWN: Record<string, IntegrationConfig> = {
@@ -20,6 +24,11 @@ const KNOWN: Record<string, IntegrationConfig> = {
     desc: "Sincronize seu estoque, tabelas de atacado/varejo e maletas de consignado com a mila.",
     logo: "/integrations/jueri.png",
     isApiKeyGuided: true,
+    // Jueri exige os DOIS valores (Código de Cliente + Token). Com um campo só
+    // não há como conferir a credencial contra a API — e conferir é o ponto.
+    precisaClienteId: true,
+    clienteIdLabel: "Código de Cliente Jueri",
+    chaveLabel: "Token de API",
   },
   bling: {
     nome: "Bling",
@@ -58,6 +67,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   const info = KNOWN[key];
 
   const [apiKey, setApiKey] = useState("");
+  const [clienteId, setClienteId] = useState("");
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
   const [erro, setErro] = useState("");
@@ -71,7 +81,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
       const res = await fetch(`/api/oauth/${key}/key`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ key: apiKey.trim() }),
+        body: JSON.stringify({ key: apiKey.trim(), cliente_id: clienteId.trim() }),
       });
       const data = (await res.json()) as { ok?: boolean; detail?: string };
       if (res.ok && data.ok) {
@@ -179,25 +189,55 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 </li>
                 <li>
                   <span className="step-num">2</span>
-                  <span>Crie ou copie a <strong>chave de conexão</strong> da integração.</span>
+                  <span>
+                    {info.precisaClienteId
+                      ? "Copie o seu código de cliente e o token de API."
+                      : "Crie ou copie a chave de conexão da integração."}
+                  </span>
                 </li>
                 <li>
                   <span className="step-num">3</span>
-                  <span>Cole a sua chave no campo abaixo:</span>
+                  <span>Cole {info.precisaClienteId ? "os dois" : "a sua chave"} no campo abaixo:</span>
                 </li>
               </ol>
 
+              {info.precisaClienteId ? (
+                <div className="integration-field">
+                  <label htmlFor="integration-cliente-id">
+                    {info.clienteIdLabel ?? "Código de cliente"}
+                  </label>
+                  <input
+                    id="integration-cliente-id"
+                    type="text"
+                    autoComplete="off"
+                    placeholder="Ex.: 12345"
+                    value={clienteId}
+                    onChange={(e) => setClienteId(e.target.value)}
+                    required
+                  />
+                </div>
+              ) : null}
+
               <div className="integration-field">
-                <label htmlFor="integration-api-key">Chave de conexão do {info.nome}</label>
+                <label htmlFor="integration-api-key">
+                  {info.chaveLabel ?? `Chave de conexão do ${info.nome}`}
+                </label>
                 <input
                   id="integration-api-key"
                   type="password"
                   autoComplete="off"
-                  placeholder={`Cole sua chave do ${info.nome} aqui...`}
+                  placeholder={
+                    info.precisaClienteId
+                      ? `Cole seu ${info.chaveLabel ?? "token"} aqui...`
+                      : `Cole sua chave do ${info.nome} aqui...`
+                  }
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
                   required
                 />
+                <p className="hint" style={{ marginTop: "0.4rem" }}>
+                  A mila <strong>confere</strong> com o {info.nome} antes de dizer que conectou.
+                </p>
               </div>
 
               {erro ? (

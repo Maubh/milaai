@@ -37,9 +37,16 @@ export async function POST(
     // Sem teto, um body gigante atravessa o proxy inteiro até o VPS.
     return NextResponse.json({ ok: false, detail: "chave_longa" }, { status: 413 });
   }
+  // Jueri exige dois valores (código de cliente + token). Repassamos o código
+  // quando vier; o VPS é quem decide se aquele conector precisa dele.
+  const clienteId =
+    typeof parsed.data.cliente_id === "string" ? parsed.data.cliente_id.trim() : "";
+  if (clienteId.length > 64) {
+    return NextResponse.json({ ok: false, detail: "cliente_invalido" }, { status: 400 });
+  }
   const { status, data } = await proxyOAuth(`/api/oauth/${slug}/key`, {
     method: "POST",
-    body: JSON.stringify({ key: trimmed }),
+    body: JSON.stringify({ key: trimmed, cliente_id: clienteId }),
   });
   // A chave nunca volta para o browser; só o resultado da gravação.
   return NextResponse.json(sanitizeOAuthResponse(data), {

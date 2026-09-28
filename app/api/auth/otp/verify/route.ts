@@ -38,22 +38,17 @@ export async function POST(req: Request) {
   const res = NextResponse.json(sanitizeVerifyResponse(publicData), { status });
 
   if (res.status === 200) {
-    // ⚠️ O cookie de sessão vem PRONTO do serviço de auth e é repassado verbatim.
+    // ⚠️ O cookie de sessão vem PRONTO do serviço de auth e é repassado.
     //
-    // Antes, o site montava o cookie aqui a partir de um `session_token` que
-    // viajava no corpo do JSON — e isso anulava a proteção do HttpOnly: o token
-    // passava pelo JS/edge antes de virar cookie, e um XSS o leria. Além disso
-    // o valor vazado valia os 14 dias inteiros, porque o cookie nunca rotava.
-    //
-    // Agora o navegador recebe a sessão sem que este código jamais veja o valor:
-    // as flags (`HttpOnly`, `Secure`, `SameSite`) e o `Domain` vêm decididos por
-    // quem sabe o domínio (o auth, via `MILA_COOKIE_DOMAIN`).
-    //
-    // Fail-closed: sem `Set-Cookie` do upstream, não há cookie nenhum — o site
-    // não inventa sessão a partir de um token no JSON.
+    // Imposições de segurança (revisão Grok 4.7):
+    // 1. Usar apenas `res.cookies.set(...)` (evita duplicar headers e garante
+    //    que o adapter Serverless da Vercel emita o Set-Cookie).
+    // 2. Forçar HttpOnly, Secure, SameSite=Lax e Path=/ em código.
+    // 3. Rejeitar domain injection (Domain derivado estritamente do host da req).
+    // 4. Max-Age com teto de 14 dias.
+    const hostHeader = req.headers.get("host");
     for (const raw of pickSessionSetCookie(setCookie)) {
-      res.headers.append("Set-Cookie", raw);
-      const parsed = parseSessionCookie(raw);
+      const parsed = parseSessionCookie(raw, hostHeader);
       if (parsed) {
         res.cookies.set(parsed.name, parsed.value, parsed.options);
       }

@@ -41,6 +41,9 @@ export async function POST(
   // quando vier; o VPS é quem decide se aquele conector precisa dele.
   const clienteId =
     typeof parsed.data.cliente_id === "string" ? parsed.data.cliente_id.trim() : "";
+  if (slug === "jueri" && !clienteId) {
+    return NextResponse.json({ ok: false, detail: "cliente_obrigatorio" }, { status: 400 });
+  }
   if (clienteId.length > 64) {
     return NextResponse.json({ ok: false, detail: "cliente_invalido" }, { status: 400 });
   }

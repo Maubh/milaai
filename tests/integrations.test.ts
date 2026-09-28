@@ -96,12 +96,12 @@ test("Set-Cookie: sem sessão do upstream, nenhum cookie é criado", () => {
 
 test("parseSessionCookie: converte raw Set-Cookie em opções para res.cookies.set", () => {
   const raw = "mila_session=tok_opaco_123; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax; Secure; Domain=milaai.com.br";
-  const parsed = parseSessionCookie(raw);
+  const parsed = parseSessionCookie(raw, "milaai.com.br");
   assert.ok(parsed);
   assert.equal(parsed.name, "mila_session");
   assert.equal(parsed.value, "tok_opaco_123");
   assert.equal(parsed.options.path, "/");
-  assert.equal(parsed.options.domain, "milaai.com.br");
+  assert.equal(parsed.options.domain, ".milaai.com.br");
   assert.equal(parsed.options.maxAge, 1209600);
   assert.equal(parsed.options.httpOnly, true);
   assert.equal(parsed.options.secure, true);
@@ -109,6 +109,29 @@ test("parseSessionCookie: converte raw Set-Cookie em opções para res.cookies.s
 
   assert.equal(parseSessionCookie(""), null);
   assert.equal(parseSessionCookie("not-a-cookie"), null);
+});
+
+test("parseSessionCookie: defesas de segurança (revisão Grok 4.7)", () => {
+  // 1. Domain injection rejeitado: upstream malicioso tenta Domain=evil.com
+  const evilDomain = parseSessionCookie("mila_session=tok; Domain=evil.com", "milaai.com.br");
+  assert.ok(evilDomain);
+  assert.equal(evilDomain.options.domain, ".milaai.com.br"); // forçado para o domínio da allowlist
+
+  // 2. Flags de segurança forçadas mesmo se upstream omitir
+  const bare = parseSessionCookie("mila_session=tok", "milaai.com.br");
+  assert.ok(bare);
+  assert.equal(bare.options.httpOnly, true);
+  assert.equal(bare.options.secure, true);
+  assert.equal(bare.options.sameSite, "lax");
+  assert.equal(bare.options.path, "/");
+
+  // 3. Cookie com nome diferente rejeitado estritamente
+  assert.equal(parseSessionCookie("attacker_session=tok", "milaai.com.br"), null);
+
+  // 4. Max-Age abusivo tem teto de 14 dias
+  const hugeAge = parseSessionCookie("mila_session=tok; Max-Age=999999999", "milaai.com.br");
+  assert.ok(hugeAge);
+  assert.equal(hugeAge.options.maxAge, 1209600);
 });
 
 test("cookie: o nome da sessão é o mesmo dos dois lados", () => {

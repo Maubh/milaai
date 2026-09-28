@@ -6,6 +6,35 @@
 /** Hosts do site que podem emitir o cookie de produção. */
 export const PRODUCTION_COOKIE_HOSTS = ["milaai.com.br", "www.milaai.com.br"] as const;
 
+/** Nome do cookie de sessão da mila (mesmo nome nos dois lados). */
+export const SESSION_COOKIE = "mila_session";
+
+/**
+ * Filtra os `Set-Cookie` vindos do serviço de auth, deixando passar **só** a
+ * sessão da mila.
+ *
+ * O cookie de sessão é montado no serviço de auth (que é quem sabe o domínio) e
+ * chega pronto para ser repassado ao browser — o site **nunca** vê o valor do
+ * token. Repassar verbatim é o ponto: as flags (`HttpOnly`, `Secure`,
+ * `SameSite`) vêm de quem emitiu, então não existe caminho em que o JS leia a
+ * sessão.
+ *
+ * ⚠️ Por que filtrar em vez de repassar tudo: um `Set-Cookie` de `.milaai.com.br`
+ * vale para **todo** subdomínio. Se o upstream (ou um bug futuro nele) mandar
+ * outro cookie, o site estaria publicando um cookie de domínio inteiro em nome
+ * de outra origem. Só o cookie de sessão passa.
+ */
+export function pickSessionSetCookie(
+  setCookieHeaders: readonly string[],
+  cookieName: string = SESSION_COOKIE,
+): string[] {
+  const nome = `${cookieName}=`;
+  return setCookieHeaders.filter((raw) => {
+    const primeira = String(raw || "").split(";")[0].trim();
+    return primeira.startsWith(nome);
+  });
+}
+
 /**
  * Domínio do cookie a partir do `Host` da requisição.
  *

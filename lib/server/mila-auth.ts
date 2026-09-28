@@ -2,11 +2,16 @@ import "server-only";
 
 import {
   cookieDomainFor as cookieDomainForHost,
+  pickSessionSetCookie,
+  SESSION_COOKIE,
   sessionCookieOptionsFor,
   type SessionCookieOptions,
 } from "@/lib/cookie-domain";
 
 export type { SessionCookieOptions };
+// O cookie é montado pelo serviço de auth e repassado pelo site: a regra de
+// qual `Set-Cookie` aceitar vive em `@/lib/cookie-domain` (pura, testável).
+export { pickSessionSetCookie, SESSION_COOKIE };
 
 const DEFAULT_BASE = "https://wa.milaai.com.br";
 
@@ -21,8 +26,6 @@ const ALLOWED_START_KEYS = [
   "skip_checkout",
   "wa_number",
 ] as const;
-
-export const SESSION_COOKIE = "mila_session";
 
 /** Campos do verify que podem ir para o browser (sem identidade de loja). */
 const ALLOWED_VERIFY_KEYS = [
@@ -68,16 +71,28 @@ export function sessionCookieOptions(
   );
 }
 
-/** Campos da resposta de verify que viram cookie; o resto é descartado. */
+/**
+ * Separa o que pode ir para o browser do que vira cookie.
+ *
+ * ⚠️ **`session_token` já NÃO vem no corpo.** O serviço de auth entrega a sessão
+ * pelo `Set-Cookie` da própria resposta (ver `pickSessionSetCookie`) e o corpo
+ * só traz dados públicos. O campo continua sendo descartado aqui por defesa em
+ * profundidade: se um dia voltar — ou se um proxy antigo responder — o token
+ * **não** vaza para o browser.
+ *
+ * Por isso não há mais caminho que monte o cookie no site: se o `Set-Cookie`
+ * não vier, a sessão simplesmente não existe (fail-closed), em vez de o site
+ * inventar um cookie a partir de um token em JSON.
+ */
 export function splitSession(data: Record<string, unknown>): {
   publicData: Record<string, unknown>;
-  sessionToken: string | null;
+  sessionToken: null;
   cookie: Record<string, unknown> | null;
 } {
-  const { session_token: token, cookie, ...rest } = data as Record<string, unknown>;
+  const { session_token: _descartado, cookie, ...rest } = data as Record<string, unknown>;
   return {
     publicData: rest,
-    sessionToken: typeof token === "string" && token.length > 20 ? token : null,
+    sessionToken: null,
     cookie: (cookie as Record<string, unknown>) ?? null,
   };
 }
@@ -150,11 +165,11 @@ export function sanitizeVerifyResponse(data: Record<string, unknown>): Record<st
 export async function proxyMilaAuth(
   path: string,
   init?: RequestInit & { sessionToken?: string | null },
-): Promise<{ status: number; data: Record<string, unknown> }> {
+): Promise<{ status: number; data: Record<string, unknown>; setCookie: string[] }> {
   const secret = milaAuthSecret();
   if (!secret) {
     // fail-close: sem segredo não falamos com o serviço de auth
-    return { status: 500, data: { ok: false, detail: "missing_auth_secret" } };
+    return { status: 500, data: { ok: false, detail: "missing_auth_secret" }, setCookie: [] };
   }
   const url = `${milaAuthBase()}${path.startsWith("/") ? path : `/${path}`}`;
   const headers = new Headers(init?.headers || {});
@@ -180,13 +195,24 @@ export async function proxyMilaAuth(
     } catch {
       data = { ok: false, detail: "invalid_upstream_json" };
     }
+    // ⚠️ `Set-Cookie` do serviço de auth é a ÚNICA fonte da sessão: é ele que
+    // traz `HttpOnly`/`Domain` decididos pelo servidor. O site só repassa.
+    const setCookie = res.headers.getSetCookie?.() ?? [];
     const status = res.status === 0 ? 504 : res.status;
-    return { status, data };
+    return { status, data, setCookie };
   } catch (err) {
     const name = err instanceof Error ? err.name : "";
     if (name === "TimeoutError" || name === "AbortError") {
-      return { status: 504, data: { ok: false, detail: "upstream_timeout" } };
+      return {
+        status: 504,
+        data: { ok: false, detail: "upstream_timeout" },
+        setCookie: [],
+      };
     }
-    return { status: 502, data: { ok: false, detail: "upstream_unreachable" } };
+    return {
+      status: 502,
+      data: { ok: false, detail: "upstream_unreachable" },
+      setCookie: [],
+    };
   }
 }

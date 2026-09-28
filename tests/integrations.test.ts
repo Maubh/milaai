@@ -15,6 +15,8 @@ import assert from "node:assert/strict";
 
 import {
   cookieDomainFor,
+  pickSessionSetCookie,
+  SESSION_COOKIE,
   sessionCookieOptionsFor,
   sessionCookieHeader,
   PRODUCTION_COOKIE_HOSTS,
@@ -57,6 +59,45 @@ test("cookie: override explícito vence; '-' força host-only", () => {
 
 test("cookie: a lista de hosts de produção é fechada", () => {
   assert.deepEqual([...PRODUCTION_COOKIE_HOSTS], ["milaai.com.br", "www.milaai.com.br"]);
+});
+
+test("Set-Cookie: só o cookie de sessão é repassado, verbatim", () => {
+  // O auth manda a sessão pronta (inclusive o Domain decidido por ele). O site
+  // repassa sem tocar: é assim que o HttpOnly fica de pé — o JS do site nunca
+  // vê o valor do token.
+  const upstream = [
+    "mila_session=tok_opaco; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax; Secure; Domain=milaai.com.br",
+    "rastreador=abc; Path=/",
+    "outro_session=nope; Path=/",
+    "",
+  ];
+  const repassados = pickSessionSetCookie(upstream);
+  assert.equal(repassados.length, 1);
+  assert.match(repassados[0], /^mila_session=tok_opaco;/);
+  // Domain e flags vêm do emissor, sem alteração do site.
+  assert.match(repassados[0], /Domain=milaai\.com\.br/);
+  assert.match(repassados[0], /HttpOnly/);
+  assert.match(repassados[0], /Secure/);
+});
+
+test("Set-Cookie: cookie de nome parecido não passa", () => {
+  // `mila_session_old` começa com os mesmos caracteres: sem o `=`, o filtro
+  // por prefixo deixaria passar um cookie que não é a sessão.
+  assert.deepEqual(pickSessionSetCookie(["mila_session_old=x; Path=/"]), []);
+  assert.deepEqual(pickSessionSetCookie(["session=x; Path=/"]), []);
+  assert.deepEqual(pickSessionSetCookie([]), []);
+});
+
+test("Set-Cookie: sem sessão do upstream, nenhum cookie é criado", () => {
+  // Fail-closed: o site não inventa cookie a partir de token no JSON.
+  assert.deepEqual(pickSessionSetCookie(["outro=1; Path=/"]), []);
+});
+
+test("cookie: o nome da sessão é o mesmo dos dois lados", () => {
+  // Divergência aqui = logout que não apaga (sessão órfã por 14 dias).
+  assert.equal(SESSION_COOKIE, "mila_session");
+  const header = sessionCookieHeader(sessionCookieOptionsFor("milaai.com.br", 60), "t");
+  assert.match(header, new RegExp(`^${SESSION_COOKIE}=`));
 });
 
 test("Set-Cookie: login grava a sessão com as flags certas", () => {

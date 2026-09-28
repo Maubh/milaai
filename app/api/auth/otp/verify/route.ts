@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  SESSION_COOKIE,
-  cookieMaxAge,
   normalizePhoneE164,
+  pickSessionSetCookie,
   proxyMilaAuth,
   sanitizeVerifyResponse,
-  sessionCookieOptions,
   splitSession,
 } from "@/lib/server/mila-auth";
 
@@ -28,20 +26,33 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, detail: "invalid_body" }, { status: 400 });
   }
 
-  const { status, data } = await proxyMilaAuth("/api/auth/otp/verify", {
+  const { status, data, setCookie } = await proxyMilaAuth("/api/auth/otp/verify", {
     method: "POST",
     body: JSON.stringify({ phone, code: digits }),
   });
 
-  const { publicData, sessionToken, cookie } = splitSession(data as Record<string, unknown>);
+  const { publicData } = splitSession(data as Record<string, unknown>);
   // sanitizeVerifyResponse descarta session_token/tenant_id: identidade da loja
-  // não vai para o browser, só para o cookie HttpOnly abaixo.
+  // não vai para o browser.
   const res = NextResponse.json(sanitizeVerifyResponse(publicData), { status });
 
-  if (res.status === 200 && sessionToken) {
-    // Cookie HttpOnly com domínio compartilhado: o callback do OAuth acontece em
-    // wa.milaai.com.br e precisa receber esta sessão.
-    res.cookies.set(SESSION_COOKIE, sessionToken, sessionCookieOptions(req, cookieMaxAge(cookie)));
+  if (res.status === 200) {
+    // ⚠️ O cookie de sessão vem PRONTO do serviço de auth e é repassado verbatim.
+    //
+    // Antes, o site montava o cookie aqui a partir de um `session_token` que
+    // viajava no corpo do JSON — e isso anulava a proteção do HttpOnly: o token
+    // passava pelo JS/edge antes de virar cookie, e um XSS o leria. Além disso
+    // o valor vazado valia os 14 dias inteiros, porque o cookie nunca rotava.
+    //
+    // Agora o navegador recebe a sessão sem que este código jamais veja o valor:
+    // as flags (`HttpOnly`, `Secure`, `SameSite`) e o `Domain` vêm decididos por
+    // quem sabe o domínio (o auth, via `MILA_COOKIE_DOMAIN`).
+    //
+    // Fail-closed: sem `Set-Cookie` do upstream, não há cookie nenhum — o site
+    // não inventa sessão a partir de um token no JSON.
+    for (const raw of pickSessionSetCookie(setCookie)) {
+      res.headers.append("Set-Cookie", raw);
+    }
   }
   return res;
 }

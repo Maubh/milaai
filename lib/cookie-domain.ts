@@ -35,6 +35,65 @@ export function pickSessionSetCookie(
   });
 }
 
+export interface ParsedSessionCookie {
+  name: string;
+  value: string;
+  options: {
+    path?: string;
+    domain?: string;
+    maxAge?: number;
+    httpOnly?: boolean;
+    secure?: boolean;
+    sameSite?: "lax" | "strict" | "none";
+  };
+}
+
+/**
+ * Converte a string de `Set-Cookie` vinda do auth nas opções esperadas pelo
+ * `res.cookies.set(...)` do Next.js.
+ *
+ * Necessário porque o Next.js App Router (rodando no ambiente Serverless da Vercel)
+ * serializa cookies a partir da coleção interna `res.cookies`. Usar apenas
+ * `res.headers.append("Set-Cookie", ...)` não popula `res.cookies` e o header
+ * é descartado pelo adapter da Vercel.
+ */
+export function parseSessionCookie(raw: string): ParsedSessionCookie | null {
+  if (!raw || typeof raw !== "string") return null;
+  const parts = raw.split(";").map((p) => p.trim());
+  const [first, ...attrs] = parts;
+  if (!first) return null;
+  const eqIdx = first.indexOf("=");
+  if (eqIdx <= 0) return null;
+  const name = first.slice(0, eqIdx).trim();
+  const value = first.slice(eqIdx + 1).trim();
+
+  const options: ParsedSessionCookie["options"] = {};
+  for (const attr of attrs) {
+    if (!attr) continue;
+    const aEq = attr.indexOf("=");
+    const key = (aEq > 0 ? attr.slice(0, aEq) : attr).trim().toLowerCase();
+    const val = aEq > 0 ? attr.slice(aEq + 1).trim() : "";
+    if (key === "path") {
+      options.path = val;
+    } else if (key === "domain") {
+      options.domain = val;
+    } else if (key === "max-age") {
+      const num = parseInt(val, 10);
+      if (!isNaN(num)) options.maxAge = num;
+    } else if (key === "httponly") {
+      options.httpOnly = true;
+    } else if (key === "secure") {
+      options.secure = true;
+    } else if (key === "samesite") {
+      const s = val.toLowerCase();
+      if (s === "lax" || s === "strict" || s === "none") {
+        options.sameSite = s;
+      }
+    }
+  }
+  return { name, value, options };
+}
+
 /**
  * Domínio do cookie a partir do `Host` da requisição.
  *

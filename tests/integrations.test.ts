@@ -15,6 +15,7 @@ import assert from "node:assert/strict";
 
 import {
   cookieDomainFor,
+  parseSessionCookie,
   pickSessionSetCookie,
   SESSION_COOKIE,
   sessionCookieOptionsFor,
@@ -91,6 +92,23 @@ test("Set-Cookie: cookie de nome parecido não passa", () => {
 test("Set-Cookie: sem sessão do upstream, nenhum cookie é criado", () => {
   // Fail-closed: o site não inventa cookie a partir de token no JSON.
   assert.deepEqual(pickSessionSetCookie(["outro=1; Path=/"]), []);
+});
+
+test("parseSessionCookie: converte raw Set-Cookie em opções para res.cookies.set", () => {
+  const raw = "mila_session=tok_opaco_123; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax; Secure; Domain=milaai.com.br";
+  const parsed = parseSessionCookie(raw);
+  assert.ok(parsed);
+  assert.equal(parsed.name, "mila_session");
+  assert.equal(parsed.value, "tok_opaco_123");
+  assert.equal(parsed.options.path, "/");
+  assert.equal(parsed.options.domain, "milaai.com.br");
+  assert.equal(parsed.options.maxAge, 1209600);
+  assert.equal(parsed.options.httpOnly, true);
+  assert.equal(parsed.options.secure, true);
+  assert.equal(parsed.options.sameSite, "lax");
+
+  assert.equal(parseSessionCookie(""), null);
+  assert.equal(parseSessionCookie("not-a-cookie"), null);
 });
 
 test("cookie: o nome da sessão é o mesmo dos dois lados", () => {

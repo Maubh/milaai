@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   normalizePhoneE164,
+  parseSessionCookie,
   pickSessionSetCookie,
   proxyMilaAuth,
   sanitizeVerifyResponse,
@@ -52,6 +53,10 @@ export async function POST(req: Request) {
     // não inventa sessão a partir de um token no JSON.
     for (const raw of pickSessionSetCookie(setCookie)) {
       res.headers.append("Set-Cookie", raw);
+      const parsed = parseSessionCookie(raw);
+      if (parsed) {
+        res.cookies.set(parsed.name, parsed.value, parsed.options);
+      }
     }
   }
   return res;

@@ -15,6 +15,7 @@ import assert from "node:assert/strict";
 
 import {
   cookieDomainFor,
+  parseSessionCookie,
   pickSessionSetCookie,
   SESSION_COOKIE,
   sessionCookieOptionsFor,
@@ -91,6 +92,46 @@ test("Set-Cookie: cookie de nome parecido não passa", () => {
 test("Set-Cookie: sem sessão do upstream, nenhum cookie é criado", () => {
   // Fail-closed: o site não inventa cookie a partir de token no JSON.
   assert.deepEqual(pickSessionSetCookie(["outro=1; Path=/"]), []);
+});
+
+test("parseSessionCookie: converte raw Set-Cookie em opções para res.cookies.set", () => {
+  const raw = "mila_session=tok_opaco_123; Path=/; Max-Age=1209600; HttpOnly; SameSite=Lax; Secure; Domain=milaai.com.br";
+  const parsed = parseSessionCookie(raw, "milaai.com.br");
+  assert.ok(parsed);
+  assert.equal(parsed.name, "mila_session");
+  assert.equal(parsed.value, "tok_opaco_123");
+  assert.equal(parsed.options.path, "/");
+  assert.equal(parsed.options.domain, ".milaai.com.br");
+  assert.equal(parsed.options.maxAge, 1209600);
+  assert.equal(parsed.options.httpOnly, true);
+  assert.equal(parsed.options.secure, true);
+  assert.equal(parsed.options.sameSite, "lax");
+
+  assert.equal(parseSessionCookie(""), null);
+  assert.equal(parseSessionCookie("not-a-cookie"), null);
+});
+
+test("parseSessionCookie: defesas de segurança (revisão Grok 4.7)", () => {
+  // 1. Domain injection rejeitado: upstream malicioso tenta Domain=evil.com
+  const evilDomain = parseSessionCookie("mila_session=tok; Domain=evil.com", "milaai.com.br");
+  assert.ok(evilDomain);
+  assert.equal(evilDomain.options.domain, ".milaai.com.br"); // forçado para o domínio da allowlist
+
+  // 2. Flags de segurança forçadas mesmo se upstream omitir
+  const bare = parseSessionCookie("mila_session=tok", "milaai.com.br");
+  assert.ok(bare);
+  assert.equal(bare.options.httpOnly, true);
+  assert.equal(bare.options.secure, true);
+  assert.equal(bare.options.sameSite, "lax");
+  assert.equal(bare.options.path, "/");
+
+  // 3. Cookie com nome diferente rejeitado estritamente
+  assert.equal(parseSessionCookie("attacker_session=tok", "milaai.com.br"), null);
+
+  // 4. Max-Age abusivo tem teto de 14 dias
+  const hugeAge = parseSessionCookie("mila_session=tok; Max-Age=999999999", "milaai.com.br");
+  assert.ok(hugeAge);
+  assert.equal(hugeAge.options.maxAge, 1209600);
 });
 
 test("cookie: o nome da sessão é o mesmo dos dois lados", () => {
@@ -353,4 +394,42 @@ test("tela do código: só acusa 'sem número' depois de ler o storage", () => {
   // `""` é leitura concluída e nada guardado — aí o aviso é verdadeiro.
   assert.equal(shouldShowMissingPhoneNote(""), true);
   assert.equal(shouldShowMissingPhoneNote("31999999999"), false);
+});
+
+test("chave colada: cada recusa do provedor tem o SEU texto", () => {
+  // Furo medido 2026-09-28: a tela dizia "Conectado com sucesso!" para qualquer
+  // chave de 8+ caracteres. Agora os motivos chegam à lojista — e cada um
+  // precisa ser distinguível, senão ela não sabe o que corrigir.
+  const recusada = integrationErrorText("credencial_invalida");
+  assert.match(recusada, /provedor recusou/i);
+  assert.match(recusada, /nada foi conectado/i);
+
+  const fora = integrationErrorText("nao_verificavel_agora");
+  assert.match(fora, /não conseguimos falar/i);
+  assert.match(fora, /nada foi conectado/i);
+  assert.notEqual(recusada, fora, "chave errada ≠ provedor fora do ar");
+
+  // Jueri precisa dos DOIS valores: confundir os dois faz a lojista trocar o
+  // token quando o problema era o código de cliente.
+  assert.match(integrationErrorText("cliente_obrigatorio"), /código de cliente/i);
+  assert.notEqual(
+    integrationErrorText("cliente_invalido"),
+    recusada,
+    "código de cliente inválido ≠ token inválido",
+  );
+
+  // Sem validador não há como dizer "conectado" — e a tela admite isso.
+  assert.match(integrationErrorText("sem_verificador"), /nada foi conectado/i);
+
+  // Nenhum desses pode cair no silêncio do genérico.
+  const generico = integrationErrorText(undefined);
+  for (const codigo of [
+    "credencial_invalida",
+    "nao_verificavel_agora",
+    "cliente_obrigatorio",
+    "cliente_invalido",
+    "sem_verificador",
+  ]) {
+    assert.notEqual(integrationErrorText(codigo), generico, codigo);
+  }
 });

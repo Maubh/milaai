@@ -35,6 +35,80 @@ export function pickSessionSetCookie(
   });
 }
 
+export interface ParsedSessionCookie {
+  name: string;
+  value: string;
+  options: {
+    path: string;
+    domain?: string;
+    maxAge: number;
+    httpOnly: boolean;
+    secure: boolean;
+    sameSite: "lax";
+  };
+}
+
+/** Teto da sessão do produto: 14 dias (1.209.600 s). */
+export const MAX_SESSION_AGE = 14 * 86_400;
+
+/**
+ * Converte a string de `Set-Cookie` vinda do auth nas opções seguras para
+ * `res.cookies.set(...)` do Next.js.
+ *
+ * Imposições de segurança (revisão Grok 4.7):
+ * - Nome DEVE ser exatamente `SESSION_COOKIE` ("mila_session").
+ * - Flags HttpOnly, Secure, SameSite=Lax e Path=/ são SEMPRE forçadas,
+ *   mesmo que o upstream omita ou envie valores relaxados.
+ * - Domain só é aceito se coincidir com o domínio de produção permitido
+ *   pelo host da requisição (impede domain injection de hosts maliciosos).
+ * - Max-Age tem teto estrito de 14 dias (1.209.600 s).
+ * - Apenas um canal de escrita é usado no Next.js (res.cookies.set).
+ */
+export function parseSessionCookie(
+  raw: string,
+  hostHeader?: string | null,
+): ParsedSessionCookie | null {
+  if (!raw || typeof raw !== "string") return null;
+  const parts = raw.split(";").map((p) => p.trim());
+  const [first, ...attrs] = parts;
+  if (!first) return null;
+  const eqIdx = first.indexOf("=");
+  if (eqIdx <= 0) return null;
+  const name = first.slice(0, eqIdx).trim();
+  if (name !== SESSION_COOKIE) return null;
+
+  const value = first.slice(eqIdx + 1).trim();
+  if (!value) return null;
+
+  let maxAge = MAX_SESSION_AGE;
+  for (const attr of attrs) {
+    if (!attr) continue;
+    const aEq = attr.indexOf("=");
+    const key = (aEq > 0 ? attr.slice(0, aEq) : attr).trim().toLowerCase();
+    const val = aEq > 0 ? attr.slice(aEq + 1).trim() : "";
+    if (key === "max-age") {
+      const num = parseInt(val, 10);
+      if (!isNaN(num)) {
+        maxAge = num <= 0 ? 0 : Math.min(num, MAX_SESSION_AGE);
+      }
+    }
+  }
+
+  const allowedDomain = cookieDomainFor(hostHeader);
+  const options: ParsedSessionCookie["options"] = {
+    path: "/",
+    httpOnly: true,
+    secure: true,
+    sameSite: "lax",
+    maxAge,
+  };
+  if (allowedDomain) {
+    options.domain = allowedDomain;
+  }
+
+  return { name, value, options };
+}
+
 /**
  * Domínio do cookie a partir do `Host` da requisição.
  *

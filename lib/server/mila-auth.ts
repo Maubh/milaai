@@ -2,16 +2,18 @@ import "server-only";
 
 import {
   cookieDomainFor as cookieDomainForHost,
+  parseSessionCookie,
   pickSessionSetCookie,
   SESSION_COOKIE,
   sessionCookieOptionsFor,
+  type ParsedSessionCookie,
   type SessionCookieOptions,
 } from "@/lib/cookie-domain";
 
-export type { SessionCookieOptions };
+export type { ParsedSessionCookie, SessionCookieOptions };
 // O cookie é montado pelo serviço de auth e repassado pelo site: a regra de
 // qual `Set-Cookie` aceitar vive em `@/lib/cookie-domain` (pura, testável).
-export { pickSessionSetCookie, SESSION_COOKIE };
+export { parseSessionCookie, pickSessionSetCookie, SESSION_COOKIE };
 
 const DEFAULT_BASE = "https://wa.milaai.com.br";
 

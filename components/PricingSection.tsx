@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { PLANO_GOOGLE } from "@/lib/google-workspace";
+
 interface PlanItem {
   id: string;
   name: string;
@@ -31,8 +33,11 @@ const PLANS: PlanItem[] = [
       "Descrições técnicas prontas para loja virtual",
       "Caderno de fornecedores validados no WhatsApp",
       "Leitor de notas fiscais de compra (XML e PDF)",
-      "Google Workspace (Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações)",
-      "Notion (Documentos, Wiki, Páginas e Bancos de dados)",
+      // Fonte única (lib/google-workspace.ts): a mesma frase vale para o plano,
+      // a lista da área logada e a tela de conexão. Antes cada tela repetia o
+      // texto à mão e as versões divergiam — foi assim que a promessa de Gmail
+      // e Agenda sobreviveu aqui depois de já ter saído do resto do site.
+      PLANO_GOOGLE,
     ],
     ctaLabel: "Conhecer o Essencial",
     ctaHref: "/login",

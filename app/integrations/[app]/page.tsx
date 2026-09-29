@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { use, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
+import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
+import { NOTION_DESC } from "@/lib/notion";
 import "../../workspace/workspace.css";
 
 interface IntegrationConfig {
@@ -10,6 +12,15 @@ interface IntegrationConfig {
   title: string;
   desc: string;
   logo?: string;
+  /**
+   * Ferramentas da suíte que a mila usa, com o ícone oficial, exibidas SOB o
+   * nome da marca. Hoje só o Google usa isto (Drive e Planilhas) — no fluxo
+   * OAuth (`isApiKeyGuided: false`). O Notion, que usa chave colada, tem o
+   * `desc` + o passo a passo no lugar.
+   */
+  tools?: typeof FERRAMENTAS_GOOGLE;
+  /** O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo. */
+  escopoNota?: string;
   isApiKeyGuided?: boolean;
   /** Conectores que exigem DOIS valores (Jueri: código de cliente + token). */
   precisaClienteId?: boolean;
@@ -55,15 +66,21 @@ const KNOWN: Record<string, IntegrationConfig> = {
   },
   google: {
     nome: "Google Workspace",
-    title: "Conectar Google Workspace",
-    desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — a suíte que você já usa, lado a lado com a mila.",
+    // "Conectar Google Workspace" sugeria a suíte inteira (e a pasta do Drive).
+    // O que se conecta é o Drive + Planilhas da mila, e é isso que a tela diz.
+    title: GOOGLE_TITULO,
+    desc: GOOGLE_DESC,
     logo: "/integrations/google-workspace.svg",
+    // Ícones das ferramentas que a mila REALMENTE usa, exibidos sob o nome.
+    tools: FERRAMENTAS_GOOGLE,
+    // O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo.
+    escopoNota: GOOGLE_ESCOPO_NOTA,
     isApiKeyGuided: false,
   },
   notion: {
     nome: "Notion",
     title: "Conectar Notion",
-    desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
+    desc: NOTION_DESC,
     // Enquanto a integração usa token de conexão no vault, ela segue o mesmo
     // fluxo protegido de chave colada do Jueri (não inicia OAuth inválido).
     isApiKeyGuided: true,
@@ -296,8 +313,28 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 <span className="integration-badge-tag">OAuth seguro</span>
               </div>
 
+              {info.tools && info.tools.length > 0 ? (
+                <div className="integration-tools" aria-label={`O que a mila faz no ${info.nome}`}>
+                  {info.tools.map((t) => (
+                    <div key={t.nome} className="integration-tool">
+                      {t.icone ? <img src={t.icone} alt="" aria-hidden="true" /> : null}
+                      <strong>{t.nome}</strong>
+                      <span>{t.uso}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+
               <p style={{ fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.25rem" }}>
-                Autorize a <strong className="mila-highlight">mila</strong> a sincronizar pedidos, notas fiscais e estoque da sua conta {info.nome}.
+                {info.escopoNota ? (
+                  info.escopoNota
+                ) : (
+                  <>
+                    Conecte sua conta {info.nome} para a{" "}
+                    <strong className="mila-highlight">mila</strong> gravar o que está
+                    descrito acima. Ela acessa só o que é seu, em seu nome.
+                  </>
+                )}
               </p>
 
               {erro ? (

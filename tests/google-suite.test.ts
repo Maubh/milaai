@@ -62,16 +62,16 @@ import * as NO from "../lib/notion.ts";
 
 const ler = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
 
-/** Lista recursivamente os arquivos de um diretório (para achar tela nova). */
+/**
+ * Lista recursivamente os arquivos de um diretório (para achar tela nova).
+ *
+ * O diretório é obrigatório: `app/` e `components/` sempre existem no repo, e um
+ * `catch` que devolvesse lista vazia deixaria a varredura passar em SILÊNCIO
+ * (fail-open) — o Grok apontou. Melhor quebrar o teste do que varrer nada.
+ */
 function listar(dir: string): string[] {
   const saida: string[] = [];
-  let entradas;
-  try {
-    entradas = readdirSync(dir, { withFileTypes: true });
-  } catch {
-    return saida; // diretório ausente não deve derrubar o teste
-  }
-  for (const e of entradas) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
     const p = `${dir}/${e.name}`;
     if (e.isDirectory()) {
       if (e.name === "node_modules" || e.name.startsWith(".")) continue;
@@ -180,18 +180,20 @@ const mascararTecnico = (src: string) =>
     .replace(/^[ \t]*(slug|icone|id|status|href|key|cor)\s*:\s*["'][a-z0-9-]+["'],?[ \t]*$/gm, " ");
 
 /**
+ * Neutraliza os invólucros que quebram a junção: `("G")+("mail")` e
+ * `["G"]+["mail"]` escapavam porque o `+` ficava entre `) `/` (`, ou `] `/`[`.
+ * Trocar por espaço não inventa palavra (não cola `f` de `g`) nem esconde nada.
+ */
+const neutralizar = (src: string) => src.replace(/[()[\]]/g, " ");
+
+/**
  * Junta string concatenada em pedaços: `"lê " + "G" + "mail"` → `"lê Gmail"`.
  *
  * Aceita `"`, `'` e crase (inclusive misturados) e consome as DUAS aspas: sem
  * isso sobra uma aspa no meio e a palavra nunca se forma.
- *
- * Parênteses são neutralizados ANTES: `("G")+("mail")` escapava porque o `+`
- * ficava entre `) ` e ` (`. Trocar `(`/`)` por espaço não inventa palavra (não
- * cola `f` de `g`) e não esconde nada — só devolve o literal à forma que a
- * junção reconhece.
  */
 const juntarConcatenacao = (src: string) =>
-  src.replace(/[()]/g, " ").replace(/(["'`])\s*\+\s*(["'`])/g, "");
+  neutralizar(src).replace(/(["'`])\s*\+\s*(["'`])/g, "");
 
 /** Tira as negações HONESTAS: elas protegem a lojista e não são promessa. */
 const NEGACAO_HONESTA =
@@ -199,15 +201,26 @@ const NEGACAO_HONESTA =
 const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
 
 /**
- * Nomes de produto e palavras da promessa antiga.
- * `sheets`/`e-mail` entraram depois da 2ª rodada do Grok (passavam batido).
+ * Nomes de produto — a denylist ESTRITA, a única segura para varrer o site
+ * inteiro. `gmail`, `sheets`, `slides`, `calendar`, `wiki`, `agenda` não têm uso
+ * legítimo na loja; medido: 0 ocorrências nos 37 arquivos de app/ + components/.
+ */
+const NAO_ENTREGUES_PRODUTO =
+  /\b(gmail|sheets?|slides?|calendar|calend[áa]rios?|wiki|agendas?)\b/i;
+
+/**
+ * Nomes de produto + palavras genéricas da promessa antiga, para os arquivos de
+ * COPY (onde cada palavra é escolhida a dedo).
  *
- * O substantivo do produto ("Apresentação"/"Apresentações") é exigido com o
- * SUFIXO: a forma anterior (`apresenta[çc][õo]es?`) casava o plural e deixava
- * passar o singular (e "apresentacao"); a tentativa de aceitar também a forma
- * nua (`apresenta` sozinho) volta a casar o VERBO "apresentamos" — falso
- * positivo medido. O grupo abaixo cobre singular/plural com e sem acento e NÃO
- * casa o verbo. `agenda`/`calendário` ganharam plural.
+ * Os genéricos NÃO entram na varredura ampla: "Apresentação da mila" (aria-label
+ * de seção), "Página não encontrada", "páginas visitadas" e "pelo e-mail de
+ * privacidade" são português legítimo — medido, eles quebraram 4 arquivos quando
+ * tentei varrer tudo com esta lista. Por isso a varredura ampla usa só a
+ * ESTRITA, e esta fica onde a palavra é promessa de produto.
+ *
+ * `apresenta(?:...)` exige o SUFIXO do substantivo: `apresenta` nu volta a casar
+ * o VERBO "apresentamos" (falso positivo medido), e `apresenta\w*` casava
+ * "apresentação" de seção. `agenda`/`calendário` aceitam plural.
  */
 const NAO_ENTREGUES =
   /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rios?|agendas?)\b/i;
@@ -399,29 +412,37 @@ test("notion: a mila NÃO cria a base — e o texto não promete que cria", () =
   assert.doesNotMatch(NO.NOTION_DESC, /viram bases/);
 });
 
-test("google: nenhuma tela importa a fonte única fora da lista varrida", () => {
-  // A lista TELAS é manual, então uma tela NOVA que use a fonte ficaria fora da
-  // varredura — e poderia digitar à mão sem ninguém notar. O Grok apontou isso.
-  // Aqui o diretório é vasculhado: quem importa `google-workspace`/`notion` tem
-  // que estar em TELAS. É de propósito que SÓ esses dois módulos contam (varrer
-  // todo `lib/` traria texto legítimo e quebraria o teste).
+test("google: nenhum arquivo de app/ ou components/ promete o que não entrega", () => {
+  // O Grok mostrou que exigir cadastro em TELAS só para quem IMPORTA a fonte
+  // deixava passar uma tela nova com promessa HARDCODED:
+  //   export function Nova() { return <p>Google Workspace (Gmail, Agenda)</p> }
+  // Aqui TODO arquivo de app/ e components/ é varrido, com a denylist ampla
+  // (que inclui os genéricos). Medido antes de adotar: 0 falso positivo nos 37
+  // arquivos — os genéricos que existem ("Página não encontrada", "documentos
+  // fiscais", a pesquisa por "tarefa") vivem em `not-found.tsx` e nas páginas de
+  // termos/privacidade, e são legítimos. Se um deles passar a colidir, a saída
+  // documentada é ser explícito (allowlist), não afrouxar a denylist.
   const raiz = new URL("..", import.meta.url).pathname;
-  const arquivos = [
-    ...listar(`${raiz}app`),
-    ...listar(`${raiz}components`),
-  ].filter((p) => /\.(tsx|ts)$/.test(p) && !p.includes("node_modules"));
+  const arquivos = [...listar(`${raiz}app`), ...listar(`${raiz}components`)]
+    .filter((p) => /\.(tsx|ts)$/.test(p) && !p.includes("node_modules"));
   assert.ok(arquivos.length > 10, `esperava varrer app/ e components/, achei ${arquivos.length}`);
 
-  const conhecidos = new Set(TELAS.map(([, src]) => src));
-  const fora: string[] = [];
+  const falhas: string[] = [];
   for (const caminho of arquivos) {
-    const src = readFileSync(caminho, "utf8");
-    const usaFonte = /from\s+["'][^"']*lib\/(google-workspace|notion)["']/.test(src);
-    if (usaFonte && !conhecidos.has(src)) fora.push(caminho.replace(raiz, ""));
+    const achado = varrerArquivo(caminho).match(NAO_ENTREGUES_PRODUTO);
+    if (achado) falhas.push(`${caminho.replace(raiz, "")} → "${achado[0]}"`);
   }
-  assert.deepEqual(fora, [],
-    "estas telas usam a fonte única e NÃO estão em TELAS (adicione-as): " + fora.join(", "));
+  assert.deepEqual(falhas, [], "promessa sem entrega:\n  " + falhas.join("\n  "));
 });
+
+/** Pipeline aplicado a um ARQUIVO (inclui e-mail/mailto, que só existe em copy). */
+const varrerArquivo = (caminho: string) => {
+  const limpo = varrer(readFileSync(caminho, "utf8"));
+  return limpo
+    .replace(/mailto:[^\s"'<>]+/g, " ")
+    .replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, " ")
+    .replace(/["'`][a-z0-9-]+["'`]/g, " "); // {lhs: "mila"}
+};
 
 test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {
   // Pedido do Maurício (2026-09-29): *"no marquee os icones para o google

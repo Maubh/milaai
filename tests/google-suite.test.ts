@@ -187,40 +187,69 @@ const mascararTecnico = (src: string) =>
 const neutralizar = (src: string) => src.replace(/[()[\]]/g, " ");
 
 /**
- * Junta string concatenada em pedaços: `"lê " + "G" + "mail"` → `"lê Gmail"`.
- *
- * Aceita `"`, `'` e crase (inclusive misturados) e consome as DUAS aspas: sem
- * isso sobra uma aspa no meio e a palavra nunca se forma.
+ * Junta pedaços que o JS cola em runtime, para a palavra não se esconder:
+ *   `"lê " + "G" + "mail"`   → "lê Gmail"
+ *   `["G","mail"].join("")`  → "Gmail"
+ *   `"G".concat("mail")`     → "Gmail"
+ * O Grok mostrou as duas últimas: elas renderizam a palavra e o fonte não a
+ * contém. Nada disso é forma normal de escrever copy, mas custa pouco cobrir.
  */
 const juntarConcatenacao = (src: string) =>
-  neutralizar(src).replace(/(["'`])\s*\+\s*(["'`])/g, "");
+  neutralizar(
+    // `.join(` / `.concat(` são colagem em runtime: virar `+` faz as regras
+    // abaixo tratá-los como o `+` do operador. Tem que ser ANTES de neutralizar,
+    // porque neutralizar apaga justamente o `(`.
+    src.replace(/\.(?:join|concat)\s*\(/g, " + "),
+  )
+    .replace(/(["'`])\s*\+\s*(["'`])/g, "") // "a" + "b" → "ab"
+    .replace(/(["'`])\s*,\s*(["'`])/g, ""); // ["a","b"] → "ab"
 
-/** Tira as negações HONESTAS: elas protegem a lojista e não são promessa. */
-const NEGACAO_HONESTA =
-  /não (acessa seu Gmail nem sua Agenda|abre nem lista seus outros arquivos do Drive)/gi;
+/**
+ * Tira as negações HONESTAS do texto.
+ *
+ * Antes era uma frase congelada; o Grok mostrou que variar "Não acessamos seu
+ * Gmail." quebrava. Transparência sobre o que a mila NÃO acessa protege a
+ * lojista — então a allowlist cobre as formas naturais dessa negação, não uma
+ * redação fixa. Só conta com a NEGAÇÃO ("não"/"sem") na mesma sentença: promessa
+ * sem "não" continua sendo promessa.
+ */
+const NEGACAO_HONESTA = new RegExp(
+  String.raw`(?:n[ãa]o|sem)\s[^.!?]{0,80}?\b(?:gmail|agenda|drive|e-?mails?|documentos?|p[áa]ginas?)\b[^.!?]{0,80}`,
+  "gi");
 const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
 
 /**
- * Nomes de produto — a denylist ESTRITA, a única segura para varrer o site
- * inteiro. `gmail`, `sheets`, `slides`, `calendar`, `wiki`, `agenda` não têm uso
- * legítimo na loja; medido: 0 ocorrências nos 37 arquivos de app/ + components/.
+ * Nomes de produto do Google/Notion. `workspace` NÃO entra: é o nome da própria
+ * área logada do site (18 usos legítimos, medido) — o que interessa é
+ * "Google Workspace", tratado pela regra de PROXIMIDADE logo abaixo.
  */
 const NAO_ENTREGUES_PRODUTO =
   /\b(gmail|sheets?|slides?|calendar|calend[áa]rios?|wiki|agendas?)\b/i;
 
 /**
- * Nomes de produto + palavras genéricas da promessa antiga, para os arquivos de
- * COPY (onde cada palavra é escolhida a dedo).
- *
- * Os genéricos NÃO entram na varredura ampla: "Apresentação da mila" (aria-label
- * de seção), "Página não encontrada", "páginas visitadas" e "pelo e-mail de
- * privacidade" são português legítimo — medido, eles quebraram 4 arquivos quando
- * tentei varrer tudo com esta lista. Por isso a varredura ampla usa só a
- * ESTRITA, e esta fica onde a palavra é promessa de produto.
- *
- * `apresenta(?:...)` exige o SUFIXO do substantivo: `apresenta` nu volta a casar
- * o VERBO "apresentamos" (falso positivo medido), e `apresenta\w*` casava
- * "apresentação" de seção. `agenda`/`calendário` aceitam plural.
+ * Palavras genéricas que, SOZINHAS, são português legítimo ("Página não
+ * encontrada", "documentos fiscais", "apresentação da mila") e por isso NÃO
+ * podem ser varridas soltas pelo site.
+ */
+const GENERICOS =
+  String.raw`e-?mails?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|p[áa]ginas?|tarefas?|tasks`;
+
+/** A marca do Google/Notion aparece perto? (proxy de "promessa dessas suítes") */
+const MARCA = String.raw`google|notion|drive|planilhas?`;
+
+/**
+ * Genérico a até 120 caracteres de uma marca — a regra que pega a promessa
+ * disfarçada:
+ *   <p>Google Workspace: e-mails, Google Docs, documentos, apresentações</p>
+ * Medido antes de adotar: **0 falsos positivos** nos 37 arquivos do site.
+ */
+const NAO_ENTREGUES_PERTO_DA_MARCA = new RegExp(
+  `(?:${MARCA})[\\s\\S]{0,120}?(?:\\b(?:${GENERICOS})\\b)`, "i");
+
+/**
+ * A denylist AMPLA (produto + genéricos) — usada só nos arquivos de COPY, onde
+ * cada palavra é escolhida a dedo e "Apresentações"/"Documentos" seriam promessa
+ * de produto. Fora da copy, os genéricos só contam perto da marca.
  */
 const NAO_ENTREGUES =
   /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rios?|agendas?)\b/i;
@@ -416,12 +445,13 @@ test("google: nenhum arquivo de app/ ou components/ promete o que não entrega",
   // O Grok mostrou que exigir cadastro em TELAS só para quem IMPORTA a fonte
   // deixava passar uma tela nova com promessa HARDCODED:
   //   export function Nova() { return <p>Google Workspace (Gmail, Agenda)</p> }
-  // Aqui TODO arquivo de app/ e components/ é varrido, com a denylist ampla
-  // (que inclui os genéricos). Medido antes de adotar: 0 falso positivo nos 37
-  // arquivos — os genéricos que existem ("Página não encontrada", "documentos
-  // fiscais", a pesquisa por "tarefa") vivem em `not-found.tsx` e nas páginas de
-  // termos/privacidade, e são legítimos. Se um deles passar a colidir, a saída
-  // documentada é ser explícito (allowlist), não afrouxar a denylist.
+  // Aqui TODO arquivo de app/ e components/ é varrido, com DUAS regras:
+  //   - nome de produto (gmail/sheets/slides/calendar/wiki/agenda) solto;
+  //   - palavra genérica (e-mail/documento/apresentação/página/tarefa) só quando
+  //     aparece a até 120 caracteres de "google|notion|drive|planilha" — a
+  //     promessa disfarçada de suíte. Medido: 0 falso positivo nos 37 arquivos.
+  // Os genéricos soltos ("Página não encontrada", "documentos fiscais") são
+  // português legítimo e vivem fora da copy; não devem quebrar o teste.
   const raiz = new URL("..", import.meta.url).pathname;
   const arquivos = [...listar(`${raiz}app`), ...listar(`${raiz}components`)]
     .filter((p) => /\.(tsx|ts)$/.test(p) && !p.includes("node_modules"));
@@ -429,8 +459,11 @@ test("google: nenhum arquivo de app/ ou components/ promete o que não entrega",
 
   const falhas: string[] = [];
   for (const caminho of arquivos) {
-    const achado = varrerArquivo(caminho).match(NAO_ENTREGUES_PRODUTO);
-    if (achado) falhas.push(`${caminho.replace(raiz, "")} → "${achado[0]}"`);
+    const texto = varrerArquivo(caminho);
+    const produto = texto.match(NAO_ENTREGUES_PRODUTO);
+    const perto = texto.match(NAO_ENTREGUES_PERTO_DA_MARCA);
+    if (produto) falhas.push(`${caminho.replace(raiz, "")} → "${produto[0]}" (nome de produto)`);
+    else if (perto) falhas.push(`${caminho.replace(raiz, "")} → "${perto[0]}" (perto da marca)`);
   }
   assert.deepEqual(falhas, [], "promessa sem entrega:\n  " + falhas.join("\n  "));
 });

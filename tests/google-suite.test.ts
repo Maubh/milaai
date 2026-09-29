@@ -199,9 +199,13 @@ const juntarConcatenacao = (src: string) => {
   // O SEPARADOR importa: colar as vírgulas como vazio transformava o segundo caso
   // em "acesseGmail" e o `\bgmail\b` não casava (brecha da 7ª rodada).
   const comJoin = src.replace(
-    /\[\s*((?:["'`][^"'`]*["'`]\s*,\s*)*["'`][^"'`]*["'`])\s*\]\s*\.join\s*\(\s*(["'`])([^"'`]*)\2?\s*\)/g,
-    (_m, itens: string, _q: string, sep: string) => {
+    /\[\s*((?:["'`][^"'`]*["'`]\s*,\s*)*["'`][^"'`]*["'`])\s*\]\s*\.join\s*\(\s*([^)]*)\)/g,
+    (_m, itens: string, sepBruto: string) => {
       const partes = itens.match(/["'`][^"'`]*["'`]/g) ?? [];
+      // O separador pode ser EXPRESSÃO (`""+"")` — o Grok usou isso na 8ª rodada.
+      // Tirar as aspas e os `+` devolve o separador real (ou algo equivalente, no
+      // caso de soma de pedaços). O que importa é juntar os ITENS.
+      const sep = sepBruto.replace(/["'`]/g, "").replace(/\+/g, "");
       return partes.map((p) => p.slice(1, -1)).join(sep);
     },
   );
@@ -228,15 +232,22 @@ const juntarConcatenacao = (src: string) => {
  * Sem "não"/"sem", continua sendo promessa.
  */
 const NEGACAO_HONESTA = new RegExp(
-  String.raw`(?:n[ãa]o|sem)\s+(?:\w+\s+){0,6}?` +
-    String.raw`\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|` +
-    String.raw`sheets?|slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
-    // a negação continua em "…, e não acessa seu Gmail NEM sua Agenda": a
-    // continuação exige a PRÓPRIA negação ("não"/"nem"), senão "Não acessa a
-    // Agenda e o Gmail vem liberado" seria engolido como se fosse honesto.
-    String.raw`(?:\s*,?\s*(?:e\s+)?(?:n[ãa]o|nem)\s+(?:\w+\s+){0,6}?` +
-    String.raw`\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|` +
-    String.raw`sheets?|slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b)*`,
+  // A negação vale em QUALQUER direção e a até 4 palavras do termo:
+  //   "não acessa seu Gmail" (2) · "não abre ... arquivos do Drive" (4)
+  //   "O Gmail não está incluído" (1, depois) · "Nunca lemos seu Gmail" (3)
+  // A 8ª rodada mostrou que 6 palavras (só à esquerda) engoliam promessa:
+  //   "O plano sem custo inclui o Gmail".
+  //
+  // LIMITE CONHECIDO (documentado, não escondido): "Você não fica sem o Gmail"
+  // tem negação a 4 palavras e é apagado — indistinguível, por proximidade, de
+  // "Nunca lemos seu Gmail", que é honesto. Separar os dois exigiria entender a
+  // frase. É redação esquisita e não existe na copy; fica registrado aqui.
+  String.raw`(?:(?:n[ãa]o|nunca|jamais|sem|nem)\s+(?:\w+\s+){0,4}?\b(?:gmail|agenda|drive|` +
+    String.raw`e-?mails?|docs|documentos?|p[áa]ginas?|sheets?|slides?|tarefas?|` +
+    String.raw`apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
+    String.raw`|\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|sheets?|` +
+    String.raw`slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
+    String.raw`(?:\s+\w+){0,4}?\s+(?:n[ãa]o|nunca|jamais)\b)`,
   "gi");
 const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
 
@@ -260,25 +271,36 @@ const GENERICOS =
 const MARCA = String.raw`google|notion|drive|planilhas?`;
 
 /**
- * Genérico e marca na MESMA frase — nos dois sentidos.
- *
- * O Grok mostrou que só `marca → genérico` deixava passar
- * `<p>e-mails, documentos e apresentações no Google</p>`, e que 120 caracteres
- * eram pouco para uma frase longa sem negação. Agora: qualquer um dos dois antes
- * do outro, até 300 caracteres, sem atravessar `.`/`!`/`?` (a marca pode estar
- * escrita como "Google Workspace", então "Google." com ponto não conta).
- * Medido antes de adotar: 0 falso positivo nos 37 arquivos do site.
+ * Genérico e marca na MESMA frase — nos dois sentidos, e agora atravessando
+ * `.`/`!`/`?`: o Grok mostrou que cortar na pontuação deixava
+ * `Seus e-mails, documentos e apresentações. Tudo no Google.` passar (duas
+ * frases com a marca na segunda). Medido antes de adotar: 0 falso positivo nos
+ * 37 arquivos do site — inclusive `lib/google-workspace.ts`, que tem pontos e
+ * "Google" e continua limpo.
  */
 const NAO_ENTREGUES_PERTO_DA_MARCA = new RegExp(
-  String.raw`(?:(?:\b(?:${MARCA})\b)[^.!?]{0,300}?\b(?:${GENERICOS})\b` +
-    String.raw`|(?:\b(?:${GENERICOS})\b)[^.!?]{0,300}?\b(?:${MARCA})\b)`,
+  String.raw`(?:(?:\b(?:${MARCA})\b)[\s\S]{0,300}?\b(?:${GENERICOS})\b` +
+    String.raw`|(?:\b(?:${GENERICOS})\b)[\s\S]{0,300}?\b(?:${MARCA})\b)`,
   "i");
 
 /**
- * A denylist AMPLA (produto + genéricos) — usada só nos arquivos de COPY, onde
- * cada palavra é escolhida a dedo e "Apresentações"/"Documentos" seriam promessa
- * de produto. Fora da copy, os genéricos só contam perto da marca.
+ * Montagem de TEXTO em runtime — as construções que o Grok usou nas rodadas 6–8
+ * para esconder a palavra do scanner (`["G","mail"].join("")`,
+ * `"G".concat("mail")`, `["acesse","Gmail"].join(" ")`).
+ *
+ * Vale nas TELAS (onde a promessa é renderizada) e nas libs de copy.
  */
+const MONTAGEM_DE_PALAVRA = /\.(?:join|concat|fromCharCode)\s*\(/;
+
+/**
+ * Template literal com interpolação — proibido SÓ nas libs de copy, onde o texto
+ * é literal por definição (medido: nenhuma ocorrência hoje).
+ *
+ * Nas telas `${}` é legítimo e comum (`className={`+"`pricing-card ${...}`"+`}`,
+ * `href={`+"`/api/oauth/${p}/start`"+`}`) — proibir lá daria falso positivo sem
+ * proteger nada, porque esses templates montam classe e URL, não promessa.
+ */
+const TEMPLATE_INTERPOLADO = /`[^`]*\$\{/;
 const NAO_ENTREGUES =
   /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rios?|agendas?)\b/i;
 
@@ -504,6 +526,27 @@ const varrerArquivo = (caminho: string) => {
     .replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, " ")
     .replace(/["'`][a-z0-9-]+["'`]/g, " "); // {lhs: "mila"}
 };
+
+/** Caminhos reais dos módulos de copy (os únicos onde montagem é proibida). */
+const CAMINHOS_COPY = ["lib/google-workspace.ts", "lib/notion.ts"];
+
+test("copy: o texto não é montado em runtime nos arquivos de copy", () => {
+  // Fecha a família join/concat/template que as rodadas 6–8 exploraram, em vez de
+  // caçar cada variante. `.join/.concat` não têm uso legítimo na copy; template
+  // interpolado também não (nas telas ele constrói classe/URL, o que é legítimo —
+  // por isso o template só é proibido nas libs de copy).
+  const falhas: string[] = [];
+  for (const [nome, src] of TELAS) {
+    const achado = src.match(MONTAGEM_DE_PALAVRA);
+    if (achado) falhas.push(`${nome} → "${achado[0]}"`);
+  }
+  for (const caminho of CAMINHOS_COPY) {
+    const conteudo = readFileSync(new URL(`../${caminho}`, import.meta.url), "utf8");
+    const achado = conteudo.match(MONTAGEM_DE_PALAVRA) ?? conteudo.match(TEMPLATE_INTERPOLADO);
+    if (achado) falhas.push(`${caminho} → "${achado[0]}"`);
+  }
+  assert.deepEqual(falhas, [], "texto montado em runtime:\n  " + falhas.join("\n  "));
+});
 
 test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {
   // Pedido do Maurício (2026-09-29): *"no marquee os icones para o google

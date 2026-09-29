@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
-import { FERRAMENTAS_GOOGLE } from "@/lib/google-workspace";
+import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
 import "../../workspace/workspace.css";
 
@@ -66,16 +66,15 @@ const KNOWN: Record<string, IntegrationConfig> = {
   },
   google: {
     nome: "Google Workspace",
-    title: "Conectar Google Workspace",
-    desc: "Drive e Planilhas — o caderno de fornecedores pode virar uma planilha no seu Google.",
+    // "Conectar Google Workspace" sugeria a suíte inteira (e a pasta do Drive).
+    // O que se conecta é o Drive + Planilhas da mila, e é isso que a tela diz.
+    title: GOOGLE_TITULO,
+    desc: GOOGLE_DESC,
     logo: "/integrations/google-workspace.svg",
     // Ícones das ferramentas que a mila REALMENTE usa, exibidos sob o nome.
     tools: FERRAMENTAS_GOOGLE,
     // O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo.
-    escopoNota:
-      "A mila cria e mantém a planilha do seu caderno de fornecedores. " +
-      "Ela vê só os arquivos que ela mesma cria — não enxerga o resto do seu Drive, " +
-      "e não acessa seu Gmail nem sua Agenda.",
+    escopoNota: GOOGLE_ESCOPO_NOTA,
     isApiKeyGuided: false,
   },
   notion: {

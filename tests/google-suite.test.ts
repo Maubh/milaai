@@ -8,31 +8,71 @@
  * acabaram de sair do código (`auth/oauth.py`), então o texto era promessa
  * sem entrega em três telas.
  *
- * Estes testes leem o TEXTO que vai para a lojista (componente + dados) e
- * barram a volta das ferramentas que não existem. Se um dia Gmail ou Agenda
- * forem implementados de verdade, é aqui que se libera — de propósito.
+ * ── Por que este teste NÃO lê "a linha que contém Google Workspace" ──────────
+ * A primeira versão fazia isso e foi reprovada na revisão do Grok 4.7: bastava
+ * escrever "Documentos"/"Calendário"/"Sheets" na linha de BAIXO, ou dentro do
+ * valor de uma constante, para a promessa voltar sem quebrar nada — o teste
+ * media o TEXTO-FONTE, não o que a lojista lê.
+ *
+ * Agora ele mede os VALORES que vão para a tela: importa as constantes reais e
+ * varre o conteúdo delas, sem depender de onde a string foi escrita. E confere
+ * que cada tela continua LIGADA na fonte única (se alguém voltar a digitar a
+ * promessa à mão em outro arquivo, o teste pega).
  *
  *   npm test
  */
 
 import test from "node:test";
 import assert from "node:assert/strict";
-
 import { readFileSync } from "node:fs";
 
-import { FERRAMENTAS_GOOGLE, CADERNO_DESTINOS, GOOGLE_DESC, GOOGLE_RESUMO } from "../lib/google-workspace.ts";
+import {
+  FERRAMENTAS_GOOGLE,
+  GOOGLE_DESC,
+  GOOGLE_ESCOPO_NOTA,
+  GOOGLE_TITULO,
+  PLANO_GOOGLE,
+} from "../lib/google-workspace.ts";
 import { NOTION_DESC } from "../lib/notion.ts";
 
-const PRICING = readFileSync(new URL("../components/PricingSection.tsx", import.meta.url), "utf8");
-const DEMO = readFileSync(new URL("../lib/demo-data.ts", import.meta.url), "utf8");
-const INTEGRACAO = readFileSync(
-  new URL("../app/integrations/[app]/page.tsx", import.meta.url),
-  "utf8",
-);
-const MARQUEE = readFileSync(new URL("../components/IntegrationsMarquee.tsx", import.meta.url), "utf8");
+const ler = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
 
-/** Ferramentas do Google que o produto NÃO usa — não podem ser anunciadas. */
-const NAO_ENTREGUES = ["Gmail", "Agenda", "Tarefas", "Apresentações", "Slides"];
+const PRICING = ler("../components/PricingSection.tsx");
+const DEMO = ler("../lib/demo-data.ts");
+const INTEGRACAO = ler("../app/integrations/[app]/page.tsx");
+const MARQUEE = ler("../components/IntegrationsMarquee.tsx");
+
+/** Tira comentários: eles EXPLICAM o que saiu do ar e não são lidos pela lojista. */
+const semComentarios = (src: string) =>
+  src.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/(^|[^:])\/\/[^\n]*/g, "$1 ");
+
+/**
+ * Ferramentas que o produto NÃO usa. Não podem aparecer como promessa.
+ *
+ * `agenda`/`calendar`/`gmail` entram aqui porque foram anunciados e nunca
+ * existiram; `documentos`/`docs`/`slides`/`apresenta`/`wiki`/`páginas`/`tarefas`
+ * fecham o resto da suíte que o texto antigo citava.
+ */
+const NAO_ENTREGUES =
+  /\b(gmail|agenda|calendar|calend[áa]rio|tarefas?|tasks|docs|documentos|apresenta\w*|slides|wiki|p[áa]ginas?|planilhas do google sheets)\b/i;
+
+/**
+ * Negação HONESTA: o aviso de escopo diz que a mila NÃO acessa Gmail/Agenda.
+ * Isso protege a lojista — então é allowlist, não violação. Sem esta exceção o
+ * próprio texto que dá transparência quebraria o teste.
+ */
+const NEGACAO_HONESTA = /não acessa seu Gmail nem sua Agenda/gi;
+const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
+
+/** Todos os textos de UI que a lojista lê, como VALOR (não como fonte). */
+const TEXTOS_DE_UI: Array<[string, string]> = [
+  ["PLANO_GOOGLE", PLANO_GOOGLE],
+  ["GOOGLE_DESC", GOOGLE_DESC],
+  ["GOOGLE_ESCOPO_NOTA", GOOGLE_ESCOPO_NOTA],
+  ["GOOGLE_TITULO", GOOGLE_TITULO],
+  ["NOTION_DESC", NOTION_DESC],
+  ...FERRAMENTAS_GOOGLE.map((f) => [`uso de ${f.nome}`, f.uso] as [string, string]),
+];
 
 test("google: a lista de ferramentas é só o que o produto usa", () => {
   const nomes = FERRAMENTAS_GOOGLE.map((f) => f.nome).sort();
@@ -41,53 +81,90 @@ test("google: a lista de ferramentas é só o que o produto usa", () => {
     assert.match(f.icone, /^\/integrations\/google-.+\.png$/, f.nome);
     assert.ok(f.uso.length > 10, `uso de ${f.nome} precisa explicar algo`);
   }
-});
-
-test("google: nenhuma tela anuncia ferramenta fora da lista", () => {
-  // Só a linha do Google interessa: as outras integrações (Notion, por
-  // exemplo) mencionam ferramentas próprias delas, e isso é legítimo.
-  const linhasGoogle = [PRICING, DEMO, INTEGRACAO, MARQUEE]
-    .flatMap((src) => src.split("\n"))
-    .filter((l) => /Google Workspace|GOOGLE_DESC|GOOGLE_RESUMO/.test(l));
-
-  assert.ok(linhasGoogle.length >= 4, "esperava a linha do Google em 4 arquivos");
-
-  for (const linha of linhasGoogle) {
-    for (const fora of NAO_ENTREGUES) {
-      assert.doesNotMatch(
-        linha,
-        new RegExp(fora),
-        `a linha do Google ainda promete "${fora}": ${linha.trim()}`,
-      );
-    }
+  // Cada ícone declarado tem que existir em disco, senão a faixa fica com
+  // quadrado vazio / 404 e ninguém percebe.
+  for (const f of FERRAMENTAS_GOOGLE) {
+    const caminho = new URL(`../public${f.icone}`, import.meta.url);
+    assert.ok(readFileSync(caminho).length > 100, `asset ausente: ${f.icone}`);
   }
 });
 
-test("google: as telas dizem Drive e Planilhas", () => {
-  assert.match(GOOGLE_DESC, /Drive e Planilhas/);
-  assert.match(GOOGLE_RESUMO, /Drive e Planilhas/);
-  // O plano Essencial cita explicitamente o que entra.
-  const linhaPlano = PRICING.split("\n").find((l) => /Google Workspace/.test(l)) ?? "";
-  assert.match(linhaPlano, /Drive e Planilhas/);
+test("google: nenhum texto de UI promete ferramenta fora da lista", () => {
+  for (const [rotulo, texto] of TEXTOS_DE_UI) {
+    const limpo = despirNegacao(texto);
+    const achado = limpo.match(NAO_ENTREGUES);
+    assert.equal(
+      achado,
+      null,
+      `${rotulo} promete "${achado?.[0]}" — o produto não entrega: ${texto}`,
+    );
+  }
+});
+
+test("google: nem no fonte das telas, com comentários fora", () => {
+  // Blinda contra alguém digitar a promessa à mão numa tela NOVA, sem passar
+  // pelas constantes. O comentário de código não conta (não é lido por ninguém).
+  for (const [nome, src] of [
+    ["PricingSection", PRICING],
+    ["demo-data", DEMO],
+    ["integrations/[app]", INTEGRACAO],
+    ["IntegrationsMarquee", MARQUEE],
+  ] as Array<[string, string]>) {
+    const achado = despirNegacao(semComentarios(src)).match(NAO_ENTREGUES);
+    assert.equal(achado, null, `${nome} traz "${achado?.[0]}" como promessa`);
+  }
+});
+
+test("google: as telas continuam LIGADAS na fonte única", () => {
+  // Se uma tela voltar a digitar o texto à mão, ela deixa de citar a constante
+  // e este teste cai — foi assim que três versões da mesma frase divergiram.
+  assert.match(PRICING, /PLANO_GOOGLE/, "o plano precisa usar PLANO_GOOGLE");
+  assert.match(DEMO, /GOOGLE_DESC/, "a lista logada precisa usar GOOGLE_DESC");
+  assert.match(DEMO, /NOTION_DESC/, "a lista logada precisa usar NOTION_DESC");
+  assert.match(INTEGRACAO, /GOOGLE_ESCOPO_NOTA/);
+  assert.match(INTEGRACAO, /GOOGLE_TITULO/);
+  assert.match(INTEGRACAO, /FERRAMENTAS_GOOGLE/);
+  assert.match(MARQUEE, /FERRAMENTAS_GOOGLE/);
 });
 
 test("google: a tela de conexão explica o limite do escopo", () => {
   // Com `drive.file` a mila vê só o que ela cria. Prometer leitura do Drive
-  // inteiro seria falso — e é justamente o que a lojista precisa saber antes
-  // de autorizar.
-  assert.match(INTEGRACAO, /não enxerga o resto do seu Drive/);
-  assert.match(INTEGRACAO, /não acessa seu Gmail nem sua Agenda/);
-  // E não pode voltar a prometer sincronizar pedidos/notas na conta Google.
-  const trechoGoogle = INTEGRACAO.slice(INTEGRACAO.indexOf('google: {'));
-  const bloco = trechoGoogle.slice(0, trechoGoogle.indexOf('notion: {'));
-  assert.doesNotMatch(bloco, /sincronizar pedidos, notas fiscais e estoque/);
+  // inteiro seria falso — e é o que a lojista precisa saber antes de autorizar.
+  assert.match(GOOGLE_ESCOPO_NOTA, /não abre nem lista seus outros arquivos do Drive/);
+  // A negação honesta precisa CONTINUAR existindo (não pode ser apagada em
+  // silêncio: é ela que a lojista lê antes de autorizar).
+  assert.match(GOOGLE_ESCOPO_NOTA, NEGACAO_HONESTA);
+  // E o título não pode voltar a sugerir a suíte inteira.
+  assert.doesNotMatch(GOOGLE_TITULO, /Workspace/);
+  assert.match(GOOGLE_TITULO, /Drive e Planilhas/);
+});
+
+test("google: o essencial diz que o caderno fica salvo mesmo sem destino", () => {
+  // Decisão do Maurício (2026-09-29): *"Se a loja não escolher nenhum, eh
+  // informar que ficará salvo e ele pode consultar a qualquer momento"*.
+  assert.match(PLANO_GOOGLE, /salvo e consultável no WhatsApp/);
+  assert.match(GOOGLE_DESC, /salvo e consultável no WhatsApp/);
+  // E a escolha do destino aparece nas duas telas.
+  assert.match(PLANO_GOOGLE, /planilha/i);
+  assert.match(PLANO_GOOGLE, /Notion/);
+  // A linha do plano NÃO pode repetir "caderno de fornecedores": a feature
+  // anterior já diz isso, e repetir foi o que deixou o plano redundante.
+  const outrasLinhas = PRICING.split("\n").filter(
+    (l) => /Caderno de fornecedores validados/.test(l),
+  );
+  assert.ok(outrasLinhas.length > 0, "a feature do caderno deve seguir no plano");
+  assert.doesNotMatch(
+    PLANO_GOOGLE,
+    /Caderno de fornecedores/,
+    "a linha do espelho não repete a feature anterior",
+  );
 });
 
 test("google: os ícones das ferramentas são exibidos sob o nome da marca", () => {
   // Pedido do Maurício (2026-09-29): o nome "Google Workspace" visível, com os
   // ícones das ferramentas abaixo.
-  const blocoMarquee = MARQUEE.slice(MARQUEE.indexOf('id: "google-workspace"'));
-  const item = blocoMarquee.slice(0, blocoMarquee.indexOf('id: "notion"'));
+  const bloco = MARQUEE.slice(MARQUEE.indexOf('id: "google-workspace"'));
+  const item = bloco.slice(0, bloco.indexOf('id: "notion"'));
   assert.match(item, /showName: true/, "sem o nome, os ícones ficam sem dono");
   assert.match(item, /tools: FERRAMENTAS_GOOGLE/);
 
@@ -98,32 +175,28 @@ test("google: os ícones das ferramentas são exibidos sob o nome da marca", () 
 
 test("notion: o site diz que o caderno pode ir para o Notion", () => {
   // Correção do Maurício (2026-09-29): *"mas o caderno tbm pode ser salvo tbm
-  // no notion, certo?"* — sim. O site dava a entender que só o Google recebia o
-  // caderno, e o Notion era genérico ("Documentos, Wiki, Páginas").
-  assert.match(PRICING, /Google Workspace \(Drive e Planilhas\) ou Notion/);
-  assert.match(DEMO, /caderno de fornecedores e as notas de compra viram bases/);
-  assert.match(INTEGRACAO, /NOTION_DESC/);
+  // no notion, certo?"* — sim. O site dava a entender que só o Google recebia
+  // o caderno, e o Notion era genérico ("Documentos, Wiki, Páginas").
   assert.match(NOTION_DESC, /caderno de fornecedores e as notas de compra/);
-  assert.match(NOTION_DESC, /planilha do Google/);
-  assert.match(CADERNO_DESTINOS, /Notion/);
+  assert.match(NOTION_DESC, /planilha no Google Drive/);
+  // O caderno vai para o Notion OU para a planilha — a escolha é da lojista.
+  assert.match(PLANO_GOOGLE, /Notion/);
 });
 
-test("notion: o site não promete Wiki, Documentos ou Páginas", () => {
-  // O produto grava CADERNO e NOTAS. Wiki/Documentos/Páginas nunca existiram.
-  const proibidos = ["Wiki", "Páginas e Bancos de dados", "o espaço da marca com a mila"];
-  for (const src of [PRICING, DEMO, INTEGRACAO, NOTION_DESC]) {
-    for (const p of proibidos) {
-      assert.doesNotMatch(src, new RegExp(p), `ainda promete "${p}"`);
-    }
-  }
+test("notion: a mila NÃO cria a base — e o texto não promete que cria", () => {
+  // Medido em `notion_client.py`: `listar_bases` (é o que existe) e nenhuma
+  // chamada a `POST /databases`. Ela pergunta qual base usar. "Viram bases"
+  // sugeria que a mila criava uma base por nota — era impreciso.
+  assert.match(NOTION_DESC, /ela não cria a base/);
+  assert.doesNotMatch(NOTION_DESC, /viram bases/);
 });
 
 test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {
-  // Pedido do Maurício (2026-09-29): *"nao precisa no marque nada disso. Eu so
-  // quero no marquee os icones para o google workspace. Para notion nao precisa
-  // ter nada no marquee"* / *"o notion nao precisa de nenhuma mudanca"*.
-  const blocoNotion = MARQUEE.slice(MARQUEE.indexOf('id: "notion"'));
-  const item = blocoNotion.slice(0, blocoNotion.indexOf('id: "outlook"'));
+  // Pedido do Maurício (2026-09-29): *"no marquee os icones para o google
+  // workspace. Para notion nao precisa ter nada"* / *"o notion nao precisa de
+  // nenhuma mudanca"*.
+  const bloco = MARQUEE.slice(MARQUEE.indexOf('id: "notion"'));
+  const item = bloco.slice(0, bloco.indexOf('id: "outlook"'));
   assert.doesNotMatch(item, /tools/, "o item do Notion na faixa não tem sub-ícones");
   assert.match(item, /name: "Notion"/, "o nome aparece, como nas outras marcas");
 

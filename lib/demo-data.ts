@@ -1,3 +1,6 @@
+import { GOOGLE_DESC } from "@/lib/google-workspace";
+import { NOTION_DESC } from "@/lib/notion";
+
 export interface PecaExemplo {
   id: string;
   nome: string;
@@ -56,7 +59,12 @@ export type Integracao = {
   desc: string;
 };
 
-/** Conectores da área logada. Parêntese = status/variante (Instinct), não a descrição. */
+/**
+ * Conectores da área logada. Parêntese = status/variante (Instinct), não a descrição.
+ *
+ * O Google e o Notion importam a descrição de `lib/google-workspace.ts` e
+ * `lib/notion.ts`: era aqui que as duas versões divergiam da tela de conexão.
+ */
 export const INTEGRACOES: Integracao[] = [
   {
     id: "jueri",
@@ -80,12 +88,12 @@ export const INTEGRACOES: Integracao[] = [
     id: "google",
     nome: "Google Workspace",
     status: "disponível",
-    desc: "Drive e Planilhas — o caderno de fornecedores vira uma planilha no seu Google. A mila cria e mantém o arquivo.",
+    desc: GOOGLE_DESC,
   },
   {
     id: "notion",
     nome: "Notion",
     status: "disponível",
-    desc: "Bases de dados — o caderno de fornecedores e as notas de compra viram bases no seu Notion. Você escolhe onde guardar o caderno: no Notion ou na planilha do Google.",
+    desc: NOTION_DESC,
   },
 ];

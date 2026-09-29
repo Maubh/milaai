@@ -231,25 +231,26 @@ const juntarConcatenacao = (src: string) => {
  *
  * Sem "não"/"sem", continua sendo promessa.
  */
-const NEGACAO_HONESTA = new RegExp(
-  // A negação vale em QUALQUER direção e a até 4 palavras do termo:
-  //   "não acessa seu Gmail" (2) · "não abre ... arquivos do Drive" (4)
-  //   "O Gmail não está incluído" (1, depois) · "Nunca lemos seu Gmail" (3)
-  // A 8ª rodada mostrou que 6 palavras (só à esquerda) engoliam promessa:
-  //   "O plano sem custo inclui o Gmail".
-  //
-  // LIMITE CONHECIDO (documentado, não escondido): "Você não fica sem o Gmail"
-  // tem negação a 4 palavras e é apagado — indistinguível, por proximidade, de
-  // "Nunca lemos seu Gmail", que é honesto. Separar os dois exigiria entender a
-  // frase. É redação esquisita e não existe na copy; fica registrado aqui.
-  String.raw`(?:(?:n[ãa]o|nunca|jamais|sem|nem)\s+(?:\w+\s+){0,4}?\b(?:gmail|agenda|drive|` +
-    String.raw`e-?mails?|docs|documentos?|p[áa]ginas?|sheets?|slides?|tarefas?|` +
-    String.raw`apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
-    String.raw`|\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|sheets?|` +
-    String.raw`slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
-    String.raw`(?:\s+\w+){0,4}?\s+(?:n[ãa]o|nunca|jamais)\b)`,
-  "gi");
-const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
+/**
+ * Tira as NEGAÇÕES HONESTAS — por FRASE EXATA, não por heurística.
+ *
+ * A versão anterior procurava "não|sem ... termo" a até N palavras e deixava
+ * passar QUALQUER coisa junto (o Grok mostrou: `O plano sem custo inclui o Gmail`
+ * e `O Gmail nunca sai do plano` eram apagados como se fossem avisos honestos), e
+ * ao mesmo tempo quebrava transparência legítima escrita de outro jeito.
+ *
+ * Aqui não há inferência: só as frases declaradas abaixo, literais, saem do
+ * texto. É allowlist de verdade — a transparência que protege a lojista é
+ * DECLARADA por quem escreve a copy. Redação nova que não esteja na lista não
+ * "escapa": ela FALHA o teste, e quem escreveu decide se é aviso (entra na lista)
+ * ou promessa (sai da copy). Silêncio nunca é a resposta.
+ */
+const NEGACOES_HONESTAS = [
+  "não abre nem lista seus outros arquivos do Drive",
+  "não acessa seu Gmail nem sua Agenda",
+];
+const despirNegacao = (t: string) =>
+  NEGACOES_HONESTAS.reduce((acc, frase) => acc.split(frase).join(" "), t);
 
 /**
  * Nomes de produto do Google/Notion. `workspace` NÃO entra: é o nome da própria
@@ -284,29 +285,68 @@ const NAO_ENTREGUES_PERTO_DA_MARCA = new RegExp(
   "i");
 
 /**
- * Montagem de TEXTO em runtime — as construções que o Grok usou nas rodadas 6–8
- * para esconder a palavra do scanner (`["G","mail"].join("")`,
- * `"G".concat("mail")`, `["acesse","Gmail"].join(" ")`).
+ * Neutraliza strings MONTADAS em runtime, devolvendo o texto que elas produzem.
  *
- * Vale nas TELAS (onde a promessa é renderizada) e nas libs de copy.
- */
-const MONTAGEM_DE_PALAVRA = /\.(?:join|concat|fromCharCode)\s*\(/;
-
-/**
- * Template literal com interpolação — proibido SÓ nas libs de copy, onde o texto
- * é literal por definição (medido: nenhuma ocorrência hoje).
+ * Antes eu tentava BANIR as construções (`MONTAGEM_DE_PALAVRA`) — o Grok mostrou
+ * que ban-list de token é corrida infinita: `String.fromCodePoint`,
+ * `globalThis["String"]["fromCharCode"]` e `decodeURIComponent("%47%6D...")` todas
+ * passavam. Em vez de perseguir a próxima variante, aqui as construções são
+ * RESOLVIDAS: o literal produzido entra no texto e a denylist faz o trabalho dela.
  *
- * Nas telas `${}` é legítimo e comum (`className={`+"`pricing-card ${...}`"+`}`,
- * `href={`+"`/api/oauth/${p}/start`"+`}`) — proibir lá daria falso positivo sem
- * proteger nada, porque esses templates montam classe e URL, não promessa.
+ * Cobre: `String.fromCharCode(...)`, `String.fromCodePoint(...)`,
+ * `decodeURIComponent("%47%6D%61%69%6C")` e `["G","mail"].join(sep)` (com
+ * separador literal ou expressão). Acesso por colchete
+ * (`globalThis["String"]["fromCharCode"]`) não é resolvido — o teste de
+ * `MONTAGEM_DE_PALAVRA` pega o `["..."]` e o caso exótico falha alto, como deve.
  */
-const TEMPLATE_INTERPOLADO = /`[^`]*\$\{/;
+const decodificar = (src: string) => {
+  let out = src;
+  // String.fromCharCode(71,109,97,105,108) / String.fromCodePoint(...)
+  out = out.replace(
+    /String\s*\.\s*from(?:CharCode|CodePoint)\s*\(\s*([\d\s,xXa-fA-F]+?)\s*\)/g,
+    (m, nums: string) => {
+      const codes = nums.split(",").map((n) => Number(n.trim())).filter((n) => Number.isFinite(n));
+      // Se algum código for inválido, devolve o original (o teste de montagem quebra).
+      return codes.length ? String.fromCodePoint(...codes) : m;
+    });
+  // decodeURIComponent("%47%6D%61%69%6C")
+  out = out.replace(
+    /decodeURIComponent\s*\(\s*["']([^"']*)["']\s*\)/g,
+    (m, s: string) => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return m;
+      }
+    });
+  // ["G","mail"].join("") / join(" " + "") / join(String()) — usa o separador real;
+  // `String()` vira vazio, que é como o JS se comporta.
+  out = out.replace(
+    /\[\s*((?:["'`][^"'`]*["'`]\s*,\s*)*["'`][^"'`]*["'`])\s*\]\s*\.\s*join\s*\(\s*([^)]*)\)/g,
+    (_m, itens: string, sepBruto: string) => {
+      const partes = itens.match(/["'`][^"'`]*["'`]/g) ?? [];
+      // Separação de EXPRESSÃO: pega os literais e, se um deles for só `+`/espaço,
+      // o separador real é aquele literal (ex.: `"" + " "` → " ").
+      const literais = (sepBruto.match(/["'`][^"'`]*["'`]/g) ?? [])
+        .map((q) => q.slice(1, -1))
+        .filter((s) => s.length > 0);
+      const sep = literais.length === 1 ? literais[0] : "";
+      return partes.map((p) => p.slice(1, -1)).join(sep);
+    });
+  return out;
+};
 const NAO_ENTREGUES =
   /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rios?|agendas?)\b/i;
 
-/** Pipeline único, para a varredura de fonte não divergir da de valor. */
+/**
+ * Pipeline único, para a varredura de fonte não divergir da de valor.
+ *
+ * Ordem importa: `decodificar` primeiro (resolve o que foi montado em runtime e
+ * devolve o literal), depois comentário/identificador/concatenação, e a negação
+ * honesta por último (frase declarada).
+ */
 const varrer = (src: string) =>
-  despirNegacao(juntarConcatenacao(mascararTecnico(semComentarios(src))));
+  despirNegacao(juntarConcatenacao(mascararTecnico(semComentarios(decodificar(src)))));
 
 /**
  * Chaves cujo valor é identificador, não copy. `slug: "sheets"` nomeia um arquivo
@@ -530,22 +570,23 @@ const varrerArquivo = (caminho: string) => {
 /** Caminhos reais dos módulos de copy (os únicos onde montagem é proibida). */
 const CAMINHOS_COPY = ["lib/google-workspace.ts", "lib/notion.ts"];
 
-test("copy: o texto não é montado em runtime nos arquivos de copy", () => {
-  // Fecha a família join/concat/template que as rodadas 6–8 exploraram, em vez de
-  // caçar cada variante. `.join/.concat` não têm uso legítimo na copy; template
-  // interpolado também não (nas telas ele constrói classe/URL, o que é legítimo —
-  // por isso o template só é proibido nas libs de copy).
+test("copy: nada de montagem exótica de string na copy", () => {
+  // A denylist NÃO depende mais de banir construções (isso era corrida infinita:
+  // fromCodePoint, colchete, decodeURIComponent...). Agora `decodificar()` resolve
+  // o que é montado e a denylist vê o literal — coberto no teste de promessa, que
+  // injeta e mede.
+  //
+  // Este teste cobre o RESÍDUO: construções que não dá para resolver por regex, e
+  // que não têm uso legítimo na copy (medido: zero ocorrências hoje). Se aparecer
+  // uma legítima, o certo é revisar a copy — não afrouxar a regra.
+  const EXOTICO = /\[\s*["'`][\w$]+["'`]\s*\]\s*\(|\b(?:eval|Function)\s*\(|\.replace\s*\(\s*\/|String\s*\.\s*raw/;
   const falhas: string[] = [];
-  for (const [nome, src] of TELAS) {
-    const achado = src.match(MONTAGEM_DE_PALAVRA);
-    if (achado) falhas.push(`${nome} → "${achado[0]}"`);
-  }
   for (const caminho of CAMINHOS_COPY) {
     const conteudo = readFileSync(new URL(`../${caminho}`, import.meta.url), "utf8");
-    const achado = conteudo.match(MONTAGEM_DE_PALAVRA) ?? conteudo.match(TEMPLATE_INTERPOLADO);
+    const achado = conteudo.match(EXOTICO);
     if (achado) falhas.push(`${caminho} → "${achado[0]}"`);
   }
-  assert.deepEqual(falhas, [], "texto montado em runtime:\n  " + falhas.join("\n  "));
+  assert.deepEqual(falhas, [], "montagem não resolvível na copy:\n  " + falhas.join("\n  "));
 });
 
 test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {

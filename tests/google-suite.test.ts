@@ -55,12 +55,33 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 
 import * as GW from "../lib/google-workspace.ts";
 import * as NO from "../lib/notion.ts";
 
 const ler = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
+
+/** Lista recursivamente os arquivos de um diretório (para achar tela nova). */
+function listar(dir: string): string[] {
+  const saida: string[] = [];
+  let entradas;
+  try {
+    entradas = readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return saida; // diretório ausente não deve derrubar o teste
+  }
+  for (const e of entradas) {
+    const p = `${dir}/${e.name}`;
+    if (e.isDirectory()) {
+      if (e.name === "node_modules" || e.name.startsWith(".")) continue;
+      saida.push(...listar(p));
+    } else {
+      saida.push(p);
+    }
+  }
+  return saida;
+}
 
 /** Telas que exibem a promessa (e por isso são varridas inteiras). */
 const TELAS: Array<[string, string]> = [
@@ -119,16 +140,25 @@ function semComentarios(src: string): string {
 }
 
 /**
- * Remove imports por LINHA (brecha 5).
+ * Remove imports por LINHA (brecha 5 da 3ª rodada; endurecido na v5).
  *
- * `import\s+[^;]+;` engolia tudo até o próximo `;` — num import sem `;` (ASI)
- * isso levava junto a linha seguinte. Aqui o import sai inteiro por si, mesmo
- * sem ponto-e-vírgula e mesmo quebrado em várias linhas.
+ * `import\s+[^;]+;` removia tudo até o próximo `;` — num import sem `;` (ASI)
+ * isso levava junto a linha seguinte.
+ *
+ * A 1ª versão daqui usava `^\s*import\b[\s\S]*?from\s+["']...` e o Grok mostrou
+ * que ela continua comendo o miolo: com um import de EFEITO COLATERAL no meio,
+ * `import "./x"` + código + `import { A } from "y"` casava o `from` da ÚLTIMA
+ * linha e apagava as do meio. Cada forma de import é removida pela própria
+ * sintaxe, então nenhuma delas atravessa linha que não seja dela.
  */
 const semImports = (src: string) =>
   src
-    .replace(/^\s*import\b[\s\S]*?from\s+["'][^"']*["'];?/gm, " ")
-    .replace(/^\s*import\s+["'][^"']*["'];?$/gm, " ");
+    // import { a, b } from "x"  (pode quebrar em várias linhas)
+    .replace(/^[ \t]*import\s*\{[\s\S]*?\}\s*from\s*["'][^"']*["'];?/gm, " ")
+    // import Nome, { a } from "x"  /  import Nome from "x"  (uma linha)
+    .replace(/^[ \t]*import\s+[A-Za-z_$][\w$]*(?:\s*,\s*\{[^}]*\})?\s*from\s*["'][^"']*["'];?/gm, " ")
+    // import "x";  (efeito colateral, linha inteira)
+    .replace(/^[ \t]*import\s+["'][^"'\n]*["'];?[ \t]*$/gm, " ");
 
 /** Fonte que a lojista de fato vê: sem comentário (não é lido) e sem import. */
 const codigoUtil = (src: string) => semImports(semComentarios(src));
@@ -137,23 +167,31 @@ const codigoUtil = (src: string) => semImports(semComentarios(src));
  * Apaga identificadores técnicos que NÃO são promessa: caminho de asset
  * (`/integrations/google-sheets.png`), `className`, imports. Sem isso, o próprio
  * nome do arquivo do ícone faria `sheets` disparar — falso positivo.
+ *
+ * O padrão de `slug:` é restrito às chaves TÉCNICAS (`CHAVE_TECNICA`), não a
+ * qualquer `palavra: "valor"`. A versão genérica mascarava copy de verdade: o
+ * Grok mostrou que `{ titulo: "e-mail" }` (valor kebab-case) ficava invisível e
+ * renderizava na tela.
  */
 const mascararTecnico = (src: string) =>
   semImports(src)
     .replace(/\bclassName=(\{[^}]*\}|"[^"]*")/g, " ")
     .replace(/["'`][^"'`]*\.(png|svg|jpe?g|css|tsx?|ts)["'`]/g, " ")
-    .replace(/^\s*[a-zA-Z]+:\s*"[a-z0-9-]+",?\s*$/gm, " "); // slug: "sheets",
+    .replace(/^[ \t]*(slug|icone|id|status|href|key|cor)\s*:\s*["'][a-z0-9-]+["'],?[ \t]*$/gm, " ");
 
 /**
  * Junta string concatenada em pedaços: `"lê " + "G" + "mail"` → `"lê Gmail"`.
  *
- * Aceita `"`, `'` e crase, inclusive misturados. E consome as DUAS aspas (a que
- * fecha o pedaço e a que abre o seguinte), senão sobra uma aspa no meio —
- * `' le ' + 'G' + 'mail'` virava `' le 'G'mail'` e "Gmail" nunca se formava.
- * Foi assim que a brecha 2 sobreviveu à primeira tentativa de conserto.
+ * Aceita `"`, `'` e crase (inclusive misturados) e consome as DUAS aspas: sem
+ * isso sobra uma aspa no meio e a palavra nunca se forma.
+ *
+ * Parênteses são neutralizados ANTES: `("G")+("mail")` escapava porque o `+`
+ * ficava entre `) ` e ` (`. Trocar `(`/`)` por espaço não inventa palavra (não
+ * cola `f` de `g`) e não esconde nada — só devolve o literal à forma que a
+ * junção reconhece.
  */
 const juntarConcatenacao = (src: string) =>
-  src.replace(/(["'`])\s*\+\s*(["'`])/g, "");
+  src.replace(/[()]/g, " ").replace(/(["'`])\s*\+\s*(["'`])/g, "");
 
 /** Tira as negações HONESTAS: elas protegem a lojista e não são promessa. */
 const NEGACAO_HONESTA =
@@ -164,13 +202,15 @@ const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
  * Nomes de produto e palavras da promessa antiga.
  * `sheets`/`e-mail` entraram depois da 2ª rodada do Grok (passavam batido).
  *
- * `apresenta[çc][õo]es?` é o substantivo (o produto "Apresentações" da promessa
- * original). Antes era `apresenta\w*`, que também pegava o VERBO — "apresentamos
- * abaixo o que a mila faz" quebrava o teste sem nenhuma promessa. Falso positivo
- * medido; consertado estreitando o padrão, não afrouxando a denylist.
+ * O substantivo do produto ("Apresentação"/"Apresentações") é exigido com o
+ * SUFIXO: a forma anterior (`apresenta[çc][õo]es?`) casava o plural e deixava
+ * passar o singular (e "apresentacao"); a tentativa de aceitar também a forma
+ * nua (`apresenta` sozinho) volta a casar o VERBO "apresentamos" — falso
+ * positivo medido. O grupo abaixo cobre singular/plural com e sem acento e NÃO
+ * casa o verbo. `agenda`/`calendário` ganharam plural.
  */
 const NAO_ENTREGUES =
-  /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta[çc][õo]es?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rio|agenda)\b/i;
+  /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao)s?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rios?|agendas?)\b/i;
 
 /** Pipeline único, para a varredura de fonte não divergir da de valor. */
 const varrer = (src: string) =>
@@ -357,6 +397,30 @@ test("notion: a mila NÃO cria a base — e o texto não promete que cria", () =
   // mila criava uma base por nota — impreciso.
   assert.match(NO.NOTION_DESC, /ela não cria a base/);
   assert.doesNotMatch(NO.NOTION_DESC, /viram bases/);
+});
+
+test("google: nenhuma tela importa a fonte única fora da lista varrida", () => {
+  // A lista TELAS é manual, então uma tela NOVA que use a fonte ficaria fora da
+  // varredura — e poderia digitar à mão sem ninguém notar. O Grok apontou isso.
+  // Aqui o diretório é vasculhado: quem importa `google-workspace`/`notion` tem
+  // que estar em TELAS. É de propósito que SÓ esses dois módulos contam (varrer
+  // todo `lib/` traria texto legítimo e quebraria o teste).
+  const raiz = new URL("..", import.meta.url).pathname;
+  const arquivos = [
+    ...listar(`${raiz}app`),
+    ...listar(`${raiz}components`),
+  ].filter((p) => /\.(tsx|ts)$/.test(p) && !p.includes("node_modules"));
+  assert.ok(arquivos.length > 10, `esperava varrer app/ e components/, achei ${arquivos.length}`);
+
+  const conhecidos = new Set(TELAS.map(([, src]) => src));
+  const fora: string[] = [];
+  for (const caminho of arquivos) {
+    const src = readFileSync(caminho, "utf8");
+    const usaFonte = /from\s+["'][^"']*lib\/(google-workspace|notion)["']/.test(src);
+    if (usaFonte && !conhecidos.has(src)) fora.push(caminho.replace(raiz, ""));
+  }
+  assert.deepEqual(fora, [],
+    "estas telas usam a fonte única e NÃO estão em TELAS (adicione-as): " + fora.join(", "));
 });
 
 test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {

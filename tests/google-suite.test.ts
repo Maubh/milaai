@@ -301,6 +301,11 @@ const NAO_ENTREGUES_PERTO_DA_MARCA = new RegExp(
  */
 const decodificar = (src: string) => {
   let out = src;
+  // Escapes unicode/hex no literal: "lê seu \u0047mail" → "lê seu Gmail" (e \x47).
+  // O Grok mostrou que sem isso a palavra existe no TEXTO mas não no código lido.
+  out = out.replace(/\\u\{([0-9a-fA-F]{1,6})\}|\\u([0-9a-fA-F]{4})|\\x([0-9a-fA-F]{2})/g,
+    (_m, braced: string, u: string, x: string) =>
+      String.fromCodePoint(parseInt(braced ?? u ?? x, 16)));
   // String.fromCharCode(71,109,97,105,108) / String.fromCodePoint(...)
   out = out.replace(
     /String\s*\.\s*from(?:CharCode|CodePoint)\s*\(\s*([\d\s,xXa-fA-F]+?)\s*\)/g,
@@ -325,14 +330,22 @@ const decodificar = (src: string) => {
     /\[\s*((?:["'`][^"'`]*["'`]\s*,\s*)*["'`][^"'`]*["'`])\s*\]\s*\.\s*join\s*\(\s*([^)]*)\)/g,
     (_m, itens: string, sepBruto: string) => {
       const partes = itens.match(/["'`][^"'`]*["'`]/g) ?? [];
-      // Separação de EXPRESSÃO: pega os literais e, se um deles for só `+`/espaço,
-      // o separador real é aquele literal (ex.: `"" + " "` → " ").
-      const literais = (sepBruto.match(/["'`][^"'`]*["'`]/g) ?? [])
-        .map((q) => q.slice(1, -1))
-        .filter((s) => s.length > 0);
-      const sep = literais.length === 1 ? literais[0] : "";
+      // Avalia o separador como EXPRESSÃO simples. O Grok mostrou que só tratar
+      // `""+""` deixava `.join("".slice(0,0))` (que também é vazio) passar.
+      const sep = (sepBruto.match(/["'`][^"'`]*["'`]/g) ?? []).map((q) => q.slice(1, -1)).join("");
       return partes.map((p) => p.slice(1, -1)).join(sep);
     });
+  // Interpolação que resolve para VAZIO: `${""}`, `${''}`, `${``}`, `${"" + ""}`.
+  // O Grok montou `` `Seu G${""}mail` `` — o texto renderizado é "Gmail" e o
+  // literal no código não tem a palavra. Remove só o que é comprovadamente vazio;
+  // interpolação com conteúdo fica (e aí o literal dela é varrido normalmente).
+  out = out.replace(/\$\{\s*(?:["'`](?:["'`]|\s*\+\s*["'`])*)\s*\}/g, "");
+  // Filhos JSX adjacentes colados pelo React: {"G"}{"mail"} → Gmail.
+  // (O Grok lembrou: o React concatena filhos, então o texto renderizado difere
+  // do que está escrito em cada literal.) Duas etapas: tira as chaves e depois
+  // colapsa os literais que ficaram encostados ("G""mail" → "Gmail"). Literais
+  // separados por vírgula NÃO são afetados — só os adjacentes.
+  out = out.replace(/}\s*\{/g, "").replace(/(["'`])\s*(["'`])/g, "");
   return out;
 };
 const NAO_ENTREGUES =

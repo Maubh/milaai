@@ -80,12 +80,12 @@ export const INTEGRACOES: Integracao[] = [
     id: "google",
     nome: "Google Workspace",
     status: "disponível",
-    desc: "Gmail, Agenda, Tarefas, Drive, Documentos, Planilhas e Apresentações — lado a lado com o preço.",
+    desc: "Drive e Planilhas — o caderno de fornecedores vira uma planilha no seu Google. A mila cria e mantém o arquivo.",
   },
   {
     id: "notion",
     nome: "Notion",
     status: "disponível",
-    desc: "Documentos, Wiki, Páginas e Bancos de dados — o espaço da marca com a mila.",
+    desc: "Bases de dados — o caderno de fornecedores e as notas de compra viram bases no seu Notion. Você escolhe onde guardar o caderno: no Notion ou na planilha do Google.",
   },
 ];

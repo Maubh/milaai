@@ -149,6 +149,26 @@
   width: auto;
   object-fit: contain;
 }
+/* Ferramentas da suíte que a mila realmente usa (ex.: Drive e Planilhas do
+   Google). Cada item diz o NOME e o USO: o ícone sozinho não basta. */
+.integration-tools {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+.integration-tool {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 0.15rem 0.7rem;
+  align-items: center;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.5);
+}
+.integration-tool img { grid-row: span 2; width: 26px; height: 26px; object-fit: contain; }
+.integration-tool strong { font-size: 0.95rem; line-height: 1.2; }
+.integration-tool span { font-size: 0.88rem; line-height: 1.35; color: rgba(30, 43, 40, 0.78); }
 .integration-badge-tag {
   font-size: 0.75rem;
   font-weight: 700;

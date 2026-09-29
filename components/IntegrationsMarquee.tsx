@@ -2,12 +2,20 @@
 
 import React from "react";
 
+import { FERRAMENTAS_GOOGLE } from "@/lib/google-workspace";
+
 interface IntegrationItem {
   id: string;
   name?: string;
   showName?: boolean;
   color: string;
   icon: React.ReactNode;
+  /**
+   * Só o Google usa isto: as ferramentas da suíte, exibidas SOB o nome da
+   * marca (Drive e Planilhas). As demais integrações (Notion, Jueri, Bling,
+   * Olist, Outlook) mostram apenas o logo — sem sub-ícones.
+   */
+  tools?: typeof FERRAMENTAS_GOOGLE;
 }
 
 /* Wordmarks do Bling e da Olist são os SVGs distribuídos pelas próprias marcas,
@@ -43,11 +51,15 @@ const INTEGRATIONS: IntegrationItem[] = [
   {
     id: "google-workspace",
     name: "Google Workspace",
-    showName: false,
+    // A marca aparece com o NOME visível: abaixo dele vão os ícones das
+    // ferramentas que a mila realmente usa (Drive e Planilhas). Sem o nome, a
+    // lista de ícones ficaria sem dono.
+    showName: true,
     color: "#5F6368",
     icon: (
       <img src="/integrations/google-workspace.svg" alt="" />
     ),
+    tools: FERRAMENTAS_GOOGLE,
   },
   {
     id: "notion",
@@ -75,11 +87,28 @@ const INTEGRATIONS: IntegrationItem[] = [
 
 function BrandMark({ item }: { item: IntegrationItem }) {
   const label = item.name ?? item.id;
+  const temNome = item.showName !== false;
+  const tools = item.tools ?? [];
 
   return (
     <div className={`marquee-mark integration-${item.id}`} aria-label={label}>
       <span className="marquee-mark-logo" style={{ color: item.color }}>{item.icon}</span>
-      {item.showName !== false ? <span className="marquee-mark-name">{item.name}</span> : null}
+      {temNome ? <span className="marquee-mark-name">{item.name}</span> : null}
+      {tools.length > 0 ? (
+        /* Ferramentas da suíte, SOB o nome da marca. Cada ícone leva o nome no
+           alt/title: sozinho, o logo não diz o que a mila faz com ele. */
+        <span className="marquee-mark-tools">
+          {tools.map((t) => (
+            <img
+              key={t.nome}
+              className="marquee-mark-tool"
+              src={t.icone}
+              alt={t.nome}
+              title={t.nome}
+            />
+          ))}
+        </span>
+      ) : null}
     </div>
   );
 }

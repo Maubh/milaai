@@ -194,27 +194,49 @@ const neutralizar = (src: string) => src.replace(/[()[\]]/g, " ");
  * O Grok mostrou as duas últimas: elas renderizam a palavra e o fonte não a
  * contém. Nada disso é forma normal de escrever copy, mas custa pouco cobrir.
  */
-const juntarConcatenacao = (src: string) =>
-  neutralizar(
-    // `.join(` / `.concat(` são colagem em runtime: virar `+` faz as regras
-    // abaixo tratá-los como o `+` do operador. Tem que ser ANTES de neutralizar,
-    // porque neutralizar apaga justamente o `(`.
-    src.replace(/\.(?:join|concat)\s*\(/g, " + "),
-  )
-    .replace(/(["'`])\s*\+\s*(["'`])/g, "") // "a" + "b" → "ab"
-    .replace(/(["'`])\s*,\s*(["'`])/g, ""); // ["a","b"] → "ab"
+const juntarConcatenacao = (src: string) => {
+  // `["G","mail"].join("")` → "Gmail";  `["acesse","Gmail"].join(" ")` → "acesse Gmail".
+  // O SEPARADOR importa: colar as vírgulas como vazio transformava o segundo caso
+  // em "acesseGmail" e o `\bgmail\b` não casava (brecha da 7ª rodada).
+  const comJoin = src.replace(
+    /\[\s*((?:["'`][^"'`]*["'`]\s*,\s*)*["'`][^"'`]*["'`])\s*\]\s*\.join\s*\(\s*(["'`])([^"'`]*)\2?\s*\)/g,
+    (_m, itens: string, _q: string, sep: string) => {
+      const partes = itens.match(/["'`][^"'`]*["'`]/g) ?? [];
+      return partes.map((p) => p.slice(1, -1)).join(sep);
+    },
+  );
+  return neutralizar(
+    // `.concat(` é colagem em runtime: virar `+` deixa a regra abaixo tratar como
+    // operador. Antes de neutralizar, porque neutralizar apaga o `(`.
+    comJoin.replace(/\.concat\s*\(/g, " + "),
+  ).replace(/(["'`])\s*\+\s*(["'`])/g, ""); // "a" + "b" → "ab"
+};
 
 /**
  * Tira as negações HONESTAS do texto.
  *
- * Antes era uma frase congelada; o Grok mostrou que variar "Não acessamos seu
- * Gmail." quebrava. Transparência sobre o que a mila NÃO acessa protege a
- * lojista — então a allowlist cobre as formas naturais dessa negação, não uma
- * redação fixa. Só conta com a NEGAÇÃO ("não"/"sem") na mesma sentença: promessa
- * sem "não" continua sendo promessa.
+ * Transparência sobre o que a mila NÃO acessa protege a lojista — então ela não
+ * pode ser tratada como promessa. Mas a versão anterior (`[^.!?]{0,80}` à
+ * DIREITA) varria 80 caracteres depois do termo e podia apagar uma promessa
+ * seguinte na mesma frase (brecha da 7ª rodada).
+ *
+ * Agora é ESTRITA: a negação precisa estar colada no termo (até ~6 palavras,
+ * cobrindo "não abre nem lista seus outros arquivos do Drive"), e nada é apagado
+ * depois do termo. A lista inclui sheets/slides/tarefas/apresentações: a frase
+ * honesta sobre eles também não pode quebrar o teste.
+ *
+ * Sem "não"/"sem", continua sendo promessa.
  */
 const NEGACAO_HONESTA = new RegExp(
-  String.raw`(?:n[ãa]o|sem)\s[^.!?]{0,80}?\b(?:gmail|agenda|drive|e-?mails?|documentos?|p[áa]ginas?)\b[^.!?]{0,80}`,
+  String.raw`(?:n[ãa]o|sem)\s+(?:\w+\s+){0,6}?` +
+    String.raw`\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|` +
+    String.raw`sheets?|slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b` +
+    // a negação continua em "…, e não acessa seu Gmail NEM sua Agenda": a
+    // continuação exige a PRÓPRIA negação ("não"/"nem"), senão "Não acessa a
+    // Agenda e o Gmail vem liberado" seria engolido como se fosse honesto.
+    String.raw`(?:\s*,?\s*(?:e\s+)?(?:n[ãa]o|nem)\s+(?:\w+\s+){0,6}?` +
+    String.raw`\b(?:gmail|agenda|drive|e-?mails?|docs|documentos?|p[áa]ginas?|` +
+    String.raw`sheets?|slides?|tarefas?|apresenta(?:[çc][ãa]o|[çc][õo]es|coes|cao))s?\b)*`,
   "gi");
 const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
 
@@ -238,13 +260,19 @@ const GENERICOS =
 const MARCA = String.raw`google|notion|drive|planilhas?`;
 
 /**
- * Genérico a até 120 caracteres de uma marca — a regra que pega a promessa
- * disfarçada:
- *   <p>Google Workspace: e-mails, Google Docs, documentos, apresentações</p>
- * Medido antes de adotar: **0 falsos positivos** nos 37 arquivos do site.
+ * Genérico e marca na MESMA frase — nos dois sentidos.
+ *
+ * O Grok mostrou que só `marca → genérico` deixava passar
+ * `<p>e-mails, documentos e apresentações no Google</p>`, e que 120 caracteres
+ * eram pouco para uma frase longa sem negação. Agora: qualquer um dos dois antes
+ * do outro, até 300 caracteres, sem atravessar `.`/`!`/`?` (a marca pode estar
+ * escrita como "Google Workspace", então "Google." com ponto não conta).
+ * Medido antes de adotar: 0 falso positivo nos 37 arquivos do site.
  */
 const NAO_ENTREGUES_PERTO_DA_MARCA = new RegExp(
-  `(?:${MARCA})[\\s\\S]{0,120}?(?:\\b(?:${GENERICOS})\\b)`, "i");
+  String.raw`(?:(?:\b(?:${MARCA})\b)[^.!?]{0,300}?\b(?:${GENERICOS})\b` +
+    String.raw`|(?:\b(?:${GENERICOS})\b)[^.!?]{0,300}?\b(?:${MARCA})\b)`,
+  "i");
 
 /**
  * A denylist AMPLA (produto + genéricos) — usada só nos arquivos de COPY, onde

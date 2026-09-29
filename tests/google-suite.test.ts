@@ -8,28 +8,47 @@
  * acabaram de sair do código (`auth/oauth.py`), então o texto era promessa
  * sem entrega em três telas.
  *
- * ── Histórico deste teste (as duas versões anteriores foram reprovadas) ──────
+ * ── Histórico: TRÊS versões anteriores foram reprovadas ──────────────────────
  * v1 — filtrava as linhas do FONTE que continham "Google Workspace" e varria só
  *      essas. Burlável: a promessa na linha de BAIXO, ou dentro do VALOR de uma
  *      constante, passava. Também não pegava "documentos" nem "gmail" minúsculo.
- * v2 — passou a varrer os valores, mas com lista MANUAL de constantes e um
- *      removedor de comentários que engolia `//` dentro de string. O Grok 4.7
- *      mostrou duas brechas: "Sheets"/"e-mail" (fora da denylist) e um export
- *      NOVO que não estava na lista manual — este renderizava na tela e passava.
+ * v2 — varria os valores, mas com lista MANUAL de constantes e um removedor de
+ *      comentários que engolia `//` dentro de string. Brechas: "Sheets"/"e-mail"
+ *      fora da denylist e um export NOVO que não estava na lista manual.
+ * v3 — `import * as` (todo export coberto) + máquina de estados p/ comentários.
+ *      O Grok 4.7 achou 5 brechas restantes (todas medidas rodando `npm test`,
+ *      todas passando 37/37 antes do conserto):
  *
- * v3 (esta) — não depende de lista manual nem de regex frágil:
- *   - importa MÓDULO INTEIRO (`import * as`) e varre TODO export de texto;
- *     export novo já nasce coberto;
- *   - o removedor de comentários é uma máquina de estados que respeita strings,
- *     então `"sync // Gmail"` continua visível;
- *   - a denylist tem os nomes de produto (gmail, e-mail, sheets, docs, slides,
- *     calendar, tasks) E as palavras da promessa antiga.
+ *   1. `\bPLANO_GOOGLE\b` casa dentro de COMENTÁRIO. Tirar o uso real e deixar
+ *      `// usa PLANO_GOOGLE` satisfazia o teste de ligação;
+ *   2. `juntarConcatenacao` só juntava aspas DUPLAS — `'G' + 'mail'` passava;
+ *   3. `visitar()` ignorava string curta (`length > 8`): `["Gmail","Agenda"]`
+ *      passava;
+ *   4. `visitar()` não desce em função: `function f(){ return "lê seu Gmail" }`
+ *      passava — e a lib nem era lida como FONTE, só importada;
+ *   5. `mascararTecnico` removia `import\s+[^;]+;` — sem ponto-e-vírgula (ASI) o
+ *      regex engolia a promessa da LINHA SEGUINTE.
  *
- * ── Falso positivo: o teste é um arame farpado, não um muro ──────────────────
- * Se um dia "documentos fiscais" for texto legítimo nestas telas, o teste vai
- * falhar apontando a palavra. Aí a saída é ser explícito — foi o que se fez com
- * a negação honesta ("não acessa seu Gmail nem sua Agenda"), que é transparência
- * e por isso está em allowlist. Nunca afrouxe a denylist inteira por causa disso.
+ * ── v4 (esta): o que mudou para fechar cada uma ──────────────────────────────
+ *   1. o teste de ligação roda sobre o fonte SEM COMENTÁRIOS e SEM IMPORTS
+ *      (`codigoUtil()`): a constante precisa ser USADA, não citada;
+ *   2. `juntarConcatenacao` aceita `"`, `'` e crase, inclusive misturados;
+ *   3. `visitar()` não usa mais heurística de tamanho: descarta só identificador
+ *      (chave técnica, caminho de asset, token `kebab-case`), então string curta
+ *      de prosa entra na varredura;
+ *   4. os módulos-fonte entram também na varredura de FONTE (`FONTES`), e a
+ *      varredura de valor continua por `import * as`;
+ *   5. import é removido por LINHA (`semImports`), não até o próximo `;`.
+ *
+ * ── Falso positivo: o teste é arame farpado, não muro ────────────────────────
+ * Se um dia "documentos fiscais" for texto legítimo nestas telas, o teste falha
+ * apontando a palavra. Aí a saída é ser explícito — foi o que se fez com a
+ * negação honesta ("não acessa seu Gmail nem sua Agenda"), que é transparência e
+ * por isso está em allowlist. Nunca afrouxe a denylist inteira por causa disso.
+ *
+ * ⚠️ Arquivo de copy NOVO não é varrido sozinho: a lista `FONTES` é explícita.
+ *    Se a copy passar a morar em outro módulo, adicione-o aqui — de propósito,
+ *    porque varrer todo `lib/` traria palavras legítimas e quebraria o teste.
  *
  *   npm test
  */
@@ -43,6 +62,7 @@ import * as NO from "../lib/notion.ts";
 
 const ler = (p: string) => readFileSync(new URL(p, import.meta.url), "utf8");
 
+/** Telas que exibem a promessa (e por isso são varridas inteiras). */
 const TELAS: Array<[string, string]> = [
   ["PricingSection", ler("../components/PricingSection.tsx")],
   ["demo-data", ler("../lib/demo-data.ts")],
@@ -51,11 +71,22 @@ const TELAS: Array<[string, string]> = [
 ];
 
 /**
+ * Módulos de copy + telas, todos varridos como FONTE.
+ * As libs entram explicitamente: `visitar()` não enxerga o retorno de função, e
+ * um texto escondido ali apareceria na tela sem nunca ser lido (brecha 4).
+ */
+const FONTES: Array<[string, string]> = [
+  ...TELAS,
+  ["lib/google-workspace", ler("../lib/google-workspace.ts")],
+  ["lib/notion", ler("../lib/notion.ts")],
+];
+
+/**
  * Remove comentários respeitando strings.
  *
  * Por que não um regex: `"sync // Gmail"` tem `//` DENTRO de uma string. Um
  * regex simples apaga o resto da linha e a promessa desaparece da varredura —
- * foi exatamente a brecha que o Grok apontou.
+ * foi exatamente a brecha que o Grok apontou na 2ª rodada.
  */
 function semComentarios(src: string): string {
   let saida = "";
@@ -88,44 +119,86 @@ function semComentarios(src: string): string {
 }
 
 /**
+ * Remove imports por LINHA (brecha 5).
+ *
+ * `import\s+[^;]+;` engolia tudo até o próximo `;` — num import sem `;` (ASI)
+ * isso levava junto a linha seguinte. Aqui o import sai inteiro por si, mesmo
+ * sem ponto-e-vírgula e mesmo quebrado em várias linhas.
+ */
+const semImports = (src: string) =>
+  src
+    .replace(/^\s*import\b[\s\S]*?from\s+["'][^"']*["'];?/gm, " ")
+    .replace(/^\s*import\s+["'][^"']*["'];?$/gm, " ");
+
+/** Fonte que a lojista de fato vê: sem comentário (não é lido) e sem import. */
+const codigoUtil = (src: string) => semImports(semComentarios(src));
+
+/**
  * Apaga identificadores técnicos que NÃO são promessa: caminho de asset
  * (`/integrations/google-sheets.png`), `className`, imports. Sem isso, o próprio
  * nome do arquivo do ícone faria `sheets` disparar — falso positivo.
  */
 const mascararTecnico = (src: string) =>
-  src
+  semImports(src)
     .replace(/\bclassName=(\{[^}]*\}|"[^"]*")/g, " ")
-    .replace(/\bfrom\s+"[^"]*"/g, " ")
-    .replace(/\bimport\s+[^;]+;/g, " ")
     .replace(/["'`][^"'`]*\.(png|svg|jpe?g|css|tsx?|ts)["'`]/g, " ")
     .replace(/^\s*[a-zA-Z]+:\s*"[a-z0-9-]+",?\s*$/gm, " "); // slug: "sheets",
 
 /**
  * Junta string concatenada em pedaços: `"lê " + "G" + "mail"` → `"lê Gmail"`.
- * Sem isto, quebrar a palavra com `+` esconderia a promessa do teste (brecha
- * apontada pelo Grok na 2ª rodada).
+ *
+ * Aceita `"`, `'` e crase, inclusive misturados. E consome as DUAS aspas (a que
+ * fecha o pedaço e a que abre o seguinte), senão sobra uma aspa no meio —
+ * `' le ' + 'G' + 'mail'` virava `' le 'G'mail'` e "Gmail" nunca se formava.
+ * Foi assim que a brecha 2 sobreviveu à primeira tentativa de conserto.
  */
-const juntarConcatenacao = (src: string) => src.replace(/"\s*\+\s*"/g, "");
+const juntarConcatenacao = (src: string) =>
+  src.replace(/(["'`])\s*\+\s*(["'`])/g, "");
 
 /** Tira as negações HONESTAS: elas protegem a lojista e não são promessa. */
-const NEGACAO_HONESTA = /não (acessa seu Gmail nem sua Agenda|abre nem lista seus outros arquivos do Drive)/gi;
+const NEGACAO_HONESTA =
+  /não (acessa seu Gmail nem sua Agenda|abre nem lista seus outros arquivos do Drive)/gi;
 const despirNegacao = (t: string) => t.replace(NEGACAO_HONESTA, " ");
 
 /**
  * Nomes de produto e palavras da promessa antiga.
  * `sheets`/`e-mail` entraram depois da 2ª rodada do Grok (passavam batido).
+ *
+ * `apresenta[çc][õo]es?` é o substantivo (o produto "Apresentações" da promessa
+ * original). Antes era `apresenta\w*`, que também pegava o VERBO — "apresentamos
+ * abaixo o que a mila faz" quebrava o teste sem nenhuma promessa. Falso positivo
+ * medido; consertado estreitando o padrão, não afrouxando a denylist.
  */
 const NAO_ENTREGUES =
-  /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta\w*|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rio|agenda)\b/i;
+  /\b(gmail|e-?mails?|sheets?|docs|documentos?|apresenta[çc][õo]es?|slides?|wiki|p[áa]ginas?|tarefas?|tasks|calendar|calend[áa]rio|agenda)\b/i;
+
+/** Pipeline único, para a varredura de fonte não divergir da de valor. */
+const varrer = (src: string) =>
+  despirNegacao(juntarConcatenacao(mascararTecnico(semComentarios(src))));
+
+/**
+ * Chaves cujo valor é identificador, não copy. `slug: "sheets"` nomeia um arquivo
+ * de ícone; marcar isso como promessa seria falso positivo (brecha 3 veio da
+ * tentativa de resolver isso por tamanho de string).
+ */
+const CHAVE_TECNICA = new Set(["slug", "icone", "id", "status", "href", "key", "cor"]);
+
+const ultimaChave = (caminho: string) =>
+  caminho.replace(/\[\d+\]$/, "").split(".").pop() ?? "";
+
+/** Valor é identificador? (chave técnica, caminho de asset ou token kebab) */
+const ehIdentificador = (caminho: string, v: string) =>
+  CHAVE_TECNICA.has(ultimaChave(caminho)) ||
+  v.startsWith("/") ||
+  /^[a-z0-9-]+$/.test(v);
 
 /** Coleta TODO texto exportado pelos módulos-fonte (sem lista manual). */
 function textosExportados(): Array<[string, string]> {
   const achados: Array<[string, string]> = [];
   const visitar = (v: unknown, caminho: string): void => {
     if (typeof v === "string") {
-      // Só prosa. `slug: "sheets"` e `icone: "/integrations/..."` não têm espaço
-      // e são identificadores, não copy — quem os cobre é a varredura de fonte.
-      if (v.includes(" ") && v.length > 8) achados.push([caminho, v]);
+      // Sem heurística de tamanho (brecha 3): string curta de prosa conta.
+      if (!ehIdentificador(caminho, v)) achados.push([caminho, v]);
       return;
     }
     if (Array.isArray(v)) { v.forEach((x, i) => visitar(x, `${caminho}[${i}]`)); return; }
@@ -153,10 +226,19 @@ test("google: a lista de ferramentas é só o que o produto usa", () => {
   }
 });
 
+test("google: a varredura de valores não voltou a ficar vazia", () => {
+  // Sem isto, um erro no `visitar()` deixaria o teste abaixo passando em vazio.
+  assert.ok(TEXTOS_DE_UI.length >= 6, `esperava textos exportados, achei ${TEXTOS_DE_UI.length}`);
+  const caminhos = TEXTOS_DE_UI.map(([c]) => c);
+  for (const exigido of [".PLANO_GOOGLE", ".GOOGLE_DESC", ".GOOGLE_ESCOPO_NOTA"]) {
+    assert.ok(caminhos.some((c) => c.endsWith(exigido)),
+      `a varredura de valores precisa incluir ${exigido} (achei ${caminhos.join(", ")})`);
+  }
+});
+
 test("google: nenhum texto exportado promete ferramenta fora da lista", () => {
   // Cobre TODO export dos módulos-fonte — inclusive um export novo, que na
-  // versão anterior passava batido (brecha apontada pelo Grok).
-  assert.ok(TEXTOS_DE_UI.length >= 6, `esperava textos exportados, achei ${TEXTOS_DE_UI.length}`);
+  // versão v2 passava batido (brecha apontada pelo Grok).
   for (const [caminho, texto] of TEXTOS_DE_UI) {
     const achado = despirNegacao(texto).match(NAO_ENTREGUES);
     assert.equal(achado, null,
@@ -164,26 +246,55 @@ test("google: nenhum texto exportado promete ferramenta fora da lista", () => {
   }
 });
 
-test("google: nem no fonte das telas, com comentários fora", () => {
+test("google: nem no fonte, com comentários fora", () => {
   // Pega a promessa digitada À MÃO numa tela nova (sem passar pelas constantes),
   // e o texto solto no JSX. Comentário não conta: não é lido por ninguém.
-  for (const [nome, src] of TELAS) {
-    const limpo = juntarConcatenacao(mascararTecnico(semComentarios(src)));
-    const achado = despirNegacao(limpo).match(NAO_ENTREGUES);
+  // As libs de copy entram aqui também (brecha 4): `visitar()` só enxerga
+  // valores exportados, então texto escondido no corpo de uma função da lib
+  // apareceria na tela sem nunca ser lido.
+  for (const [nome, src] of FONTES) {
+    const achado = varrer(src).match(NAO_ENTREGUES);
     assert.equal(achado, null, `${nome} traz "${achado?.[0]}" como promessa`);
   }
 });
 
-test("google: as telas continuam LIGADAS na fonte única", () => {
-  // Se uma tela voltar a digitar o texto à mão, ela deixa de citar a constante e
-  // este teste cai — foi assim que três versões da mesma frase divergiram.
-  assert.match(TELAS[0][1], /\bPLANO_GOOGLE\b/, "o plano precisa usar PLANO_GOOGLE");
-  assert.match(TELAS[1][1], /\bGOOGLE_DESC\b/, "a lista logada precisa usar GOOGLE_DESC");
-  assert.match(TELAS[1][1], /\bNOTION_DESC\b/, "a lista logada precisa usar NOTION_DESC");
-  assert.match(TELAS[2][1], /\bGOOGLE_ESCOPO_NOTA\b/);
-  assert.match(TELAS[2][1], /\bGOOGLE_TITULO\b/);
-  assert.match(TELAS[2][1], /\bFERRAMENTAS_GOOGLE\b/);
-  assert.match(TELAS[3][1], /\bFERRAMENTAS_GOOGLE\b/);
+/** Constantes que cada arquivo precisa USAR (não só mencionar). */
+const EXIGIDAS: Array<[string, string[]]> = [
+  ["PricingSection", ["PLANO_GOOGLE"]],
+  ["demo-data", ["GOOGLE_DESC", "NOTION_DESC"]],
+  ["integrations/[app]", ["GOOGLE_DESC", "GOOGLE_TITULO", "GOOGLE_ESCOPO_NOTA", "FERRAMENTAS_GOOGLE"]],
+  ["IntegrationsMarquee", ["FERRAMENTAS_GOOGLE"]],
+];
+
+test("google: as telas USAM a fonte única em código, não citam em comentário", () => {
+  // Brecha 1: `assert.match(src, /\bPLANO_GOOGLE\b/)` casava dentro de um
+  // comentário. Trocar o uso real por texto literal e deixar `// usa PLANO_GOOGLE`
+  // mantinha o teste verde — medido. Aqui o fonte passa por `codigoUtil()`
+  // (sem comentário E sem import), então só conta USO de verdade.
+  for (const [nome, constantes] of EXIGIDAS) {
+    const src = TELAS.find(([n]) => n === nome)?.[1];
+    assert.ok(src, `tela ${nome} não está em TELAS`);
+    const codigo = codigoUtil(src!);
+    for (const c of constantes) {
+      assert.match(codigo, new RegExp(`\\b${c}\\b`),
+        `${nome} precisa USAR ${c} em código (o import e o comentário não contam)`);
+    }
+  }
+});
+
+test("google: nenhuma tela digita à mão o texto da fonte única", () => {
+  // Fecha o caso oposto: manter o import e digitar o texto à mão. Se o literal
+  // aparecer no fonte, a constante deixou de ser fonte única.
+  const valores = [
+    GW.GOOGLE_TITULO, GW.GOOGLE_DESC, GW.PLANO_GOOGLE, GW.GOOGLE_ESCOPO_NOTA,
+    NO.NOTION_DESC,
+  ];
+  for (const [nome, src] of TELAS) {
+    const limpo = semComentarios(src);
+    for (const v of valores) {
+      assert.ok(!limpo.includes(v), `${nome} repete à mão o texto da fonte única`);
+    }
+  }
 });
 
 test("google: a tela de conexão explica o limite do escopo", () => {

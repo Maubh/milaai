@@ -29,12 +29,12 @@ function sourceFiles(): Record<string, string> {
   };
   // Pin the complete local source/dependency set, not only imports inferred by regex.
   // New layouts/templates, CSS, imported helpers and public assets fail closed.
-  for (const dir of ["app", "components", "lib", "public"]) {
+  for (const dir of ["app", "components", "lib", "public", "src", "pages"]) {
     for (const path of scan(join(ROOT, dir), [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css", ".scss", ".svg", ".png", ".jpg", ".webp", ".json"])) add(ROOT, "site/", path);
   }
   // Root middleware, Next/config/redirects, dependency versions and Vercel config.
   for (const name of readdirSync(ROOT)) {
-    if (/\.(?:ts|tsx|js|mjs|cjs|json)$/.test(name) && lstatSync(join(ROOT, name)).isFile()) add(ROOT, "site/", join(ROOT, name));
+    if (/\.(?:ts|tsx|jsx|js|mjs|cjs|json)$/.test(name) && lstatSync(join(ROOT, name)).isFile()) add(ROOT, "site/", join(ROOT, name));
   }
   // Newly introduced Python files anywhere in the web repository also fail closed.
   for (const path of scan(ROOT, [".py"])) add(ROOT, "site/", path);

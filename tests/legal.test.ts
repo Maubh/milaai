@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 /**
  * A política e os termos não podem afirmar o que o produto não faz.
  *
@@ -65,7 +66,11 @@ const nomeSaida = (rel: string) => rel.replace(/[/.]/g, "_") + ".mjs";
  *  instrumentada com sentinelas, usada pelo teste de prosa estática). */
 function transpilar(rel: string, aliasLegal?: string): void {
   const abs = join(RAIZ, rel);
-  const js = ts.transpileModule(readFileSync(abs, "utf8"), {
+  const source = readFileSync(abs, "utf8");
+  if (PAGINAS.some((p) => p.caminho === rel) || rel === "components/PricingSection.tsx") {
+    assert.doesNotMatch(source, /["']use client["']|\b(?:process|window|document|globalThis)\b|\bnext\/dynamic\b|\buse(?:Effect|LayoutEffect|InsertionEffect|State|Reducer|SyncExternalStore)\b/, `${rel}: conteúdo dinâmico fora do harness estático`);
+  }
+  const js = ts.transpileModule(source, {
     compilerOptions: {
       jsx: ts.JsxEmit.ReactJSX,
       target: ts.ScriptTarget.ES2022,
@@ -1232,9 +1237,8 @@ Privacidade e dados:
 Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`;
 
 /** Normaliza o HTML renderizado: sentinelas → `§`, tags → quebra, entidades. */
-function prosaDe(html: string): string {
+function normalizar(html: string): string {
   return html
-    .replace(/\u00ab[^\u00bb]*\u00bb/g, "\u00a7")
     .replace(/<[^>]+>/g, "\n")
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
@@ -1245,9 +1249,249 @@ function prosaDe(html: string): string {
     .split("\n")
     .map((s) => s.trim())
     .filter((s) => s.length > 0)
+    .join("\n");
+}
+
+/** Prosa fixa: o que sobra depois de a fonte virar sentinela. */
+function prosaDe(html: string): string {
+  return normalizar(html.replace(/\u00ab[^\u00bb]*\u00bb/g, "\u00a7"))
+    .split("\n")
     .filter((s) => !/^[\u00a7\s.,:;—–-]*$/.test(s) && !/^[\(\u00a7\)\s—–-]*$/.test(s))
     .join("\n");
 }
+
+/**
+ * TEXTO VISÍVEL do render REAL (valores da fonte reais, sem sentinela).
+ *
+ * É a camada que fecha a classe, e ela veio da 7ª revisão do Grok. O argumento
+ * dele, que eu aceito: o render instrumentado é um **segundo programa**. Enquanto
+ * a única fotografia da frase for o render em que as strings da fonte foram
+ * apagadas, um PREDICADO sobre essas strings decide o que o browser mostra e o
+ * golden não vê. Dois diffs que passavam em tudo:
+ *
+ *   {RETENCAO_NOTA.length > 100 ? <p>…mentira…</p> : null}
+ *   {GOOGLE_LIMITED_USE.replace("não os vendemos", "e os vendemos")}
+ *
+ * No primeiro, `«RETENCAO_NOTA»`.length é 16 e o ramo da mentira nem existe no
+ * render instrumentado; no segundo, a sentinela não contém o needle e o replace
+ * vira no-op. Nos dois, o golden da prosa, o `GOLDEN_FONTE` e o vocabulário de DOM
+ * ficam idênticos — e o titular lê outra coisa.
+ *
+ * Aqui o golden é o texto do render REAL, byte a byte. Não há sentinela para um
+ * predicado enganar: o texto do render estático real é comparado sem sentinelas; CSS e hidratação não são medidos por este snapshot.
+ */
+const GOLDEN_TEXTO: Record<string, string> = {
+  "política": `← Voltar
+Política de privacidade
+Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de setembro de 2026.
+1. Quem somos
+Esta política descreve o tratamento de dados no site
+milaai.com.br
+, no workspace web e no canal WhatsApp da
+mila.
+. O serviço é operado pela equipe fundadora da mila. — a empresa ainda não está constituída, e por isso não há CNPJ a informar. Quando estiver, ele será publicado aqui.
+Na relação com a loja — conta, plano e cobrança — a mila. é a
+controladora
+dos dados. Nos dados que a loja cadastra ou envia sobre a própria operação (custos, notas, fornecedores, destinatários que aparecem na nota), a mila. atua como
+operadora
+, a serviço da loja, que é quem decide o que registrar.
+Encarregado (DPO):
+a mila. é operada hoje sem CNPJ — é um serviço em lançamento, e o enquadramento formal como agente de pequeno porte depende de constituição da empresa. O canal do titular não depende disso e já funciona: é o contato no fim desta página, com resposta em até 15 dias.
+2. De quem são os dados
+Titulares dos dados tratados neste serviço:
+A lojista (dona ou pessoa autorizada da loja) — usuária do serviço.
+O representante do fornecedor, quando a lojista o cadastra no caderno.
+O destinatário que aparece na nota fiscal, quando a lojista envia uma nota para leitura.
+A mila.
+não mantém CRM
+, histórico de vendas a consumidores finais nem base de compradores da loja. Mas ela
+lê a nota fiscal
+, e a nota traz o destinatário — nome, CPF/CNPJ e endereço. Esses dados de terceiros são tratados pela mila. como operadora, a serviço da loja; a loja é a controladora deles.
+3. O que o serviço faz
+Calcula preço de venda a partir do custo, do imposto e da margem que a lojista informa.
+Pesquisa preços praticados por concorrentes e a média do mercado.
+Lê notas fiscais (XML ou foto) e extrai os itens.
+Mantém o cadastro de fornecedores da loja: contato, pedido mínimo, carência e histórico.
+Gera textos para site e catálogo (recursos do plano Pro).
+A mila recomenda; quem decide é a lojista. Não há perfilamento, pontuação, ranqueamento de pessoas nem decisão de crédito.
+Algumas ações que alteram dados ainda não pedem confirmação separada — estamos implantando isso rota a rota. Enquanto não estiver completo, confira a prévia antes de confirmar.
+4. Para que usamos e com que base legal
+Prestar o serviço pedido (precificar, ler nota, caderno, conteúdo)
+— Execução de contrato (art. 7, V)
+Autenticar o acesso por código no WhatsApp
+— Execução de contrato e legítimo interesse em segurança (art. 7, V e IX)
+Segurança, anti-abuso e limites de tentativa
+— Legítimo interesse (art. 7, IX)
+Cumprir obrigação legal e atender autoridade
+— Obrigação legal e regulatória (art. 7, II)
+Medir uso com métricas agregadas ou dados desidentificados
+— Legítimo interesse (art. 7, IX)
+5. Quais dados são tratados e para onde vão
+Mensagens de texto enviadas pela lojista no WhatsApp
+— Classificadas para a mila entender o pedido, com apoio de provedor de IA. O conteúdo da mensagem é registrado em arquivo de diagnóstico para investigar erro e é excluído sob pedido.
+Fotos de peças e de notas fiscais
+— Enviadas a modelo de visão para identificação do que está na imagem. O texto e os dados extraídos ficam no histórico da loja. As imagens não são guardadas em pasta própria pela mila; o arquivo de diagnóstico da mensagem pode conter a referência recebida.
+Descrição da peça e região da loja
+— Usadas na consulta de preço de mercado. Fica em cache o preço agregado, para não repetir consulta.
+Notas fiscais: dados do emitente, itens e o destinatário (nome, CPF/CNPJ, endereço)
+— Lidos para extrair custo e itens. Quando aparecem dados de terceiros (destinatário, fornecedor), a loja é a controladora desses dados e a mila atua como operadora, para prestar o serviço que a loja pediu.
+Cadastro de fornecedores (nome, contato, pedido mínimo, carência, histórico)
+— Gravado no caderno da loja. A lojista escolhe onde: Notion (a mila só grava em base que já existe) ou planilha criada no Google Drive da loja. A mila não envia mensagens a fornecedores.
+Telefone e código de verificação (login)
+— O telefone identifica a loja. O código é de vida curta e guardado apenas em hash com salt (SHA-256 + salt aleatório) — a mila não consegue lê-lo.
+Dados de cobrança (quando houver plano pago)
+— Processados pela operadora de pagamentos. Dados de cartão são coletados e guardados por ela; não passam nem repousam nos servidores da mila.
+Credenciais de integração, quando a lojista conecta uma conta
+— Guardadas em cofre cifrado com Fernet (AES-128-CBC + HMAC), com a chave de decifragem em arquivo de permissão restrita (600).
+6. Com quem compartilhamos (subprocessadores)
+Não vendemos dados. Para operar, usamos prestadores que processam informações
+em nosso nome e por nossa conta
+:
+Google
+(Estados Unidos) — Modelo de visão (lê a foto da peça e da nota) e geração de texto. Também guarda a planilha do caderno no Drive da loja, quando ela escolhe essa opção.
+Recebe do Google: arquivo e conteúdo do Drive.
+TypeSafe (System One)
+(Estados Unidos) — Classificação da intenção da mensagem, para a mila entender o pedido. Recebe o texto da mensagem.
+Não recebe dado das APIs do Google.
+Alibaba
+(China) — Modelo de texto alternativo, usado só quando o provedor principal está indisponível. Recebe o mesmo texto que seria enviado ao principal.
+Não recebe dado das APIs do Google.
+Zhipu
+(China) — Segundo modelo de texto alternativo, na mesma condição do anterior. Acionado só quando a alternativa gratuita está fora. Recebe o texto da mensagem enviada à mila no WhatsApp — não recebe arquivo do seu Drive, nem o conteúdo da sua planilha, nem credencial de acesso.
+Não recebe dado das APIs do Google.
+Serper
+(Estados Unidos) — Consulta de preço de concorrentes e média de mercado.
+Não recebe dado das APIs do Google.
+MegaAPI
+(Brasil) — Transporte da mensagem no WhatsApp (texto e mídia). O WhatsApp/Meta também participa do transporte.
+Não recebe dado das APIs do Google.
+Vercel
+(Estados Unidos) — Hospedagem do site e do workspace web.
+Não recebe dado das APIs do Google.
+Cloudflare
+(Estados Unidos) — DNS, túnel, proteção do endpoint e verificação anti-robô no login (Turnstile).
+Não recebe dado das APIs do Google.
+Asaas
+(Brasil) — Processamento de pagamento, quando houver cobrança.
+Não recebe dado das APIs do Google.
+Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente enquanto a empresa não estiver constituída. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai.
+7. Google: o que a mila acessa e o que não acessa
+Ao conectar o Google, a mila recebe um identificador da conta (escopo openid). Ela NÃO recebe seu endereço de e-mail. Na prática, quem mantém o vínculo entre a conexão e a sua loja é a sessão autenticada no WhatsApp — a mila não usa o identificador para saber de qual conta se trata, e a tela não mostra o endereço da conta conectada. Acesso a arquivos fica restrito ao escopo drive.file: só os arquivos que a própria mila cria. Ela não abre, não lista e não altera o restante do seu Drive, não lê sua caixa de e-mail e não acessa sua agenda ou seu calendário.
+Escopos solicitados ao conectar: openid, auth/drive.file.
+Uso de dados do Google. O que a mila recebe das APIs do Google é usado somente para fornecer e melhorar as funcionalidades que você vê: criar e manter a planilha do caderno de fornecedores que ela mesma cria, e registrar a conexão da conta. Não usamos esses dados para publicidade, não os vendemos, não os usamos para avaliar crédito, pontuação ou risco de pessoas, nem para treinar modelos de inteligência artificial. Esses dados só são repassados a prestador que nos atende sob contrato e apenas no necessário para a finalidade contratada, para segurança ou para cumprir a lei. Nenhuma pessoa lê o conteúdo do seu Drive ou da sua conta sem a sua autorização específica para aquela situação — o suporte a que você dá acesso é feito em conversa conosco, não pela leitura do seu Drive. O uso segue a Política de Dados de Usuário dos Serviços de API do Google, incluindo os requisitos de Limited Use.
+8. Integrações que a loja conecta
+Quando a lojista autoriza um conector, a mila. age na conta
+em nome dela
+, nos limites da permissão concedida. Isso é distinto dos subprocessadores acima.
+Disponíveis hoje:
+Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).
+Notion — a mila grava o caderno numa base que a loja já tem; não cria base.
+Disponíveis, com validação em andamento:
+Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
+Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.
+9. Por quanto tempo guardamos
+Código de verificação (OTP)
+— Vida curta; expira sozinho. Alvo: minutos.
+Arquivo de diagnóstico da mensagem recebida
+— Mantido até exclusão sob pedido.
+Histórico operacional da conversa
+— Mantido até exclusão sob pedido. Alvo: até cerca de 90 dias.
+Notas fiscais processadas
+— Mantido até exclusão sob pedido. Alvo: até cerca de 180 dias.
+Logs técnicos de visão e download
+— Só metadado (data, modelo, latência, erro) — sem o conteúdo da mensagem. Alvo: até cerca de 30 dias.
+Credenciais de integração
+— Mantidas enquanto a integração estiver conectada. Alvo: até a lojista desconectar.
+Estes prazos são alvo, ainda não são automáticos: hoje a exclusão é feita pela equipe sob pedido, pelo canal de privacidade. A mila não substitui a obrigação da loja de guardar documentos fiscais nos prazos legais. Especificamente: a rotina automática de expurgo ainda não está no ar.
+10. Isolamento entre lojas
+Praticado: cada loja é um espaço separado; o acesso é restrito por lista de números autorizados e o registro de sessão é por loja.
+Em implantação: registro sistemático de acesso excepcional da equipe fundadora. A estrutura de auditoria existe, mas o registro automático ainda não está ligado.
+11. Seus direitos (LGPD)
+Você pode pedir:
+confirmação de que tratamos seus dados e acesso a eles
+correção de dados incompletos, inexatos ou desatualizados
+anonimização, bloqueio ou eliminação de dados desnecessários ou excessivos
+portabilidade, quando aplicável
+eliminação dos dados tratados com consentimento
+informação sobre com quem compartilhamos
+informação sobre a possibilidade de não consentir e as consequências disso
+revogação do consentimento e oposição a tratamento fundado em legítimo interesse
+Os pedidos são atendidos pelo e-mail
+contato@milaai.com.br
+, em até 15 dias, prorrogáveis na forma da LGPD. Também é possível reclamar à ANPD.
+12. Segurança
+Controles proporcionais ao porte do serviço: segredos de autenticação fora do navegador, acesso por lista de números autorizados, limite de tentativas, código de verificação guardado apenas em hash com salt, credenciais de integração em cofre cifrado e sessão de login com registro por loja.
+Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço, estoque e textos importantes antes de usar.
+13. O que não fazemos
+Não vendemos nem cedemos dados a terceiros fora dos prestadores listados acima.
+Não usamos o conteúdo da loja para treinar modelo próprio, nem enviamos esse conteúdo a terceiros para treinar modelos de fundação.
+Não acessamos o endereço, a caixa de e-mail, a agenda ou o calendário da conta Google da loja.
+Não mantemos CRM, histórico de vendas a consumidores finais nem base de compradores da loja.
+O site não usa rastreadores de marketing: sem analytics de terceiros, pixel ou cookie de publicidade.
+Não há decisão totalmente automatizada que afete a lojista ou seus clientes.
+14. Crianças
+O serviço é voltado a titulares de negócio adultos. Não coletamos de forma consciente dados de menores de 18 anos.
+15. Contato
+Privacidade e dados:
+contato@milaai.com.br
+. Instagram: @usemila.ai.
+16. Mudanças
+Podemos atualizar esta política. A versão vigente fica sempre nesta página, com a data no topo. Mudanças materiais serão comunicadas de forma razoável (site e/ou WhatsApp).`,
+  "termos": `← Voltar
+Termos de uso
+Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de setembro de 2026.
+1. Aceite
+Ao acessar milaai.com.br, solicitar código de verificação, usar o WhatsApp da mila. ou o workspace, você concorda com estes termos e com a
+política de privacidade
+. Se não concordar, não use o serviço.
+2. O que é a mila.
+A mila. é uma assistente operacional: você envia foto, nota ou pergunta e recebe apoio de precificação, leitura de custos, organização e rascunhos de conteúdo. O canal principal é o
+WhatsApp
+. O site e o workspace são apoio (login, status de plano e conectores).
+Neste momento o serviço opera em
+piloto / prévia
+. O acesso é restrito a números autorizados. Recursos marcados como “em breve” ou demonstrativos não devem ser tratados como funcionalidade ativa.
+3. Conta e elegibilidade
+Você declara ter 18 anos ou mais e capacidade para contratar.
+Se usa a mila. em nome de uma loja, declara ter autorização para vincular o número e, quando existirem, os conectores dessa loja.
+Você é responsável por quem tem acesso ao WhatsApp e ao workspace ligados à sua conta.
+4. Entradas, saídas e ações
+Você pode enviar textos, imagens e arquivos (“entradas”). A mila. pode gerar respostas (“saídas”) e, quando um conector estiver disponível e você autorizar — com confirmação quando exigirmos — executar ações nas ferramentas conectadas.
+Você garante ter direito de enviar o conteúdo e de autorizar o uso das contas conectadas.
+Saídas de IA podem conter erros. Não use preço, estoque, prazo ou texto gerado sem revisão humana quando isso importar para a sua loja.
+Quando esse controle estiver disponível e houver ações que alteram dados, pediremos confirmação ligada à prévia da ação. Um “sim” solto no chat sobre outro assunto não conta como autorização.
+Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — não é orientação real de preço.
+5. Planos e pagamento
+Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
+6. Integrações de terceiros
+Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
+Estes conectores ainda não estão disponíveis para uso: Olist, Bling. As telas existem, mas o acesso ainda não foi habilitado.
+7. Uso aceitável
+Você se compromete a não:
+violar lei, direito de terceiros ou estes termos;
+tentar acessar conta, dados ou loja de outra pessoa sem autorização;
+contornar a lista de números autorizados, o código de verificação, limites de tentativa ou proteções anti-abuso;
+enviar malware, spam ou conteúdo ilícito pelo canal da mila.;
+usar saídas da mila. para treinar ou destilar modelos concorrentes de forma abusiva;
+sobrecarregar de propósito a infraestrutura ou fazer engenharia reversa indevida do serviço.
+8. Propriedade intelectual
+A marca mila., o site, o software e a identidade visual pertencem aos respectivos titulares. Você mantém direitos sobre o conteúdo da sua loja. Concedemos licença limitada para usar o serviço conforme estes termos; você nos concede licença para processar suas entradas só na medida necessária para prestar o serviço (veja a política de privacidade).
+9. Isenções e limite de responsabilidade
+O serviço é oferecido “como está”, com esforço razoável de disponibilidade e segurança, sem garantia de resultado comercial específico (lucro, conversão, aprovação de anúncio etc.).
+Na máxima extensão permitida pela lei brasileira: (a) no piloto sem cobrança, a responsabilidade da mila. limita-se às hipóteses inafastáveis por lei; (b) se houver pagamento, limita-se ao valor efetivamente pago por você nos 3 meses anteriores ao evento — salvo dolo ou outra hipótese legal inafastável.
+A mila. não é consultoria jurídica, contábil ou fiscal. Decisões de preço, tributação e compliance fiscal são suas.
+10. Suspensão e encerramento
+Podemos suspender ou encerrar o acesso em caso de violação, risco de segurança, ordem legal ou fim do piloto. Você pode parar de usar a qualquer momento e pedir exclusão de dados pelo canal indicado na política de privacidade.
+11. Mudanças
+Podemos atualizar estes termos. A versão vigente fica nesta página, com a data no topo. O uso continuado após mudança material, quando comunicada de forma razoável, implica aceite — salvo regra legal em contrário.
+12. Lei e foro
+Aplica-se a legislação brasileira. Fica eleito o foro da comarca de Belo Horizonte/MG, salvo foro privilegiado legal do consumidor quando aplicável.
+13. Contato
+Privacidade e dados:
+contato@milaai.com.br
+. Suporte: Instagram @usemila.ai.
+Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`,
+};
 
 const GOLDEN_POR_PAGINA: Record<string, string> = {
   "política": GOLDEN_POLITICA,
@@ -1591,5 +1835,62 @@ test("legal: as páginas jurídicas usam só o vocabulário de DOM congelado", a
       [],
       `${pg.nome}: atributo novo no HTML — pode veicular texto que o golden da prosa não vê`,
     );
+  }
+});
+
+test("legal: o texto visível do render REAL é exatamente o golden", async () => {
+  // A camada definitiva (7ª rodada do Grok). O render instrumentado é um segundo
+  // programa: predicado sobre a sentinela (`RETENCAO_NOTA.length > 100`) ou um
+  // `replace` que mira o texto real mas não casa na sentinela decidem o que o
+  // browser mostra sem mexer em nenhum golden anterior. Aqui é a fotografia do
+  // que o titular LÊ, com os valores reais.
+  for (const pg of PAGINAS) {
+    const golden = GOLDEN_TEXTO[pg.nome];
+    assert.ok(
+      golden && !golden.startsWith("PLACEHOLDER"),
+      `sem golden de texto para ${pg.nome}`,
+    );
+    const real = normalizar(await htmlDe(pg.caminho));
+
+    if (real !== golden) {
+      const a = golden.split("\n");
+      const b = real.split("\n");
+      const novas = b.filter((l) => !a.includes(l));
+      const removidas = a.filter((l) => !b.includes(l));
+      assert.fail(
+        `o texto visível de ${pg.nome} mudou.\n` +
+          (novas.length ? `\nTEXTO NOVO (o titular passaria a ler):\n  - ${novas.join("\n  - ")}` : "") +
+          (removidas.length ? `\n\nTEXTO REMOVIDO:\n  - ${removidas.join("\n  - ")}` : "") +
+          "\n\nSe a mudanca e intencional, rode scripts/gerar_golden_legal.sh e LEIA O DIFF.",
+      );
+    }
+  }
+});
+
+/** Hash do código OAuth revisado: a AST é diagnóstico, não aceita código novo
+ * silenciosamente. Qualquer mutação, alias, chamada ou atualização desconhecida
+ * do arquivo exige nova revisão. NÃO é regenerado pelo gerador de texto. */
+test("legal: implementação OAuth é exatamente a versão revisada", () => {
+  const path = ["/opt/data/profiles/mila/auth/oauth.py", join(RAIZ, "../auth/oauth.py")].find(existsSync);
+  assert.ok(path, "Sem OAuth real não há evidência de paridade");
+  assert.equal(createHash("sha256").update(readFileSync(path)).digest("hex"), "0cd12f7ea58517fb8af5f60f352a484d55cbd28b0d022f99066cea00134f33bb", "OAuth mudou: revisar a implementação antes de aceitar novo hash; AST não garante semântica arbitrária");
+});
+
+/** Entorno da rota e CSS congelados; não são compostos no render estático das
+ * páginas. Alteração exige revisar o entorno, não apenas regenerar a copy. */
+const ENTORNO_REVISADO: Record<string, string> = {
+  "app/(site)/layout.tsx": "6393d0b33263d81d17f9c1ab2513fe4c87f463a552298672c46c365780707b58",
+  "app/(site)/login/auth.css": "89474c9f6c60fd5166ae78c28376f4bca192008ddf6561cbafa4d03cc8e2706e",
+  "app/globals.css": "84e3d5f415c9a5ae300726302eae47d7980ea67ca288d9c560531429d5497262",
+  "app/layout.tsx": "4a4eb8d86c23f95299d15d62232ba50c93327f03d22cb32f4695c2934106a855",
+  "app/site.css": "f8ef6108261d31f6698228cdb0c233f0d2c157893a938910ee2850dbf4cd2e37",
+  "app/workspace/workspace.css": "8dcf6352f84a4755bcd434a8b5abc9500b2024c0098d397a0c01454ccd8be02b",
+  "components/BrandLogo.tsx": "eadd3ecf16e11bb0fc69d40c528727afc971142daec9367c51266b1f633fabb2",
+  "components/SiteFooter.tsx": "ccb5264b00af80a48fdd0d496447085c8f48c6c9a868a547fc456d0e5eed3554",
+  "components/SiteHeader.tsx": "ea089f55205cc6a40156232c611d0d162121fc22204acf558b7f7f958ba4b817"
+};
+test("legal: layout, componentes do entorno e CSS permanecem revisados", () => {
+  for (const [rel, hash] of Object.entries(ENTORNO_REVISADO)) {
+    assert.equal(createHash("sha256").update(readFileSync(join(RAIZ, rel))).digest("hex"), hash, `${rel}: entorno mudou; revisar antes de atualizar hash`);
   }
 });

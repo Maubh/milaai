@@ -60,8 +60,10 @@ const CACHE = join(RAIZ, ".next", "legal-guard");
 
 const nomeSaida = (rel: string) => rel.replace(/[/.]/g, "_") + ".mjs";
 
-/** Transpila um arquivo do projeto para .mjs, resolvendo o alias `@/`. */
-function transpilar(rel: string): void {
+/** Transpila um arquivo do projeto para .mjs, resolvendo o alias `@/`.
+ *  `aliasLegal` redireciona `@/lib/legal` para outro módulo (a versão
+ *  instrumentada com sentinelas, usada pelo teste de prosa estática). */
+function transpilar(rel: string, aliasLegal?: string): void {
   const abs = join(RAIZ, rel);
   const js = ts.transpileModule(readFileSync(abs, "utf8"), {
     compilerOptions: {
@@ -73,13 +75,20 @@ function transpilar(rel: string): void {
     fileName: abs,
   }).outputText;
   // `@/lib/legal` → `./lib_legal_ts.mjs`, já presente no cache.
-  const comAlias = js.replace(
+  let comAlias = js.replace(
     /from\s+["']@\/([\w./-]+)["']/g,
     (_m, p: string) => `from "./${nomeSaida(p + ".ts")}"`,
   );
+  if (aliasLegal) {
+    comAlias = comAlias.replace(
+      /from\s+["']\.\/lib_legal_ts\.mjs["']/g,
+      `from "./${aliasLegal}"`,
+    );
+  }
   // `next/link` não resolve fora do Next: shim para uma âncora.
   const comShim = comAlias.replace(/from\s+["']next\/link["']/g, `from "./_link.mjs"`);
-  writeFileSync(join(CACHE, nomeSaida(rel)), comShim, "utf8");
+  const saida = aliasLegal ? nomeSaida(rel).replace(/\.mjs$/, ".sentinela.mjs") : nomeSaida(rel);
+  writeFileSync(join(CACHE, saida), comShim, "utf8");
 }
 
 let pronto = false;
@@ -249,7 +258,8 @@ const PROIBIDOS: Array<[string, RegExp]> = [
  * Abordagem nova: aqui as páginas jurídicas são proibidas de usar `style=` e
  * `hidden` de QUALQUER forma. Elas não têm motivo para ter estilo inline.
  */
-const NAO_PODE_TER_ESTILO = /\sstyle\s*=|\shidden[\s/>=]|aria-hidden|dangerouslySetInnerHTML/i;
+const NAO_PODE_TER_ESTILO =
+  /\sstyle\s*[=:]|\shidden[\s/>=]|aria-hidden|dangerouslySetInnerHTML|<style|<script/i;
 
 /**
  * Atributo que ESCONDE, procurado no HTML RENDERIZADO.
@@ -263,6 +273,14 @@ const ESCONDE_NO_HTML: Array<[string, RegExp]> = [
   ["style inline", /<[a-z][^>]*\sstyle\s*=/i],
   ["hidden", /<[a-z][^>]*\shidden(\s|>|=)/i],
   ["aria-hidden", /<[a-z][^>]*\saria-hidden\s*=\s*["']true["']/i],
+  // A 5ª rodada do Grok mostrou que eu estava errado ao afirmar que "nenhuma
+  // sintaxe escapa no HTML renderizado": `<style>{`.s{display:none}`}</style>`
+  // não vira atributo, o `texto()` não aplica CSS, e a frase honesta segue no DOM
+  // para o `includes`. Bloco de estilo não tem razão de existir em página
+  // jurídica — então é PROIBIDO, no documento e no fonte.
+  ["bloco de estilo", /<style[\s>]/i],
+  ["script", /<script[\s>]/i],
+  ["iframe", /<iframe[\s>]/i],
 ];
 
 /** Texto visível: tags fora, entidades resolvidas.
@@ -282,6 +300,69 @@ function texto(html: string): string {
     .replace(/\s+/g, " ")
     .trim();
 }
+
+// ─────────────────────────── instrumento: prosa estática vs conteúdo da fonte
+
+const MARCA = "\u00a7"; // § — separador entre sentinelas e prosa fixa
+
+/**
+ * Escreve `lib/legal.ts` "instrumentado": cada string e cada campo de texto de
+ * objeto vira uma SENTINELA `«nome»`. Booleanos e números ficam reais (para não
+ * trocar o ramo dos ternários da página). Assim, ao renderizar, tudo que vier da
+ * fonte aparece como sentinela — e o texto que sobrar é PROSA FIXA da página.
+ *
+ * Por que isto fecha a classe: a mentira que o Grok injetou era uma FRASE NOVA
+ * na página ("Os dados são automaticamente excluídos…"). Com a prosa fixa
+ * congelada numa whitelist, qualquer frase a mais — em `<p>`, `<div>` ou `<li>`,
+ * com ou sem "não", na ordem que for — é texto que não estava previsto e falha.
+ * Não depende de redação, de regex, nem de eu adivinhar a paráfrase.
+ */
+function escreverFonteInstrumentada(real: Record<string, unknown>): void {
+  const linhas: string[] = [];
+  for (const [nome, valor] of Object.entries(real)) {
+    linhas.push(`export const ${nome} = ${instrumentar(nome, valor)};`);
+  }
+  writeFileSync(join(CACHE, "lib_legal_sentinela.mjs"), linhas.join("\n") + "\n", "utf8");
+}
+
+function instrumentar(caminho: string, valor: unknown): string {
+  const s = (n: string) => JSON.stringify(`\u00ab${n}\u00bb`);
+  if (typeof valor === "string") return s(caminho);
+  if (typeof valor === "number" || typeof valor === "boolean" || valor === null) {
+    return JSON.stringify(valor); // real: não troca o ramo dos ternários
+  }
+  if (Array.isArray(valor)) {
+    const itens = valor.map((v, i) => instrumentar(`${caminho}[${i}]`, v));
+    return `[${itens.join(",")}]`;
+  }
+  if (typeof valor === "object") {
+    const campos = Object.entries(valor as Record<string, unknown>).map(
+      ([k, v]) => `${JSON.stringify(k)}: ${instrumentar(`${caminho}.${k}`, v)}`,
+    );
+    return `{${campos.join(",")}}`;
+  }
+  return JSON.stringify(valor);
+}
+
+/** Renderiza a página usando a fonte INSTRUMENTADA (tudo da fonte = sentinela). */
+async function htmlComSentinela(rel: string, real: Record<string, unknown>): Promise<string> {
+  preparar();
+  escreverFonteInstrumentada(real);
+  transpilar(rel, "lib_legal_sentinela.mjs");
+  const saida = nomeSaida(rel).replace(/\.mjs$/, ".sentinela.mjs");
+  const mod = (await import(pathToFileURL(join(CACHE, saida)).href)) as {
+    default: () => unknown;
+  };
+  return renderToStaticMarkup(React.createElement(mod.default as never));
+}
+
+/**
+ * PROSA FIXA da página: o texto visível que NÃO vem da fonte, já congelado.
+ * Cada string aqui é decisão consciente. Frase nova na página = falha.
+ */
+const PROSA_FIXA: string[] = [
+  "PLACEHOLDER_para_dump",
+];
 
 /** Módulo da fonte única, importado com os valores REAIS de runtime. */
 async function fatos(): Promise<Record<string, unknown>> {
@@ -998,4 +1079,202 @@ test("legal: os termos linkam a política e explicam os papéis", async () => {
   const h = texto(await htmlDe(PAGINAS[0].caminho));
   assert.match(h, /controladora/, "a política precisa falar de controladora");
   assert.match(h, /operadora/, "a política precisa falar de operadora");
+});
+
+// ────────────────── E. GOLDEN MASTER: a prosa fixa da página, congelada
+
+/**
+ * GOLDEN MASTER da prosa estática da política.
+ *
+ * Por que esta camada existe (5ª revisão do Grok 4.7): as camadas anteriores
+ * tentavam reconhecer a MENTIRA ("apagados automaticamente", "cláusulas
+ * firmadas") por regex. O Grok derrubou cada uma com uma paráfrase: advérbio
+ * antes do verbo, "Não há dúvida:" satisfazendo a negação, a frase numa `<div>`
+ * em vez de `<p>`. Reconhecer mentira em português por regex é jogo perdido.
+ *
+ * Esta camada inverte o jogo. O texto da página vem de dois lugares:
+ *
+ *   (a) da fonte única (`lib/legal.ts`) — verificado por outros testes;
+ *   (b) PROSA FIXA escrita à mão nas páginas — é aqui que a mentira se esconde.
+ *
+ * Renderizo a página com a fonte INSTRUMENTADA (todo valor da fonte vira `§`).
+ * Então (a) some e sobra (b). Comparo com este golden: **qualquer** texto novo
+ * na página falha, sem eu precisar prever a redação. Foi assim que a frase que o
+ * Grok injetou na 5ª rodada seria pega — ela não está neste golden.
+ *
+ * Regenerar (só com decisão consciente, e o diff é revisado):
+ *   ver o teste "TEMP dump golden" no histórico do git, ou rodar o dump descrito
+ *   em `references/guard-de-copy.md`.
+ */
+const GOLDEN_POLITICA = `← Voltar
+Política de privacidade
+Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: §.
+1. Quem somos
+Esta política descreve o tratamento de dados no site
+milaai.com.br
+, no workspace web e no canal WhatsApp da
+mila.
+. O serviço é operado pela § — a empresa ainda não está constituída, e por isso não há CNPJ a informar. Quando estiver, ele será publicado aqui.
+Na relação com a loja — conta, plano e cobrança — a mila. é a
+controladora
+dos dados. Nos dados que a loja cadastra ou envia sobre a própria operação (custos, notas, fornecedores, destinatários que aparecem na nota), a mila. atua como
+operadora
+, a serviço da loja, que é quem decide o que registrar.
+Encarregado (DPO):
+a mila. é operada hoje sem CNPJ — é um serviço em lançamento, e o enquadramento formal como agente de pequeno porte depende de constituição da empresa. O canal do titular não depende disso e já funciona: é o contato no fim desta página, com resposta em até 15 dias.
+2. De quem são os dados
+Titulares dos dados tratados neste serviço:
+A mila.
+não mantém CRM
+, histórico de vendas a consumidores finais nem base de compradores da loja. Mas ela
+lê a nota fiscal
+, e a nota traz o destinatário — nome, CPF/CNPJ e endereço. Esses dados de terceiros são tratados pela mila. como operadora, a serviço da loja; a loja é a controladora deles.
+3. O que o serviço faz
+4. Para que usamos e com que base legal
+5. Quais dados são tratados e para onde vão
+6. Com quem compartilhamos (subprocessadores)
+Não vendemos dados. Para operar, usamos prestadores que processam informações
+em nosso nome e por nossa conta
+Recebe do Google: §.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+Não recebe dado das APIs do Google.
+7. Google: o que a mila acessa e o que não acessa
+Escopos solicitados ao conectar: §, §.
+8. Integrações que a loja conecta
+Quando a lojista autoriza um conector, a mila. age na conta
+em nome dela
+, nos limites da permissão concedida. Isso é distinto dos subprocessadores acima.
+Disponíveis hoje:
+Disponíveis, com validação em andamento:
+9. Por quanto tempo guardamos
+— § Alvo: §.
+— § Alvo: §.
+— § Alvo: §.
+— § Alvo: §.
+— § Alvo: §.
+— § Alvo: §.
+§ Especificamente: a rotina automática de expurgo ainda não está no ar.
+10. Isolamento entre lojas
+11. Seus direitos (LGPD)
+Você pode pedir:
+Os pedidos são atendidos pelo e-mail
+, em até 15 dias, prorrogáveis na forma da LGPD. Também é possível reclamar à ANPD.
+12. Segurança
+Controles proporcionais ao porte do serviço: segredos de autenticação fora do navegador, acesso por lista de números autorizados, limite de tentativas, código de verificação guardado apenas em hash com salt, credenciais de integração em cofre cifrado e sessão de login com registro por loja.
+Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço, estoque e textos importantes antes de usar.
+13. O que não fazemos
+14. Crianças
+O serviço é voltado a titulares de negócio adultos. Não coletamos de forma consciente dados de menores de 18 anos.
+15. Contato
+Privacidade e dados:
+. Instagram: §.
+16. Mudanças
+Podemos atualizar esta política. A versão vigente fica sempre nesta página, com a data no topo. Mudanças materiais serão comunicadas de forma razoável (site e/ou WhatsApp).`;
+
+const GOLDEN_TERMOS = `← Voltar
+Termos de uso
+Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: §.
+1. Aceite
+Ao acessar milaai.com.br, solicitar código de verificação, usar o WhatsApp da mila. ou o workspace, você concorda com estes termos e com a
+política de privacidade
+. Se não concordar, não use o serviço.
+2. O que é a mila.
+A mila. é uma assistente operacional: você envia foto, nota ou pergunta e recebe apoio de precificação, leitura de custos, organização e rascunhos de conteúdo. O canal principal é o
+WhatsApp
+. O site e o workspace são apoio (login, status de plano e conectores).
+Neste momento o serviço opera em
+piloto / prévia
+. O acesso é restrito a números autorizados. Recursos marcados como “em breve” ou demonstrativos não devem ser tratados como funcionalidade ativa.
+3. Conta e elegibilidade
+Você declara ter 18 anos ou mais e capacidade para contratar.
+Se usa a mila. em nome de uma loja, declara ter autorização para vincular o número e, quando existirem, os conectores dessa loja.
+Você é responsável por quem tem acesso ao WhatsApp e ao workspace ligados à sua conta.
+4. Entradas, saídas e ações
+Você pode enviar textos, imagens e arquivos (“entradas”). A mila. pode gerar respostas (“saídas”) e, quando um conector estiver disponível e você autorizar — com confirmação quando exigirmos — executar ações nas ferramentas conectadas.
+Você garante ter direito de enviar o conteúdo e de autorizar o uso das contas conectadas.
+Saídas de IA podem conter erros. Não use preço, estoque, prazo ou texto gerado sem revisão humana quando isso importar para a sua loja.
+Quando esse controle estiver disponível e houver ações que alteram dados, pediremos confirmação ligada à prévia da ação. Um “sim” solto no chat sobre outro assunto não conta como autorização.
+Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — não é orientação real de preço.
+5. Planos e pagamento
+Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
+6. Integrações de terceiros
+Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
+Estes conectores ainda não estão disponíveis para uso: §, §. As telas existem, mas o acesso ainda não foi habilitado.
+7. Uso aceitável
+Você se compromete a não:
+violar lei, direito de terceiros ou estes termos;
+tentar acessar conta, dados ou loja de outra pessoa sem autorização;
+contornar a lista de números autorizados, o código de verificação, limites de tentativa ou proteções anti-abuso;
+enviar malware, spam ou conteúdo ilícito pelo canal da mila.;
+usar saídas da mila. para treinar ou destilar modelos concorrentes de forma abusiva;
+sobrecarregar de propósito a infraestrutura ou fazer engenharia reversa indevida do serviço.
+8. Propriedade intelectual
+A marca mila., o site, o software e a identidade visual pertencem aos respectivos titulares. Você mantém direitos sobre o conteúdo da sua loja. Concedemos licença limitada para usar o serviço conforme estes termos; você nos concede licença para processar suas entradas só na medida necessária para prestar o serviço (veja a política de privacidade).
+9. Isenções e limite de responsabilidade
+O serviço é oferecido “como está”, com esforço razoável de disponibilidade e segurança, sem garantia de resultado comercial específico (lucro, conversão, aprovação de anúncio etc.).
+Na máxima extensão permitida pela lei brasileira: (a) no piloto sem cobrança, a responsabilidade da mila. limita-se às hipóteses inafastáveis por lei; (b) se houver pagamento, limita-se ao valor efetivamente pago por você nos 3 meses anteriores ao evento — salvo dolo ou outra hipótese legal inafastável.
+A mila. não é consultoria jurídica, contábil ou fiscal. Decisões de preço, tributação e compliance fiscal são suas.
+10. Suspensão e encerramento
+Podemos suspender ou encerrar o acesso em caso de violação, risco de segurança, ordem legal ou fim do piloto. Você pode parar de usar a qualquer momento e pedir exclusão de dados pelo canal indicado na política de privacidade.
+11. Mudanças
+Podemos atualizar estes termos. A versão vigente fica nesta página, com a data no topo. O uso continuado após mudança material, quando comunicada de forma razoável, implica aceite — salvo regra legal em contrário.
+12. Lei e foro
+Aplica-se a legislação brasileira. Fica eleito o foro da comarca de Belo Horizonte/MG, salvo foro privilegiado legal do consumidor quando aplicável.
+13. Contato
+Privacidade e dados:
+. Suporte: Instagram §.
+Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`;
+
+/** Normaliza o HTML renderizado: sentinelas → `§`, tags → quebra, entidades. */
+function prosaDe(html: string): string {
+  return html
+    .replace(/\u00ab[^\u00bb]*\u00bb/g, "\u00a7")
+    .replace(/<[^>]+>/g, "\n")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#x27;|&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter((s) => s.length > 0)
+    .filter((s) => !/^[\u00a7\s.,:;—–-]*$/.test(s) && !/^[\(\u00a7\)\s—–-]*$/.test(s))
+    .join("\n");
+}
+
+const GOLDEN_POR_PAGINA: Record<string, string> = {
+  "política": GOLDEN_POLITICA,
+  "termos": GOLDEN_TERMOS,
+};
+
+test("legal: a prosa fixa de cada página é exatamente o golden", async () => {
+  const f = await fatos();
+  for (const pg of PAGINAS) {
+  const golden = GOLDEN_POR_PAGINA[pg.nome];
+  assert.ok(golden, `sem golden para ${pg.nome}`);
+  const prosa = prosaDe(await htmlComSentinela(pg.caminho, f));
+
+  if (prosa !== golden) {
+    const a = golden.split("\n");
+    const b = prosa.split("\n");
+    const novas = b.filter((l) => !a.includes(l));
+    const removidas = a.filter((l) => !b.includes(l));
+    assert.fail(
+      `a prosa estática de ${pg.nome} mudou.\n` +
+        (novas.length ? `\nTEXTO NOVO (não previsto no golden):\n  - ${novas.join("\n  - ")}` : "") +
+        (removidas.length ? `\n\nTEXTO REMOVIDO:\n  - ${removidas.join("\n  - ")}` : "") +
+        `\n\nSe a mudança é intencional, atualize GOLDEN_${pg.nome === "política" ? "POLITICA" : "TERMOS"} no teste — de ` +
+        "propósito, para que a mudança de texto seja uma decisão e não um efeito " +
+        "colateral.",
+    );
+  }
+  assert.equal(prosa, golden);
+  }
 });

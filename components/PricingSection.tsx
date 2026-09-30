@@ -1,8 +1,17 @@
-"use client";
 
 import Link from "next/link";
 
 import { PLANO_GOOGLE } from "@/lib/google-workspace";
+import { CONECTORES_NAO_PRONTOs } from "@/lib/legal";
+
+/** Linha do plano que fala de ERP. Fonte única: `lib/legal.ts` diz QUAIS
+ *  conectores não estão prontos — antes o texto era digitado aqui à mão, e foi
+ *  assim que "Integração direta Jueri, Bling e Olist" ficou no ar prometendo o
+ *  que devolve 501 (achado pelo guard `tests/legal.test.ts`). */
+export const PLANO_ERP =
+  "Integração direta com ERP (Jueri disponível; " +
+  CONECTORES_NAO_PRONTOs.join(" e ") +
+  " ainda não)";
 
 interface PlanItem {
   id: string;
@@ -55,7 +64,7 @@ const PLANS: PlanItem[] = [
       "Tudo do Essencial",
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
-      "Integração direta Jueri, Bling e Olist (entrada de notas e estoque)",
+      PLANO_ERP,
       "Marketing de Instagram: legenda, carrossel, hashtags, bio, plano de conteúdo e reaproveitamento",
     ],
     ctaLabel: "Conhecer o Pro",

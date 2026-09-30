@@ -1,9 +1,16 @@
 import Link from "next/link";
 
+import {
+  ATUALIZADO_EM,
+  CONECTORES_NAO_PRONTOs,
+  CONTATO_PRIVACIDADE,
+  INSTAGRAM,
+} from "@/lib/legal";
+
 export const metadata = {
   title: "Termos de uso — mila.",
   description:
-    "Termos de uso do piloto da mila.: WhatsApp, site, responsabilidades e limites.",
+    "Termos de uso da mila.: WhatsApp, site, responsabilidades e limites.",
 };
 
 export default function TermosPage() {
@@ -14,8 +21,8 @@ export default function TermosPage() {
       </p>
       <h1 className="auth-minimal-title">Termos de uso</h1>
       <p className="auth-minimal-lede">
-        Regras do piloto da mila. — assistente de negócios no WhatsApp para
-        lojas de joias e semijoias. Última atualização: 27 de setembro de 2026.
+        Regras da mila. — assistente de negócios no WhatsApp para lojas de joias
+        e semijoias. Última atualização: {ATUALIZADO_EM}.
       </p>
       <div className="legal-body">
         <h2>1. Aceite</h2>
@@ -73,8 +80,8 @@ export default function TermosPage() {
           </li>
           <li>
             Quando esse controle estiver disponível e houver ações que alteram
-            dados, pediremos confirmação ligada à prévia da ação. Um “sim”
-            solto no chat sobre outro assunto não conta como autorização.
+            dados, pediremos confirmação ligada à prévia da ação. Um “sim” solto
+            no chat sobre outro assunto não conta como autorização.
           </li>
           <li>
             Conteúdo do mockup do site e da rota de conversa simulada é
@@ -91,7 +98,21 @@ export default function TermosPage() {
           checkout ou no WhatsApp antes da cobrança.
         </p>
 
-        <h2>6. Uso aceitável</h2>
+        <h2>6. Integrações de terceiros</h2>
+        <p>
+          Conectores (Google, Notion, Jueri e outros que venham a ser
+          liberados), quando disponíveis, são serviços de terceiros. Ao
+          conectar, você autoriza a mila. a agir nos limites da permissão
+          concedida e aceita os termos desses provedores. A mila. não controla
+          indisponibilidade, mudança de API ou políticas deles.
+        </p>
+        <p>
+          Estes conectores ainda não estão disponíveis para uso:{" "}
+          {CONECTORES_NAO_PRONTOs.join(", ")}. As telas existem, mas o acesso
+          ainda não foi habilitado.
+        </p>
+
+        <h2>7. Uso aceitável</h2>
         <p>Você se compromete a não:</p>
         <ul>
           <li>violar lei, direito de terceiros ou estes termos;</li>
@@ -102,9 +123,7 @@ export default function TermosPage() {
             contornar a lista de números autorizados, o código de verificação,
             limites de tentativa ou proteções anti-abuso;
           </li>
-          <li>
-            enviar malware, spam ou conteúdo ilícito pelo canal da mila.;
-          </li>
+          <li>enviar malware, spam ou conteúdo ilícito pelo canal da mila.;</li>
           <li>
             usar saídas da mila. para treinar ou destilar modelos concorrentes de
             forma abusiva;
@@ -114,16 +133,6 @@ export default function TermosPage() {
             reversa indevida do serviço.
           </li>
         </ul>
-
-        <h2>7. Integrações de terceiros</h2>
-        <p>
-          Conectores (Google, Notion, Jueri, Olist, Bling etc.), quando
-          disponíveis, são serviços de terceiros. Ao conectar, você autoriza a
-          mila. a agir nos limites da permissão concedida e aceita os termos
-          desses provedores. A mila. não controla indisponibilidade, mudança de
-          API ou políticas deles. A disponibilidade de cada integração pode variar conforme o
-          serviço conectado e as permissões concedidas.
-        </p>
 
         <h2>8. Propriedade intelectual</h2>
         <p>
@@ -137,7 +146,7 @@ export default function TermosPage() {
 
         <h2>9. Isenções e limite de responsabilidade</h2>
         <p>
-          O piloto é oferecido “como está”, com esforço razoável de
+          O serviço é oferecido “como está”, com esforço razoável de
           disponibilidade e segurança, sem garantia de resultado comercial
           específico (lucro, conversão, aprovação de anúncio etc.).
         </p>
@@ -179,14 +188,14 @@ export default function TermosPage() {
         <h2>13. Contato</h2>
         <p>
           Privacidade e dados:{" "}
-          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>.
-          Suporte do piloto: Instagram @usemila.ai.
+          <a href={`mailto:${CONTATO_PRIVACIDADE}`}>{CONTATO_PRIVACIDADE}</a>.
+          Suporte: Instagram {INSTAGRAM}.
         </p>
         <p>
           <em>
-            Estes textos foram redigidos para o piloto com base nas práticas
-            atuais do produto. Não substituem revisão por advogado antes de
-            cobrança ampla ou constituição formal da empresa.
+            Estes textos foram redigidos com base nas práticas atuais do
+            produto. Não substituem revisão por advogado antes de cobrança
+            ampla ou constituição formal da empresa.
           </em>
         </p>
       </div>

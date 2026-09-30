@@ -248,6 +248,16 @@ const juntarConcatenacao = (src: string) => {
 const NEGACOES_HONESTAS = [
   "não abre nem lista seus outros arquivos do Drive",
   "não acessa seu Gmail nem sua Agenda",
+  // 2026-09-30: com o escopo `email` REMOVIDO, a negação sobre e-mail não tem
+  // ressalva. Estas três frases saem do texto antes da varredura por serem
+  // transparência declarada, não promessa — e continuam verificadas, uma a uma,
+  // no teste "a tela de conexão explica o limite do escopo".
+  "não recebe nem lê seu e-mail",
+  "não acessa sua agenda ou seu calendário",
+  // Declaração POSITIVA do que o `openid` concede. Não é promessa escondida, é o
+  // contrário: diz exatamente o que a mila recebe. Sem ela, "não recebemos seu
+  // e-mail" viraria desculpa para omitir até a identidade da conta.
+  "recebe apenas o identificador",
 ];
 const despirNegacao = (t: string) =>
   NEGACOES_HONESTAS.reduce((acc, frase) => acc.split(frase).join(" "), t);
@@ -491,8 +501,27 @@ test("google: a tela de conexão explica o limite do escopo", () => {
   // encontrada por regressão). Cada uma tem que estar lá, textualmente.
   assert.match(GW.GOOGLE_ESCOPO_NOTA, /não abre nem lista seus outros arquivos do Drive/,
     "o aviso precisa dizer que a mila não abre os outros arquivos do Drive");
-  assert.match(GW.GOOGLE_ESCOPO_NOTA, /não acessa seu Gmail nem sua Agenda/,
-    "o aviso precisa dizer que a mila não acessa Gmail nem Agenda");
+  // Correção de 2026-09-30 (ordem do Maurício): o escopo `email` foi REMOVIDO do
+  // app. Antes disso o aviso precisava declarar que o endereço da conta era
+  // recebido; agora não recebe nada além do identificador, então as negações são
+  // limpas. As três continuam verificadas separadamente — apagar uma só já
+  // passou batido no passado (brecha encontrada por regressão).
+  assert.match(GW.GOOGLE_ESCOPO_NOTA, /não recebe nem lê seu e-mail/,
+    "o aviso precisa dizer que a mila não recebe nem lê e-mail");
+  assert.match(GW.GOOGLE_ESCOPO_NOTA, /não acessa sua agenda ou seu calendário/,
+    "o aviso precisa dizer que a mila não acessa agenda/calendário");
+  // E precisa declarar o que RECEBE — sem alegar que a mila "sabe qual conta
+  // está conectada": o código não lê `id_token`/`userinfo` (0 ocorrências), quem
+  // amarra a conexão à loja é o tenant da sessão. O Grok mostrou que a versão
+  // anterior congelava uma frase sem lastro.
+  assert.match(GW.GOOGLE_ESCOPO_NOTA, /recebe um identificador que registra a conexão/,
+    "o aviso precisa descrever o que o openid realmente faz");
+  assert.doesNotMatch(GW.GOOGLE_ESCOPO_NOTA, /para saber qual conta está conectada/,
+    "a tela não sabe qual conta conectou — não pode afirmar isso");
+  // Se o escopo `email` voltar ao app, este aviso vira mentira — o guard falha
+  // pelo teste de escopos em `tests/legal.test.ts`.
+  assert.doesNotMatch(GW.GOOGLE_ESCOPO_NOTA, /endereço de e-mail/i,
+    "o endereço não é mais recebido: o aviso não pode dizer que é");
   // E o título não pode voltar a sugerir a suíte inteira.
   assert.doesNotMatch(GW.GOOGLE_TITULO, /Workspace/);
   assert.match(GW.GOOGLE_TITULO, /Drive e Planilhas/);

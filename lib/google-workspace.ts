@@ -79,10 +79,15 @@ export const PLANO_GOOGLE =
 /**
  * O que a lojista autoriza, dito sem enfeite, antes de clicar em conectar.
  *
- * O trecho "não acessa seu Gmail nem sua Agenda" é uma NEGAÇÃO honesta e o teste
- * o trata como allowlist — sem isso, o próprio aviso que protege a lojista
- * quebraria a checagem de promessa.
+ * ⚠️ 2026-09-30 — o escopo `email` FOI REMOVIDO do app (`auth/oauth.py`), a
+ * pedido do Maurício: *"lembra que nao iremos ter o escopo de email mais"*.
+ * Antes disso a frase precisava declarar que o endereço da conta era recebido,
+ * porque "não acessa seu Gmail" com o escopo `email` ativo podia ser lido como
+ * falso pelo revisor do Google. Agora a mila recebe só o identificador da conta
+ * (openid) — então a negação é limpa e não precisa de ressalva.
  */
 export const GOOGLE_ESCOPO_NOTA =
   "A mila cria e mantém a planilha do seu caderno de fornecedores. Ela não abre " +
-  "nem lista seus outros arquivos do Drive, e não acessa seu Gmail nem sua Agenda.";
+  "nem lista seus outros arquivos do Drive, não recebe nem lê seu e-mail e não " +
+  "acessa sua agenda ou seu calendário. Da conta Google ela recebe um " +
+  "identificador que registra a conexão — a tela não mostra o endereço da conta.";

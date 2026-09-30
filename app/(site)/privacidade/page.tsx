@@ -121,7 +121,12 @@ export default function PrivacidadePage() {
         <ul>
           {SUBCONTROLADORES.map((s) => (
             <li key={s.nome}>
-              <strong>{s.nome}</strong> ({s.pais}) — {s.papel}
+              <strong>{s.nome}</strong> ({s.pais}) — {s.papel}{" "}
+              {s.tocaDadoDoGoogle === false ? (
+                <em>Não recebe dado das APIs do Google.</em>
+              ) : (
+                <em>Recebe do Google: {s.tocaDadoDoGoogle}.</em>
+              )}
             </li>
           ))}
         </ul>

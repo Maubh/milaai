@@ -230,7 +230,18 @@ export const SUBCONTROLADORES: Array<{
   nome: string;
   papel: string;
   pais: string;
-  dadoDoGoogle: boolean;
+  /**
+   * Que dado RECEBIDO DO GOOGLE este prestador toca. Não é booleano.
+   *
+   * A 3ª revisão do Grok mostrou o furo: `dadoDoGoogle: boolean` era um campo
+   * morto — nenhum teste o lia e a página não o renderizava. Então dava para
+   * marcar `true` e o titular nunca saber. Aqui o campo é uma união que a
+   * página OBRIGA a renderizar (o texto sai na lista de subprocessadores), e o
+   * guard confere que cada valor aparece no HTML.
+   *
+   * `false` = não recebe nada oriundo das APIs do Google.
+   */
+  tocaDadoDoGoogle: false | "arquivo e conteúdo do Drive" | "foto, nota e texto";
 }> = [
   {
     nome: "Google",
@@ -239,7 +250,7 @@ export const SUBCONTROLADORES: Array<{
       "Também guarda a planilha do caderno no Drive da loja, quando ela escolhe " +
       "essa opção.",
     pais: "Estados Unidos",
-    dadoDoGoogle: true,
+    tocaDadoDoGoogle: "arquivo e conteúdo do Drive",
   },
   {
     nome: "TypeSafe (System One)",
@@ -247,7 +258,7 @@ export const SUBCONTROLADORES: Array<{
       "Classificação da intenção da mensagem, para a mila entender o pedido. " +
       "Recebe o texto da mensagem.",
     pais: "Estados Unidos",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Alibaba",
@@ -255,7 +266,7 @@ export const SUBCONTROLADORES: Array<{
       "Modelo de texto alternativo, usado só quando o provedor principal está " +
       "indisponível. Recebe o mesmo texto que seria enviado ao principal.",
     pais: "China",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Zhipu",
@@ -265,13 +276,13 @@ export const SUBCONTROLADORES: Array<{
       "mensagem enviada à mila no WhatsApp — não recebe arquivo do seu Drive, " +
       "nem o conteúdo da sua planilha, nem credencial de acesso.",
     pais: "China",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Serper",
     papel: "Consulta de preço de concorrentes e média de mercado.",
     pais: "Estados Unidos",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "MegaAPI",
@@ -279,13 +290,13 @@ export const SUBCONTROLADORES: Array<{
       "Transporte da mensagem no WhatsApp (texto e mídia). O WhatsApp/Meta " +
       "também participa do transporte.",
     pais: "Brasil",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Vercel",
     papel: "Hospedagem do site e do workspace web.",
     pais: "Estados Unidos",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Cloudflare",
@@ -293,18 +304,24 @@ export const SUBCONTROLADORES: Array<{
       "DNS, túnel, proteção do endpoint e verificação anti-robô no login " +
       "(Turnstile).",
     pais: "Estados Unidos",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
   {
     nome: "Asaas",
     papel: "Processamento de pagamento, quando houver cobrança.",
     pais: "Brasil",
-    dadoDoGoogle: false,
+    tocaDadoDoGoogle: false,
   },
 ];
 
 /**
- * Transferência internacional. A revisão do Grok 4.7 mostrou que a 1ª versão
+ * Transferência internacional.
+ *
+ * A 3ª revisão do Grok mostrou que congelar só as palavras "transferência
+ * internacional" e "China" não bastava: dava para trocar o corpo por
+ * "cláusulas-padrão já firmadas" e a suíte ficava verde. Os fragmentos que
+ * carregam a DECISÃO (mecanismo em formalização, o que se transfere, o que
+ * NÃO vai) estão congelados em `tests/legal.test.ts`. A revisão do Grok 4.7 mostrou que a 1ª versão
  * afirmava "usamos cláusulas contratuais-padrão" como se o art. 33 já estivesse
  * fechado — e não há instrumento nenhum nem pessoa jurídica constituída para
  * assinar. O texto passa a ser honesto: a transferência acontece, o mecanismo
@@ -422,3 +439,12 @@ export const NAO_PRONTOs_FRASE =
   "Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de " +
   "conexão existe, mas o acesso ainda não foi habilitado — não conte com eles " +
   "para a operação da sua loja por enquanto.";
+
+
+/** Sentinela de fim de arquivo. O guard lê este arquivo para comparar a lista
+ *  publicada de escopos com a fonte real do app (`auth/oauth.py`). Se um
+ *  arquivo grande for concatenado no fim, o arquivo deixa de terminar aqui e o
+ *  teste falha de propósito — em vez de varrer um arquivo mutilado.
+ *  (Furo apontado na 3ª revisão do Grok: o corte `"google"`→`"notion"` podia cair
+ *  num comentário decoy e ler o bloco errado.) */
+export const MILA_LEGAL_FIM = "mila-legal-fim";

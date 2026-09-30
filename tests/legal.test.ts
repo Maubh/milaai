@@ -1278,3 +1278,318 @@ test("legal: a prosa fixa de cada página é exatamente o golden", async () => {
   assert.equal(prosa, golden);
   }
 });
+
+// ────────── F. GOLDEN DA FONTE e do VOCABULÁRIO do DOM
+
+/**
+ * Canonicaliza um valor para comparação estável: chaves ordenadas, 2 espaços.
+ * Mesmo formato de `json.dumps(sort_keys=True, indent=2, ensure_ascii=False)`.
+ */
+function canonico(v: unknown, ind = 0): string {
+  const pad = "  ".repeat(ind);
+  const pad2 = "  ".repeat(ind + 1);
+  if (v === null) return "null";
+  if (Array.isArray(v)) {
+    if (!v.length) return "[]";
+    return `[\n${v.map((x) => pad2 + canonico(x, ind + 1)).join(",\n")}\n${pad}]`;
+  }
+  if (typeof v === "object") {
+    const ks = Object.keys(v as Record<string, unknown>).sort();
+    if (!ks.length) return "{}";
+    return (
+      `{\n` +
+      ks
+        .map(
+          (k) =>
+            `${pad2}${JSON.stringify(k)}: ` +
+            canonico((v as Record<string, unknown>)[k], ind + 1),
+        )
+        .join(",\n") +
+      `\n${pad}}`
+    );
+  }
+  return JSON.stringify(v);
+}
+
+/**
+ * GOLDEN DA FONTE — todos os valores de `lib/legal.ts`, congelados.
+ *
+ * Fecha o furo que o Grok abriu na 6ª rodada: o golden da prosa transforma todo
+ * valor da fonte em sentinela, então uma FRASE ADICIONADA DENTRO DA FONTE
+ * (concatenando na string de `GOOGLE_LIMITED_USE`, por exemplo) desaparecia do
+ * golden da prosa e nenhum outro teste a pegava. Aqui a fonte inteira é o
+ * golden: mudar qualquer valor — inclusive uma frase a mais dentro de uma string
+ * — falha, e o diff mostra exatamente o texto novo.
+ *
+ * Regenerar: `scripts/gerar_golden_legal.sh`.
+ */
+const GOLDEN_FONTE = `{
+  "ATUALIZADO_EM": "30 de setembro de 2026",
+  "BASES_LEGAIS": [
+    {
+      "base": "Execução de contrato (art. 7, V)",
+      "finalidade": "Prestar o serviço pedido (precificar, ler nota, caderno, conteúdo)"
+    },
+    {
+      "base": "Execução de contrato e legítimo interesse em segurança (art. 7, V e IX)",
+      "finalidade": "Autenticar o acesso por código no WhatsApp"
+    },
+    {
+      "base": "Legítimo interesse (art. 7, IX)",
+      "finalidade": "Segurança, anti-abuso e limites de tentativa"
+    },
+    {
+      "base": "Obrigação legal e regulatória (art. 7, II)",
+      "finalidade": "Cumprir obrigação legal e atender autoridade"
+    },
+    {
+      "base": "Legítimo interesse (art. 7, IX)",
+      "finalidade": "Medir uso com métricas agregadas ou dados desidentificados"
+    }
+  ],
+  "CONECTORES_DISPONIVEIS": [
+    "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
+    "Notion — a mila grava o caderno numa base que a loja já tem; não cria base."
+  ],
+  "CONECTORES_NAO_PRONTOs": [
+    "Olist",
+    "Bling"
+  ],
+  "CONECTORES_VALIDACAO_PENDENTE": [
+    "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente."
+  ],
+  "CONTATO_PRIVACIDADE": "contato@milaai.com.br",
+  "CONTROLADOR_CNPJ": null,
+  "CONTROLADOR_NOME": "equipe fundadora da mila.",
+  "DADOS_TRATADOS": [
+    {
+      "dado": "Mensagens de texto enviadas pela lojista no WhatsApp",
+      "destino": "Classificadas para a mila entender o pedido, com apoio de provedor de IA. O conteúdo da mensagem é registrado em arquivo de diagnóstico para investigar erro e é excluído sob pedido."
+    },
+    {
+      "dado": "Fotos de peças e de notas fiscais",
+      "destino": "Enviadas a modelo de visão para identificação do que está na imagem. O texto e os dados extraídos ficam no histórico da loja. As imagens não são guardadas em pasta própria pela mila; o arquivo de diagnóstico da mensagem pode conter a referência recebida."
+    },
+    {
+      "dado": "Descrição da peça e região da loja",
+      "destino": "Usadas na consulta de preço de mercado. Fica em cache o preço agregado, para não repetir consulta."
+    },
+    {
+      "dado": "Notas fiscais: dados do emitente, itens e o destinatário (nome, CPF/CNPJ, endereço)",
+      "destino": "Lidos para extrair custo e itens. Quando aparecem dados de terceiros (destinatário, fornecedor), a loja é a controladora desses dados e a mila atua como operadora, para prestar o serviço que a loja pediu."
+    },
+    {
+      "dado": "Cadastro de fornecedores (nome, contato, pedido mínimo, carência, histórico)",
+      "destino": "Gravado no caderno da loja. A lojista escolhe onde: Notion (a mila só grava em base que já existe) ou planilha criada no Google Drive da loja. A mila não envia mensagens a fornecedores."
+    },
+    {
+      "dado": "Telefone e código de verificação (login)",
+      "destino": "O telefone identifica a loja. O código é de vida curta e guardado apenas em hash com salt (SHA-256 + salt aleatório) — a mila não consegue lê-lo."
+    },
+    {
+      "dado": "Dados de cobrança (quando houver plano pago)",
+      "destino": "Processados pela operadora de pagamentos. Dados de cartão são coletados e guardados por ela; não passam nem repousam nos servidores da mila."
+    },
+    {
+      "dado": "Credenciais de integração, quando a lojista conecta uma conta",
+      "destino": "Guardadas em cofre cifrado com Fernet (AES-128-CBC + HMAC), com a chave de decifragem em arquivo de permissão restrita (600)."
+    }
+  ],
+  "DECISAO_AUTOMATIZADA": false,
+  "DECISAO_AUTOMATIZADA_RESSALVA": "Algumas ações que alteram dados ainda não pedem confirmação separada — estamos implantando isso rota a rota. Enquanto não estiver completo, confira a prévia antes de confirmar.",
+  "DECISAO_AUTOMATIZADA_TEXTO": "A mila recomenda; quem decide é a lojista. Não há perfilamento, pontuação, ranqueamento de pessoas nem decisão de crédito.",
+  "DIREITOS": [
+    "confirmação de que tratamos seus dados e acesso a eles",
+    "correção de dados incompletos, inexatos ou desatualizados",
+    "anonimização, bloqueio ou eliminação de dados desnecessários ou excessivos",
+    "portabilidade, quando aplicável",
+    "eliminação dos dados tratados com consentimento",
+    "informação sobre com quem compartilhamos",
+    "informação sobre a possibilidade de não consentir e as consequências disso",
+    "revogação do consentimento e oposição a tratamento fundado em legítimo interesse"
+  ],
+  "EXPURGO_AUTOMATICO_ATIVO": false,
+  "FUNCOES": [
+    "Calcula preço de venda a partir do custo, do imposto e da margem que a lojista informa.",
+    "Pesquisa preços praticados por concorrentes e a média do mercado.",
+    "Lê notas fiscais (XML ou foto) e extrai os itens.",
+    "Mantém o cadastro de fornecedores da loja: contato, pedido mínimo, carência e histórico.",
+    "Gera textos para site e catálogo (recursos do plano Pro)."
+  ],
+  "GOOGLE_ESCOPOS": [
+    "openid",
+    "https://www.googleapis.com/auth/drive.file"
+  ],
+  "GOOGLE_LIMITED_USE": "Uso de dados do Google. O que a mila recebe das APIs do Google é usado somente para fornecer e melhorar as funcionalidades que você vê: criar e manter a planilha do caderno de fornecedores que ela mesma cria, e registrar a conexão da conta. Não usamos esses dados para publicidade, não os vendemos, não os usamos para avaliar crédito, pontuação ou risco de pessoas, nem para treinar modelos de inteligência artificial. Esses dados só são repassados a prestador que nos atende sob contrato e apenas no necessário para a finalidade contratada, para segurança ou para cumprir a lei. Nenhuma pessoa lê o conteúdo do seu Drive ou da sua conta sem a sua autorização específica para aquela situação — o suporte a que você dá acesso é feito em conversa conosco, não pela leitura do seu Drive. O uso segue a Política de Dados de Usuário dos Serviços de API do Google, incluindo os requisitos de Limited Use.",
+  "GOOGLE_O_QUE_ACESSA": "Ao conectar o Google, a mila recebe um identificador da conta (escopo openid). Ela NÃO recebe seu endereço de e-mail. Na prática, quem mantém o vínculo entre a conexão e a sua loja é a sessão autenticada no WhatsApp — a mila não usa o identificador para saber de qual conta se trata, e a tela não mostra o endereço da conta conectada. Acesso a arquivos fica restrito ao escopo drive.file: só os arquivos que a própria mila cria. Ela não abre, não lista e não altera o restante do seu Drive, não lê sua caixa de e-mail e não acessa sua agenda ou seu calendário.",
+  "INSTAGRAM": "@usemila.ai",
+  "ISOLAMENTO": [
+    "Praticado: cada loja é um espaço separado; o acesso é restrito por lista de números autorizados e o registro de sessão é por loja.",
+    "Em implantação: registro sistemático de acesso excepcional da equipe fundadora. A estrutura de auditoria existe, mas o registro automático ainda não está ligado."
+  ],
+  "MILA_LEGAL_FIM": "mila-legal-fim",
+  "NAO_FEITO": [
+    "Não vendemos nem cedemos dados a terceiros fora dos prestadores listados acima.",
+    "Não usamos o conteúdo da loja para treinar modelo próprio, nem enviamos esse conteúdo a terceiros para treinar modelos de fundação.",
+    "Não acessamos o endereço, a caixa de e-mail, a agenda ou o calendário da conta Google da loja.",
+    "Não mantemos CRM, histórico de vendas a consumidores finais nem base de compradores da loja.",
+    "O site não usa rastreadores de marketing: sem analytics de terceiros, pixel ou cookie de publicidade.",
+    "Não há decisão totalmente automatizada que afete a lojista ou seus clientes."
+  ],
+  "NAO_PRONTOs_FRASE": "Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.",
+  "RETENCAO": [
+    {
+      "alvo": "minutos",
+      "item": "Código de verificação (OTP)",
+      "praticado": "Vida curta; expira sozinho."
+    },
+    {
+      "alvo": "não definido",
+      "item": "Arquivo de diagnóstico da mensagem recebida",
+      "praticado": "Mantido até exclusão sob pedido."
+    },
+    {
+      "alvo": "até cerca de 90 dias",
+      "item": "Histórico operacional da conversa",
+      "praticado": "Mantido até exclusão sob pedido."
+    },
+    {
+      "alvo": "até cerca de 180 dias",
+      "item": "Notas fiscais processadas",
+      "praticado": "Mantido até exclusão sob pedido."
+    },
+    {
+      "alvo": "até cerca de 30 dias",
+      "item": "Logs técnicos de visão e download",
+      "praticado": "Só metadado (data, modelo, latência, erro) — sem o conteúdo da mensagem."
+    },
+    {
+      "alvo": "até a lojista desconectar",
+      "item": "Credenciais de integração",
+      "praticado": "Mantidas enquanto a integração estiver conectada."
+    }
+  ],
+  "RETENCAO_NOTA": "Estes prazos são alvo, ainda não são automáticos: hoje a exclusão é feita pela equipe sob pedido, pelo canal de privacidade. A mila não substitui a obrigação da loja de guardar documentos fiscais nos prazos legais.",
+  "SECAO_CONTATO": 15,
+  "SUBCONTROLADORES": [
+    {
+      "nome": "Google",
+      "pais": "Estados Unidos",
+      "papel": "Modelo de visão (lê a foto da peça e da nota) e geração de texto. Também guarda a planilha do caderno no Drive da loja, quando ela escolhe essa opção.",
+      "tocaDadoDoGoogle": "arquivo e conteúdo do Drive"
+    },
+    {
+      "nome": "TypeSafe (System One)",
+      "pais": "Estados Unidos",
+      "papel": "Classificação da intenção da mensagem, para a mila entender o pedido. Recebe o texto da mensagem.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Alibaba",
+      "pais": "China",
+      "papel": "Modelo de texto alternativo, usado só quando o provedor principal está indisponível. Recebe o mesmo texto que seria enviado ao principal.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Zhipu",
+      "pais": "China",
+      "papel": "Segundo modelo de texto alternativo, na mesma condição do anterior. Acionado só quando a alternativa gratuita está fora. Recebe o texto da mensagem enviada à mila no WhatsApp — não recebe arquivo do seu Drive, nem o conteúdo da sua planilha, nem credencial de acesso.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Serper",
+      "pais": "Estados Unidos",
+      "papel": "Consulta de preço de concorrentes e média de mercado.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "MegaAPI",
+      "pais": "Brasil",
+      "papel": "Transporte da mensagem no WhatsApp (texto e mídia). O WhatsApp/Meta também participa do transporte.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Vercel",
+      "pais": "Estados Unidos",
+      "papel": "Hospedagem do site e do workspace web.",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Cloudflare",
+      "pais": "Estados Unidos",
+      "papel": "DNS, túnel, proteção do endpoint e verificação anti-robô no login (Turnstile).",
+      "tocaDadoDoGoogle": false
+    },
+    {
+      "nome": "Asaas",
+      "pais": "Brasil",
+      "papel": "Processamento de pagamento, quando houver cobrança.",
+      "tocaDadoDoGoogle": false
+    }
+  ],
+  "TITULARES": [
+    "A lojista (dona ou pessoa autorizada da loja) — usuária do serviço.",
+    "O representante do fornecedor, quando a lojista o cadastra no caderno.",
+    "O destinatário que aparece na nota fiscal, quando a lojista envia uma nota para leitura."
+  ],
+  "TRANSFERENCIA_INTERNACIONAL": "Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente enquanto a empresa não estiver constituída. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai."
+}`;
+
+/**
+ * GOLDEN DO VOCABULÁRIO — tags e atributos que as páginas jurídicas podem usar.
+ *
+ * Fecha o outro furo da 6ª rodada: `prosaDe` remove tags e não olha atributo,
+ * então a mentira podia ir para um `alt`, um data-URI de `<img>` ou um
+ * `className`. Aqui o vocabulário é FECHADO: tag ou atributo novo falha, e
+ * acrescentar `img`/`alt` a uma página de política passa a ser decisão explícita.
+ */
+const GOLDEN_TAGS: string[] = ["a", "div", "em", "h1", "h2", "li", "p", "strong", "ul"];
+const GOLDEN_ATRIBUTOS: string[] = ["class", "href"];
+
+function vocabulario(html: string): { tags: string[]; atributos: string[] } {
+  const tags = new Set<string>();
+  const atributos = new Set<string>();
+  for (const m of html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*)>/gi)) {
+    tags.add(m[1].toLowerCase());
+    // nome do atributo pode ser seguido de `=`, `/` ou espaço (`hidden`, `checked`)
+    for (const a of m[2].matchAll(/(?:^|\s)([a-zA-Z][a-zA-Z0-9-]*)(?=\s*=|\s|$|\/)/g)) {
+      atributos.add(a[1].toLowerCase());
+    }
+  }
+  return { tags: [...tags].sort(), atributos: [...atributos].sort() };
+}
+
+test("legal: os valores da fonte são exatamente o golden da fonte", async () => {
+  const f = await fatos();
+  const todos: Record<string, unknown> = {};
+  for (const k of Object.keys(f).sort()) todos[k] = f[k];
+  const atual = canonico(todos);
+  if (atual !== GOLDEN_FONTE) {
+    const a = GOLDEN_FONTE.split("\n");
+    const b = atual.split("\n");
+    const novas = b.filter((l) => !a.includes(l));
+    const removidas = a.filter((l) => !b.includes(l));
+    assert.fail(
+      "os valores de lib/legal.ts mudaram.\n" +
+        (novas.length ? `\nLINHAS NOVAS:\n  ${novas.join("\n  ")}` : "") +
+        (removidas.length ? `\n\nLINHAS REMOVIDAS:\n  ${removidas.join("\n  ")}` : "") +
+        "\n\nSe a mudança é intencional, rode scripts/gerar_golden_legal.sh e LEIA O DIFF.",
+    );
+  }
+});
+
+test("legal: as páginas jurídicas usam só o vocabulário de DOM congelado", async () => {
+  for (const pg of PAGINAS) {
+    const v = vocabulario(await htmlDe(pg.caminho));
+    assert.deepEqual(
+      v.tags.filter((x) => !GOLDEN_TAGS.includes(x)),
+      [],
+      `${pg.nome}: tag nova no HTML — pode veicular texto que o golden da prosa não vê`,
+    );
+    assert.deepEqual(
+      v.atributos.filter((x) => !GOLDEN_ATRIBUTOS.includes(x)),
+      [],
+      `${pg.nome}: atributo novo no HTML — pode veicular texto que o golden da prosa não vê`,
+    );
+  }
+});

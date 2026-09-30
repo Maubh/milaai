@@ -187,26 +187,39 @@ export const GOOGLE_ESCOPOS = [
 ] as const;
 
 export const GOOGLE_O_QUE_ACESSA =
-  "Ao conectar o Google, a mila recebe o identificador da conta (escopo openid) " +
-  "— é assim que ela sabe qual conta está conectada. Ela não recebe seu " +
-  "endereço de e-mail. Acesso a arquivos fica restrito ao escopo drive.file: só " +
-  "os arquivos que a própria mila cria. Ela não abre, não lista e não altera o " +
-  "restante do seu Drive, não lê sua caixa de e-mail e não acessa sua agenda ou " +
-  "seu calendário.";
+  "Ao conectar o Google, a mila recebe um identificador da conta (escopo openid). " +
+  "Ela NÃO recebe seu endereço de e-mail. Na prática, quem mantém o vínculo entre " +
+  "a conexão e a sua loja é a sessão autenticada no WhatsApp — a mila não usa o " +
+  "identificador para saber de qual conta se trata, e a tela não mostra o " +
+  "endereço da conta conectada. Acesso a arquivos fica restrito ao escopo " +
+  "drive.file: só os arquivos que a própria mila cria. Ela não abre, não lista e " +
+  "não altera o restante do seu Drive, não lê sua caixa de e-mail e não acessa " +
+  "sua agenda ou seu calendário.";
 
 /**
  * Cláusula de Limited Use — exigida pela Política de Dados de Usuário dos
- * Serviços de API do Google. Sem ela, o app não passa na verificação.
+ * Serviços de API do Google (aplica-se a TODO dado recebido das APIs, inclusive
+ * de escopo não sensível como `drive.file`).
+ *
+ * A revisão do Grok 4.7 apontou o que faltava na 1ª versão: proibição de uso
+ * para crédito/scoring, regra de transferência a operadores, acesso humano no
+ * padrão do Google (consentimento para o dado específico, não "quando pedir
+ * suporte"), e coerência com a seção 7 (o identificador da conta serve para
+ * registrar a conexão, não só para o caderno).
  */
 export const GOOGLE_LIMITED_USE =
-  "Uso de dados do Google: o que a mila recebe das APIs do Google é usado " +
-  "somente para fornecer e melhorar as funcionalidades que você vê — manter o " +
-  "caderno de fornecedores na sua planilha. Não usamos esses dados para " +
-  "publicidade, não os vendemos, não os usamos para treinar modelos de " +
-  "inteligência artificial e não permitimos que pessoas leiam esse conteúdo, " +
-  "exceto quando você pedir suporte, quando for necessário por segurança ou " +
-  "para cumprir a lei. O uso segue a Política de Dados de Usuário dos Serviços " +
-  "de API do Google, incluindo os requisitos de Limited Use.";
+  "Uso de dados do Google. O que a mila recebe das APIs do Google é usado " +
+  "somente para fornecer e melhorar as funcionalidades que você vê: criar e " +
+  "manter a planilha do caderno de fornecedores que ela mesma cria, e registrar " +
+  "a conexão da conta. Não usamos esses dados para publicidade, não os vendemos, " +
+  "não os usamos para avaliar crédito, pontuação ou risco de pessoas, nem para " +
+  "treinar modelos de inteligência artificial. Esses dados só são repassados a " +
+  "prestador que nos atende sob contrato e apenas no necessário para a " +
+  "finalidade contratada, para segurança ou para cumprir a lei. Nenhuma pessoa " +
+  "lê o conteúdo do seu Drive ou da sua conta sem a sua autorização específica " +
+  "para aquela situação — o suporte a que você dá acesso é feito em conversa " +
+  "conosco, não pela leitura do seu Drive. O uso segue a Política de Dados de " +
+  "Usuário dos Serviços de API do Google, incluindo os requisitos de Limited Use.";
 
 /**
  * Subprocessadores — divulgação NOMINAL. Requisito do Google para o app
@@ -248,11 +261,11 @@ export const SUBCONTROLADORES: Array<{
     nome: "Zhipu",
     papel:
       "Segundo modelo de texto alternativo, na mesma condição do anterior. " +
-      "Inclui conteúdo que pode ter sido gerado com apoio do Google — por isso " +
-      "ele só é acionado quando a alternativa gratuita está fora, e você pode " +
-      "pedir para não usar.",
+      "Acionado só quando a alternativa gratuita está fora. Recebe o texto da " +
+      "mensagem enviada à mila no WhatsApp — não recebe arquivo do seu Drive, " +
+      "nem o conteúdo da sua planilha, nem credencial de acesso.",
     pais: "China",
-    dadoDoGoogle: true,
+    dadoDoGoogle: false,
   },
   {
     nome: "Serper",
@@ -290,13 +303,24 @@ export const SUBCONTROLADORES: Array<{
   },
 ];
 
+/**
+ * Transferência internacional. A revisão do Grok 4.7 mostrou que a 1ª versão
+ * afirmava "usamos cláusulas contratuais-padrão" como se o art. 33 já estivesse
+ * fechado — e não há instrumento nenhum nem pessoa jurídica constituída para
+ * assinar. O texto passa a ser honesto: a transferência acontece, o mecanismo
+ * ainda não está formalizado, e a responsabilidade fica com quem opera.
+ */
 export const TRANSFERENCIA_INTERNACIONAL =
-  "Vários prestadores acima processam dados fora do Brasil — Estados Unidos e " +
-  "China. Isso é transferência internacional (LGPD, art. 33) e depende de " +
-  "mecanismo próprio: usamos cláusulas contratuais-padrão com esses " +
-  "fornecedores. Legítimo interesse não é hipótese de transferência " +
-  "internacional. Chips de fornecedor chinês aparecem nominalmente porque você " +
-  "tem o direito de saber para onde o dado vai.";
+  "Vários prestadores acima processam dados fora do Brasil — Estados Unidos " +
+  "(Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso " +
+  "é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de " +
+  "adesão (termos de serviço) desses fornecedores preveem as salvaguardas de " +
+  "proteção de dados, e a formalização das cláusulas-padrão segue pendente " +
+  "enquanto a empresa não estiver constituída. Enquanto isso, transferimos o " +
+  "mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo " +
+  "do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai " +
+  "para os modelos alternativos. Chips de fornecedor chinês aparecem " +
+  "nominalmente porque você tem o direito de saber para onde o dado vai.";
 
 /**
  * Retenção. Separada em ALVO × PRATICADO de propósito: hoje NÃO existe rotina

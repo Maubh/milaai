@@ -64,10 +64,11 @@ export default function PrivacidadePage() {
           registrar.
         </p>
         <p>
-          <strong>Encarregado (DPO):</strong> a ANPD dispensa o agente de pequeno
-          porte da indicação formal de encarregado (Resolução CD/ANPD nº
-          2/2022). O canal de comunicação com o titular é obrigatório e existe: é
-          o contato no fim desta página, com resposta em até 15 dias.
+          <strong>Encarregado (DPO):</strong> a mila. é operada hoje sem CNPJ — é
+          um serviço em lançamento, e o enquadramento formal como agente de
+          pequeno porte depende de constituição da empresa. O canal do titular
+          não depende disso e já funciona: é o contato no fim desta página, com
+          resposta em até 15 dias.
         </p>
 
         <h2>2. De quem são os dados</h2>

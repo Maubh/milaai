@@ -32,7 +32,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { dirname, join, relative, resolve } from "node:path";
 import { createRequire } from "node:module";
@@ -107,7 +107,71 @@ async function htmlDe(rel: string): Promise<string> {
   return renderToStaticMarkup(React.createElement(mod.default as never));
 }
 
-/** Texto visível: tags fora, entidades resolvidas. */
+/**
+ * ── TEXTOS CONGELADOS (o ponto que faltava, achado na 2ª revisão do Grok) ────
+ * A v2 ainda era burlável de um jeito simples e grave: todos os testes exigiam
+ * que o HTML contivesse "o que `lib/legal.ts` diz AGORA". Mudar a fonte mudava
+ * os DOIS lados da asserção — dava para trocar `praticado` de "Mantido até
+ * exclusão sob pedido" para "Removido sozinho ao fim do prazo" e a suíte seguia
+ * verde, porque nada estava ancorado em literal.
+ *
+ * Aqui ficam os trechos que são DECISÃO, não texto editável. Cada um é um
+ * fragmento literal que tem de existir no HTML. Mudar a redação exige mudar
+ * este arquivo de teste também — que é o ponto: obriga a decisão consciente.
+ */
+const CONGELADOS: Array<[string, string]> = [
+  // expurgo — o produto NÃO apaga sozinho hoje
+  ["expurgo", "rotina automática de expurgo ainda não está no ar"],
+  // contato oficial
+  ["contato", "contato@milaai.com.br"],
+  // retenção praticada (o Grok mostrou que `praticado` não era assertido)
+  ["retencao-msg", "Mantido até exclusão sob pedido"],
+  // payload cru É gravado
+  ["payload-cru", "registrado em arquivo de diagnóstico"],
+  // papéis
+  ["controladora", "controladora"],
+  ["operadora", "operadora"],
+  // dados de terceiros
+  ["fornecedor", "operadora, para prestar o serviço que a loja pediu"],
+  // escopos do Google
+  ["escopo-openid", "openid"],
+  ["escopo-drive-file", "drive.file"],
+  ["limited-use", "Limited Use"],
+  ["acesso-humano", "autorização específica"],
+  // transferência internacional por região
+  ["transferencia", "transferência internacional"],
+  ["china", "China"],
+  // Google não é usado para achar a loja
+  ["google-vinculo", "sessão autenticada no WhatsApp"],
+  // conectores não prontos
+  ["olist", "Olist"],
+  ["bling", "Bling"],
+];
+
+/** Trechos congelados que vivem FORA das páginas jurídicas (home/pricing). */
+const CONGELADOS_PRICING: Array<[string, string]> = [
+  // A linha inteira do ERP fica congelada: é a que estava mentindo no ar
+  // ("Integração direta Jueri, Bling e Olist") quando o guard nasceu.
+  ["erp-ressalva", "Olist e Bling ainda não"],
+  ["jueri-disponivel", "Jueri disponível"],
+];
+
+/** O que o HTML NUNCA pode conter, mesmo com a fonte mudando. */
+const PROIBIDOS: Array<[string, RegExp]> = [
+  ["expurgo automatico", /apagad\w*\s+automaticamente|excluíd\w*\s+automaticamente|removid\w*\s+sozinho/i],
+  ["e-mail inexistente", /privacy@/i],
+  ["provedor a definir", /a\s+definir/i],
+  ["endereco recebido", /recebe\s+o\s+endereço|endereço\s+de\s+e-mail\s+associado/i],
+  ["escopo email", /["'`]email["'`]|\bemail\b\s*,/i],
+  ["escopo sensivel", /googleapis\.com\/auth\/(gmail|calendar|tasks|spreadsheets|contacts|drive\b)/i],
+  ["promessa de venda de dados", /(?<!não\s)vendemos\s+(seus\s+)?dados/i],
+];
+
+/** Texto visível: tags fora, entidades resolvidas.
+ *
+ * Limitação conhecida: NÃO aplica CSS, então um `display:none` esconde do leitor
+ * e não deste teste. Por isso o guard também reprova `display: "none"` e
+ * `hidden` nas páginas — ver o teste específico. */
 function texto(html: string): string {
   return html
     .replace(/<[^>]+>/g, " ")
@@ -256,6 +320,45 @@ test("legal: Google com escopo, limite e cláusula de Limited Use", async () => 
 
 // ─────────────────────────────────────────── C. fatos proibidos
 
+test("legal: os trechos decisivos estão CONGELADOS no HTML", async () => {
+  // O Grok apontou o furo central da v2: todo teste exigia "o que legal.ts diz
+  // agora", então mudar a fonte mudava os dois lados. Estes literais são
+  // decisão (não texto editável) e não vêm da fonte.
+  const h = texto(await htmlDe(PAGINAS[0].caminho));
+  const faltando = CONGELADOS.filter(([, frag]) => !h.includes(frag));
+  assert.deepEqual(
+    faltando.map(([nome]) => nome),
+    [],
+    "trecho congelado sumiu do HTML — se a mudança foi intencional, atualize CONGELADOS no teste",
+  );
+});
+
+test("legal: nenhum PROIBIDO aparece no HTML", async () => {
+  for (const p of PAGINAS) {
+    const h = texto(await htmlDe(p.caminho));
+    for (const [nome, re] of PROIBIDOS) {
+      assert.doesNotMatch(h, re, `${p.nome}: apareceu "${nome}" (${re})`);
+    }
+  }
+});
+
+test("legal: nenhuma página esconde texto com CSS", () => {
+  // O `texto()` do guard não aplica CSS: `display:none` esconderia do leitor e
+  // não do teste. O Grok usou exatamente isso para burlar a v1. Como as páginas
+  // jurídicas não têm motivo para esconder nada, a regra é simples: não pode.
+  for (const p of PAGINAS) {
+    const src = readFileSync(join(RAIZ, p.caminho), "utf8");
+    for (const [nome, re] of [
+      ["display none", /display\s*:\s*["']none["']/],
+      ["visibility hidden", /visibility\s*:\s*["']hidden["']/],
+      ["atributo hidden", /<[a-z][^>]*\shidden[\s/>]/i],
+      ["aria-hidden em bloco de texto", /<p[^>]*aria-hidden/i],
+    ] as Array<[string, RegExp]>) {
+      assert.doesNotMatch(src, re, `${p.nome}: ${nome} esconde conteúdo do titular`);
+    }
+  }
+});
+
 test("legal: nenhum HTML publica o e-mail inexistente privacy@", async () => {
   for (const p of PAGINAS) {
     const html = await htmlDe(p.caminho);
@@ -396,7 +499,90 @@ test("legal: o site não pede escopo sensível do Google", async () => {
   );
 });
 
-test("legal: as duas páginas usam a mesma data, vinda da fonte", async () => {
+test("legal: a fonte REAL dos escopos (auth/oauth.py) bate com a lista publicada", async () => {
+  // O Grok mostrou que o scanner antigo só olhava `.tsx?` do site — então dava
+  // para pôr `email` e `drive` de volta em `auth/oauth.py`, que é a fonte de
+  // verdade, e a suíte ficava verde. Aqui o arquivo REAL é lido e comparado.
+  const f = await fatos();
+  const publicados = new Set(f.GOOGLE_ESCOPOS as string[]);
+
+  // A VPS fica fora do repo, mas o caminho é o mesmo host: se existir, lê.
+  const candidatos = [
+    "/opt/data/profiles/mila/auth/oauth.py",
+    join(RAIZ, "../auth/oauth.py"),
+  ];
+  const fonte = candidatos.find((c) => existsSync(c));
+
+  if (!fonte) {
+    // Sem acesso ao arquivo, o mínimo honesto: avisar que este teste não cobriu
+    // em vez de passar em silêncio fingindo cobertura.
+    console.warn("⚠️  auth/oauth.py não acessível — escopos reais NÃO verificados");
+    return;
+  }
+
+  const txt = readFileSync(fonte, "utf8");
+  // Isola o bloco do provider google: do `"google"` até o `},` que fecha.
+  const bloco = txt.slice(txt.indexOf('"google"'), txt.indexOf('"notion"'));
+  assert.ok(bloco.length > 100, "não consegui isolar o bloco do provider google");
+
+  const escopos = [...bloco.matchAll(/"(https:\/\/www\.googleapis\.com\/auth\/[\w.]+|openid|email|profile)"/g)]
+    .map((m) => m[1])
+    .filter((e, i, a) => e.includes("auth/") || ["openid", "email", "profile"].includes(e));
+
+  for (const e of escopos) {
+    assert.ok(
+      publicados.has(e),
+      `auth/oauth.py pede "${e}", que NÃO está publicado em lib/legal.ts — a política mentiria`,
+    );
+  }
+  // E o proibido não pode voltar, em nenhuma forma.
+  assert.doesNotMatch(
+    bloco,
+    /"(email|profile|https:\/\/www\.googleapis\.com\/auth\/(drive|gmail|calendar|spreadsheets))"/,
+    "escopo removido (email, profile, drive inteiro, gmail, calendar, sheets) voltou ao app",
+  );
+  assert.doesNotMatch(
+    bloco,
+    /\b\d+(\.\d+)?\s*(KB|MB|GB)\b|all\s+files\s+in\s+drive/i,
+    "texto de Drive inteiro no bloco do provider",
+  );
+});
+
+test("legal: o pricing renderizado não promete conector não pronto", async () => {
+  // `PricingSection` é "use client", mas `renderToStaticMarkup` renderiza do
+  // mesmo jeito (a diretiva é dica de build). Renderizar de verdade importa
+  // aqui: a linha do ERP é MONTADA em runtime (`CONECTORES_NAO_PRONTOs.join`),
+  // então procurar o texto no fonte nunca acharia — foi o que me fez perder uma
+  // rodada. O Grok apontou que o guard antigo nem abria este arquivo.
+  preparar();
+  transpilar("components/PricingSection.tsx");
+  const mod = (await import(
+    pathToFileURL(join(CACHE, nomeSaida("components/PricingSection.tsx"))).href
+  )) as { default: () => unknown };
+  const h = texto(renderToStaticMarkup(React.createElement(mod.default as never)));
+  assert.ok(h.includes("Planos para o momento da sua loja"), "o pricing não renderizou");
+
+  // Os trechos que são DECISÃO ficam congelados no HTML renderizado.
+  for (const [nome, frag] of CONGELADOS_PRICING) {
+    assert.ok(h.includes(frag), `pricing perdeu o trecho congelado "${nome}": ${frag}`);
+  }
+
+  // E nenhuma menção a conector não pronto pode aparecer sem a ressalva, na
+  // mesma frase do HTML renderizado.
+  const f = await fatos();
+  for (const nome of f.CONECTORES_NAO_PRONTOs as string[]) {
+    for (const frase of h.split(/(?<=[.!?])\s+/)) {
+      if (!new RegExp(`\\b${nome}\\b`, "i").test(frase)) continue;
+      assert.match(
+        frase,
+        /ainda não|ainda nao|não dispon|nao dispon/i,
+        `pricing promete ${nome} sem ressalva: "${frase.trim()}"`,
+      );
+    }
+  }
+});
+
+test("legal: as duas páginas declaram a mesma data, vinda da fonte", async () => {
   const f = await fatos();
   for (const p of PAGINAS) {
     const src = readFileSync(join(RAIZ, p.caminho), "utf8");

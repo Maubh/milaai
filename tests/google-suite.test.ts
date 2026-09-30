@@ -510,10 +510,14 @@ test("google: a tela de conexão explica o limite do escopo", () => {
     "o aviso precisa dizer que a mila não recebe nem lê e-mail");
   assert.match(GW.GOOGLE_ESCOPO_NOTA, /não acessa sua agenda ou seu calendário/,
     "o aviso precisa dizer que a mila não acessa agenda/calendário");
-  // E precisa declarar o que RECEBE — para não virar 'não lemos sua caixa' como
-  // desculpa para omitir a identidade da conta que o openid entrega.
-  assert.match(GW.GOOGLE_ESCOPO_NOTA, /recebe apenas o identificador/,
-    "o aviso precisa declarar que só o identificador da conta é recebido");
+  // E precisa declarar o que RECEBE — sem alegar que a mila "sabe qual conta
+  // está conectada": o código não lê `id_token`/`userinfo` (0 ocorrências), quem
+  // amarra a conexão à loja é o tenant da sessão. O Grok mostrou que a versão
+  // anterior congelava uma frase sem lastro.
+  assert.match(GW.GOOGLE_ESCOPO_NOTA, /recebe um identificador que registra a conexão/,
+    "o aviso precisa descrever o que o openid realmente faz");
+  assert.doesNotMatch(GW.GOOGLE_ESCOPO_NOTA, /para saber qual conta está conectada/,
+    "a tela não sabe qual conta conectou — não pode afirmar isso");
   // Se o escopo `email` voltar ao app, este aviso vira mentira — o guard falha
   // pelo teste de escopos em `tests/legal.test.ts`.
   assert.doesNotMatch(GW.GOOGLE_ESCOPO_NOTA, /endereço de e-mail/i,

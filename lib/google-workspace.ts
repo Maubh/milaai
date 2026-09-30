@@ -89,5 +89,5 @@ export const PLANO_GOOGLE =
 export const GOOGLE_ESCOPO_NOTA =
   "A mila cria e mantém a planilha do seu caderno de fornecedores. Ela não abre " +
   "nem lista seus outros arquivos do Drive, não recebe nem lê seu e-mail e não " +
-  "acessa sua agenda ou seu calendário. Da conta Google ela recebe apenas o " +
-  "identificador, para saber qual conta está conectada.";
+  "acessa sua agenda ou seu calendário. Da conta Google ela recebe um " +
+  "identificador que registra a conexão — a tela não mostra o endereço da conta.";

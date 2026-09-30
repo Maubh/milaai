@@ -20,6 +20,15 @@ O leitor AST do OAuth ajuda a diagnosticar a lista de escopos, mas não resolve 
 
 Layouts, componentes de entorno listados e CSS também têm hashes revisados. Alterações exigem revisão explícita e atualização manual consciente, não apenas regenerar texto. Este bloqueio é conservador: até uma alteração legítima de estilo exige revisão.
 
+## Conjunto fechado de fontes
+
+`tests/legal-source-lock.test.ts` também compara o conjunto completo de fontes com `tests/legal-source-lock.json`: app/components/lib/public, arquivos raiz de código/configuração, Python do repositório e módulos de backend listados. Arquivo novo, removido ou alterado falha. Isso cobre helpers importados, novos layouts/CSS, mudança de classes e mutações OAuth fora do arquivo original.
+
+O lock NÃO é regenerado pelo script de copy. Para mudança legítima, é necessária nova revisão do código e atualização consciente do manifesto. O custo é deliberadamente conservador: alterações não relacionadas à copy nos diretórios protegidos também interrompem essa verificação. Ele congela uma versão revisada; não analisa semântica arbitrária e não promete cobrir código externo fora desses diretórios.
+
+- `python3 scripts/legal/prova_v9.py`: cinco mutações de fonte/novo layout/CSS/classe/Python externo.
+- `env NODE_ENV=production VERCEL=1 VERCEL_ENV=production npm test`: também conferir os snapshots em modo de produção.
+
 ## Limites
 
 - Texto normalizado não é uma fotografia visual, não é comparação de HTML byte a byte e não executa hidratação.

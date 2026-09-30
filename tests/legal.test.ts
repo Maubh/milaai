@@ -171,6 +171,32 @@ const CONGELADOS_PRICING: Array<[string, string]> = [
   ["jueri-disponivel", "Jueri disponível"],
 ];
 
+/**
+ * PARÁGRAFOS VISÍVEIS, exatos.
+ *
+ * Terceira camada contra o ataque mais sujo (verdade escondida ao lado da
+ * mentira). As camadas anteriores são: proibido por regex (frágil à redação),
+ * contagem de seção (frágil à estrutura). Esta compara o **parágrafo inteiro**
+ * com o esperado — a ordem das palavras não importa, porque o parágrafo é a
+ * unidade. "Os dados são automaticamente excluídos" passa por qualquer regex de
+ * verbo+advérbio, mas não é o parágrafo que está congelado.
+ */
+const EXATOS: Array<{
+  quando: string;
+  exato: (f: Record<string, unknown>) => string;
+}> = [
+  {
+    quando: "declaração de expurgo",
+    // O parágrafo é a NOTA (vinda da fonte) + a frase de expurgo (CONGELADA —
+    // é a decisão). Comparar o parágrafo inteiro é o que pega o ataque: uma
+    // frase a mais, contradizendo o resto, aparece como parágrafo diferente.
+    exato: (f) =>
+      f.EXPURGO_AUTOMATICO_ATIVO === true
+        ? String(f.RETENCAO_NOTA)
+        : `${f.RETENCAO_NOTA} Especificamente: a rotina automática de expurgo ainda não está no ar.`,
+  },
+];
+
 /** O que o HTML NUNCA pode conter, mesmo com a fonte mudando.
  *
  * A 3ª revisão do Grok mostrou que a 1ª versão era denylist de exemplos: cada
@@ -224,6 +250,20 @@ const PROIBIDOS: Array<[string, RegExp]> = [
  * `hidden` de QUALQUER forma. Elas não têm motivo para ter estilo inline.
  */
 const NAO_PODE_TER_ESTILO = /\sstyle\s*=|\shidden[\s/>=]|aria-hidden|dangerouslySetInnerHTML/i;
+
+/**
+ * Atributo que ESCONDE, procurado no HTML RENDERIZADO.
+ *
+ * O Grok derrubou a versão que varria o FONTE com denylist de `style=`/`hidden=`
+ * usando `{...{ style: { display: "none" } }}` — o spread não tem `=`, e o
+ * `texto()` não aplica CSS. No HTML renderizado o spread já virou atributo, então
+ * não há sintaxe de JSX que escape: se está no documento, está nos atributos.
+ */
+const ESCONDE_NO_HTML: Array<[string, RegExp]> = [
+  ["style inline", /<[a-z][^>]*\sstyle\s*=/i],
+  ["hidden", /<[a-z][^>]*\shidden(\s|>|=)/i],
+  ["aria-hidden", /<[a-z][^>]*\saria-hidden\s*=\s*["']true["']/i],
+];
 
 /** Texto visível: tags fora, entidades resolvidas.
  *
@@ -450,6 +490,49 @@ test("legal: cada seção aparece uma única vez (sem texto duplicado)", async (
   }
 });
 
+test("legal: os parágrafos decisivos são exatamente o esperado", async () => {
+  // Terceira camada. A denylist por regex depende da redação ("automaticamente
+  // excluídos" passava porque o advérbio vinha antes do verbo); a contagem de
+  // seção depende da estrutura. Aqui o parágrafo INTEIRO é a unidade: uma frase
+  // nova que contradiga o que está congelado aparece como parágrafo a mais, e
+  // falha — independentemente de como foi escrita.
+  const f = await fatos();
+  const html = await htmlDe(PAGINAS[0].caminho);
+
+  // extrai só os <p> visíveis (os que não estão dentro de bloco escondido — e
+  // esconder é proibido pelo teste de estilo, então aqui não há filtro extra)
+  const paragrafos = [...html.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/g)]
+    .map((m) => texto(m[1]))
+    .filter((s) => s.length > 0);
+
+  for (const caso of EXATOS) {
+    const esperado = caso.exato(f);
+    if (!esperado) continue; // quando a automação existe, não há o que declarar
+    assert.ok(
+      paragrafos.includes(esperado),
+      `${caso.quando}: o parágrafo exato não está no HTML.\n` +
+        `Esperado: "${esperado}"\n` +
+        `Parágrafos com "expurgo": ${JSON.stringify(paragrafos.filter((s) => /expurgo/i.test(s)))}`,
+    );
+  }
+
+  // E nenhum parágrafo pode afirmar sumiço automático de dado. Como o parágrafo
+  // é a unidade, qualquer ORDEM das palavras cai aqui: só precisa ter sujeito de
+  // dado, verbo de sumiço e advérbio na MESMA frase.
+  for (const s of paragrafos) {
+    if (!/\b(dados?|informa\w+|conte[uú]do|arquiv\w+|registr\w+|mensage\w+|nota|hist[oó]rico|payload)\b/i.test(s)) continue;
+    const temVerbo = /\b(apagad\w*|exclu[ií]d\w*|removid\w*|eliminad\w*|deletad\w*|expirad\w*)\b/i.test(s);
+    const temAdv = /\b(automaticamente|sozinh\w*)\b/i.test(s);
+    if (!(temVerbo && temAdv)) continue;
+    // é mentira? só é verdade se disser que NÃO acontece (e hoje não acontece)
+    assert.match(
+      s,
+      /\b(n[ãa]o|ainda n[ãa]o|sem rotina|n[ãa]o h[áa])\b/i,
+      `parágrafo afirma sumiço automático de dado, sem negar: "${s}"`,
+    );
+  }
+});
+
 test("legal: nenhum PROIBIDO aparece no HTML", async () => {
   for (const p of PAGINAS) {
     const h = texto(await htmlDe(p.caminho));
@@ -459,7 +542,7 @@ test("legal: nenhum PROIBIDO aparece no HTML", async () => {
   }
 });
 
-test("legal: nenhuma página esconde texto", () => {
+test("legal: nenhuma página esconde texto", async () => {
   // O `texto()` do guard não aplica CSS: `display:none` esconderia do titular e
   // não do teste. A 3ª revisão do Grok derrubou a versão anterior desta checagem
   // — era denylist de 4 literais, sem flag `i`, exigindo aspas simples/duplas,
@@ -470,6 +553,8 @@ test("legal: nenhuma página esconde texto", () => {
   // classe. Qualquer tentativa de esconder texto do titular falha aqui, seja
   // qual for a sintaxe.
   for (const p of PAGINAS) {
+    // (a) no FONTE: pega cedo e cobre o que ainda não é atributo (CSS em classe,
+    //     dangerouslySetInnerHTML). Sintaxe que escape aqui NÃO escapa de (b).
     const src = readFileSync(join(RAIZ, p.caminho), "utf8");
     assert.doesNotMatch(
       src,
@@ -477,6 +562,18 @@ test("legal: nenhuma página esconde texto", () => {
       `${p.nome}: usa style/hidden/aria-hidden/dangerouslySetInnerHTML — ` +
         "é assim que se esconde texto do titular sem esconder do teste",
     );
+
+    // (b) no HTML RENDERIZADO: é a checagem que fecha a classe. `{...{style:
+    //     {display:"none"}}}` não tem `=` no fonte e passava em (a); renderizado,
+    //     vira `style="..."` e não passa aqui.
+    const html = await htmlDe(p.caminho);
+    for (const [nome, re] of ESCONDE_NO_HTML) {
+      assert.doesNotMatch(
+        html,
+        re,
+        `${p.nome}: o HTML renderizado tem ${nome} — esconde conteúdo do titular`,
+      );
+    }
   }
 });
 
@@ -679,34 +776,104 @@ test("legal: a fonte REAL dos escopos (auth/oauth.py) bate com a lista publicada
 
   // O `python3` real lê e imprime só a lista de escopos do provider google.
   // Nada é importado/executado: `ast.parse` não roda o módulo.
+  // O script aplica TODA escrita que afete `scopes`, em ordem de linha: o
+  // literal inicial, mutação por Subscript (`PROVIDERS["google"]["scopes"] = …`)
+  // e `update()`. A versão anterior só lia o literal — o Grok mostrou que dava
+  // para trocar os escopos EM RUNTIME e a suíte ficava verde, comparando a lista
+  // publicada com um literal que ninguém mais usava.
   const script = [
     "import ast, json, sys",
-    "arvore = ast.parse(open(sys.argv[1], encoding='utf-8').read())",
-    "achado = None",
+    "src = open(sys.argv[1], encoding='utf-8').read()",
+    "arvore = ast.parse(src)",
+    "escopos = None",
+    "",
+    "def alvo_e_providers(no):",
+    "    if isinstance(no, ast.AnnAssign):",
+    "        return isinstance(no.target, ast.Name) and no.target.id == 'PROVIDERS'",
+    "    if isinstance(no, ast.Assign) and len(no.targets) == 1:",
+    "        return isinstance(no.targets[0], ast.Name) and no.targets[0].id == 'PROVIDERS'",
+    "    return False",
+    "",
+    "# 1. o literal inicial",
     "for no in ast.walk(arvore):",
-    "    alvo = valor = None",
-    "    if isinstance(no, ast.AnnAssign) and isinstance(no.target, ast.Name):",
-    "        alvo, valor = no.target.id, no.value",
-    "    elif isinstance(no, ast.Assign) and len(no.targets) == 1 and isinstance(no.targets[0], ast.Name):",
-    "        alvo, valor = no.targets[0].id, no.value",
-    "    if alvo == 'PROVIDERS' and isinstance(valor, ast.Dict):",
-    "        mapa = valor",
-    "        if isinstance(mapa, ast.Dict):",
-    "            for chave, valor in zip(mapa.keys, mapa.values):",
-    "                if isinstance(chave, ast.Constant) and chave.value == 'google':",
-    "                    if isinstance(valor, ast.Dict):",
-    "                        for k2, v2 in zip(valor.keys, valor.values):",
-    "                            if isinstance(k2, ast.Constant) and k2.value == 'scopes':",
-    "                                achado = ast.literal_eval(v2)",
-    "print(json.dumps(achado))",
+    "    if alvo_e_providers(no) and isinstance(no.value, ast.Dict):",
+    "        for chave, valor in zip(no.value.keys, no.value.values):",
+    "            if isinstance(chave, ast.Constant) and chave.value == 'google' and isinstance(valor, ast.Dict):",
+    "                for k2, v2 in zip(valor.keys, valor.values):",
+    "                    if isinstance(k2, ast.Constant) and k2.value == 'scopes':",
+    "                        escopos = ast.literal_eval(v2)",
+    "",
+    "# 2. QUALQUER escrita posterior, em ordem de linha",
+    "escritas = []",
+    "for no in ast.walk(arvore):",
+    "    if alvo_e_providers(no):",
+    "        continue  # o literal já foi aplicado",
+    "    alvo = None",
+    "    if isinstance(no, ast.Assign) and len(no.targets) == 1:",
+    "        alvo = no.targets[0]",
+    "    elif isinstance(no, ast.AnnAssign):",
+    "        alvo = no.target",
+    "    if alvo is not None:",
+    "        # cadeia de subscrito enraizada em PROVIDERS?",
+    "        partes = []",
+    "        cur = alvo",
+    "        while isinstance(cur, ast.Subscript):",
+    "            partes.append(ast.literal_eval(cur.slice))",
+    "            cur = cur.value",
+    "        if isinstance(cur, ast.Name) and cur.id == 'PROVIDERS':",
+    "            partes.reverse()",
+    "            escritas.append((no.lineno, partes, no.value))",
+    "    if isinstance(no, ast.Expr) and isinstance(no.value, ast.Call):",
+    "        f = no.value.func",
+    "        if isinstance(f, ast.Attribute) and f.attr == 'update':",
+    "            partes = []",
+    "            cur = f.value",
+    "            while isinstance(cur, ast.Subscript):",
+    "                partes.append(ast.literal_eval(cur.slice))",
+    "                cur = cur.value",
+    "            if isinstance(cur, ast.Name) and cur.id == 'PROVIDERS':",
+    "                partes.reverse()",
+    "                escritas.append((no.lineno, partes, no.value.args[0] if no.value.args else None))",
+    "",
+    "for _, partes, valor in sorted(escritas, key=lambda x: x[0]):",
+    "    try:",
+    "        if partes == ['google', 'scopes']:",
+    "            escopos = ast.literal_eval(valor)",
+    "        elif partes == ['google'] and isinstance(valor, ast.Dict):",
+    "            for k2, v2 in zip(valor.keys, valor.values):",
+    "                if isinstance(k2, ast.Constant) and k2.value == 'scopes':",
+    "                    escopos = ast.literal_eval(v2)",
+    "    except Exception:",
+    "        pass  # escrita não literal não dá para resolver sem executar",
+    "",
+    "# 3. rede de segurança: escrita em 'scopes' que NÃO conseguimos resolver",
+    "bruto = src",
+    "sospeitos = []",
+    "for no in ast.walk(arvore):",
+    "    if isinstance(no, ast.Assign) and len(no.targets) == 1 and isinstance(no.targets[0], ast.Subscript):",
+    "        if isinstance(no.targets[0].slice, ast.Constant) and no.targets[0].slice.value == 'scopes':",
+    "            try:",
+    "                ast.literal_eval(no.value)",
+    "            except Exception:",
+    "                sospeitos.append(no.lineno)",
+    "print(json.dumps({'escopos': escopos, 'nao_resolvidas': sospeitos}))",
   ].join("\n");
 
   const cache = join(CACHE, "_leitor_escopos.py");
   writeFileSync(cache, script);
   const saida = execFileSync("python3", [cache, fonte], { encoding: "utf8" }).trim();
-  assert.notEqual(saida, "null", "não achei PROVIDERS['google']['scopes'] na AST");
+  const lido = JSON.parse(saida) as { escopos: string[] | null; nao_resolvidas: number[] };
+  assert.notEqual(lido.escopos, null, "não achei PROVIDERS['google']['scopes'] na AST");
+  // Escrita em `scopes` que o leitor não conseguiu resolver (valor não literal)
+  // é motivo para falhar: pode ser exatamente o runtime escapando do guard.
+  assert.deepEqual(
+    lido.nao_resolvidas,
+    [],
+    `escrita não-literal em 'scopes' nas linhas ${lido.nao_resolvidas.join(", ")} — ` +
+      "o guard não consegue provar o que o app pede",
+  );
 
-  const reais = JSON.parse(saida) as string[];
+  const reais = lido.escopos as string[];
   assert.ok(reais.length > 0, "PROVIDERS['google']['scopes'] está vazio");
 
   // 1. tudo que o app pede está publicado

@@ -1,9 +1,27 @@
 import Link from "next/link";
 
+import {
+  ATUALIZADO_EM,
+  CONECTORES_DISPONIVEIS,
+  CONECTORES_NAO_PRONTOs,
+  CONECTORES_VALIDACAO_PENDENTE,
+  CONTATO_PRIVACIDADE,
+  DADOS_TRATADOS,
+  DECISAO_AUTOMATIZADA_TEXTO,
+  EXPURGO_AUTOMATICO_ATIVO,
+  FUNCOES,
+  INSTAGRAM,
+  NAO_FEITO,
+  RETENCAO,
+  RETENCAO_NOTA,
+  SUBCONTROLADORES,
+  TITULARES,
+} from "@/lib/legal";
+
 export const metadata = {
   title: "Política de privacidade — mila.",
   description:
-    "Como a mila. trata dados no piloto: WhatsApp, site, OTP e subprocessadores.",
+    "Como a mila. trata dados: WhatsApp, site, login, IA, integrações e transferência internacional.",
 };
 
 export default function PrivacidadePage() {
@@ -15,210 +33,183 @@ export default function PrivacidadePage() {
       <h1 className="auth-minimal-title">Política de privacidade</h1>
       <p className="auth-minimal-lede">
         Como tratamos informações no piloto da mila. — assistente de negócios no
-        WhatsApp para lojas de joias e semijoias. Última atualização: 27 de
-        setembro de 2026.
+        WhatsApp para lojas de joias e semijoias. Última atualização:{" "}
+        {ATUALIZADO_EM}.
       </p>
       <div className="legal-body">
         <h2>1. Quem somos</h2>
         <p>
           Esta política descreve o tratamento de dados no site{" "}
           <strong>milaai.com.br</strong>, no workspace web e no canal WhatsApp
-          da <strong>mila.</strong> Neste piloto, o serviço é operado pela
-          equipe fundadora sob a marca mila.; razão social e CNPJ serão
-          atualizados aqui quando a empresa estiver constituída. Não há
-          encarregado (DPO) nomeado nesta fase: o contato de privacidade é a
-          própria equipe fundadora.
+          da <strong>mila.</strong> O serviço é operado pela equipe fundadora sob
+          a marca mila.; razão social e CNPJ serão publicados aqui quando a
+          empresa estiver constituída.
         </p>
         <p>
-          Contato:{" "}
-          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>{" "}
-          (encaminhado à equipe). Instagram: @usemila.ai.
+          Na relação com a loja — conta, plano e cobrança — a mila. é a{" "}
+          <strong>controladora</strong> dos dados. Nos dados que a loja cadastra
+          sobre a própria operação (custos, notas, fornecedores), a mila. atua
+          como <strong>operadora</strong>, a serviço da loja, que é quem decide
+          o que registrar.
         </p>
-
-        <h2>2. Escopo deste piloto</h2>
         <p>
-          O acesso é restrito a founders e números autorizados (lista
-          controlada). Partes do site ainda são demonstrativas, como os mockups.
-          O login com código por WhatsApp, quando
-          liberado para o seu número, é um fluxo real: o telefone chega aos
-          nossos servidores e ao provedor de mensagem.
+          <strong>Encarregado (DPO):</strong> a ANPD dispensou o agente de
+          pequeno porte da indicação formal de encarregado. O canal de
+          comunicação com o titular é obrigatório e existe — é o contato no fim
+          desta página, com resposta em até 15 dias.
         </p>
 
-        <h2>3. O que coletamos</h2>
-        <p>Dependendo de como você usa a mila., podemos tratar:</p>
+        <h2>2. De quem são os dados</h2>
+        <p>Neste serviço, os titulares são:</p>
         <ul>
-          <li>
-            <strong>Dados de conta e contato</strong> — número de WhatsApp,
-            código de verificação de vida curta, indicação de plano/autorização
-            e status de verificação.
-          </li>
-          <li>
-            <strong>Conteúdo que você envia no WhatsApp</strong> — mensagens,
-            fotos de peças, notas fiscais (XML/PDF), perguntas sobre preço,
-            estoque, fornecedores ou marketing.
-          </li>
-          <li>
-            <strong>Dados de uso do site</strong> — páginas visitadas, eventos
-            técnicos de login, IP e sinais do navegador na medida necessária
-            para segurança, inclusive verificação anti-robô da Cloudflare
-            (Turnstile) no login.
-          </li>
-          <li>
-            <strong>Dados de integrações (quando o recurso estiver ligado e
-            você conectar)</strong>{" "}
-            — metadados e credenciais necessárias para agir na sua conta
-            (Google Workspace, Notion, Jueri, Olist, Bling etc.). A intenção de
-            produto é guardar essas credenciais só nos nossos servidores e
-            mostrar na interface apenas o status de conexão; isso ainda está em
-            implantação.
-          </li>
+          {TITULARES.map((t) => (
+            <li key={t}>{t}</li>
+          ))}
         </ul>
         <p>
-          Sobre notas fiscais: a loja é a controladora dos dados fiscais e dos
-          dados de clientes/fornecedores que aparecem no documento. A mila. trata
-          esse conteúdo como operadora, para prestar o serviço que você pediu.
+          A mila. <strong>não trata dados de clientes finais da loja</strong>:
+          não há CRM, histórico de vendas a consumidores nem base de compradores.
+          O escopo é a operação interna da loja.
         </p>
 
-        <h2>4. Para que usamos (bases)</h2>
-        <p>
-          Em regra, tratamos dados para executar o que você pediu (prestação do
-          serviço e autenticação), para segurança anti-abuso e, quando couber,
-          para cumprir obrigação legal. Em detalhe:
-        </p>
+        <h2>3. O que o serviço faz</h2>
         <ul>
-          <li>Autenticar o acesso (código por WhatsApp) e reconhecer sua loja.</li>
-          <li>
-            Prestar o serviço: precificação, leitura de notas, respostas no
-            WhatsApp e funções liberadas no piloto.
-          </li>
-          <li>
-            Segurança: anti-abuso, limite de tentativas e suporte aos
-            autorizados.
-          </li>
-          <li>Cumprir obrigações legais e pedidos legítimos de autoridade.</li>
-          <li>
-            Melhorar o produto com métricas agregadas ou dados desidentificados,
-            sem vender sua base.
-          </li>
+          {FUNCOES.map((f) => (
+            <li key={f}>{f}</li>
+          ))}
         </ul>
-        <p>
-          <strong>Treino de modelos:</strong> a mila. não treina modelo próprio
-          com o conteúdo da sua loja (mensagens, NF-e, fotos, custos). Como
-          política de produto, não enviamos esse conteúdo a terceiros para
-          treinar modelos de fundação. O provedor de modelo de IA ainda será
-          escolhido; quando for definido, nomearemos nesta página. Configurações
-          e contratos desse provedor serão alinhados a esta política.
-        </p>
+        <p>{DECISAO_AUTOMATIZADA_TEXTO}</p>
+
+        <h2>4. Quais dados são tratados e para onde vão</h2>
+        <ul>
+          {DADOS_TRATADOS.map((d) => (
+            <li key={d.dado}>
+              <strong>{d.dado}</strong> — {d.destino}
+            </li>
+          ))}
+        </ul>
 
         <h2>5. Com quem compartilhamos (subprocessadores)</h2>
         <p>
-          Não vendemos seus dados. Para operar o piloto, usamos prestadores que
-          processam informações em nosso nome, por exemplo:
+          Não vendemos dados. Para operar, usamos prestadores que processam
+          informações <em>em nosso nome e por nossa conta</em>. São eles:
         </p>
         <ul>
-          <li>
-            <strong>Provedor de modelo de IA (LLM) — a definir</strong> —
-            recebe trechos necessários do pedido (texto, descrição de imagem ou
-            dados já reduzidos) para gerar a resposta.
-          </li>
-          <li>
-            <strong>MegaAPI</strong> — transporte da mensagem no WhatsApp (texto
-            e mídia). O app WhatsApp / Meta também participa do transporte da
-            mensagem que você envia e recebe.
-          </li>
-          <li>
-            <strong>Vercel</strong> — hospedagem do site e do workspace.
-          </li>
-          <li>
-            <strong>Cloudflare</strong> — DNS, túnel, proteção do endpoint de
-            autenticação/WhatsApp e verificação anti-robô no login.
-          </li>
-          <li>
-            <strong>Provedores de busca/visão</strong> (quando ligados, ex.:
-            pesquisa de preço) — apenas o necessário para a tarefa.
-          </li>
+          {SUBCONTROLADORES.map((s) => (
+            <li key={s.nome}>
+              <strong>{s.nome}</strong> — {s.papel}
+            </li>
+          ))}
         </ul>
         <p>
-          Esses prestadores podem processar dados fora do Brasil. Estamos
-          formalizando contratos e configurações alinhados a essa prestação
-          neste piloto.
-        </p>
-        <p>
-          Quando um conector estiver disponível e você autorizar (Google,
-          Notion, ERP etc.), a mila. acessa essa conta <em>em seu nome</em>, nos
-          limites da permissão concedida. Isso é a sua integração — distinto dos
-          subprocessadores acima.
+          Vários desses prestadores processam dados{" "}
+          <strong>fora do Brasil</strong>, principalmente nos Estados Unidos.
+          Isso é uma transferência internacional de dados (LGPD, art. 33),
+          amparada em cláusulas contratuais e no legítimo interesse de operar o
+          serviço.
         </p>
 
-        <h2>6. Separação entre lojas</h2>
+        <h2>6. Integrações que a loja conecta</h2>
         <p>
-          A meta do produto é tratar cada loja como um espaço separado:
-          operadores da mesma loja podem compartilhar o ambiente; lojas
-          diferentes não devem ver dados umas das outras. Esse isolamento está
-          sendo reforçado no piloto. A intenção é registrar acessos
-          excepcionais de suporte pela equipe fundadora; o registro sistemático
-          ainda está em implantação.
+          Quando a lojista autoriza um conector, a mila. age na conta{" "}
+          <em>em nome dela</em>, nos limites da permissão concedida. Isso é
+          distinto dos subprocessadores acima.
         </p>
-
-        <h2>7. Retenção</h2>
-        <p>Enquanto o piloto estiver ativo, a proposta de guarda é:</p>
+        <p>
+          <strong>Disponíveis hoje:</strong>
+        </p>
         <ul>
-          <li>Código de verificação (OTP): minutos (vida curta).</li>
-          <li>Histórico operacional de chat: até cerca de 90 dias, ou até exclusão.</li>
-          <li>NF-e / XML processados: até cerca de 180 dias, ou até exclusão.</li>
-          <li>Fotos de peça: até cerca de 90 dias, ou até exclusão.</li>
-          <li>Logs técnicos: até cerca de 30 dias, com o mínimo necessário.</li>
-          <li>
-            Credenciais de integração (quando existirem): até você desconectar
-            ou pedirmos revogação.
-          </li>
+          {CONECTORES_DISPONIVEIS.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
         </ul>
         <p>
-          Esses prazos são alvo do piloto; a exclusão neste momento é sob
-          pedido pelo e-mail de privacidade. A mila. não substitui a obrigação
-          da loja de guardar documentos fiscais nos prazos legais.
+          <strong>Disponíveis, com validação em andamento:</strong>
+        </p>
+        <ul>
+          {CONECTORES_VALIDACAO_PENDENTE.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
+        <p>
+          <strong>Anunciados e ainda não disponíveis:</strong>{" "}
+          {CONECTORES_NAO_PRONTOs.join(", ")}. A tela de conexão existe, mas o
+          acesso ainda não foi habilitado. Não conte com eles para a operação da
+          sua loja por enquanto.
         </p>
 
-        <h2>8. Seus direitos (LGPD)</h2>
+        <h2>7. Por quanto tempo guardamos</h2>
+        <ul>
+          {RETENCAO.map((r) => (
+            <li key={r.item}>
+              <strong>{r.item}</strong> — {r.praticado}
+              {r.alvo !== "não definido" ? ` Alvo: ${r.alvo}.` : ""}
+            </li>
+          ))}
+        </ul>
+        <p>
+          {RETENCAO_NOTA}
+          {EXPURGO_AUTOMATICO_ATIVO
+            ? ""
+            : " Importante ser transparente: a rotina automática de expurgo ainda não está no ar — enquanto isso, a exclusão é feita pela equipe sob pedido."}
+        </p>
+
+        <h2>8. Isolamento entre lojas</h2>
+        <p>
+          Cada loja é um espaço separado: operadores da mesma loja compartilham o
+          ambiente; lojas diferentes não veem dados umas das outras. O acesso é
+          restrito por lista de números autorizados.
+        </p>
+
+        <h2>9. Seus direitos (LGPD)</h2>
         <p>
           Você pode pedir confirmação de tratamento, acesso, correção,
           anonimização, portabilidade (quando aplicável), eliminação e
-          informação sobre compartilhamentos. No piloto, esses pedidos são
-          atendidos pela equipe fundadora pelo e-mail{" "}
-          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>, em
-          até 15 dias, prorrogáveis na forma da LGPD. Também é possível
+          informação sobre compartilhamentos. Os pedidos são atendidos pelo
+          e-mail{" "}
+          <a href={`mailto:${CONTATO_PRIVACIDADE}`}>{CONTATO_PRIVACIDADE}</a>,
+          em até 15 dias, prorrogáveis na forma da LGPD. Também é possível
           reclamar à ANPD.
         </p>
 
-        <h2>9. Segurança</h2>
+        <h2>10. Segurança</h2>
         <p>
-          No piloto de hoje aplicamos controles proporcionais: segredos de
+          Aplicamos controles proporcionais ao porte do serviço: segredos de
           autenticação fora do navegador, acesso por lista de números
-          autorizados e limite de tentativas. Estamos implantando confirmação
-          antes de ações que alteram dados, redução de dados sensíveis em logs e
-          respostas, e privilégio mínimo por plano. Nenhum sistema é perfeito;
-          respostas de IA podem errar — revise preço, estoque e textos
-          importantes antes de usar.
+          autorizados, limite de tentativas, senhas e códigos guardados apenas
+          em hash, credenciais de integração em cofre cifrado e isolamento entre
+          lojas.
+        </p>
+        <p>
+          Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço,
+          estoque e textos importantes antes de usar.
         </p>
 
-        <h2>10. Crianças</h2>
+        <h2>11. O que não fazemos</h2>
+        <ul>
+          {NAO_FEITO.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+
+        <h2>12. Crianças</h2>
         <p>
           O serviço é voltado a titulares de negócio adultos. Não coletamos de
           forma consciente dados de menores de 18 anos.
         </p>
 
-        <h2>11. Mudanças</h2>
+        <h2>13. Mudanças</h2>
         <p>
           Podemos atualizar esta política. A versão vigente fica sempre nesta
-          página, com a data no topo. Mudanças materiais no piloto serão
-          comunicadas de forma razoável (site e/ou WhatsApp).
+          página, com a data no topo. Mudanças materiais serão comunicadas de
+          forma razoável (site e/ou WhatsApp).
         </p>
 
-        <h2>12. Contato</h2>
+        <h2>14. Contato</h2>
         <p>
-          Dúvidas:{" "}
-          <a href="mailto:privacy@milaai.com.br">privacy@milaai.com.br</a>.
-          Instagram: @usemila.ai.
+          Privacidade e dados:{" "}
+          <a href={`mailto:${CONTATO_PRIVACIDADE}`}>{CONTATO_PRIVACIDADE}</a>.
+          Instagram: {INSTAGRAM}.
         </p>
       </div>
     </div>

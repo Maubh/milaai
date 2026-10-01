@@ -127,7 +127,7 @@
   "backend/mila_router/balanco_runner.py": "6a0abe07d3d327b650aacecd37e256266a0e26b7aa3daaf6e7a4851c1ed33c7a",
   "backend/mila_router/conversation.py": "abe04ce934a412b1ef088266f12160e15ca4b25693d504fce3653d825be1b7e4",
   "backend/mila_router/custo_runner.py": "a85caf7384f71254a7a5d9f999bb47df28792edb6845a1bea6b30ac9a84be9ad",
-  "backend/mila_router/estoque_analise.py": "06375866cd1a468f3d98f059420de4bd2bedaa18bdf4cf025a1a7e540d5c9002",
+  "backend/mila_router/estoque_analise.py": "0403ccfc81be8af1280024745b03b79e1f192825212a96d262844669be08ad2b",
   "backend/mila_router/flow.py": "d49a92d567af86f64eba5b793e7f3fc851e996b056ed492d9d819cf877d3cabe",
   "backend/mila_router/handlers.py": "7255e5ea6c7bce4c93f215fb10c840d87b2989f0eee4d670f11c46b94cce5350",
   "backend/mila_router/ig_skills.py": "b06a1074e7d66d8c2ca909184381fbca72f18d3d1232a531644a9776f6fe5bfa",

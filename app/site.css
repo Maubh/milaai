@@ -222,9 +222,9 @@
   color: rgba(30, 43, 40, 0.62);
 }
 .footer-minimal-inner p { margin: 0; }
+.footer-minimal-inner a { text-decoration: none; color: inherit; }
+.footer-minimal-inner a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .footer-minimal-inner nav { display: flex; gap: 1.2rem; }
-.footer-minimal-inner nav a { text-decoration: none; color: inherit; }
-.footer-minimal-inner nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .auth-minimal-back-top { margin: 0 0 1.6rem; }
 
 /* Minimal landing: one viewport, left column + iPhone */

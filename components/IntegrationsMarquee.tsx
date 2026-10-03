@@ -53,6 +53,7 @@ const INTEGRATIONS: IntegrationItem[] = [
     id: "bling",
     name: "Bling",
     showName: false,
+    badge: "Em breve",
     color: "#002726",
     icon: (
       <img src="/integrations/bling-ink.svg" alt="" />
@@ -62,7 +63,6 @@ const INTEGRATIONS: IntegrationItem[] = [
     id: "olist",
     name: "Olist",
     showName: false,
-    badge: "Em breve",
     color: "#0A4EE4",
     icon: (
       <img src="/integrations/olist.svg" alt="" />

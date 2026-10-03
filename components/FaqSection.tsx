@@ -17,6 +17,14 @@ const FAQ_ITEMS: FaqItem[] = [
     ),
   },
   {
+    question: "Preciso repetir as taxas da minha maquininha ou meus custos a cada conversa?",
+    answer: (
+      <>
+        Não. A <span className="mila-highlight">mila</span> guarda as informações da sua loja conforme vocês conversam. Se você avisar a taxa média do cartão, os custos com embalagens ou o nome dos seus fornecedores, ela usa esses valores nos próximos cálculos. Quando você pedir para precificar outra peça semanas depois, a conta já sai com as suas regras.
+      </>
+    ),
+  },
+  {
     question: "Como funciona a publicação e consulta na Nuvemshop?",
     answer: (
       <>

@@ -36,7 +36,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Como a mila ajuda quem usa Phibo, Jueri ou Olist?",
     answer: (
       <>
-        Para a Phibo, a <span className="mila-highlight">mila</span> entrega no WhatsApp uma planilha formatada exatamente no layout oficial de importação do sistema (com NCM 71132000 de semijoias, códigos hexadecimais de banho, preços e categorias), pronta para você importar em segundos. Para Jueri e Olist (Tiny), você conta com conexão direta para gestão de estoque e notas.
+        Para a Phibo, a <span className="mila-highlight">mila</span> entrega no WhatsApp uma planilha formatada exatamente no layout oficial de importação do sistema, pronta para você importar em segundos. Para Jueri e Olist (Tiny), você conta com conexão direta para gestão de estoque e notas.
       </>
     ),
   },

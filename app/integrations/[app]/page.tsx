@@ -64,6 +64,13 @@ const KNOWN: Record<string, IntegrationConfig> = {
     logo: "/integrations/olist.svg",
     isApiKeyGuided: false,
   },
+  nuvemshop: {
+    nome: "Nuvemshop",
+    title: "Conectar Nuvemshop",
+    desc: "Cadastre produtos com foto, descrição e preço na sua loja virtual em 1 clique pelo WhatsApp.",
+    logo: "/integrations/nuvemshop.svg",
+    isApiKeyGuided: false,
+  },
   google: {
     nome: "Google Workspace",
     // "Conectar Google Workspace" sugeria a suíte inteira (e a pasta do Drive).

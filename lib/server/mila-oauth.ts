@@ -11,7 +11,7 @@ export async function currentSessionToken(): Promise<string | null> {
 export const GUIDED_PROVIDERS = ["jueri", "notion"] as const;
 
 /** Conectores OAuth de app. Whitelist única: nada de slug livre no path. */
-export const OAUTH_PROVIDERS = ["olist", "bling", "google"] as const;
+export const OAUTH_PROVIDERS = ["olist", "nuvemshop", "bling", "google"] as const;
 
 export const ALL_PROVIDERS = [...OAUTH_PROVIDERS, ...GUIDED_PROVIDERS] as const;
 

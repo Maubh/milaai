@@ -9,46 +9,34 @@ interface FaqItem {
 
 const FAQ_ITEMS: FaqItem[] = [
   {
-    question: "A mila serve para quem vende joias e semijoias?",
+    question: "Como a mila ajuda quem vende joias e semijoias no dia a dia?",
     answer: (
       <>
-        Sim. A proposta considera os dois segmentos. Ao analisar uma peça, informe a categoria,
-        os materiais e os custos reais: uma joia e uma semijoia podem exigir composições de custo
-        e descrições diferentes.
+        A <span className="mila-highlight">mila</span> atua como o braço direito da empresária de semijoias: calcula o preço de venda com margem real (Raio-X), analisa custos de banho e pedraria, pesquisa preços da concorrência no Google Shopping, lê notas fiscais de compra (XML e PDF) e cria legendas e carrosséis magnéticos para o Instagram.
       </>
     ),
   },
   {
-    question: "Qual plano combina com a minha loja?",
+    question: "Como funciona a publicação e consulta na Nuvemshop?",
     answer: (
       <>
-        O Essencial começa pela peça: custos, margem, pesquisa de mercado e descrição. No Pro,
-        você amplia esse apoio para a rotina da loja, com visão de compras e faturamento, alertas
-        de fornecedores, integrações de estoque e notas, além de ferramentas de conteúdo.
+        No plano Pro, você conecta sua loja Nuvemshop via OAuth seguro em 1 clique. Pelo WhatsApp, você pode consultar estoque e preços de qualquer peça em tempo real e publicar novos produtos com foto real, descrição técnica completa e preço de venda já calculado, sem precisar abrir o computador.
       </>
     ),
   },
   {
-    question: "Preciso instalar algum aplicativo no computador ou celular?",
+    question: "Como a mila ajuda quem usa Phibo, Jueri ou Olist?",
     answer: (
       <>
-        Não para explorar a prévia no site. A proposta da <span className="mila-highlight">mila</span> é conversar com você pelo WhatsApp, sem exigir outro aplicativo.
+        Para a Phibo, a <span className="mila-highlight">mila</span> entrega no WhatsApp uma planilha formatada exatamente no layout oficial de importação do sistema (com NCM 71132000 de semijoias, códigos hexadecimais de banho, preços e categorias), pronta para você importar em segundos. Para Jueri e Olist (Tiny), você conta com conexão direta para gestão de estoque e notas.
       </>
     ),
   },
   {
-    question: "Estou começando agora e ainda não tenho Instagram nem site. Serve para mim?",
+    question: "O que são as Vitrines Web e Catálogos em PDF?",
     answer: (
       <>
-        Com certeza! A <span className="mila-highlight">mila</span> te ajuda a calcular seus custos desde a primeira peça, sugere preços justos e ainda cria o nome e a Bio do seu Instagram do zero.
-      </>
-    ),
-  },
-  {
-    question: "A descrição serve para qual plataforma de e-commerce?",
-    answer: (
-      <>
-        Serve para qualquer uma (Nuvemshop, Shopify, WooCommerce, catálogo do WhatsApp ou ERPs como Jueri, Bling e Olist). É só copiar e colar a ficha técnica já formatada.
+        São páginas públicas interativas e catálogos elegantes em PDF gerados automaticamente com as fotos reais das suas peças. O cliente navega pelas coleções no celular e clica em um botão direto para comprar com você no WhatsApp, sem intermediários de pagamento nem taxas sobre as suas vendas.
       </>
     ),
   },
@@ -56,7 +44,23 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Como funciona o caderno de fornecedores e o alerta de carência?",
     answer: (
       <>
-        Você registra seus fornecedores no chat e a <span className="mila-highlight">mila</span> te avisa no WhatsApp antes de vencer o prazo para você não perder o benefício de comprar sem pedido mínimo.
+        Você registra os dados e prazos dos seus fabricantes de confiança e a <span className="mila-highlight">mila</span> te avisa no WhatsApp antes de vencer o prazo de carência, evitando que você perca o benefício de comprar reposições sem exigência de pedido mínimo.
+      </>
+    ),
+  },
+  {
+    question: "Preciso instalar algum aplicativo no computador ou celular?",
+    answer: (
+      <>
+        Não. Toda a sua rotina com a <span className="mila-highlight">mila</span> acontece no aplicativo que você já usa o dia todo: o <strong>WhatsApp</strong>. Você envia áudios, fotos de peças e notas fiscais e recebe respostas e arquivos prontos na hora.
+      </>
+    ),
+  },
+  {
+    question: "Qual é a diferença entre o Plano Essencial e o Plano Pro?",
+    answer: (
+      <>
+        O <strong>Essencial (R$ 39/mês)</strong> é ideal para quem quer precificação precisa com margem real, radar de concorrentes, leitor de notas fiscais, caderno sincronizado no Google Planilhas e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> desbloqueia a automação completa da loja: integração com Nuvemshop no WhatsApp, vitrines e catálogos PDF ilimitados, conexões com ERPs (Jueri, Olist e planilha pronta para Phibo), projeção de faturamento e criação de conteúdo para Instagram.
       </>
     ),
   },
@@ -64,7 +68,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Preciso cadastrar cartão de crédito para começar?",
     answer: (
       <>
-        Não. Você entra com seu número de WhatsApp e já começa a testar na hora sem compromisso.
+        Não. Você entra com seu número de WhatsApp e já começa a testar a experiência na hora, sem compromisso e sem precisar cadastrar cartão.
       </>
     ),
   },

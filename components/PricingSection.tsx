@@ -76,7 +76,7 @@ const PLANS: PlanItem[] = [
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
       PLANO_ERP,
-      "Marketing de Instagram: legendas magnéticas, carrosséis, ideias de Reels e calendário semanal",
+      "Marketing de Instagram: legendas magnéticas, carrosséis, ideias de Reels e planejamento semanal",
     ],
     ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",

@@ -926,7 +926,8 @@
     transform: translateY(0);
   }
 }
-.gx-file {
+.gx-file,
+.gx-notion-card {
   display: flex;
   align-items: center;
   gap: 0.55rem;
@@ -948,18 +949,31 @@
   font-size: 0.6rem;
   font-weight: 800;
 }
-.gx-file > span:last-child {
+.gx-notion-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.38rem;
+  background: #111111;
+  color: #fff;
+}
+.gx-file > span:last-child,
+.gx-notion-card > span:last-child {
   display: grid;
   gap: 0.08rem;
   min-width: 0;
 }
-.gx-file strong {
+.gx-file strong,
+.gx-notion-card strong {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 0.72rem;
 }
-.gx-file small { font-size: 0.63rem; opacity: 0.72; }
+.gx-file small,
+.gx-notion-card small { font-size: 0.63rem; opacity: 0.72; }
 
 .faq-answer {
   font-size: 0.93rem;

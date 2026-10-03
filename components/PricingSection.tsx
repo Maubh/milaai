@@ -18,6 +18,9 @@ export const PLANO_VITRINE_ESSENCIAL =
 export const PLANO_VITRINE_PRO =
   "Vitrines web ilimitadas e catálogos em PDF ilimitados com fotos reais";
 
+export const PLANO_NUVEMSHOP_PRO =
+  "Integração com Nuvemshop: consulta de estoque, preços e publicação de produtos direto no WhatsApp";
+
 interface PlanItem {
   id: string;
   name: string;
@@ -68,11 +71,12 @@ const PLANS: PlanItem[] = [
     description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
+      PLANO_NUVEMSHOP_PRO,
       PLANO_VITRINE_PRO,
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
       PLANO_ERP,
-      "Marketing de Instagram: legenda, carrossel, hashtags, bio, plano de conteúdo e reaproveitamento",
+      "Marketing de Instagram: legendas magnéticas, carrosséis, ideias de Reels e calendário semanal",
     ],
     ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",

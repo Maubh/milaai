@@ -7,38 +7,36 @@ interface ItemVitrine {
   nome: string;
   precoVenda: number;
   fotoUrl: string;
-  descricao?: string;
-  sku?: string;
+  descricao?: string | null;
+  sku?: string | null;
 }
 
-interface VitrineData {
-  sucesso: boolean;
+interface VitrineResponse {
+  ok: boolean;
   loja: {
-    nome: string;
     slug: string;
-    whatsapp: string;
-    logoUrl?: string;
-    cores: {
-      primaria: string;
-      secundaria: string;
-      destaque: string;
-    };
-    tipografia: {
-      heading: string;
-      body: string;
-    };
+    nomeExibicao: string;
+    whatsappContato: string;
+    corPrimaria: string;
+    corSecundaria: string;
+    corDestaque: string;
+    tipografiaHeading: string;
+    tipografiaBody: string;
+    logoUrl?: string | null;
     plano: string;
   };
-  colecao: {
-    slug: string;
-    titulo: string;
-    expiraEm: number | null;
+  vitrine: {
+    id: string;
+    slugColecao: string;
+    tituloColecao: string;
+    descricao?: string | null;
+    expiraEm?: number | null;
     itens: ItemVitrine[];
   };
 }
 
-async function getShowcase(slugLoja: string, slugColecao: string): Promise<VitrineData | null> {
-  const apiUrl = process.env.MILA_INTERNAL_API_URL || "https://api.milaai.com.br";
+async function getShowcase(slugLoja: string, slugColecao: string): Promise<VitrineResponse | null> {
+  const apiUrl = process.env.MILA_INTERNAL_API_URL || "https://wa.milaai.com.br";
   const token = process.env.MILA_INTERNAL_HMAC_SECRET || "mila_internal_hmac_secret_2026";
 
   try {
@@ -76,19 +74,20 @@ export async function generateMetadata({
   const { slugLoja, slugColecao } = await params;
   const data = await getShowcase(slugLoja, slugColecao);
 
-  if (!data) {
+  if (!data || !data.ok || !data.loja || !data.vitrine) {
     return {
       title: "Vitrine não encontrada | Mila",
     };
   }
 
+  const { loja, vitrine } = data;
   return {
-    title: `${data.colecao.titulo} — ${data.loja.nome}`,
-    description: `Confira os lançamentos e novidades da ${data.loja.nome}. Peça direto pelo WhatsApp!`,
+    title: `${vitrine.tituloColecao} — ${loja.nomeExibicao}`,
+    description: `Confira os lançamentos e novidades da ${loja.nomeExibicao}. Peça direto pelo WhatsApp!`,
     openGraph: {
-      title: `${data.colecao.titulo} | ${data.loja.nome}`,
-      description: `Confira a nova seleção de peças exclusivas da ${data.loja.nome}.`,
-      images: data.colecao.itens[0]?.fotoUrl ? [data.colecao.itens[0].fotoUrl] : [],
+      title: `${vitrine.tituloColecao} | ${loja.nomeExibicao}`,
+      description: `Confira a nova seleção de peças exclusivas da ${loja.nomeExibicao}.`,
+      images: vitrine.itens[0]?.fotoUrl ? [vitrine.itens[0].fotoUrl] : [],
     },
   };
 }
@@ -101,12 +100,12 @@ export default async function VitrinePage({
   const { slugLoja, slugColecao } = await params;
   const data = await getShowcase(slugLoja, slugColecao);
 
-  if (!data) {
+  if (!data || !data.ok || !data.loja || !data.vitrine) {
     notFound();
   }
 
-  const { loja, colecao } = data;
-  const whatsappLimpo = loja.whatsapp.replace(/\D/g, "");
+  const { loja, vitrine } = data;
+  const whatsappLimpo = (loja.whatsappContato || "").replace(/\D/g, "");
 
   const formatarPreco = (valor: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -119,7 +118,7 @@ export default async function VitrinePage({
     <div
       className="min-h-screen bg-stone-50 text-stone-900 pb-20 selection:bg-amber-100"
       style={{
-        fontFamily: loja.tipografia.body || "Inter, sans-serif",
+        fontFamily: loja.tipografiaBody || "Inter, sans-serif",
       }}
     >
       {/* Cabeçalho Limpo e Focado (Sem banners gigantes) */}
@@ -130,7 +129,7 @@ export default async function VitrinePage({
               <div className="relative w-10 h-10 rounded-full overflow-hidden border border-stone-200 bg-stone-100 shrink-0">
                 <Image
                   src={loja.logoUrl}
-                  alt={loja.nome}
+                  alt={loja.nomeExibicao}
                   fill
                   sizes="40px"
                   className="object-cover"
@@ -139,24 +138,24 @@ export default async function VitrinePage({
             ) : (
               <div
                 className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0 shadow-sm"
-                style={{ backgroundColor: loja.cores.primaria || "#1F2937" }}
+                style={{ backgroundColor: loja.corPrimaria || "#1F2937" }}
               >
-                {loja.nome.substring(0, 2).toUpperCase()}
+                {(loja.nomeExibicao || "LO").substring(0, 2).toUpperCase()}
               </div>
             )}
             <div>
               <h1 className="font-semibold text-stone-900 leading-tight tracking-tight">
-                {loja.nome}
+                {loja.nomeExibicao}
               </h1>
               <p className="text-xs text-stone-500 font-medium">
-                {colecao.titulo}
+                {vitrine.tituloColecao}
               </p>
             </div>
           </div>
 
           <Link
             href={`https://wa.me/${whatsappLimpo}?text=${encodeURIComponent(
-              `Olá, ${loja.nome}! Vi sua vitrine (${colecao.titulo}) e gostaria de tirar uma dúvida.`
+              `Olá, ${loja.nomeExibicao}! Vi sua vitrine (${vitrine.tituloColecao}) e gostaria de tirar uma dúvida.`
             )}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -176,11 +175,11 @@ export default async function VitrinePage({
           <h2
             className="text-2xl font-bold tracking-tight text-stone-900"
             style={{
-              fontFamily: loja.tipografia.heading || "inherit",
-              color: loja.cores.primaria || "#1F2937",
+              fontFamily: loja.tipografiaHeading || "inherit",
+              color: loja.corPrimaria || "#1F2937",
             }}
           >
-            {colecao.titulo}
+            {vitrine.tituloColecao}
           </h2>
           <p className="text-xs text-stone-500 max-w-md mx-auto">
             Selecione suas peças favoritas e finalize seu pedido diretamente no WhatsApp da loja com atendimento personalizado.
@@ -191,9 +190,9 @@ export default async function VitrinePage({
       {/* Grid de Peças Mobile-First */}
       <main className="max-w-2xl mx-auto px-4 pt-2">
         <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
-          {colecao.itens.map((item, idx) => {
+          {vitrine.itens.map((item, idx) => {
             const mensagemWhatsApp = encodeURIComponent(
-              `Olá, ${loja.nome}! Gostaria de pedir a peça "${item.nome}" (${formatarPreco(
+              `Olá, ${loja.nomeExibicao}! Gostaria de pedir a peça "${item.nome}" (${formatarPreco(
                 item.precoVenda
               )}) que vi na sua vitrine.`
             );
@@ -223,7 +222,7 @@ export default async function VitrinePage({
                     </h3>
                     <p
                       className="text-sm sm:text-base font-bold tracking-tight"
-                      style={{ color: loja.cores.destaque || "#D97706" }}
+                      style={{ color: loja.corDestaque || "#D97706" }}
                     >
                       {formatarPreco(item.precoVenda)}
                     </p>
@@ -236,7 +235,7 @@ export default async function VitrinePage({
                     rel="noopener noreferrer"
                     className="w-full inline-flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl text-xs font-semibold text-white shadow-sm hover:opacity-95 active:scale-[0.98] transition-all text-center"
                     style={{
-                      backgroundColor: loja.cores.primaria || "#1F2937",
+                      backgroundColor: loja.corPrimaria || "#1F2937",
                     }}
                   >
                     <span>💬</span>
@@ -252,7 +251,7 @@ export default async function VitrinePage({
       {/* Rodapé Seguro e Neutro */}
       <footer className="max-w-2xl mx-auto px-4 mt-12 text-center space-y-2 border-t border-stone-200/60 pt-6">
         <p className="text-[11px] text-stone-400">
-          Esta vitrine é um catálogo direto da loja <strong>{loja.nome}</strong>. Sem intermediários ou taxas de pagamento.
+          Esta vitrine é um catálogo direto da loja <strong>{loja.nomeExibicao}</strong>. Sem intermediários ou taxas de pagamento.
         </p>
         <p className="text-[10px] text-stone-300 font-medium">
           Tecnologia Mila AI • Inteligência para Semijoias

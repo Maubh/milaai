@@ -44,7 +44,7 @@ export default function LandingPage() {
               </Link>
             </p>
             <p className="minimal-micro">
-              Do custo da peça à rotina da loja, com mais clareza.
+              Ela grava suas taxas, custos com embalagens e fornecedores. Você não precisa ficar repetindo.
             </p>
           </div>
         </div>

@@ -889,6 +889,11 @@
   font-size: 1rem;
   color: var(--plum);
   user-select: none;
+  outline: none;
+}
+.faq-summary:focus-visible {
+  outline: 2px solid var(--mineral);
+  outline-offset: -2px;
 }
 .faq-summary::-webkit-details-marker {
   display: none;
@@ -909,6 +914,17 @@
 }
 .faq-content {
   padding: 0 1.4rem 1.3rem;
+  animation: faqFadeIn 0.25s ease-out;
+}
+@keyframes faqFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .faq-answer {
   font-size: 0.93rem;

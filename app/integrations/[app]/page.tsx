@@ -69,6 +69,8 @@ const KNOWN: Record<string, IntegrationConfig> = {
     title: "Conectar Nuvemshop",
     desc: "Cadastre produtos com foto, descrição e preço na sua loja virtual em 1 clique pelo WhatsApp.",
     logo: "/integrations/nuvemshop.png",
+    escopoNota:
+      "A mila sincroniza seus produtos e fotos criados a partir do WhatsApp diretamente no catálogo da sua Nuvemshop. Ela acessa apenas a sua loja, em seu nome.",
     isApiKeyGuided: false,
   },
   google: {

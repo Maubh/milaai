@@ -73,7 +73,7 @@ const INTEGRATIONS: IntegrationItem[] = [
     name: "Nuvemshop",
     showName: false,
     color: "#5D42E8",
-    icon: <img src="/integrations/nuvemshop.png" alt="Nuvemshop" />,
+    icon: <img src="/integrations/nuvemshop-wordmark.png" alt="Nuvemshop" />,
   },
   {
     id: "google-workspace",

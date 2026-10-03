@@ -5,6 +5,7 @@ import { use, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
+import NotionConnection from "@/components/NotionConnection";
 import "../../workspace/workspace.css";
 
 interface IntegrationConfig {
@@ -120,6 +121,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
       });
       const data = (await res.json()) as { ok?: boolean; detail?: string };
       if (res.ok && data.ok) {
+        setApiKey("");
         setConnected(true);
       } else {
         setErro(integrationErrorText(data.detail));
@@ -174,6 +176,10 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
         </p>
       </div>
     );
+  }
+
+  if (key === "notion") {
+    return <NotionConnection token={apiKey} onTokenChange={setApiKey} onSubmit={handleGuidedKey} connecting={connecting} connected={connected} error={erro} />;
   }
 
   return (

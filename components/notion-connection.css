@@ -1,0 +1,42 @@
+.notion-connect-page { min-height: 100svh; background: var(--ivory); color: var(--ink); padding: 0 24px 48px; }
+.notion-connect-header { max-width: 1120px; margin: 0 auto; padding: 28px 0; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.notion-connect-header img { display: block; width: 88px; height: auto; }
+.notion-connect-header a:last-child { font-size: 13px; color: var(--mineral); text-underline-offset: 4px; }
+.notion-connect { max-width: 560px; margin: 48px auto 0; }
+.notion-connect-brand { display: flex; align-items: center; gap: 10px; font-size: 23px; font-weight: 600; color: #191919; margin-bottom: 28px; }
+.notion-connect h1 { font-size: clamp(28px, 4vw, 36px); line-height: 1.2; letter-spacing: -0.03em; font-weight: 600; color: var(--mineral); text-wrap: balance; }
+.notion-connect-intro { font-size: 16px; line-height: 1.6; margin-top: 14px; color: #4b5d56; max-width: 48ch; }
+.notion-connect-panel { margin-top: 32px; padding: 32px; background: var(--white); border: 1px solid var(--line); border-radius: 16px; }
+.notion-connect-panel h2 { font-size: 19px; font-weight: 600; line-height: 1.4; letter-spacing: -0.015em; }
+.notion-connect-panel-intro { font-size: 14px; color: #4b5d56; margin-top: 7px; }
+.notion-connect-help { margin: 22px 0 26px; padding-bottom: 20px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.notion-connect-help summary { cursor: pointer; color: var(--mineral); font-weight: 600; }
+.notion-connect-help summary:hover { text-decoration: underline; text-underline-offset: 4px; }
+.notion-connect-help ol { padding-left: 21px; margin: 18px 0; }
+.notion-connect-help li { margin-bottom: 12px; padding-left: 3px; }
+.notion-connect-help p { margin-bottom: 12px; }
+.notion-connect-help a { color: var(--mineral); text-underline-offset: 3px; }
+.notion-connect-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 9px; }
+.notion-connect-input-wrap { display: flex; border: 1px solid #8b9a91; border-radius: 9px; overflow: hidden; background: white; }
+.notion-connect-input-wrap:focus-within { outline: 2px solid var(--mineral); outline-offset: 3px; }
+.notion-connect-input-wrap input { flex: 1; min-width: 0; padding: 14px; background: transparent; border: 0; font: inherit; font-size: 15px; color: var(--ink); outline: none; caret-color: var(--mineral); }
+.notion-connect-input-wrap input::placeholder { color: #617168; }
+.notion-connect-input-wrap button { border: 0; background: transparent; color: var(--mineral); font: inherit; font-size: 12px; padding: 0 14px; cursor: pointer; min-height: 48px; }
+.notion-connect-note { font-size: 12px; line-height: 1.6; margin-top: 10px; color: #4b5d56; }
+.notion-connect-submit { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 50px; padding: 13px 16px; margin-top: 26px; border: 0; border-radius: 9px; background: var(--mineral); color: white; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; text-decoration: none; transition: background 160ms ease; }
+.notion-connect-submit:hover { background: #24584f; }
+.notion-connect-submit:disabled { background: #dce5df; color: #4b6055; cursor: not-allowed; }
+.notion-connect-validation { font-size: 12px; line-height: 1.6; color: #4b5d56; text-align: center; margin-top: 13px; }
+.notion-connect-footer { margin: 22px auto 0; max-width: 44ch; font-size: 12px; line-height: 1.65; text-align: center; color: #4b5d56; }
+.notion-connect-error { margin-top: 18px; font-size: 14px; color: #9c2b25; }
+.notion-connect-error a { display: inline-block; margin-top: 6px; text-underline-offset: 3px; }
+.notion-connect-success > svg { color: var(--mineral); margin-bottom: 16px; }
+.notion-connect-success > p { margin-top: 12px; font-size: 15px; color: #4b5d56; }
+@media (max-width: 600px) {
+  .notion-connect-page { padding-inline: 20px; }
+  .notion-connect-header { padding-block: 22px; }
+  .notion-connect-header img { width: 74px; }
+  .notion-connect-header a:last-child { font-size: 12px; }
+  .notion-connect { margin-top: 28px; }
+  .notion-connect-panel { padding: 24px 20px; margin-top: 26px; }
+}

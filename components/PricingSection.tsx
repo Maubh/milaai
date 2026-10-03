@@ -8,7 +8,7 @@ import { CONECTORES_NAO_PRONTOs } from "@/lib/legal";
  *  conectores não estão prontos. Agora que Olist e Jueri estão disponíveis,
  *  apenas o Bling permanece como próximo da fila. */
 export const PLANO_ERP =
-  "Integração direta com ERP (Jueri e Olist disponíveis; " +
+  "Integração direta com ERP (Jueri e Olist disponíveis; exportação de planilha para importar produtos na Phibo; " +
   CONECTORES_NAO_PRONTOs.join(" e ") +
   " ainda não)";
 

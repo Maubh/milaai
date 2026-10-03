@@ -68,7 +68,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Nuvemshop",
     title: "Conectar Nuvemshop",
     desc: "Cadastre produtos com foto, descrição e preço na sua loja virtual em 1 clique pelo WhatsApp.",
-    logo: "/integrations/nuvemshop.svg",
+    logo: "/integrations/nuvemshop.png",
     isApiKeyGuided: false,
   },
   google: {

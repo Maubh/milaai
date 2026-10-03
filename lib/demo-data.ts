@@ -85,6 +85,12 @@ export const INTEGRACOES: Integracao[] = [
     desc: "Mesma ideia: estoque e custos organizados por peça.",
   },
   {
+    id: "nuvemshop",
+    nome: "Nuvemshop",
+    status: "disponível",
+    desc: "Cadastre produtos com foto, descrição e preço na sua loja virtual em 1 clique pelo WhatsApp.",
+  },
+  {
     id: "google",
     nome: "Google Workspace",
     status: "disponível",

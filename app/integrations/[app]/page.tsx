@@ -6,6 +6,7 @@ import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-erro
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
 import NotionConnection from "@/components/NotionConnection";
+import IntegrationConnectionLayout from "@/components/IntegrationConnectionLayout";
 import "../../workspace/workspace.css";
 
 interface IntegrationConfig {
@@ -183,19 +184,20 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   }
 
   return (
-    <div className="wrap auth-wrap">
-      <div className="auth-grid">
-        <div>
-          <p className="tag">Conector oficial · mila.</p>
-          <h1 className="auth-title">{info.title}</h1>
-          <p className="auth-lede">{info.desc}</p>
-          <p className="hint">
-            Integração segura com a <span className="mila-highlight">mila</span>. Seus dados permanecem criptografados e protegidos.
-          </p>
-        </div>
-
-        <div className="integration-card-guided" aria-label={`Conectar ${info.nome}`}>
-          {connected ? (
+    <IntegrationConnectionLayout
+      name={info.nome}
+      title={key === "bling" ? "Bling, em breve na Mila" : info.title}
+      description={info.desc}
+      brand={info.logo ? <img src={info.logo} alt={info.nome} /> : <span>{info.nome}</span>}
+    >
+        <div className="notion-connect-panel" aria-label={`Conectar ${info.nome}`}>
+          {key === "bling" ? (
+            <>
+              <h2>Estamos preparando essa conexão</h2>
+              <p className="notion-connect-panel-intro">A integração estará disponível após a aprovação do app pela Bling.</p>
+              <Link href="/workspace/integracoes" className="notion-connect-submit">Ver outras integrações</Link>
+            </>
+          ) : connected ? (
             <div className="integration-success-card">
               <div className="integration-success-icon" aria-hidden="true">
                 ✓
@@ -378,7 +380,6 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
             </form>
           )}
         </div>
-      </div>
-    </div>
+    </IntegrationConnectionLayout>
   );
 }

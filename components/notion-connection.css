@@ -4,6 +4,10 @@
 .notion-connect-header a:last-child { font-size: 13px; color: var(--mineral); text-underline-offset: 4px; }
 .notion-connect { max-width: 560px; margin: 48px auto 0; }
 .notion-connect-brand { display: flex; align-items: center; gap: 10px; font-size: 23px; font-weight: 600; color: #191919; margin-bottom: 28px; }
+.notion-connect-brand > img { display: block; max-width: 220px; width: auto; max-height: 36px; object-fit: contain; }
+.notion-connect-panel .integration-brand-badge { display: none; }
+.notion-connect-panel .btn-plum { min-height: 50px; border-radius: 9px; box-shadow: none; }
+.notion-connect-panel .btn-ghost { border: 0; background: transparent; font-size: 13px; text-decoration: underline; text-underline-offset: 4px; }
 .notion-connect h1 { font-size: clamp(28px, 4vw, 36px); line-height: 1.2; letter-spacing: -0.03em; font-weight: 600; color: var(--mineral); text-wrap: balance; }
 .notion-connect-intro { font-size: 16px; line-height: 1.6; margin-top: 14px; color: #4b5d56; max-width: 48ch; }
 .notion-connect-panel { margin-top: 32px; padding: 32px; background: var(--white); border: 1px solid var(--line); border-radius: 16px; }

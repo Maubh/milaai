@@ -164,7 +164,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
         <p className="tag">Transição simulada</p>
         <h1 className="auth-title">Integração desconhecida</h1>
         <p className="auth-lede">
-          “{app}” não está entre os conectores previstos (Bling, Olist, Jueri, Google, Notion). Nada foi
+          “{app}” não está entre os conectores previstos (Bling, Olist, Nuvemshop, Jueri, Google, Notion). Nada foi
           conectado. Escolha um caminho válido abaixo.
         </p>
         <p style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap", marginTop: "1.5rem" }}>

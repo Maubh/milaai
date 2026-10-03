@@ -12,7 +12,7 @@ O template fornece fundo marfim, cabeçalho com a marca Mila e retorno às integ
 4. Preserve os estados de carregamento, erro e sucesso. Confirme conexão somente após validação real do servidor.
 5. Se a integração não estiver disponível, use o estado Em breve e não ofereça o botão de conectar.
 
-`components/NotionConnection.tsx` é a referência para formulários de credenciais. A rota `app/integrations/[app]/page.tsx` aplica o mesmo template ao Jueri, Google, Olist e Bling.
+`components/NotionConnection.tsx` é a referência para formulários de credenciais. A rota `app/integrations/[app]/page.tsx` aplica o mesmo template ao Jueri, Google, Olist, Nuvemshop e Bling.
 
 ## Notion e OAuth
 

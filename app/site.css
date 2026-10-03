@@ -584,6 +584,9 @@
 
 /* Faixa de integrações: uma linha editorial de marcas, sem superfícies individuais. */
 .marquee-section {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
   padding: 2.15rem 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
@@ -1085,7 +1088,7 @@
     min-height: 0;
     gap: 2rem;
     padding-top: clamp(1rem, 3vh, 1.75rem);
-    padding-bottom: 2rem;
+    padding-bottom: 3.25rem;
   }
   .minimal-copy {
     grid-area: copy;
@@ -1141,7 +1144,7 @@
     max-width: none;
     margin-top: 0.5rem;
   }
-  .iphone15 { width: 100%; filter: drop-shadow(0 32px 38px rgba(23, 63, 59, 0.35)); }
+  .iphone15 { width: 100%; filter: drop-shadow(0 14px 22px rgba(23, 63, 59, 0.18)); }
   .minimal-phone .iphone-figure { justify-items: center; }
   .minimal-phone .iphone-caption { display: none; }
   .calc, .conversa-grid { grid-template-columns: minmax(0, 1fr); }

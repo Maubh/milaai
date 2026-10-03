@@ -5,11 +5,10 @@ import { PLANO_GOOGLE } from "@/lib/google-workspace";
 import { CONECTORES_NAO_PRONTOs } from "@/lib/legal";
 
 /** Linha do plano que fala de ERP. Fonte única: `lib/legal.ts` diz QUAIS
- *  conectores não estão prontos — antes o texto era digitado aqui à mão, e foi
- *  assim que "Integração direta Jueri, Bling e Olist" ficou no ar prometendo o
- *  que devolve 501 (achado pelo guard `tests/legal.test.ts`). */
+ *  conectores não estão prontos. Agora que Olist e Jueri estão disponíveis,
+ *  apenas o Bling permanece como próximo da fila. */
 export const PLANO_ERP =
-  "Integração direta com ERP (Jueri disponível; " +
+  "Integração direta com ERP (Jueri e Olist disponíveis; " +
   CONECTORES_NAO_PRONTOs.join(" e ") +
   " ainda não)";
 

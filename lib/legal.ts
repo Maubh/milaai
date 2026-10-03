@@ -422,6 +422,7 @@ export const NAO_FEITO = [
 export const CONECTORES_DISPONIVEIS = [
   "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
   "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
+  "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.",
 ] as const;
 
 /** Construídos, mas ainda sem validação com credencial de produção. */
@@ -431,12 +432,12 @@ export const CONECTORES_VALIDACAO_PENDENTE = [
 
 /** Anunciados em algum momento e que NÃO funcionam: a tela genérica de conexão
  *  existe, mas o app OAuth não foi criado e a conexão devolve erro 501.
- *  Estado medido em produção: app_credentials olist=false, bling=false. */
-export const CONECTORES_NAO_PRONTOs = ["Olist", "Bling"] as const;
+ *  Estado medido em produção: app_credentials bling=false. */
+export const CONECTORES_NAO_PRONTOs = ["Bling"] as const;
 
 /** Frase única que apresenta os não prontos — o guard exige que ela exista. */
 export const NAO_PRONTOs_FRASE =
-  "Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de " +
+  "Anunciados anteriormente e ainda não disponíveis: Bling. A tela de " +
   "conexão existe, mas o acesso ainda não foi habilitado — não conte com eles " +
   "para a operação da sua loja por enquanto.";
 

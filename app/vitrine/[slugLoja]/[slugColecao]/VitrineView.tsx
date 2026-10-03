@@ -188,9 +188,18 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
         <p className="vitrine-footer-disclaimer">
           Catálogo exclusivo da loja <strong>{loja.nomeExibicao}</strong>. O atendimento e a entrega são feitos diretamente pela lojista.
         </p>
-        <p className="vitrine-footer-brand">
-          Mila AI
-        </p>
+        <div className="vitrine-footer-brand-wrap">
+          <Link
+            href="https://milaai.com.br"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vitrine-footer-brand-link"
+          >
+            <span>Criado com</span>
+            <strong>Mila AI</strong>
+            <span className="vitrine-footer-brand-arrow">↗</span>
+          </Link>
+        </div>
       </footer>
 
       {/* Modal / Gaveta de Detalhes da Peça com Galeria de Fotos */}

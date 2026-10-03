@@ -13,6 +13,12 @@ export const PLANO_ERP =
   CONECTORES_NAO_PRONTOs.join(" e ") +
   " ainda não)";
 
+export const PLANO_VITRINE_ESSENCIAL =
+  "Vitrine web interativa (1 ativa por vez) e até 2 catálogos em PDF/mês com fotos reais";
+
+export const PLANO_VITRINE_PRO =
+  "Vitrines web ilimitadas e catálogos em PDF ilimitados com fotos reais";
+
 interface PlanItem {
   id: string;
   name: string;
@@ -42,6 +48,7 @@ const PLANS: PlanItem[] = [
       "Descrições técnicas prontas para loja virtual",
       "Caderno de fornecedores validados no WhatsApp",
       "Leitor de notas fiscais de compra (XML e PDF)",
+      PLANO_VITRINE_ESSENCIAL,
       // Fonte única (lib/google-workspace.ts): a mesma frase vale para o plano,
       // a lista da área logada e a tela de conexão. Antes cada tela repetia o
       // texto à mão e as versões divergiam — foi assim que a promessa de Gmail
@@ -62,6 +69,7 @@ const PLANS: PlanItem[] = [
     description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
+      PLANO_VITRINE_PRO,
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
       PLANO_ERP,

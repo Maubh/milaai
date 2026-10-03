@@ -2,8 +2,8 @@
 
 /**
  * Interface do WhatsApp da mila
- * Demonstração e-commerce: argola frontal cravejada com Raio-X de Custos,
- * descrição pronta pro site e legenda pro Instagram, em mensagens animadas.
+ * Demonstração da rotina real: foto e custo da peça, precificação com
+ * margem de contribuição, cadastro em estoque e sincronização no Notion.
  */
 import { useEffect, useReducer, useRef, useState } from "react";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
@@ -47,8 +47,7 @@ function usePrefersReducedMotion(): boolean {
 }
 
 export default function IPhoneMockup() {
-  // Passos: vazio(-1), msg0(0), typing(1), msg1_raiox(2), typing(3), msg2_ecommerce(4),
-  // msg3(5), typing(6), msg4_legenda(7), msg5(8), done(9)
+  // Foto e custo -> Raio-X -> cadastro -> escolha do destino -> base no Notion
   const MAX_STEP = 9;
   const [step, advance] = useReducer(
     (s: number, a: "next" | "reset" | "complete") => {
@@ -77,9 +76,9 @@ export default function IPhoneMockup() {
         : step === -1
           ? INITIAL_DELAY
           : step === 2
-            ? 3200 // Pausa após o Raio-X para leitura antes da descrição
+            ? 2600 // Pausa após o Raio-X para leitura
             : step === 4
-              ? 2400 // Pausa após a descrição e-commerce
+              ? 2600 // Pausa para leitura da escolha de destino
               : STEP_DELAY;
     timer = setTimeout(() => advance(last ? "reset" : "next"), delay);
     return () => clearTimeout(timer);
@@ -119,7 +118,7 @@ export default function IPhoneMockup() {
         <div
           className="iphone15"
           role="img"
-          aria-label="Demonstração da mila no WhatsApp: a empresária envia foto da argola frontal cravejada e recebe o Raio-X de custos transparente, descrição pronta para o e-commerce e legenda para o Instagram."
+          aria-label="Demonstração da Mila no WhatsApp: a empresária envia a foto e o custo de uma peça, recebe a precificação com margem de contribuição, cadastra o item e sincroniza na sua base do Notion."
         >
           <svg
             className="iphone15-frame"
@@ -229,7 +228,7 @@ export default function IPhoneMockup() {
                           alt="Argola frontal cravejada em zircônias, com pino e fecho click visíveis"
                         />
                         <span className="gx-text">
-                          mila, chegou reposição da argola frontal cravejada ✨ Paguei R$&nbsp;22,00 na fábrica. Me passa o preço ideal e a descrição pro meu site?
+                          mila, chegou essa argola ✨ Custo R$&nbsp;22,00. Usa os dados que deixei no perfil e me passa um preço para vender?
                         </span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
@@ -241,45 +240,30 @@ export default function IPhoneMockup() {
                     ) : s.id === 1 ? (
                       <div className="gx-raiox">
                         <div className="gx-raiox-header">
-                          <span className="gx-raiox-badge">✨ Sugestão de preço: <strong>R$&nbsp;119,90</strong></span>
-                          <span className="gx-raiox-sub">(Sua margem limpa no bolso: <strong>R$&nbsp;38,40 | 32%</strong>)</span>
+                          <span className="gx-raiox-badge">✨ Preço sugerido: <strong>R$&nbsp;89,90</strong></span>
+                          <span className="gx-raiox-sub">Margem de contribuição: <strong>R$&nbsp;56,18</strong></span>
                         </div>
 
                         <div className="gx-raiox-section">
-                          <div className="gx-raiox-title">📋 Raio-X da sua conta:</div>
+                          <div className="gx-raiox-title">Raio-X do preço:</div>
                           <ul className="gx-raiox-items">
                             <li><span>• Custo da peça:</span> <strong>R$&nbsp;22,00</strong></li>
-                            <li><span>• Embalagem:</span> <strong>R$&nbsp;6,50</strong></li>
-                            <li><span>• Rateio custos fixos:</span> <span><strong>R$&nbsp;10,00</strong> <small>(aluguel/luz diluído)</small></span></li>
-                            <li><span>• Taxa cartão + impostos:</span> <strong>R$&nbsp;13,19</strong></li>
-                            <li className="gx-raiox-line-cost"><span>• Custo total da operação:</span> <strong>R$&nbsp;51,69</strong></li>
-                            <li className="gx-raiox-line-profit"><span>• Seu lucro real:</span> <strong>R$&nbsp;68,21</strong></li>
+                            <li><span>• Embalagem do perfil:</span> <strong>R$&nbsp;6,50</strong></li>
+                            <li><span>• Taxa da maquininha:</span> <strong>R$&nbsp;5,22</strong></li>
+                            <li className="gx-raiox-line-cost"><span>• Custo variável:</span> <strong>R$&nbsp;33,72</strong></li>
                           </ul>
                         </div>
 
                         <div className="gx-raiox-market">
-                          <div className="gx-raiox-market-header">🔍 Concorrência na sua região: <strong>R$&nbsp;110 a R$&nbsp;139</strong></div>
-                          <span className="gx-raiox-market-note">(Seu preço está perfeito e protege sua margem!)</span>
+                          <div className="gx-raiox-market-header">Usei os custos e a taxa salvos no perfil da sua loja.</div>
+                          <span className="gx-raiox-market-note">Quer cadastrar 1 unidade no estoque e gerar a descrição da peça?</span>
                         </div>
-
-                        <div className="gx-raiox-commerce">
-                          <div className="gx-raiox-title">🛍️ Descrição pronta para seu e-commerce:</div>
-                          <p className="gx-raiox-commerce-text">
-                            Argola frontal cravejada em zircônias (banho ouro 18k). Design frontal
-                            anatômico que valoriza o visual, cravação delicada com microzircônias
-                            cristal e fecho de encaixe seguro. Hipoalergênica, níquel-free e com
-                            verniz protetor de alta durabilidade. Perfeita para protagonizar o
-                            primeiro furo ou compor mix elegantes.
-                          </p>
-                        </div>
-
-                        <span className="gx-raiox-insta">📱 (Se quiser, também tenho a legenda pronta para postar no Instagram dessa peça!)</span>
 
                         <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </div>
                     ) : s.id === 2 ? (
                       <>
-                        <span className="gx-text">Amei a descrição! Manda a legenda do Instagram? 📱</span>
+                        <span className="gx-text">Pode cadastrar 1 unidade no estoque?</span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
                           <svg viewBox="0 0 18 12" width="15" height="10" focusable="false">
@@ -290,13 +274,18 @@ export default function IPhoneMockup() {
                     ) : s.id === 3 ? (
                       <>
                         <span className="gx-text">
-                          Tem sim ✨ “Brilho novo por aqui: argola frontal cravejada em zircônias, leve e elegante pro dia a dia. Chama na direct pra garantir a sua! 📲💛”
+                          Pronto. Cadastrei a argola no seu estoque com 1 unidade e deixei a descrição técnica salva no catálogo. Onde você quer salvar agora?
+                          <br /><br />
+                          • Nuvemshop<br />
+                          • Google Planilhas<br />
+                          • Notion<br />
+                          • Planilha pronta para importar na Phibo
                         </span>
                         <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </>
                     ) : s.id === 4 ? (
                       <>
-                        <span className="gx-text">Aprovado, vou publicar hoje! 👍💛</span>
+                        <span className="gx-text">Salva no Notion, por favor!</span>
                         <span className="gx-stamp num">
                           {SCRIPT[s.id].time}
                           <svg viewBox="0 0 18 12" width="15" height="10" focusable="false">
@@ -306,8 +295,16 @@ export default function IPhoneMockup() {
                       </>
                     ) : (
                       <>
+                        <span className="gx-notion-card" aria-label="Registro criado no Notion">
+                          <span className="gx-notion-icon">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
+                              <path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z" />
+                            </svg>
+                          </span>
+                          <span><strong>Estoque de Joias · Notion</strong><small>Item cadastrado na sua base</small></span>
+                        </span>
                         <span className="gx-text">
-                          Combinado 💛 Quando chegar novidade, me chama que eu precifico na hora!
+                          Pronto. Sincronizei com o seu Notion: foto, custo de R$&nbsp;22,00, preço sugerido de R$&nbsp;89,90 e margem de 46%. Estoque salvo com 1 unidade.
                         </span>
                         <span className="gx-stamp num">{SCRIPT[s.id].time}</span>
                       </>

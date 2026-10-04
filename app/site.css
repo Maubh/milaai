@@ -222,9 +222,9 @@
   color: rgba(30, 43, 40, 0.62);
 }
 .footer-minimal-inner p { margin: 0; }
+.footer-minimal-inner a { text-decoration: none; color: inherit; }
+.footer-minimal-inner a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .footer-minimal-inner nav { display: flex; gap: 1.2rem; }
-.footer-minimal-inner nav a { text-decoration: none; color: inherit; }
-.footer-minimal-inner nav a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .auth-minimal-back-top { margin: 0 0 1.6rem; }
 
 /* Minimal landing: one viewport, left column + iPhone */
@@ -584,6 +584,9 @@
 
 /* Faixa de integrações: uma linha editorial de marcas, sem superfícies individuais. */
 .marquee-section {
+  position: relative;
+  z-index: 2;
+  background: var(--paper);
   padding: 2.15rem 0;
   background-color: #fff;
   border-top: 1px solid var(--line);
@@ -926,6 +929,55 @@
     transform: translateY(0);
   }
 }
+.gx-file,
+.gx-notion-card {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 0.65rem;
+  padding: 0.58rem 0.65rem;
+  border-radius: 0.6rem;
+  background: rgba(255,255,255,0.09);
+  color: inherit;
+}
+.gx-file-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.38rem;
+  background: #1d6f42;
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+}
+.gx-notion-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.38rem;
+  background: #111111;
+  color: #fff;
+}
+.gx-file > span:last-child,
+.gx-notion-card > span:last-child {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 0;
+}
+.gx-file strong,
+.gx-notion-card strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.72rem;
+}
+.gx-file small,
+.gx-notion-card small { font-size: 0.63rem; opacity: 0.72; }
+
 .faq-answer {
   font-size: 0.93rem;
   line-height: 1.6;
@@ -1036,7 +1088,7 @@
     min-height: 0;
     gap: 2rem;
     padding-top: clamp(1rem, 3vh, 1.75rem);
-    padding-bottom: 2rem;
+    padding-bottom: 3.25rem;
   }
   .minimal-copy {
     grid-area: copy;
@@ -1092,7 +1144,7 @@
     max-width: none;
     margin-top: 0.5rem;
   }
-  .iphone15 { width: 100%; filter: drop-shadow(0 32px 38px rgba(23, 63, 59, 0.35)); }
+  .iphone15 { width: 100%; filter: drop-shadow(0 14px 22px rgba(23, 63, 59, 0.18)); }
   .minimal-phone .iphone-figure { justify-items: center; }
   .minimal-phone .iphone-caption { display: none; }
   .calc, .conversa-grid { grid-template-columns: minmax(0, 1fr); }

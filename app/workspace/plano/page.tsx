@@ -186,7 +186,7 @@ export default function WorkspacePlanoPage() {
             {/* Grade com os 2 Planos */}
             <div className="work-grid-2">
               {/* PLANO ESSENCIAL */}
-              <div className="work-card plan-card">
+              <div className="card work-card plan-card">
                 <div>
                   <h3 className="plan-card-name">
                     Plano Essencial
@@ -244,7 +244,7 @@ export default function WorkspacePlanoPage() {
               </div>
 
               {/* PLANO PRO */}
-              <div className="work-card plan-card plan-card-featured">
+              <div className="card work-card plan-card plan-card-featured">
                 <div>
                   <h3 className="plan-card-name">
                     Plano Pro

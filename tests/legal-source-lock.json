@@ -144,7 +144,7 @@
   "backend/billing/store.py": "d1ead6fd3c050546640001db454480331d21929030cac08a159ffca7a28518dc",
   "backend/mila_router/__init__.py": "cdd750c192ab199c970625d5aafe4cd40973b54b15f7b427e32da1747a97b984",
   "backend/mila_router/alerta_runner.py": "1ca3a5373c1383c5eeb1930d480b4adc558dac73d3eadcd16693d0c9e90e9fdb",
-  "backend/mila_router/balanco_runner.py": "d928c4d9b4019c22ec4fb708c3269cd30fe98fbb0334091e6dcb1ccc9532a87f",
+  "backend/mila_router/balanco_runner.py": "6fe13ca77b1b31f6f1a3698828c4243c2ef424365ec09f53a668c9dc9f9a5ebb",
   "backend/mila_router/conversation.py": "d6797b0703c98045c9657895e2e47eae9a24f720b683f9635b355c8c536cdc0f",
   "backend/mila_router/custo_runner.py": "a85caf7384f71254a7a5d9f999bb47df28792edb6845a1bea6b30ac9a84be9ad",
   "backend/mila_router/estoque_analise.py": "0403ccfc81be8af1280024745b03b79e1f192825212a96d262844669be08ad2b",

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import BrandLogo from "@/components/BrandLogo";
 import {
   clearOnboarding,
@@ -28,8 +28,10 @@ const LINKS = [
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const drawerId = useId();
   const [telefone, setTelefone] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [hello, setHello] = useState<{ name: string | null; store: string | null }>({
     name: null,
     store: null,
@@ -54,6 +56,19 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
       .catch(() => undefined);
   }, []);
 
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   async function sair() {
     // A sessão é HttpOnly: limpar só o localStorage não a encerra.
     // Chamamos a rota BFF que revoga no auth server e expira o cookie.
@@ -66,54 +81,73 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
   }
 
   return (
-    <div className="work-shell">
+    <div className={`work-shell${menuOpen ? " is-menu-open" : ""}`}>
       <aside className="work-side" aria-label="Navegação do workspace">
-        <p className="brand" aria-label="mila.">
-          <BrandLogo height={26} alt="" />
-        </p>
-        <p className="work-hello">
-          {hello.name ? (
-            <>
-              <strong>{hello.name}</strong>
-            </>
-          ) : telefone ? (
-            <>
-              WhatsApp <strong className="num">{telefone}</strong>
-            </>
-          ) : (
-            <>Sua conta</>
-          )}
-          <span>{hello.store ? hello.store : "Sua área · piloto"}</span>
-        </p>
-        <nav>
-          {LINKS.map((l) => {
-            const active = pathname === l.href;
-            return (
-              <Link
-                key={l.href}
-                href={l.href}
-                aria-current={active ? "page" : undefined}
-                className={active ? "active" : ""}
-              >
-                {l.label}
-              </Link>
-            );
-          })}
-        </nav>
-        <div className="work-side-foot">
-          {waLink ? (
-            <a
-              href={waLink}
-              className="btn btn-plum btn-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Abrir WhatsApp
-            </a>
-          ) : null}
-          <button type="button" className="btn btn-ghost btn-sm" onClick={sair}>
-            Sair
+        <div className="work-bar">
+          <p className="brand work-bar-brand" aria-label="mila.">
+            <BrandLogo height={24} alt="" />
+          </p>
+          <button
+            type="button"
+            className="work-burger"
+            aria-expanded={menuOpen}
+            aria-controls={drawerId}
+            aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+            onClick={() => setMenuOpen((v) => !v)}
+          >
+            <span aria-hidden="true" className={menuOpen ? "is-open" : ""}>
+              <i />
+              <i />
+              <i />
+            </span>
           </button>
+        </div>
+        <div id={drawerId} className={`work-drawer${menuOpen ? " is-open" : ""}`}>
+          <p className="brand work-drawer-brand" aria-label="mila.">
+            <BrandLogo height={26} alt="" />
+          </p>
+          <p className="work-hello">
+            {hello.name ? (
+              <strong>{hello.name}</strong>
+            ) : telefone ? (
+              <>
+                WhatsApp <strong className="num">{telefone}</strong>
+              </>
+            ) : (
+              <>Sua conta</>
+            )}
+            <span>{hello.store ? hello.store : "Sua área · piloto"}</span>
+          </p>
+          <nav>
+            {LINKS.map((l) => {
+              const active = pathname === l.href;
+              return (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  aria-current={active ? "page" : undefined}
+                  className={active ? "active" : ""}
+                >
+                  {l.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <div className="work-side-foot">
+            {waLink ? (
+              <a
+                href={waLink}
+                className="btn btn-plum btn-sm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Abrir WhatsApp
+              </a>
+            ) : null}
+            <button type="button" className="btn btn-ghost btn-sm" onClick={sair}>
+              Sair
+            </button>
+          </div>
         </div>
       </aside>
       <div className="work-main">{children}</div>

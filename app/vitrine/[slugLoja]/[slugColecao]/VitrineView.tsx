@@ -195,8 +195,8 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
             rel="noopener noreferrer"
             className="vitrine-footer-brand-link"
           >
-            <span>Criado com</span>
-            <strong>Mila AI</strong>
+            <span>Criado por</span>
+            <strong>mila.</strong>
             <span className="vitrine-footer-brand-arrow">↗</span>
           </Link>
         </div>

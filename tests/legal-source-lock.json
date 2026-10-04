@@ -23,7 +23,7 @@
   "site/app/layout.tsx": "4a4eb8d86c23f95299d15d62232ba50c93327f03d22cb32f4695c2934106a855",
   "site/app/not-found.tsx": "8e91be195b2626360a8a5f07d602a71c368f2c7937c6f35c7f1e8a1fd16f3d90",
   "site/app/site.css": "ca3623319020534e47b727a824fb0ca06e1d2feea82e355faf24cc757e3297ef",
-  "site/app/vitrine/[slugLoja]/[slugColecao]/VitrineView.tsx": "60fff9826aebae1ba481a4218b08cfb475bed7655122667b7b00f01eba5d34fe",
+  "site/app/vitrine/[slugLoja]/[slugColecao]/VitrineView.tsx": "20d1c2f5f7728daf80f4e5fcb75a6aaf2589e111211114ddaf74f4d518e19142",
   "site/app/vitrine/[slugLoja]/[slugColecao]/page.tsx": "57371c97b88d1a99cd722a51ae48d4e922ce67f8295884dca27df5fd876049f3",
   "site/app/vitrine/vitrine.css": "50f4ab1c31bb52b74cc982f71c43c1356e5239922b5c1ceb3a40417c0c28676c",
   "site/app/workspace/conteudo/page.tsx": "6d87efa662ba6f3e4ccfe578006472fe7bb7cd614b1604a131eb5dd1231f6b09",

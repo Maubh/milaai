@@ -47,7 +47,7 @@ export default function WorkspacePlanoPage() {
   const now = new Date();
   const trialEndsDate = session?.trial_ends_at
     ? new Date(session.trial_ends_at)
-    : new Date("2026-11-02T23:14:28Z");
+    : new Date("2026-11-04T23:14:28Z");
 
   const isFounder = session?.role === "founder" || session?.billing === "comped";
   const isPaid = session?.billing === "pago";
@@ -166,7 +166,7 @@ export default function WorkspacePlanoPage() {
               {trialOpen && (
                 <p className="plan-note">
                   Você está nos 30 dias de teste do Pro, sem cobrança, até{" "}
-                  <strong>02/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
+                  <strong>04/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
                   balanço no WhatsApp já valem. Os botões de contratar aparecem aqui depois
                   dessa data.
                 </p>
@@ -174,7 +174,7 @@ export default function WorkspacePlanoPage() {
 
               {isTrialExpired && (
                 <p className="plan-note is-ended">
-                  Os 30 dias de teste acabaram em 02/11/2026. Peças e cálculos continuam
+                  Os 30 dias de teste acabaram em 04/11/2026. Peças e cálculos continuam
                   guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp
                   e este painel voltam na hora.
                 </p>
@@ -238,7 +238,7 @@ export default function WorkspacePlanoPage() {
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      No Pro até 02/11
+                      No Pro até 04/11
                     </button>
                   ) : (
                     <button
@@ -293,11 +293,11 @@ export default function WorkspacePlanoPage() {
                 <div>
                   {currentIsPro ? (
                     <button className="plan-action-btn is-current" disabled>
-                      {trialOpen ? "Seu plano · até 02/11" : "Seu plano agora"}
+                      {trialOpen ? "Seu plano · até 04/11" : "Seu plano agora"}
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      No Essencial até 02/11
+                      No Essencial até 04/11
                     </button>
                   ) : (
                     <button

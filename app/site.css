@@ -588,6 +588,7 @@
   z-index: 2;
   background: var(--paper);
   padding: 2.15rem 0;
+  background-color: #fff;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   overflow: hidden;
@@ -596,6 +597,7 @@
   width: 100%;
   overflow: hidden;
   position: relative;
+  background-color: #fff;
   mask-image: linear-gradient(to right, transparent 0, black 120px, black calc(100% - 120px), transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0, black 120px, black calc(100% - 120px), transparent 100%);
 }
@@ -609,21 +611,19 @@
 .marquee-mark-logo img, .marquee-mark-logo svg { display: block; height: 28px; width: auto; max-height: 28px; }
 .marquee-mark-logo img { max-width: 132px; }
 .marquee-mark-name { font-size: 0.96rem; font-weight: 700; letter-spacing: -0.01em; color: var(--plum); }
+.marquee-mark-badge { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.01em; color: var(--plum); opacity: 0.72; }
+.google-workspace-brand,
+.google-workspace-icons { display: inline-flex; align-items: center; gap: 0.45rem; }
+.google-workspace-brand { flex-direction: column; gap: 0.35rem; }
+.google-workspace-brand > img { width: 180px; max-width: 180px; }
+.google-workspace-icons svg { display: block; width: auto; height: 22px; overflow: visible; }
+.google-workspace-icons svg:first-child { width: 25px; }
+.google-workspace-icons svg:last-child { width: 20px; }
+.marquee-mark.integration-google-workspace,
+.marquee-mark.integration-google-workspace .marquee-mark-logo { height: 58px; }
+.marquee-mark.integration-google-workspace .marquee-mark-logo { overflow: visible; }
 .marquee-mark.integration-jueri .marquee-mark-logo img { height: 26px; max-width: 80px; }
 .marquee-mark.integration-bling .marquee-mark-logo img { height: 28px; max-width: 82px; }
-.marquee-mark.integration-google-workspace .marquee-mark-logo img { width: 162px; max-width: 162px; }
-/* Google Workspace: a marca com o nome visível e, SOB ele, os ícones das
-   ferramentas que a mila usa (Drive, Planilhas). Vira coluna só nesse item —
-   as outras marcas seguem em linha. */
-.marquee-mark.integration-google-workspace {
-  flex-direction: column;
-  height: auto;
-  align-items: center;
-  gap: 0.3rem;
-}
-.marquee-mark.integration-google-workspace .marquee-mark-name { font-size: 0.9rem; }
-.marquee-mark-tools { display: inline-flex; align-items: center; gap: 0.4rem; }
-.marquee-mark-tool { display: block; width: 20px; height: 20px; object-fit: contain; }
 @keyframes marquee-scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-100% / 3)); } }
 @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; overflow-x: auto; } }
 

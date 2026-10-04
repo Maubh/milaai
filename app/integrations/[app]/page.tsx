@@ -5,6 +5,8 @@ import { use, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
+import NotionConnection from "@/components/NotionConnection";
+import IntegrationConnectionLayout from "@/components/IntegrationConnectionLayout";
 import "../../workspace/workspace.css";
 
 interface IntegrationConfig {
@@ -68,7 +70,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Nuvemshop",
     title: "Conectar Nuvemshop",
     desc: "Cadastre produtos com foto, descrição e preço na sua loja virtual em 1 clique pelo WhatsApp.",
-    logo: "/integrations/nuvemshop.png",
+    logo: "/integrations/nuvemshop-wordmark.png",
     escopoNota:
       "A mila sincroniza seus produtos e fotos criados a partir do WhatsApp diretamente no catálogo da sua Nuvemshop. Ela acessa apenas a sua loja, em seu nome.",
     isApiKeyGuided: false,
@@ -120,6 +122,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
       });
       const data = (await res.json()) as { ok?: boolean; detail?: string };
       if (res.ok && data.ok) {
+        setApiKey("");
         setConnected(true);
       } else {
         setErro(integrationErrorText(data.detail));
@@ -161,7 +164,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
         <p className="tag">Transição simulada</p>
         <h1 className="auth-title">Integração desconhecida</h1>
         <p className="auth-lede">
-          “{app}” não está entre os conectores previstos (Bling, Olist, Jueri, Google, Notion). Nada foi
+          “{app}” não está entre os conectores previstos (Bling, Olist, Nuvemshop, Jueri, Google, Notion). Nada foi
           conectado. Escolha um caminho válido abaixo.
         </p>
         <p style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap", marginTop: "1.5rem" }}>
@@ -176,20 +179,25 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     );
   }
 
-  return (
-    <div className="wrap auth-wrap">
-      <div className="auth-grid">
-        <div>
-          <p className="tag">Conector oficial · mila.</p>
-          <h1 className="auth-title">{info.title}</h1>
-          <p className="auth-lede">{info.desc}</p>
-          <p className="hint">
-            Integração segura com a <span className="mila-highlight">mila</span>. Seus dados permanecem criptografados e protegidos.
-          </p>
-        </div>
+  if (key === "notion") {
+    return <NotionConnection token={apiKey} onTokenChange={setApiKey} onSubmit={handleGuidedKey} connecting={connecting} connected={connected} error={erro} />;
+  }
 
-        <div className="integration-card-guided" aria-label={`Conectar ${info.nome}`}>
-          {connected ? (
+  return (
+    <IntegrationConnectionLayout
+      name={info.nome}
+      title={key === "bling" ? "Bling, em breve na Mila" : info.title}
+      description={info.desc}
+      brand={info.logo ? <img src={info.logo} alt={info.nome} /> : <span>{info.nome}</span>}
+    >
+        <div className="notion-connect-panel" aria-label={`Conectar ${info.nome}`}>
+          {key === "bling" ? (
+            <>
+              <h2>Estamos preparando essa conexão</h2>
+              <p className="notion-connect-panel-intro">A integração estará disponível após a aprovação do app pela Bling.</p>
+              <Link href="/workspace/integracoes" className="notion-connect-submit">Ver outras integrações</Link>
+            </>
+          ) : connected ? (
             <div className="integration-success-card">
               <div className="integration-success-icon" aria-hidden="true">
                 ✓
@@ -372,7 +380,6 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
             </form>
           )}
         </div>
-      </div>
-    </div>
+    </IntegrationConnectionLayout>
   );
 }

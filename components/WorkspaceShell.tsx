@@ -16,6 +16,7 @@ const LINKS = [
   { href: "/workspace/precificacao", label: "Precificação" },
   { href: "/workspace/conteudo", label: "Conteúdo" },
   { href: "/workspace/integracoes", label: "Integrações" },
+  { href: "/workspace/plano", label: "Meu plano" },
 ];
 
 /**

@@ -1,0 +1,36 @@
+/* Polish da área logada. Não mexe em workspace.css (hash de entorno). */
+
+.work-back {
+  margin: 0 0 0.85rem;
+}
+.work-title,
+.work-lede {
+  text-wrap: pretty;
+}
+.work-lede {
+  line-height: 1.5;
+}
+
+.work-more {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+}
+.work-more a {
+  color: var(--plum);
+}
+
+.work-card-copy {
+  margin: 0;
+  font-size: 0.93rem;
+  color: rgba(30, 43, 40, 0.78);
+  line-height: 1.45;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-burger i {
+    transition: none;
+  }
+}

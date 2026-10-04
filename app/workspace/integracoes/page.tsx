@@ -54,10 +54,9 @@ export default async function IntegracoesPage({
 
   return (
     <div className="work-wrap">
-      <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
+      <p className="work-back">
         <Link href="/workspace">← Visão geral</Link>
       </p>
-      <p className="tag">Área logada</p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
         Ligue o que a loja já usa: Jueri, Olist, Nuvemshop, Notion, Google.

@@ -33,7 +33,6 @@ export default function WorkspaceHome() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Área logada</p>
       <h1 className="work-title">{titulo}</h1>
       <p className="work-lede">
         {ledeLoja}
@@ -42,12 +41,10 @@ export default function WorkspaceHome() {
       </p>
 
       {waLink ? (
-        <section className="card work-card" aria-label="Abrir conversa no WhatsApp" style={{ marginBottom: "1.4rem" }}>
+        <section className="card work-card" aria-label="Abrir conversa no WhatsApp">
           <h2>Conversar no WhatsApp</h2>
-          <p style={{ fontSize: "0.93rem", color: "rgba(39,35,38,0.72)" }}>
-            No celular a conversa já abre com Oi, mila.
-          </p>
-          <div className="work-actions" style={{ marginTop: "0.85rem" }}>
+          <p className="work-card-copy">No celular a conversa já abre com Oi, mila.</p>
+          <div className="work-actions">
             <a
               href={waLink}
               className="btn btn-plum"
@@ -56,23 +53,19 @@ export default function WorkspaceHome() {
             >
               Abrir WhatsApp
             </a>
-            <Link href="/workspace/integracoes" className="btn btn-ghost btn-sm">
-              Ver integrações
-            </Link>
-            <Link href="/workspace/plano" className="btn btn-ghost btn-sm">
-              Meu plano
-            </Link>
           </div>
-          <div className="handoff-qr" style={{ marginTop: "1rem" }}>
+          <p className="work-more">
+            <Link href="/workspace/integracoes">Integrações</Link>
+            <Link href="/workspace/plano">Meu plano</Link>
+          </p>
+          <div className="handoff-qr">
             <LocalQr
               className="qr-concept"
               value={waLink}
               size={160}
               alt="QR Code para abrir a conversa com a mila. no WhatsApp"
             />
-            <p className="hint" style={{ margin: 0, fontSize: "0.82rem", color: "rgba(39,35,38,0.68)" }}>
-              No computador, aponte a câmera para o QR.
-            </p>
+            <p className="hint">No computador, aponte a câmera para o QR.</p>
           </div>
         </section>
       ) : null}

@@ -20,7 +20,7 @@
   "site/app/api/turnstile/route.ts": "3b3473e826cd9bf9af78cc2f4024c4f141fdfa3b0e5e111d431ce4a58f0fc7ab",
   "site/app/globals.css": "84e3d5f415c9a5ae300726302eae47d7980ea67ca288d9c560531429d5497262",
   "site/app/integrations/[app]/page.tsx": "134687a54dd1f68b9a42331d8027590e94e95da2ee66c9d032bd4eff54df0dab",
-  "site/app/layout.tsx": "4a4eb8d86c23f95299d15d62232ba50c93327f03d22cb32f4695c2934106a855",
+  "site/app/layout.tsx": "813ab8bb4dca69c6e268fb81b0fe7c4c4283a12f24a47b56781f54dcfbf0da4f",
   "site/app/not-found.tsx": "8e91be195b2626360a8a5f07d602a71c368f2c7937c6f35c7f1e8a1fd16f3d90",
   "site/app/site.css": "ca3623319020534e47b727a824fb0ca06e1d2feea82e355faf24cc757e3297ef",
   "site/app/vitrine/[slugLoja]/[slugColecao]/VitrineView.tsx": "20d1c2f5f7728daf80f4e5fcb75a6aaf2589e111211114ddaf74f4d518e19142",

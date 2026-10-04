@@ -44,7 +44,7 @@
   position: relative;
 }
 .plan-card-featured::before {
-  content: "Recomendado para Semijoias";
+  content: "Recomendado";
   position: absolute;
   top: -12px;
   left: 1.25rem;

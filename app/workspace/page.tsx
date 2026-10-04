@@ -29,9 +29,7 @@ export default function WorkspaceHome() {
   }, []);
 
   const titulo = who.display_name ? `Olá, ${who.display_name}` : "Olá";
-  const ledeLoja = who.store_name
-    ? `Esta é a área da ${who.store_name}. `
-    : "";
+  const ledeLoja = who.store_name ? `Loja ${who.store_name}. ` : "";
 
   return (
     <div className="work-wrap">
@@ -39,15 +37,15 @@ export default function WorkspaceHome() {
       <h1 className="work-title">{titulo}</h1>
       <p className="work-lede">
         {ledeLoja}
-        Precificação, legendas e o dia a dia da loja acontecem no WhatsApp com a mila.
-        Aqui você só conecta as ferramentas e acompanha o plano.
+        A mila responde no WhatsApp: preço, legenda, peça. Daqui você liga as
+        ferramentas e vê o plano.
       </p>
 
       {waLink ? (
         <section className="card work-card" aria-label="Abrir conversa no WhatsApp" style={{ marginBottom: "1.4rem" }}>
-          <h2>Falar com a mila.</h2>
+          <h2>Conversar no WhatsApp</h2>
           <p style={{ fontSize: "0.93rem", color: "rgba(39,35,38,0.72)" }}>
-            Abra a conversa no celular. A mensagem já vem pronta: “Oi, mila.”
+            No celular a conversa já abre com Oi, mila.
           </p>
           <div className="work-actions" style={{ marginTop: "0.85rem" }}>
             <a
@@ -73,7 +71,7 @@ export default function WorkspaceHome() {
               alt="QR Code para abrir a conversa com a mila. no WhatsApp"
             />
             <p className="hint" style={{ margin: 0, fontSize: "0.82rem", color: "rgba(39,35,38,0.68)" }}>
-              No computador: escaneie com o celular
+              No computador, aponte a câmera para o QR.
             </p>
           </div>
         </section>

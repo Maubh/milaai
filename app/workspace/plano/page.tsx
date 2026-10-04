@@ -13,6 +13,7 @@ interface SessionData {
   billing: string;
   role: string;
   trial_ends_at: string | null;
+  store_name: string | null;
 }
 
 export default function WorkspacePlanoPage() {
@@ -111,16 +112,15 @@ export default function WorkspacePlanoPage() {
       <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
         <Link href="/workspace">← Visão geral</Link>
       </p>
-        <p className="tag">Área logada · assinatura</p>
-        <h1 className="work-title">Meu plano &amp; Assinatura</h1>
+        <p className="tag">Área logada</p>
+        <h1 className="work-title">Meu plano</h1>
         <p className="work-lede">
-          Acompanhe seu status de acesso, conheça os recursos disponíveis e escolha o plano
-          ideal para a rotina da sua loja de semijoias.
+          O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua.
         </p>
 
         {loading ? (
           <div className="work-card">
-            <p>Carregando dados da sua conta...</p>
+            <p>Carregando...</p>
           </div>
         ) : (
           <>
@@ -129,26 +129,26 @@ export default function WorkspacePlanoPage() {
               <div className="plan-status-header">
                 <div>
                   <h2 style={{ margin: 0, fontSize: "1.25rem", color: "var(--plum)" }}>
-                    {isFounder && "Plano Pro · Acesso Vitalício (Founder)"}
-                    {isPaid && (currentPlan === "pro" ? "Plano Pro · Ativo" : "Plano Essencial · Ativo")}
-                    {isTrialActive && "Plano Pro · Piloto 30 dias (Ativo)"}
-                    {isTrialExpired && "Piloto de 30 dias encerrado"}
+                    {isFounder && "Plano Pro · founder"}
+                    {isPaid && (currentPlan === "pro" ? "Plano Pro" : "Plano Essencial")}
+                    {isTrialActive && "Plano Pro · 30 dias de teste"}
+                    {isTrialExpired && "Teste de 30 dias encerrado"}
                   </h2>
                   <p style={{ margin: "0.25rem 0 0", fontSize: "0.9rem", color: "rgba(30,43,40,0.65)" }}>
                     {session?.phone && (
                       <>
-                        WhatsApp vinculado: <strong>{session.phone}</strong>
+                        WhatsApp <strong>{session.phone}</strong>
                       </>
                     )}
-                    {session?.tenant && ` · Loja: ${session.tenant}`}
+                    {session?.store_name && ` · ${session.store_name}`}
                   </p>
                 </div>
 
                 <div>
-                  {isFounder && <span className="plan-status-badge active">Vitalício</span>}
-                  {isPaid && <span className="plan-status-badge active">Assinatura Ativa</span>}
-                  {isTrialActive && <span className="plan-status-badge pilot">Piloto em Andamento</span>}
-                  {isTrialExpired && <span className="plan-status-badge expired">Piloto Expirado</span>}
+                  {isFounder && <span className="plan-status-badge active">Sem cobrança</span>}
+                  {isPaid && <span className="plan-status-badge active">Em dia</span>}
+                  {isTrialActive && <span className="plan-status-badge pilot">Em teste</span>}
+                  {isTrialExpired && <span className="plan-status-badge expired">Teste encerrado</span>}
                 </div>
               </div>
 
@@ -164,12 +164,10 @@ export default function WorkspacePlanoPage() {
                     lineHeight: 1.5,
                   }}
                 >
-                  🎉 <strong>Você está no período de piloto oficial de 30 dias com o Plano Pro liberado.</strong>
-                  <br />
-                  Seu acesso completo com integrações de ERP (Jueri e Olist), alertas de carência e balanços
-                  automáticos está ativo sem custo até <strong>02/11/2026 às 23:14</strong>. Durante este período,
-                  o plano Pro já está fixado para você. A partir do encerramento do piloto, a contratação dos planos
-                  estará liberada aqui para você manter o serviço sem interrupções.
+                  Você está nos 30 dias de teste do Pro, sem cobrança, até{" "}
+                  <strong>02/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
+                  balanço no WhatsApp já valem. Os botões de contratar aparecem aqui depois
+                  dessa data.
                 </div>
               )}
 
@@ -184,11 +182,9 @@ export default function WorkspacePlanoPage() {
                     lineHeight: 1.5,
                   }}
                 >
-                  ⚠️ <strong>Seus 30 dias de piloto da mila. foram concluídos em 02/11/2026.</strong>
-                  <br />
-                  Seus dados, histórico de peças e cálculos continuam 100% seguros. Escolha abaixo entre o{" "}
-                  <strong>Plano Essencial</strong> ou <strong>Plano Pro</strong> para reativar seu acesso. A liberação
-                  para uso no WhatsApp e aqui no painel ocorre de forma <strong>imediata</strong> após a confirmação do pagamento.
+                  Os 30 dias de teste acabaram em 02/11/2026. Peças e cálculos continuam
+                  guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp
+                  e este painel voltam na hora.
                 </div>
               )}
 
@@ -203,9 +199,7 @@ export default function WorkspacePlanoPage() {
                     lineHeight: 1.5,
                   }}
                 >
-                  ✅ <strong>Sua assinatura está ativa e regular.</strong>
-                  <br />
-                  Você pode alternar entre os planos ou gerenciar sua forma de pagamento a qualquer momento.
+                  Sua assinatura está em dia. Dá para mudar de plano quando quiser.
                 </div>
               )}
             </div>
@@ -249,7 +243,7 @@ export default function WorkspacePlanoPage() {
                     Plano Essencial
                   </h3>
                   <p style={{ margin: 0, fontSize: "0.9rem", color: "rgba(30,43,40,0.7)" }}>
-                    Ideal para precificação ágil, raio-x de margem e legendas para Instagram.
+                    Preço com margem, Raio-X e legendas para o Instagram.
                   </p>
 
                   <div className="plan-price-val">
@@ -261,19 +255,19 @@ export default function WorkspacePlanoPage() {
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Precificação inteligente com foto e custo real
+                      Preço a partir da foto e do custo da peça
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Raio-X de margem líquida, taxas e impostos
+                      Raio-X de margem, taxas e impostos
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Radar de preços médios de mercado
+                      Radar de concorrentes no Google Shopping
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
@@ -285,7 +279,7 @@ export default function WorkspacePlanoPage() {
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Leitura de notas fiscais de compra (XML/DANFE)
+                      Leitura de notas de compra (XML e PDF)
                     </li>
                   </ul>
                 </div>
@@ -293,11 +287,11 @@ export default function WorkspacePlanoPage() {
                 <div>
                   {isTrialActive ? (
                     <button className="plan-action-btn" disabled>
-                      Incluso no seu Piloto Pro
+                      Já no teste Pro
                     </button>
                   ) : isPaid && currentPlan === "essencial" ? (
                     <button className="plan-action-btn" disabled>
-                      Seu Plano Atual
+                      Seu plano agora
                     </button>
                   ) : (
                     <button
@@ -330,7 +324,7 @@ export default function WorkspacePlanoPage() {
                     Plano Pro
                   </h3>
                   <p style={{ margin: 0, fontSize: "0.9rem", color: "rgba(30,43,40,0.7)" }}>
-                    Automação comercial completa, ERPs, estoque e fechamentos proativos no WhatsApp.
+                    Estoque, ERP e fechamento no WhatsApp.
                   </p>
 
                   <div className="plan-price-val">
@@ -342,31 +336,31 @@ export default function WorkspacePlanoPage() {
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Tudo o que o Plano Essencial oferece +
+                      Tudo do Essencial, e ainda:
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Integração com ERP Jueri e Olist (planilha pronta para Phibo)
+                      Jueri e Olist; planilha pronta para a Phibo
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Sincronização com Notion e Google Planilhas
+                      Notion e Google Planilhas
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Fechamentos automáticos no WhatsApp (dia 15 e dia 30)
+                      Balanço no WhatsApp nos dias 15 e 30
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Alertas automáticos de carência de fornecedores
+                      Aviso de carência de fornecedor
                     </li>
                   </ul>
                 </div>
@@ -374,11 +368,11 @@ export default function WorkspacePlanoPage() {
                 <div>
                   {isTrialActive ? (
                     <button className="plan-action-btn" disabled style={{ background: "rgba(23,63,59,0.12)", color: "var(--plum)", fontWeight: 700 }}>
-                      Plano Ativo (Piloto 30 dias até 02/11)
+                      Pro até 02/11
                     </button>
                   ) : isPaid && currentPlan === "pro" ? (
                     <button className="plan-action-btn" disabled style={{ background: "rgba(37,211,102,0.15)", color: "#177a3d" }}>
-                      Seu Plano Atual (Ativo)
+                      Seu plano agora
                     </button>
                   ) : (
                     <button
@@ -400,9 +394,8 @@ export default function WorkspacePlanoPage() {
 
             {/* Informação sobre liberação imediata e segurança */}
             <div className="plan-pay-note">
-              <div style={{ fontSize: "1.8rem" }}>⚡</div>
               <div style={{ fontSize: "0.88rem", color: "rgba(30,43,40,0.8)", lineHeight: 1.5 }}>
-                <strong>Liberação imediata para uso:</strong> Os pagamentos são processados com segurança via Asaas (Pix e Cartão de Crédito). Assim que o pagamento for aprovado, seu plano é atualizado instantaneamente e todos os recursos no WhatsApp da Mila são liberados no mesmo segundo.
+                Pagamento no Asaas, Pix ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.
               </div>
             </div>
           </>

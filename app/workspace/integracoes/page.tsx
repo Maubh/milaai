@@ -60,8 +60,7 @@ export default async function IntegracoesPage({
       <p className="tag">Área logada</p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
-        Conecte as ferramentas que sua loja já usa e mantenha estoque, custos e informações das
-        peças organizadas com a mila.
+        Ligue o que a loja já usa: Jueri, Olist, Nuvemshop, Notion, Google.
       </p>
 
       {okConectado ? (
@@ -72,8 +71,8 @@ export default async function IntegracoesPage({
 
       {okPendente ? (
         <p className="hint" role="status">
-          Recebemos o retorno do <strong>{byId.get(okParam as string)?.name ?? okParam}</strong>, mas
-          a credencial ainda não aparece nesta loja. Conecte de novo ou fale com a mila.
+          O {byId.get(okParam as string)?.name ?? okParam} voltou, mas a chave ainda não
+          aparece nesta loja. Conecte de novo ou fale com a mila.
         </p>
       ) : null}
 
@@ -85,11 +84,11 @@ export default async function IntegracoesPage({
 
       {!token ? (
         <p className="hint" role="status">
-          Entre com seu telefone para ver e conectar as integrações desta loja.
+          Entre com o WhatsApp para ver as conexões desta loja.
         </p>
       ) : !consultou ? (
         <p className="hint" role="status">
-          Não conseguimos consultar suas integrações agora. Tente de novo em instantes.
+          Não deu para ler as conexões agora. Tente de novo daqui a pouco.
         </p>
       ) : null}
 

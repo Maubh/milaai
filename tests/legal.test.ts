@@ -181,8 +181,8 @@ const CONGELADOS: Array<[string, string]> = [
 const CONGELADOS_PRICING: Array<[string, string]> = [
   // A linha inteira do ERP fica congelada: é a que estava mentindo no ar
   // ("Integração direta Jueri, Bling e Olist") quando o guard nasceu.
-  ["erp-ressalva", "Olist e Bling ainda não"],
-  ["jueri-disponivel", "Jueri disponível"],
+  ["erp-ressalva", "Bling ainda não"],
+  ["jueri-disponivel", "Jueri e Olist disponíveis"],
 ];
 
 /**
@@ -427,7 +427,7 @@ test("legal: os valores de runtime são exatamente os esperados", async () => {
     !(f.GOOGLE_ESCOPOS as string[]).includes("email"),
     "o escopo email não deve estar na lista",
   );
-  assert.deepEqual(f.CONECTORES_NAO_PRONTOs, ["Olist", "Bling"]);
+  assert.deepEqual(f.CONECTORES_NAO_PRONTOs, ["Bling"]);
   // As listas não podem estar vazias — lista vazia faria os laços abaixo
   // passarem sem verificar nada.
   assert.ok((f.SUBCONTROLADORES as unknown[]).length >= 8, "subprocessadores faltando");
@@ -737,7 +737,7 @@ test("legal: o pricing importa os fatos em vez de digitar à mão", () => {
   // nenhuma forma (linha única, string solta, comentário de escape).
   const linha = pricing
     .split("\n")
-    .filter((l) => /\b(Olist|Bling)\b/i.test(l) && !/^\s*(\/\/|\*)/.test(l));
+    .filter((l) => /\b(Bling)\b/i.test(l) && !/^\s*(\/\/|\*)/.test(l));
   for (const l of linha) {
     assert.match(
       l,
@@ -1210,7 +1210,7 @@ Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — n�
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros
 Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
-Estes conectores ainda não estão disponíveis para uso: §, §. As telas existem, mas o acesso ainda não foi habilitado.
+Estes conectores ainda não estão disponíveis para uso: §. As telas existem, mas o acesso ainda não foi habilitado.
 7. Uso aceitável
 Você se compromete a não:
 violar lei, direito de terceiros ou estes termos;
@@ -1386,9 +1386,10 @@ em nome dela
 Disponíveis hoje:
 Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).
 Notion — a mila grava o caderno numa base que a loja já tem; não cria base.
+Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.
 Disponíveis, com validação em andamento:
 Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
-Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.
+Anunciados anteriormente e ainda não disponíveis: Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.
 9. Por quanto tempo guardamos
 Código de verificação (OTP)
 — Vida curta; expira sozinho. Alvo: minutos.
@@ -1465,7 +1466,7 @@ Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — n�
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros
 Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
-Estes conectores ainda não estão disponíveis para uso: Olist, Bling. As telas existem, mas o acesso ainda não foi habilitado.
+Estes conectores ainda não estão disponíveis para uso: Bling. As telas existem, mas o acesso ainda não foi habilitado.
 7. Uso aceitável
 Você se compromete a não:
 violar lei, direito de terceiros ou estes termos;
@@ -1593,10 +1594,10 @@ const GOLDEN_FONTE = `{
   ],
   "CONECTORES_DISPONIVEIS": [
     "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
-    "Notion — a mila grava o caderno numa base que a loja já tem; não cria base."
+    "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
+    "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque."
   ],
   "CONECTORES_NAO_PRONTOs": [
-    "Olist",
     "Bling"
   ],
   "CONECTORES_VALIDACAO_PENDENTE": [
@@ -1680,7 +1681,7 @@ const GOLDEN_FONTE = `{
     "O site não usa rastreadores de marketing: sem analytics de terceiros, pixel ou cookie de publicidade.",
     "Não há decisão totalmente automatizada que afete a lojista ou seus clientes."
   ],
-  "NAO_PRONTOs_FRASE": "Anunciados anteriormente e ainda não disponíveis: Olist e Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.",
+  "NAO_PRONTOs_FRASE": "Anunciados anteriormente e ainda não disponíveis: Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.",
   "RETENCAO": [
     {
       "alvo": "minutos",
@@ -1873,7 +1874,7 @@ test("legal: o texto visível do render REAL é exatamente o golden", async () =
 test("legal: implementação OAuth é exatamente a versão revisada", () => {
   const path = ["/opt/data/profiles/mila/auth/oauth.py", join(RAIZ, "../auth/oauth.py")].find(existsSync);
   assert.ok(path, "Sem OAuth real não há evidência de paridade");
-  assert.equal(createHash("sha256").update(readFileSync(path)).digest("hex"), "0cd12f7ea58517fb8af5f60f352a484d55cbd28b0d022f99066cea00134f33bb", "OAuth mudou: revisar a implementação antes de aceitar novo hash; AST não garante semântica arbitrária");
+  assert.equal(createHash("sha256").update(readFileSync(path)).digest("hex"), "3607a563802e71496e884cd5fa3f14e23c2da6449a50eb3bc15ece7302cbf793", "OAuth mudou: revisar a implementação antes de aceitar novo hash; AST não garante semântica arbitrária");
 });
 
 /** Entorno da rota e CSS congelados; não são compostos no render estático das

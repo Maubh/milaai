@@ -4,6 +4,7 @@ import { INTEGRACOES } from "@/lib/demo-data";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
+import "./integracoes.css";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -105,32 +106,14 @@ export default async function IntegracoesPage({
                 : "em breve"
             : "—";
           return (
-            <li
-              key={i.id}
-              className="card"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: "1rem",
-              }}
-            >
-              <span style={{ display: "grid", gap: "0.25rem", minWidth: 0, flex: 1 }}>
+            <li key={i.id} className="card integra-row">
+              <span className="integra-row-copy">
                 <strong>
                   {i.nome} <span className="integra-status">({label})</span>
                 </strong>
-                <span style={{ fontSize: "0.92rem", color: "rgba(30,43,40,0.78)" }}>{i.desc}</span>
+                <p>{i.desc}</p>
               </span>
-              <span
-                style={{
-                  display: "flex",
-                  gap: "0.6rem",
-                  flexWrap: "wrap",
-                  alignItems: "center",
-                  flexShrink: 0,
-                  marginLeft: "auto",
-                }}
-              >
+              <span className="integra-row-action">
                 <Link href={`/integrations/${i.id}`} className="btn btn-ghost btn-sm">
                   {live?.connected ? "Reconectar" : "Conectar"}
                 </Link>

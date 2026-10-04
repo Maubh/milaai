@@ -10,6 +10,7 @@ import {
   getTelefone,
   getVerifiedWaLink,
 } from "@/lib/onboarding";
+import "./workspace-mobile.css";
 
 const LINKS = [
   { href: "/workspace", label: "Visão geral" },

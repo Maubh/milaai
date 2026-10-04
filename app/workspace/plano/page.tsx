@@ -107,11 +107,10 @@ export default function WorkspacePlanoPage() {
   }
 
   return (
-    <div className="work-main">
-      <div className="work-wrap">
-        <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
-          <Link href="/workspace">← Visão geral</Link>
-        </p>
+    <div className="work-wrap">
+      <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
+        <Link href="/workspace">← Visão geral</Link>
+      </p>
         <p className="tag">Área logada · assinatura</p>
         <h1 className="work-title">Meu plano &amp; Assinatura</h1>
         <p className="work-lede">
@@ -400,7 +399,7 @@ export default function WorkspacePlanoPage() {
             </div>
 
             {/* Informação sobre liberação imediata e segurança */}
-            <div style={{ marginTop: "2rem", padding: "1.2rem", background: "var(--warm-white)", border: "1px solid var(--line)", borderRadius: "12px", display: "flex", gap: "1rem", alignItems: "center" }}>
+            <div className="plan-pay-note">
               <div style={{ fontSize: "1.8rem" }}>⚡</div>
               <div style={{ fontSize: "0.88rem", color: "rgba(30,43,40,0.8)", lineHeight: 1.5 }}>
                 <strong>Liberação imediata para uso:</strong> Os pagamentos são processados com segurança via Asaas (Pix e Cartão de Crédito). Assim que o pagamento for aprovado, seu plano é atualizado instantaneamente e todos os recursos no WhatsApp da Mila são liberados no mesmo segundo.
@@ -408,7 +407,6 @@ export default function WorkspacePlanoPage() {
             </div>
           </>
         )}
-      </div>
     </div>
   );
 }

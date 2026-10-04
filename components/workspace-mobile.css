@@ -1,0 +1,52 @@
+/* Chrome do workspace no celular. Não mexe em workspace.css (hash de entorno). */
+@media (max-width: 640px) {
+  .work-main {
+    padding: 0.85rem 0.75rem calc(1.25rem + env(safe-area-inset-bottom));
+  }
+  .work-title {
+    font-size: 1.65rem;
+    margin: 0.4rem 0 0.4rem;
+  }
+  .work-lede {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    margin-bottom: 1.1rem;
+  }
+  .work-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .work-actions .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .work-side {
+    padding-top: max(0.55rem, env(safe-area-inset-top));
+    padding-left: max(0.7rem, env(safe-area-inset-left));
+    padding-right: max(0.7rem, env(safe-area-inset-right));
+  }
+  .work-side nav {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+  .work-side nav a {
+    min-height: 44px;
+    font-size: 0.92rem;
+  }
+  .work-side-foot {
+    grid-template-columns: 1fr;
+  }
+  .work-side-foot .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .work-hello {
+    font-size: 0.95rem;
+  }
+  .work-hello span {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.15rem;
+  }
+}

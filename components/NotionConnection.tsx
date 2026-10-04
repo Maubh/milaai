@@ -49,7 +49,7 @@ export default function NotionConnection({ token, onTokenChange, onSubmit, conne
               <ol>
                 <li>Abra <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener noreferrer">as conexões do Notion</a> e crie uma conexão interna no seu espaço de trabalho. Você precisa ser proprietário desse espaço.</li>
                 <li>Copie o token da conexão. Ele funciona como uma chave de acesso.</li>
-                <li>Abra a base que deseja usar no Notion. No menu da página, em <strong>Conexões</strong>, adicione a conexão que você criou.</li>
+                <li>Abra a base que deseja usar no Notion. No menu de opções (•••), em <strong>Conexões</strong>, adicione a conexão que você criou.</li>
               </ol>
               <p>A Mila grava na base que você indicar; ela não cria uma base nova.</p>
               <a href="https://www.notion.com/help/create-integrations-with-the-notion-api" target="_blank" rel="noopener noreferrer">Ver instruções do Notion</a>
@@ -60,7 +60,7 @@ export default function NotionConnection({ token, onTokenChange, onSubmit, conne
               <input id="notion-token" type={visible ? "text" : "password"} value={token} onChange={(event) => onTokenChange(event.target.value)} placeholder="Cole seu token do Notion" autoComplete="off" spellCheck={false} autoCapitalize="none" required disabled={connecting} aria-describedby={error ? "notion-token-note notion-connect-error" : "notion-token-note"} />
               <button type="button" onClick={() => setVisible(!visible)} aria-controls="notion-token" aria-pressed={visible}>{visible ? "Ocultar" : "Mostrar"}</button>
             </div>
-            <p id="notion-token-note" className="notion-connect-note">A conexão permite acesso às páginas e bases que você compartilhar com ela.</p>
+            <p id="notion-token-note" className="notion-connect-note">A conexão permite acesso apenas às bases de dados que você compartilhar com ela.</p>
 
             {error ? <div id="notion-connect-error" className="notion-connect-error" role="alert"><p>{error}</p>{/telefone|sessão/.test(error) ? <Link href="/login">Entrar na Mila</Link> : null}</div> : null}
 

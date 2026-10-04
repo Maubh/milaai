@@ -1,0 +1,42 @@
+.integra-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.integra-row-copy {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  flex: 1;
+}
+.integra-row-copy p {
+  margin: 0;
+  font-size: 0.92rem;
+  color: rgba(30, 43, 40, 0.78);
+}
+.integra-row-action {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  .integra-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+  .integra-row-action {
+    margin-left: 0;
+    width: 100%;
+  }
+  .integra-row-action .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+}

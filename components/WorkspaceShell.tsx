@@ -13,8 +13,6 @@ import {
 
 const LINKS = [
   { href: "/workspace", label: "Visão geral" },
-  { href: "/workspace/precificacao", label: "Precificação" },
-  { href: "/workspace/conteudo", label: "Conteúdo" },
   { href: "/workspace/integracoes", label: "Integrações" },
   { href: "/workspace/plano", label: "Meu plano" },
 ];
@@ -97,9 +95,6 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           <button type="button" className="btn btn-ghost btn-sm" onClick={sair}>
             Sair
           </button>
-          <Link href="/" className="work-back">
-            ← Voltar à landing
-          </Link>
         </div>
       </aside>
       <div className="work-main">{children}</div>

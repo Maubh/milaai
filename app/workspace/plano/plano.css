@@ -63,8 +63,15 @@
   color: rgba(30, 43, 40, 0.75);
   line-height: 1.45;
 }
-.plan-card-featured {
+.plan-card-current {
   border: 1.5px solid var(--plum);
+}
+.plan-card-flag {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--plum);
+  margin: 0 0 0.45rem;
 }
 
 .plan-price-val {

@@ -51,15 +51,33 @@ export default function WorkspacePlanoPage() {
 
   const isFounder = session?.role === "founder" || session?.billing === "comped";
   const isPaid = session?.billing === "pago";
-  const isTrialActive =
-    !isFounder && !isPaid && session?.billing === "pilot" && now <= trialEndsDate;
   const isTrialExpired =
     !isFounder &&
     !isPaid &&
     (session?.billing === "trial_expirado" ||
-      (session?.billing === "pilot" && now > trialEndsDate));
+      (session?.billing === "pilot" && now > trialEndsDate) ||
+      (!session?.billing && now > trialEndsDate));
+  const trialOpen = now <= trialEndsDate && !isPaid && !isFounder && !isTrialExpired;
+  const hiringLocked = isFounder || trialOpen;
 
-  const currentPlan = session?.plan === "essencial" ? "essencial" : "pro";
+  const currentPlan: "essencial" | "pro" =
+    isTrialExpired ? "pro" : session?.plan === "essencial" ? "essencial" : "pro";
+  const currentIsEssencial = !isTrialExpired && currentPlan === "essencial";
+  const currentIsPro = !isTrialExpired && currentPlan === "pro";
+
+  const statusTitle = isFounder
+    ? "Plano Pro · founder"
+    : isPaid
+      ? currentPlan === "pro"
+        ? "Plano Pro"
+        : "Plano Essencial"
+      : trialOpen
+        ? "Plano Pro · 30 dias de teste"
+        : isTrialExpired
+          ? "Teste de 30 dias encerrado"
+          : currentPlan === "essencial"
+            ? "Plano Essencial"
+            : "Plano Pro";
 
   async function handleAssinar(planToOrder: "essencial" | "pro") {
     setOrderingPlan(planToOrder);
@@ -127,12 +145,7 @@ export default function WorkspacePlanoPage() {
             <div className="plan-status-card">
               <div className="plan-status-header">
                 <div>
-                  <h2 className="plan-status-name">
-                    {isFounder && "Plano Pro · founder"}
-                    {isPaid && (currentPlan === "pro" ? "Plano Pro" : "Plano Essencial")}
-                    {isTrialActive && "Plano Pro · 30 dias de teste"}
-                    {isTrialExpired && "Teste de 30 dias encerrado"}
-                  </h2>
+                  <h2 className="plan-status-name">{statusTitle}</h2>
                   <p className="plan-status-meta">
                     {session?.phone && (
                       <>
@@ -142,16 +155,15 @@ export default function WorkspacePlanoPage() {
                     {session?.store_name && ` · ${session.store_name}`}
                   </p>
                 </div>
-
                 <div>
                   {isFounder && <span className="plan-status-badge">Sem cobrança</span>}
                   {isPaid && <span className="plan-status-badge">Em dia</span>}
-                  {isTrialActive && <span className="plan-status-badge">Em teste</span>}
+                  {trialOpen && <span className="plan-status-badge">Em teste</span>}
                   {isTrialExpired && <span className="plan-status-badge is-ended">Teste encerrado</span>}
                 </div>
               </div>
 
-              {isTrialActive && (
+              {trialOpen && (
                 <p className="plan-note">
                   Você está nos 30 dias de teste do Pro, sem cobrança, até{" "}
                   <strong>02/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
@@ -186,8 +198,9 @@ export default function WorkspacePlanoPage() {
             {/* Grade com os 2 Planos */}
             <div className="work-grid-2">
               {/* PLANO ESSENCIAL */}
-              <div className="card work-card plan-card">
+              <div className={`card work-card plan-card${currentIsEssencial ? " plan-card-current" : ""}`}>
                 <div>
+                  {currentIsEssencial ? <p className="plan-card-flag">Seu plano</p> : null}
                   <h3 className="plan-card-name">
                     Plano Essencial
                   </h3>
@@ -219,13 +232,13 @@ export default function WorkspacePlanoPage() {
                 </div>
 
                 <div>
-                  {isTrialActive ? (
-                    <button className="plan-action-btn" disabled>
-                      Já no teste Pro
-                    </button>
-                  ) : isPaid && currentPlan === "essencial" ? (
-                    <button className="plan-action-btn" disabled>
+                  {currentIsEssencial ? (
+                    <button className="plan-action-btn is-current" disabled>
                       Seu plano agora
+                    </button>
+                  ) : hiringLocked ? (
+                    <button className="plan-action-btn" disabled>
+                      No Pro até 02/11
                     </button>
                   ) : (
                     <button
@@ -236,7 +249,7 @@ export default function WorkspacePlanoPage() {
                       {orderingPlan === "essencial"
                         ? "Processando..."
                         : isPaid && currentPlan === "pro"
-                        ? "Downgrade para Essencial"
+                        ? "Mudar para Essencial"
                         : "Contratar Plano Essencial"}
                     </button>
                   )}
@@ -244,8 +257,9 @@ export default function WorkspacePlanoPage() {
               </div>
 
               {/* PLANO PRO */}
-              <div className="card work-card plan-card plan-card-featured">
+              <div className={`card work-card plan-card${currentIsPro ? " plan-card-current" : ""}`}>
                 <div>
+                  {currentIsPro ? <p className="plan-card-flag">Seu plano</p> : null}
                   <h3 className="plan-card-name">
                     Plano Pro
                   </h3>
@@ -277,13 +291,13 @@ export default function WorkspacePlanoPage() {
                 </div>
 
                 <div>
-                  {isTrialActive ? (
+                  {currentIsPro ? (
                     <button className="plan-action-btn is-current" disabled>
-                      Pro até 02/11
+                      {trialOpen ? "Seu plano · até 02/11" : "Seu plano agora"}
                     </button>
-                  ) : isPaid && currentPlan === "pro" ? (
-                    <button className="plan-action-btn is-current" disabled>
-                      Seu plano agora
+                  ) : hiringLocked ? (
+                    <button className="plan-action-btn" disabled>
+                      No Essencial até 02/11
                     </button>
                   ) : (
                     <button
@@ -294,7 +308,7 @@ export default function WorkspacePlanoPage() {
                       {orderingPlan === "pro"
                         ? "Processando..."
                         : isPaid && currentPlan === "essencial"
-                        ? "Upgrade para Plano Pro"
+                        ? "Mudar para Pro"
                         : "Contratar Plano Pro"}
                     </button>
                   )}

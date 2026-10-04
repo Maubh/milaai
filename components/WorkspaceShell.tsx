@@ -29,6 +29,10 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
   const router = useRouter();
   const [telefone, setTelefone] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);
+  const [hello, setHello] = useState<{ name: string | null; store: string | null }>({
+    name: null,
+    store: null,
+  });
 
   useEffect(() => {
     // Depois da montagem: o servidor não tem esses valores, então preencher no
@@ -37,6 +41,16 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
     // Já estamos autenticadas (o servidor conferiu o cookie), então o CTA
     // existe mesmo sem nada no storage — ex.: abriu em outro navegador.
     setWaLink(getVerifiedWaLink() ?? defaultWaLink());
+    fetch("/api/session")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setHello({
+          name: typeof data.display_name === "string" ? data.display_name : null,
+          store: typeof data.store_name === "string" ? data.store_name : null,
+        });
+      })
+      .catch(() => undefined);
   }, []);
 
   async function sair() {
@@ -57,14 +71,18 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           <BrandLogo height={26} alt="" />
         </p>
         <p className="work-hello">
-          {telefone ? (
+          {hello.name ? (
+            <>
+              <strong>{hello.name}</strong>
+            </>
+          ) : telefone ? (
             <>
               WhatsApp <strong className="num">{telefone}</strong>
             </>
           ) : (
             <>Sua conta</>
           )}
-          <span>Sua área · piloto</span>
+          <span>{hello.store ? hello.store : "Sua área · piloto"}</span>
         </p>
         <nav>
           {LINKS.map((l) => {

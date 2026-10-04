@@ -5,18 +5,40 @@ import Link from "next/link";
 import LocalQr from "@/components/LocalQr";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
 
+interface SessionHint {
+  display_name: string | null;
+  store_name: string | null;
+}
+
 export default function WorkspaceHome() {
   const [waLink, setWaLink] = useState<string | null>(null);
+  const [who, setWho] = useState<SessionHint>({ display_name: null, store_name: null });
 
   useEffect(() => {
     setWaLink(getVerifiedWaLink() ?? defaultWaLink());
+    fetch("/api/session")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data) return;
+        setWho({
+          display_name: typeof data.display_name === "string" ? data.display_name : null,
+          store_name: typeof data.store_name === "string" ? data.store_name : null,
+        });
+      })
+      .catch(() => undefined);
   }, []);
+
+  const titulo = who.display_name ? `Olá, ${who.display_name}` : "Olá";
+  const ledeLoja = who.store_name
+    ? `Esta é a área da ${who.store_name}. `
+    : "";
 
   return (
     <div className="work-wrap">
       <p className="tag">Área logada · piloto</p>
-      <h1 className="work-title">Olá</h1>
+      <h1 className="work-title">{titulo}</h1>
       <p className="work-lede">
+        {ledeLoja}
         Precificação, legendas e o dia a dia da loja acontecem no WhatsApp com a mila.
         Aqui você só conecta as ferramentas e acompanha o plano.
       </p>

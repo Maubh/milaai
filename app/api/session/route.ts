@@ -30,6 +30,8 @@ export async function GET() {
       billing: typeof data.billing === "string" ? data.billing : "pilot",
       role: typeof data.role === "string" ? data.role : "user",
       trial_ends_at: typeof data.trial_ends_at === "string" ? data.trial_ends_at : null,
+      display_name: typeof data.display_name === "string" ? data.display_name : null,
+      store_name: typeof data.store_name === "string" ? data.store_name : null,
       connected: providers.filter((p) => p.connected).map((p) => p.id),
     },
     { headers: { "Cache-Control": "private, no-store" } },

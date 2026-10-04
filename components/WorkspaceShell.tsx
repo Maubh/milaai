@@ -62,11 +62,16 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
 
   useEffect(() => {
     if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") setMenuOpen(false);
     }
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
   }, [menuOpen]);
 
   async function sair() {
@@ -116,7 +121,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
             ) : (
               <>Sua conta</>
             )}
-            <span>{hello.store ? hello.store : "Sua área · piloto"}</span>
+            <span>{hello.store ? hello.store : "Sua área"}</span>
           </p>
           <nav>
             {LINKS.map((l) => {

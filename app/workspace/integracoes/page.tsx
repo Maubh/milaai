@@ -57,7 +57,7 @@ export default async function IntegracoesPage({
       <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
         <Link href="/workspace">← Visão geral</Link>
       </p>
-      <p className="tag">Área logada · piloto</p>
+      <p className="tag">Área logada</p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
         Conecte as ferramentas que sua loja já usa e mantenha estoque, custos e informações das

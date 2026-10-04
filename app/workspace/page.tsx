@@ -35,7 +35,7 @@ export default function WorkspaceHome() {
 
   return (
     <div className="work-wrap">
-      <p className="tag">Área logada · piloto</p>
+      <p className="tag">Área logada</p>
       <h1 className="work-title">{titulo}</h1>
       <p className="work-lede">
         {ledeLoja}

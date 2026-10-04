@@ -92,6 +92,32 @@
     margin-left: 0;
     margin-top: 0.15rem;
   }
+
+  .work-shell.is-menu-open .work-side {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    width: 100%;
+    max-width: none;
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--warm-white);
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    overflow: auto;
+  }
+  .work-shell.is-menu-open .work-drawer.is-open {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .work-shell.is-menu-open .work-side-foot {
+    margin-top: auto;
+  }
+  .work-shell.is-menu-open .work-main {
+    visibility: hidden;
+  }
 }
 
 @media (max-width: 640px) {

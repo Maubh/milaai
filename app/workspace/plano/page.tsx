@@ -164,7 +164,7 @@ export default function WorkspacePlanoPage() {
                 >
                   🎉 <strong>Você está no período de piloto oficial de 30 dias com o Plano Pro liberado.</strong>
                   <br />
-                  Seu acesso completo com integrações de ERP (Jueri, Bling, Olist), alertas de carência e balanços
+                  Seu acesso completo com integrações de ERP (Jueri e Olist), alertas de carência e balanços
                   automáticos está ativo sem custo até <strong>02/11/2026 às 23:14</strong>. Durante este período,
                   o plano Pro já está fixado para você. A partir do encerramento do piloto, a contratação dos planos
                   estará liberada aqui para você manter o serviço sem interrupções.
@@ -346,7 +346,7 @@ export default function WorkspacePlanoPage() {
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
-                      Integração oficial com ERP Jueri, Bling e Olist
+                      Integração com ERP Jueri e Olist (planilha pronta para Phibo)
                     </li>
                     <li>
                       <svg width="18" height="18" viewBox="0 0 20 20" fill="#173F3B">

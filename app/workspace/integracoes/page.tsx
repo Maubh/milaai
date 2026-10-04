@@ -90,7 +90,8 @@ export default async function IntegracoesPage({
       ) : null}
 
       <ul className="integra-list">
-        {INTEGRACOES.map((i) => {
+        {/* Bling ainda não está habilitado — não listar na área logada. */}
+        {INTEGRACOES.filter((i) => i.id !== "bling").map((i) => {
           const live = byId.get(i.id);
           // Sem status real do servidor não afirmamos nada sobre a conexão.
           const label = live

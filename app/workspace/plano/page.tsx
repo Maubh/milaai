@@ -282,7 +282,7 @@ export default function WorkspacePlanoPage() {
                       Notion e Google Planilhas
                     </li>
                     <li>
-                      Balanço no WhatsApp nos dias 15 e 30
+                      Balanço no WhatsApp no dia 15 e último dia do mês
                     </li>
                     <li>
                       Aviso de carência de fornecedor

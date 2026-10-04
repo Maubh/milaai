@@ -109,6 +109,9 @@ export default function WorkspacePlanoPage() {
   return (
     <div className="work-main">
       <div className="work-wrap">
+        <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
+          <Link href="/workspace">← Visão geral</Link>
+        </p>
         <p className="tag">Área logada · assinatura</p>
         <h1 className="work-title">Meu plano &amp; Assinatura</h1>
         <p className="work-lede">

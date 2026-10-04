@@ -53,6 +53,9 @@ export default async function IntegracoesPage({
 
   return (
     <div className="work-wrap">
+      <p className="work-back" style={{ margin: "0 0 0.85rem" }}>
+        <Link href="/workspace">← Visão geral</Link>
+      </p>
       <p className="tag">Área logada · piloto</p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
@@ -139,11 +142,6 @@ export default async function IntegracoesPage({
           );
         })}
       </ul>
-      <div className="work-actions">
-        <Link href="/workspace" className="btn btn-plum btn-sm">
-          Voltar à visão geral
-        </Link>
-      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { INTEGRACOES } from "@/lib/demo-data";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
+import "./integracoes.css";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -53,11 +54,12 @@ export default async function IntegracoesPage({
 
   return (
     <div className="work-wrap">
-      <p className="tag">Área logada · piloto</p>
+      <p className="work-back">
+        <Link href="/workspace">← Visão geral</Link>
+      </p>
       <h1 className="work-title">Integrações</h1>
       <p className="work-lede">
-        Conecte as ferramentas que sua loja já usa e mantenha estoque, custos e informações das
-        peças organizadas com a mila.
+        Ligue o que a loja já usa: Jueri, Olist, Nuvemshop, Notion, Google.
       </p>
 
       {okConectado ? (
@@ -68,8 +70,8 @@ export default async function IntegracoesPage({
 
       {okPendente ? (
         <p className="hint" role="status">
-          Recebemos o retorno do <strong>{byId.get(okParam as string)?.name ?? okParam}</strong>, mas
-          a credencial ainda não aparece nesta loja. Conecte de novo ou fale com a mila.
+          O {byId.get(okParam as string)?.name ?? okParam} voltou, mas a chave ainda não
+          aparece nesta loja. Conecte de novo ou fale com a mila.
         </p>
       ) : null}
 
@@ -81,16 +83,17 @@ export default async function IntegracoesPage({
 
       {!token ? (
         <p className="hint" role="status">
-          Entre com seu telefone para ver e conectar as integrações desta loja.
+          Entre com o WhatsApp para ver as conexões desta loja.
         </p>
       ) : !consultou ? (
         <p className="hint" role="status">
-          Não conseguimos consultar suas integrações agora. Tente de novo em instantes.
+          Não deu para ler as conexões agora. Tente de novo daqui a pouco.
         </p>
       ) : null}
 
       <ul className="integra-list">
-        {INTEGRACOES.map((i) => {
+        {/* Bling ainda não está habilitado — não listar na área logada. */}
+        {INTEGRACOES.filter((i) => i.id !== "bling").map((i) => {
           const live = byId.get(i.id);
           // Sem status real do servidor não afirmamos nada sobre a conexão.
           const label = live
@@ -101,12 +104,14 @@ export default async function IntegracoesPage({
                 : "em breve"
             : "—";
           return (
-            <li key={i.id} className="card">
-              <strong>
-                {i.nome} <span className="integra-status">({label})</span>
-              </strong>
-              <span style={{ fontSize: "0.92rem", color: "rgba(30,43,40,0.78)" }}>{i.desc}</span>
-              <span style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
+            <li key={i.id} className="card integra-row">
+              <span className="integra-row-copy">
+                <strong>
+                  {i.nome} <span className="integra-status">({label})</span>
+                </strong>
+                <p>{i.desc}</p>
+              </span>
+              <span className="integra-row-action">
                 <Link href={`/integrations/${i.id}`} className="btn btn-ghost btn-sm">
                   {live?.connected ? "Reconectar" : "Conectar"}
                 </Link>
@@ -118,11 +123,6 @@ export default async function IntegracoesPage({
           );
         })}
       </ul>
-      <div className="work-actions">
-        <Link href="/workspace" className="btn btn-plum btn-sm">
-          Voltar à visão geral
-        </Link>
-      </div>
     </div>
   );
 }

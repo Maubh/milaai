@@ -3,6 +3,7 @@ import { currentSessionToken } from "@/lib/server/mila-oauth";
 import { WORKSPACE_LOGIN_REDIRECT, shouldRedirectToLogin } from "@/lib/workspace-gate";
 import WorkspaceShell from "@/components/WorkspaceShell";
 import "./workspace.css";
+import "./workspace-polish.css";
 
 export const runtime = "nodejs";
 // O gate depende do cookie, então nada aqui pode ser servido de cache:

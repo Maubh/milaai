@@ -1,0 +1,150 @@
+/* Chrome do workspace no celular. Não mexe em workspace.css (hash de entorno). */
+
+.work-bar {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .work-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    min-height: 44px;
+  }
+  .work-bar-brand {
+    margin: 0;
+  }
+  .work-burger {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+  .work-burger:focus-visible {
+    outline: 2px solid var(--plum);
+    outline-offset: 2px;
+  }
+  .work-burger span {
+    display: grid;
+    gap: 5px;
+    width: 20px;
+  }
+  .work-burger i {
+    display: block;
+    height: 2px;
+    width: 100%;
+    background: var(--plum);
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+  .work-burger span.is-open i:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .work-burger span.is-open i:nth-child(2) {
+    opacity: 0;
+  }
+  .work-burger span.is-open i:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* Fecha o drawer: pílulas e botões somem; só a barra fica. */
+  .work-drawer {
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.65rem;
+  }
+  .work-drawer.is-open {
+    display: flex;
+  }
+  .work-drawer-brand {
+    display: none;
+  }
+  .work-drawer nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    overflow: visible;
+    gap: 0.25rem;
+  }
+  .work-drawer nav a {
+    min-height: 44px;
+    width: 100%;
+    border-radius: 10px;
+    justify-content: flex-start;
+  }
+  .work-side-foot {
+    grid-template-columns: 1fr;
+  }
+  .work-side-foot .btn {
+    width: 100%;
+    min-height: 44px;
+  }
+  .work-hello span {
+    display: block;
+    margin-left: 0;
+    margin-top: 0.15rem;
+  }
+
+  .work-shell.is-menu-open .work-side {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    width: 100%;
+    max-width: none;
+    min-height: 100svh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--warm-white);
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    overflow: auto;
+  }
+  .work-shell.is-menu-open .work-drawer.is-open {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .work-shell.is-menu-open .work-side-foot {
+    margin-top: auto;
+  }
+  .work-shell.is-menu-open .work-main {
+    visibility: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  .work-main {
+    padding: 0.85rem 0.75rem calc(1.25rem + env(safe-area-inset-bottom));
+  }
+  .work-title {
+    font-size: 1.65rem;
+    margin: 0.4rem 0 0.4rem;
+  }
+  .work-lede {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    margin-bottom: 1.1rem;
+  }
+  .work-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .work-actions .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+  .work-side {
+    padding-top: max(0.45rem, env(safe-area-inset-top));
+    padding-left: max(0.7rem, env(safe-area-inset-left));
+    padding-right: max(0.7rem, env(safe-area-inset-right));
+  }
+}

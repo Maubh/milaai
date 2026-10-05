@@ -6,6 +6,7 @@ interface IntegrationItem {
   id: string;
   name?: string;
   showName?: boolean;
+  badge?: string;
   color: string;
   icon: React.ReactNode;
 }
@@ -52,6 +53,7 @@ const INTEGRATIONS: IntegrationItem[] = [
     id: "bling",
     name: "Bling",
     showName: false,
+    badge: "Em breve",
     color: "#002726",
     icon: (
       <img src="/integrations/bling-ink.svg" alt="" />
@@ -65,6 +67,13 @@ const INTEGRATIONS: IntegrationItem[] = [
     icon: (
       <img src="/integrations/olist.svg" alt="" />
     ),
+  },
+  {
+    id: "nuvemshop",
+    name: "Nuvemshop",
+    showName: false,
+    color: "#5D42E8",
+    icon: <img src="/integrations/nuvemshop-wordmark.png" alt="Nuvemshop" />,
   },
   {
     id: "google-workspace",
@@ -104,6 +113,7 @@ function BrandMark({ item }: { item: IntegrationItem }) {
     <div className={`marquee-mark integration-${item.id}`} aria-label={label}>
       <span className="marquee-mark-logo" style={{ color: item.color }}>{item.icon}</span>
       {item.showName !== false ? <span className="marquee-mark-name">{item.name}</span> : null}
+      {item.badge ? <span className="marquee-mark-badge">{item.badge}</span> : null}
     </div>
   );
 }
@@ -111,7 +121,7 @@ function BrandMark({ item }: { item: IntegrationItem }) {
 function BrandGroup({ hidden = false }: { hidden?: boolean }) {
   // Lista duplicada dentro do grupo: garante cobertura total em telas ultrawide
   // sem quebrar o loop contínuo (grupos idênticos, deslocamento de -1/3).
-  const items = [...INTEGRATIONS, ...INTEGRATIONS];
+  const items = [...INTEGRATIONS.filter((item) => item.id !== "outlook"), ...INTEGRATIONS.filter((item) => item.id !== "outlook")];
   return (
     <div className="marquee-group" aria-hidden={hidden || undefined}>
       {items.map((item, i) => <BrandMark key={`${item.id}-${i}`} item={item} />)}

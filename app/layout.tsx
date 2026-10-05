@@ -3,10 +3,25 @@ import "./globals.css";
 import "./site.css";
 
 export const metadata: Metadata = {
-  title: "mila. — Para quem vende joias e semijoias",
+  title: "mila. · A inteligência por trás da sua loja de joias e semijoias",
   description:
-    "Conheça a mila., assistente de negócios para quem vende joias e semijoias. Veja uma prévia da análise de custos, margens e descrições de peças na conversa.",
+    "Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
   metadataBase: new URL("https://milaai.com.br"),
+  openGraph: {
+    title: "mila. · A inteligência por trás da sua loja de joias e semijoias",
+    description:
+      "Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
+    url: "https://milaai.com.br",
+    siteName: "mila.",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "mila. · A inteligência por trás da sua loja de joias e semijoias",
+    description:
+      "Tenha a mila. no seu WhatsApp. Precificação com margem real, descrições prontas para e-commerce, gestão de fornecedores e balanço financeiro mensal sem esforço.",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico" },

@@ -2,20 +2,38 @@
 
 import React from "react";
 
-import { FERRAMENTAS_GOOGLE } from "@/lib/google-workspace";
-
 interface IntegrationItem {
   id: string;
   name?: string;
   showName?: boolean;
   color: string;
   icon: React.ReactNode;
-  /**
-   * Só o Google usa isto: as ferramentas da suíte, exibidas SOB o nome da
-   * marca (Drive e Planilhas). As demais integrações (Notion, Jueri, Bling,
-   * Olist, Outlook) mostram apenas o logo — sem sub-ícones.
-   */
-  tools?: typeof FERRAMENTAS_GOOGLE;
+}
+
+function GoogleWorkspaceIcons() {
+  return (
+    <span className="google-workspace-icons" aria-hidden="true">
+      <svg viewBox="0 0 48 42" focusable="false">
+        <polygon fill="#0F9D58" points="16,2 30,2 46,30 32,30" />
+        <polygon fill="#F4B400" points="32,30 46,30 39,40 11,40" />
+        <polygon fill="#4285F4" points="16,2 2,30 9,40 23,12" />
+      </svg>
+      <svg viewBox="0 0 28 32" focusable="false">
+        <path fill="#34A853" d="M4 0h14l6 6v24a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2Z" />
+        <path fill="#8BCF9B" d="M18 0v6h6z" />
+        <path fill="#FFF" d="M7 13h12v2H7zm0 5h5v2h-5zm7 0h5v2h-5zm-7 5h5v2H7zm7 0h5v2h-5z" />
+      </svg>
+    </span>
+  );
+}
+
+function GoogleWorkspaceBrand() {
+  return (
+    <span className="google-workspace-brand">
+      <img src="/integrations/google-workspace.svg" alt="" />
+      <GoogleWorkspaceIcons />
+    </span>
+  );
 }
 
 /* Wordmarks do Bling e da Olist são os SVGs distribuídos pelas próprias marcas,
@@ -51,15 +69,9 @@ const INTEGRATIONS: IntegrationItem[] = [
   {
     id: "google-workspace",
     name: "Google Workspace",
-    // A marca aparece com o NOME visível: abaixo dele vão os ícones das
-    // ferramentas que a mila realmente usa (Drive e Planilhas). Sem o nome, a
-    // lista de ícones ficaria sem dono.
-    showName: true,
+    showName: false,
     color: "#5F6368",
-    icon: (
-      <img src="/integrations/google-workspace.svg" alt="" />
-    ),
-    tools: FERRAMENTAS_GOOGLE,
+    icon: <GoogleWorkspaceBrand />,
   },
   {
     id: "notion",
@@ -87,28 +99,11 @@ const INTEGRATIONS: IntegrationItem[] = [
 
 function BrandMark({ item }: { item: IntegrationItem }) {
   const label = item.name ?? item.id;
-  const temNome = item.showName !== false;
-  const tools = item.tools ?? [];
 
   return (
     <div className={`marquee-mark integration-${item.id}`} aria-label={label}>
       <span className="marquee-mark-logo" style={{ color: item.color }}>{item.icon}</span>
-      {temNome ? <span className="marquee-mark-name">{item.name}</span> : null}
-      {tools.length > 0 ? (
-        /* Ferramentas da suíte, SOB o nome da marca. Cada ícone leva o nome no
-           alt/title: sozinho, o logo não diz o que a mila faz com ele. */
-        <span className="marquee-mark-tools">
-          {tools.map((t) => (
-            <img
-              key={t.nome}
-              className="marquee-mark-tool"
-              src={t.icone}
-              alt={t.nome}
-              title={t.nome}
-            />
-          ))}
-        </span>
-      ) : null}
+      {item.showName !== false ? <span className="marquee-mark-name">{item.name}</span> : null}
     </div>
   );
 }

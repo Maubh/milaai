@@ -458,7 +458,6 @@ const EXIGIDAS: Array<[string, string[]]> = [
   ["PricingSection", ["PLANO_GOOGLE"]],
   ["demo-data", ["GOOGLE_DESC", "NOTION_DESC"]],
   ["integrations/[app]", ["GOOGLE_DESC", "GOOGLE_TITULO", "GOOGLE_ESCOPO_NOTA", "FERRAMENTAS_GOOGLE"]],
-  ["IntegrationsMarquee", ["FERRAMENTAS_GOOGLE"]],
 ];
 
 test("google: as telas USAM a fonte única em código, não citam em comentário", () => {
@@ -543,17 +542,14 @@ test("google: o essencial diz que o caderno fica salvo mesmo sem destino", () =>
     "a linha do espelho não repete a feature anterior");
 });
 
-test("google: os ícones das ferramentas são exibidos sob o nome da marca", () => {
-  // Pedido do Maurício (2026-09-29): o nome "Google Workspace" visível, com os
-  // ícones das ferramentas abaixo.
+test("google: o marquee mantém a marca compacta com ícones menores", () => {
   const src = TELAS[3][1];
   const bloco = src.slice(src.indexOf('id: "google-workspace"'));
   const item = bloco.slice(0, bloco.indexOf('id: "notion"'));
-  assert.match(item, /showName: true/, "sem o nome, os ícones ficam sem dono");
-  assert.match(item, /tools: FERRAMENTAS_GOOGLE/);
-  // E o render usa mesmo os ícones, com nome acessível.
-  assert.match(src, /className="marquee-mark-tools"/);
-  assert.match(src, /alt=\{t\.nome\}/);
+  assert.match(item, /showName: false/);
+  assert.match(item, /GoogleWorkspaceBrand/);
+  assert.match(src, /className="google-workspace-icons"/);
+  assert.doesNotMatch(src, /marquee-mark-tools/);
 });
 
 test("notion: o site diz que o caderno pode ir para o Notion", () => {

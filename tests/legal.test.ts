@@ -1883,7 +1883,7 @@ const ENTORNO_REVISADO: Record<string, string> = {
   "app/(site)/login/auth.css": "89474c9f6c60fd5166ae78c28376f4bca192008ddf6561cbafa4d03cc8e2706e",
   "app/globals.css": "84e3d5f415c9a5ae300726302eae47d7980ea67ca288d9c560531429d5497262",
   "app/layout.tsx": "4a4eb8d86c23f95299d15d62232ba50c93327f03d22cb32f4695c2934106a855",
-  "app/site.css": "f8ef6108261d31f6698228cdb0c233f0d2c157893a938910ee2850dbf4cd2e37",
+  "app/site.css": "6a57d6c91925611de539c7f85cdc4f12c6f6867c29a5bffbf871b46bdebdebda",
   "app/workspace/workspace.css": "8dcf6352f84a4755bcd434a8b5abc9500b2024c0098d397a0c01454ccd8be02b",
   "components/BrandLogo.tsx": "eadd3ecf16e11bb0fc69d40c528727afc971142daec9367c51266b1f633fabb2",
   "components/SiteFooter.tsx": "ccb5264b00af80a48fdd0d496447085c8f48c6c9a868a547fc456d0e5eed3554",

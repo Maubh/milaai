@@ -276,7 +276,7 @@ export default function WorkspacePlanoPage() {
                       Tudo do Essencial, e ainda:
                     </li>
                     <li>
-                      Jueri e Olist; planilha pronta para a Phibo
+                      Nuvemshop, Jueri e Olist; planilha pronta para a Phibo
                     </li>
                     <li>
                       Notion e Google Planilhas

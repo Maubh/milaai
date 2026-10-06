@@ -75,6 +75,10 @@ export const AUTHORIZE_HOSTS = [
   "bling.com.br",
   "accounts.google.com",
   "api.notion.com",
+  "www.tiendanube.com",
+  "tiendanube.com",
+  "www.nuvemshop.com.br",
+  "nuvemshop.com.br",
 ];
 
 /** Só deixamos o browser sair para um host de provedor conhecido, via https. */

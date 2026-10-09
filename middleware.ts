@@ -3,12 +3,19 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const url = req.nextUrl;
+  const { pathname, search } = url;
+
+  // 1. Sanitiza URLs que chegam com asteriscos ou pontuação colada de markdown (ex: WhatsApp)
+  // Exemplo: /workspace/integracoes* -> /workspace/integracoes
+  if (/[*_]+$/.test(pathname) || pathname.includes("*")) {
+    const cleanPath = pathname.replace(/[*_]+/g, "");
+    const destination = new URL(`${cleanPath || "/"}${search}`, req.url);
+    return NextResponse.redirect(destination, 308);
+  }
+
+  // 2. Se o request vier pelo subdomínio vitrine.milaai.com.br
   const hostname = req.headers.get("host") || "";
-
-  // Se o request vier pelo subdomínio vitrine.milaai.com.br
   if (hostname.startsWith("vitrine.") || hostname.includes("vitrine.localhost")) {
-    const pathname = url.pathname;
-
     // Evitar loop se já estiver em /vitrine ou arquivos estáticos
     if (
       pathname.startsWith("/_next") ||

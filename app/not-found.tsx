@@ -2,21 +2,23 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="wrap" style={{ padding: "4rem 0" }}>
-      <p className="tag">Página não encontrada</p>
-      <h1 className="display" style={{ fontSize: "clamp(2rem,4vw,3rem)", margin: "0.8rem 0" }}>
-        Essa bancada não existe.
-      </h1>
-      <p style={{ marginBottom: "1.5rem", maxWidth: "52ch" }}>
-        A simulação cobre a landing, o onboarding, a conversa simulada e o workspace de apoio. Siga por
-        um desses caminhos. Todos funcionam.
+    <div className="wrap" style={{ padding: "5rem 1.5rem", maxWidth: "620px", margin: "0 auto", textAlign: "center" }}>
+      <p className="tag" style={{ display: "inline-block", marginBottom: "0.8rem" }}>
+        Página não encontrada
       </p>
-      <p style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap" }}>
+      <h1 className="display" style={{ fontSize: "clamp(2rem,4vw,2.8rem)", margin: "0.5rem 0 1rem", lineHeight: "1.2" }}>
+        Não encontramos esta página
+      </h1>
+      <p style={{ marginBottom: "2rem", color: "rgba(39,35,38,0.78)", lineHeight: "1.6", fontSize: "1.05rem" }}>
+        O endereço que você tentou acessar pode ter mudado, estar incorreto ou não estar mais disponível.
+        Volte à página inicial ou acesse o seu painel da Mila.
+      </p>
+      <p style={{ display: "flex", gap: "0.8rem", justifyContent: "center", flexWrap: "wrap" }}>
         <Link href="/" className="btn btn-plum">
-          Voltar à landing
+          Ir para o início
         </Link>
-        <Link href="/conversa" className="btn btn-ghost">
-          Abrir conversa simulada
+        <Link href="/workspace" className="btn btn-ghost">
+          Acessar painel
         </Link>
       </p>
     </div>

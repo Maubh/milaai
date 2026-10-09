@@ -18,6 +18,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, detail: "invalid_phone" }, { status: 400 });
   }
 
+  // Em desenvolvimento local: bypass para testes sem tocar no WhatsApp real
+  if (process.env.NODE_ENV === "development" && (phone.includes("999990000") || phone.includes("123456789"))) {
+    return NextResponse.json({ ok: true, dev_sandbox: true, test_code: "123456" });
+  }
+
   const { status, data } = await proxyMilaAuth("/api/auth/otp/start", {
     method: "POST",
     body: JSON.stringify({ phone }),

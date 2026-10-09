@@ -34,6 +34,39 @@ export async function proxyOAuth(
   if (!token) {
     return { status: 401, data: { ok: false, detail: "no_session" } };
   }
+
+  // Modo Sandbox Local: responde dados simulados para desenvolvimento seguro (zero chamadas à VPS)
+  if (token === "sandbox_dev_session" || token.startsWith("sandbox_")) {
+    if (path.includes("/providers")) {
+      return {
+        status: 200,
+        data: {
+          ok: true,
+          tenant: "loja_sandbox_local",
+          store_name: "Loja Sandbox (Local Dev)",
+          display_name: "Maurício (Sandbox)",
+          providers: [
+            { id: "jueri", name: "Jueri", mode: "guided_key", connected: false, app_configured: true },
+            { id: "olist", name: "Olist", mode: "oauth", connected: false, app_configured: true },
+            { id: "nuvemshop", name: "Nuvemshop", mode: "oauth", connected: false, app_configured: true },
+            { id: "google", name: "Google Workspace", mode: "oauth", connected: false, app_configured: true },
+            { id: "notion", name: "Notion", mode: "guided_key", connected: false, app_configured: true },
+          ],
+        },
+      };
+    }
+    const slug = path.split("/")[3] || "provider";
+    return {
+      status: 200,
+      data: {
+        ok: true,
+        provider: slug,
+        authorize_url: `/workspace/integracoes?ok=${slug}`,
+        detail: "sandbox_simulated",
+      },
+    };
+  }
+
   return proxyMilaAuth(path, { ...init, sessionToken: token });
 }
 

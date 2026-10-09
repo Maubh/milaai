@@ -27,6 +27,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, detail: "invalid_body" }, { status: 400 });
   }
 
+  // Em desenvolvimento local: código 123456 ou telefone de teste emite sessão de sandbox isolada
+  if (process.env.NODE_ENV === "development" && (digits === "123456" || phone.includes("999990000"))) {
+    const res = NextResponse.json({
+      ok: true,
+      phone,
+      plan: "pro",
+      billing: "pilot",
+      role: "founder",
+    });
+    res.cookies.set("mila_session", "sandbox_dev_session", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+    return res;
+  }
+
   const { status, data, setCookie } = await proxyMilaAuth("/api/auth/otp/verify", {
     method: "POST",
     body: JSON.stringify({ phone, code: digits }),

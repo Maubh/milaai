@@ -240,6 +240,39 @@ function LoginInner() {
           {enviando ? "Enviando código…" : "Continuar para o WhatsApp"}
         </button>
       </form>
+      {process.env.NODE_ENV === "development" ? (
+        <div style={{ marginTop: "1.5rem", padding: "1.2rem", borderRadius: "10px", background: "#f0fdf4", border: "1px solid #bbf7d0", textAlign: "center" }}>
+          <p style={{ margin: 0, fontWeight: 700, color: "#166534", fontSize: "0.95rem" }}>
+            🛠️ Modo Sandbox de Desenvolvimento Ativo
+          </p>
+          <p style={{ margin: "0.4rem 0 1rem", color: "#15803d", fontSize: "0.85rem", lineHeight: 1.5 }}>
+            Ambiente 100% isolado da produção. Entre diretamente na loja fictícia de testes sem enviar SMS ou tocar na sua loja real.
+          </p>
+          <button
+            type="button"
+            className="btn btn-plum btn-sm"
+            style={{ width: "100%", justifyContent: "center" }}
+            onClick={async () => {
+              setEnviando(true);
+              try {
+                await fetch("/api/auth/otp/verify", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ phone: "+5511999990000", code: "123456" }),
+                });
+                saveTelefone("+5511999990000");
+                window.location.href = "/workspace/integracoes";
+              } catch {
+                setErro("Erro ao iniciar sandbox.");
+              } finally {
+                setEnviando(false);
+              }
+            }}
+          >
+            Entrar na Loja Sandbox de Testes →
+          </button>
+        </div>
+      ) : null}
     </div>
   );
 }

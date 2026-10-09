@@ -1,0 +1,1 @@
+{"date":"2026-10-09","scope":"workspace integrations","framework":"Next.js 15 / React 19","font":"Manrope","palette":"existing mila mineral / ivory","motion":"framer-motion and GSAP installed; no decorative motion for this catalogue","spacing":"4px scale","sources":{"font":"app/layout.tsx:43","palette":"app/globals.css:1","framework":"package.json:16"}}

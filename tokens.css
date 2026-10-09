@@ -1,0 +1,97 @@
+/* mila. integration catalogue — tokens scoped by name to preserve the existing app. */
+:root {
+  --color-integration-paper: oklch(98.6% 0.003 85);
+  --color-integration-soft: oklch(95.5% 0.01 160);
+  --color-integration-rule: oklch(87% 0.009 160);
+  --color-integration-control: oklch(59% 0.018 165);
+  --color-integration-ink: oklch(27% 0.025 165);
+  --color-integration-muted: oklch(46% 0.016 165);
+  --color-integration-accent: oklch(34% 0.049 185);
+  --color-integration-accent-ink: oklch(98.6% 0.003 85);
+  --color-integration-focus: oklch(34% 0.049 185);
+  --color-integration-error: oklch(43% 0.15 28);
+  --color-integration-error-paper: oklch(96% 0.016 28);
+  --font-integration-display: var(--display);
+  --font-integration-body: var(--sans);
+  --space-integration-xs: 0.25rem;
+  --space-integration-sm: 0.5rem;
+  --space-integration-md: 0.75rem;
+  --space-integration-lg: 1rem;
+  --space-integration-xl: 1.25rem;
+  --space-integration-2xl: 1.5rem;
+  --space-integration-3xl: 2rem;
+  --space-integration-4xl: 2.5rem;
+  --text-integration-small: var(--text-platform-caption);
+  --text-integration-body: var(--text-platform-body);
+  --text-integration-label: var(--text-platform-body);
+  --text-integration-heading: var(--text-platform-heading);
+  --text-integration-display: var(--text-platform-title);
+  --radius-integration-card: 12px;
+  --radius-integration-control: 8px;
+  --radius-integration-pill: 999px;
+  --rule-integration: 1px;
+  --ease-integration-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-integration-micro: 120ms;
+}
+
+/* Shared workspace shell and plan comparison. */
+:root {
+  --color-workspace-paper: oklch(97% 0.008 85);
+  --color-workspace-surface: oklch(99% 0.002 85);
+  --color-workspace-active: oklch(93% 0.018 165);
+  --color-workspace-rule: var(--color-integration-rule);
+  --color-workspace-ink: var(--color-integration-ink);
+  --color-workspace-muted: var(--color-integration-muted);
+  --color-workspace-accent: var(--color-integration-accent);
+  --color-workspace-accent-ink: var(--color-integration-accent-ink);
+  --color-workspace-control: var(--color-integration-control);
+  --color-workspace-error: var(--color-integration-error);
+  --color-workspace-backdrop: oklch(27% 0.025 165 / 0.3);
+  --color-workspace-shadow: oklch(27% 0.025 165 / 0.12);
+  --space-workspace-xs: 0.25rem;
+  --space-workspace-sm: 0.5rem;
+  --space-workspace-md: 0.75rem;
+  --space-workspace-lg: 1rem;
+  --space-workspace-xl: 1.5rem;
+  --space-workspace-2xl: 2rem;
+  --space-workspace-3xl: 2.5rem;
+  --font-workspace: var(--sans);
+  --text-workspace-xs: var(--text-platform-caption);
+  --text-workspace-sm: var(--text-platform-secondary);
+  --text-workspace-body: var(--text-platform-body);
+  --text-workspace-heading: var(--text-platform-heading);
+  --text-workspace-title: var(--text-platform-title);
+  --radius-workspace: 10px;
+  --radius-workspace-panel: 16px;
+  --radius-workspace-avatar: 50%;
+  --size-workspace-sidebar: 232px;
+  --size-workspace-rail: 72px;
+  --size-workspace-toolbar: 60px;
+  --size-workspace-control: 44px;
+  --size-plan-card: 540px;
+  --ease-workspace-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-workspace-short: 180ms;
+  --z-workspace-sidebar: 20;
+}
+
+/* Mobile navigation motion, reusing the workspace palette and typography. */
+:root {
+  --text-workspace-mobile-nav: var(--text-platform-control);
+  --dur-workspace-menu-enter: 300ms;
+  --dur-workspace-menu-exit: 200ms;
+  --dur-workspace-menu-fade: 120ms;
+  --dur-workspace-menu-stagger: 40ms;
+  --ease-workspace-in: cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4
+ * Platform typography by role, shared across desktop and mobile. */
+:root {
+  --text-platform-caption: 0.8125rem;
+  --text-platform-secondary: 0.875rem;
+  --text-platform-body: 0.9375rem;
+  --text-platform-control: var(--text-platform-body);
+  --text-platform-heading: 1.25rem;
+  --text-platform-title: clamp(1.75rem, 2.6vw, 2.125rem);
+  --text-platform-price: 2.25rem;
+}

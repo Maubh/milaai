@@ -1,0 +1,60 @@
+[
+  {
+    "date": "2026-10-09",
+    "scope": "workspace overview only",
+    "macrostructure": "Split Studio",
+    "theme": "existing mila mineral",
+    "enrichment": "functional WhatsApp QR only",
+    "nav": "existing workspace side rail (N3), preserved by page scope",
+    "footer": "none",
+    "brief": "WhatsApp conversation and QR diptych with separate integration and plan destinations",
+    "critique": {
+      "P": 4,
+      "H": 4,
+      "E": 5,
+      "S": 4,
+      "R": 5,
+      "V": 4
+    },
+    "verification": {
+      "viewports": [
+        320,
+        375,
+        414,
+        768,
+        1280
+      ],
+      "typescript": "pass",
+      "contrast": "pass, body minimum 6.22:1",
+      "routes": "integration and plan navigation verified"
+    }
+  },
+  {
+    "date": "2026-10-09",
+    "macrostructure": "release journal",
+    "theme": "existing mila mineral",
+    "enrichment": "none",
+    "brief": "Versioned customer-facing release history with a discreet unread indicator in existing workspace navigation"
+  },
+  {
+    "date": "2026-10-09",
+    "scope": "workspace shell and plan comparison",
+    "macrostructure": "existing workspace shell",
+    "theme": "existing mila mineral",
+    "nav": "collapsible rail adapted from 21st.dev references",
+    "brief": "Compact sidebar with bottom account area and equal-height plan cards",
+    "references": [
+      "https://21st.dev/@manuarora700/components/sidebar",
+      "https://21st.dev/@arunjdass/components/dashboard-sidebar"
+    ]
+  },
+  {
+    "date": "2026-10-09",
+    "macrostructure": "Catalogue",
+    "theme": "existing mila mineral",
+    "enrichment": "existing tool marks",
+    "nav": "existing workspace side rail",
+    "footer": "Ft2",
+    "brief": "Integration catalogue with tool logos, real connection status, and grouped tools"
+  }
+]

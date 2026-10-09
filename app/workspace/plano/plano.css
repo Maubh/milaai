@@ -1,150 +1,46 @@
+/* Hallmark · plan comparison · existing mila mineral theme
+ * Shared card height, reserved heading slots, and footer-aligned actions.
+ * pre-emit critique: P4 H5 E5 S5 R5 V4 */
 .plan-status-card,
 .plan-card {
-  background: var(--warm-white);
-  border: 1px solid var(--line);
-  border-radius: var(--radius, 16px);
-  box-shadow: 0 1px 0 rgba(23, 63, 59, 0.05), 0 18px 44px -28px rgba(23, 63, 59, 0.35);
-  padding: 1.4rem;
+  background: var(--color-workspace-surface);
+  color: var(--color-workspace-ink);
+  border: 1px solid var(--color-workspace-rule);
+  border-radius: var(--radius-workspace);
+  box-shadow: none;
+  padding: var(--space-workspace-xl);
 }
-.plan-status-card {
-  margin-bottom: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
+.plan-status-card { margin-bottom: var(--space-workspace-2xl); display: grid; gap: var(--space-workspace-lg); background: var(--color-workspace-paper); }
+.plan-status-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-workspace-sm) var(--space-workspace-lg); }
+.plan-status-name { margin: 0; font-size: var(--text-workspace-body); font-weight: 700; color: var(--color-workspace-accent); }
+.plan-status-meta { margin: var(--space-workspace-xs) 0 0; font-size: var(--text-workspace-sm); color: var(--color-workspace-muted); }
+.plan-status-badge { display: inline-flex; align-items: center; font-size: var(--text-workspace-xs); font-weight: 600; padding: var(--space-workspace-xs) var(--space-workspace-sm); border-radius: var(--radius-workspace); background: var(--color-workspace-active); color: var(--color-workspace-accent); white-space: nowrap; }
+.plan-status-badge.is-ended, .plan-note.is-ended { color: var(--color-workspace-error); }
+.plan-note { margin: 0; font-size: var(--text-platform-body); line-height: 1.6; color: var(--color-workspace-muted); max-width: 72ch; }
+.workspace-plan-page .plan-grid { align-items: stretch; grid-auto-rows: 1fr; gap: var(--space-workspace-xl); }
+.plan-card { display: flex; flex-direction: column; gap: var(--space-workspace-xl); min-height: var(--size-plan-card); height: 100%; }
+.plan-card > div:first-child { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.plan-card > div:last-child { margin-top: auto; }
+.plan-card-current { border-color: var(--color-workspace-accent); }
+.plan-card-flag { display: block; min-height: 24px; margin: 0 0 var(--space-workspace-sm); font-size: var(--text-workspace-xs); font-weight: 600; line-height: 1.5; color: var(--color-workspace-accent); }
+.plan-card-flag.is-placeholder { visibility: hidden; }
+.workspace-plan-page .plan-card-name { font-size: var(--text-workspace-heading); margin: 0 0 var(--space-workspace-sm); color: var(--color-workspace-ink); line-height: 1.3; letter-spacing: -0.02em; font-style: normal; }
+.plan-card-blurb { margin: 0; min-height: 3em; font-size: var(--text-workspace-body); color: var(--color-workspace-muted); line-height: 1.5; }
+.plan-price-val { font-size: var(--text-platform-price); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--color-workspace-accent); line-height: 1.2; margin: var(--space-workspace-xl) 0 0; letter-spacing: -0.04em; }
+.plan-price-val span { font-size: var(--text-workspace-sm); font-weight: 400; color: var(--color-workspace-muted); letter-spacing: 0; }
+.plan-feat-list { list-style: none; padding: 0; margin: var(--space-workspace-xl) 0 0; display: grid; gap: var(--space-workspace-md); }
+.plan-feat-list li { display: flex; align-items: flex-start; gap: var(--space-workspace-sm); font-size: var(--text-platform-body); color: var(--color-workspace-muted); line-height: 1.6; }
+.plan-feat-list li::before { content: "✓"; flex-shrink: 0; color: var(--color-workspace-accent); font-size: var(--text-workspace-sm); font-weight: 600; }
+.workspace-plan-page .plan-action-btn { width: 100%; min-height: 48px; padding: var(--space-workspace-md) var(--space-workspace-lg); border: 1px solid var(--color-workspace-control); border-radius: var(--radius-workspace); font-family: var(--font-workspace); font-weight: 600; font-size: var(--text-platform-control); line-height: 1.2; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--color-workspace-surface); color: var(--color-workspace-accent); white-space: nowrap; }
+.workspace-plan-page .plan-action-btn.btn-plum { background: var(--color-workspace-accent); color: var(--color-workspace-accent-ink); border-color: var(--color-workspace-accent); }
+.workspace-plan-page .plan-action-btn:disabled,
+.workspace-plan-page .plan-action-btn.is-current { cursor: not-allowed; background: var(--color-workspace-paper); color: var(--color-workspace-muted); border-color: var(--color-workspace-rule); opacity: 1; }
+.plan-action-btn:focus-visible { outline: 2px solid var(--color-workspace-accent); outline-offset: 3px; }
+.plan-action-btn:active:not(:disabled) { transform: translateY(1px); }
+.plan-pay-note { margin: var(--space-workspace-xl) 0 0; font-size: var(--text-workspace-sm); line-height: 1.6; color: var(--color-workspace-muted); max-width: 72ch; }
+@media (hover: hover) {
+  .workspace-plan-page .plan-action-btn:hover:not(:disabled) { background: var(--color-workspace-active); color: var(--color-workspace-accent); }
+  .workspace-plan-page .plan-action-btn.btn-plum:hover:not(:disabled) { background: var(--color-workspace-ink); color: var(--color-workspace-accent-ink); }
 }
-.plan-status-header {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-}
-.plan-status-name {
-  margin: 0;
-  font-size: 1.15rem;
-  color: var(--plum);
-}
-.plan-status-meta {
-  margin: 0.2rem 0 0;
-  font-size: 0.9rem;
-  color: rgba(30, 43, 40, 0.72);
-}
-.plan-status-badge {
-  font-size: 0.85rem;
-  color: var(--plum);
-}
-.plan-status-badge.is-ended {
-  color: #8a2f2f;
-}
-.plan-note {
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: rgba(30, 43, 40, 0.82);
-  max-width: 62ch;
-}
-.plan-note.is-ended {
-  color: #8a2f2f;
-}
-
-.plan-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-.plan-card-name {
-  font-size: 1.25rem;
-  margin: 0 0 0.35rem;
-  color: var(--plum);
-}
-.plan-card-blurb {
-  margin: 0;
-  font-size: 0.92rem;
-  color: rgba(30, 43, 40, 0.75);
-  line-height: 1.45;
-}
-.plan-card-current {
-  border: 1.5px solid var(--plum);
-}
-.plan-card-flag {
-  display: inline-block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--plum);
-  margin: 0 0 0.45rem;
-}
-
-.plan-price-val {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--plum);
-  line-height: 1.1;
-  margin: 0.85rem 0 0.2rem;
-}
-.plan-price-val span {
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: rgba(30, 43, 40, 0.65);
-}
-.plan-feat-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0 1.4rem;
-  display: grid;
-  gap: 0.45rem;
-}
-.plan-feat-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.55rem;
-  font-size: 0.95rem;
-  color: rgba(30, 43, 40, 0.88);
-  line-height: 1.45;
-}
-.plan-feat-list li::before {
-  content: "";
-  width: 0.4rem;
-  height: 0.4rem;
-  margin-top: 0.5em;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: var(--plum);
-}
-.plan-action-btn {
-  width: 100%;
-  padding: 0.85rem 1rem;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  text-align: center;
-  cursor: pointer;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.plan-action-btn:disabled,
-.plan-action-btn.is-current {
-  opacity: 1;
-  cursor: default;
-  background: transparent;
-  color: rgba(30, 43, 40, 0.62);
-  border: 1px solid var(--line);
-}
-
-.plan-pay-note {
-  margin: 1.4rem 0 0;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  color: rgba(30, 43, 40, 0.75);
-  max-width: 62ch;
-}
-
-@media (max-width: 640px) {
-  .plan-status-card {
-    margin-bottom: 1.2rem;
-  }
-  .plan-price-val {
-    font-size: 1.75rem;
-  }
-}
+@media (prefers-reduced-motion: reduce) { .plan-action-btn:active:not(:disabled) { transform: none; } }
+@media (max-width: 640px) { .plan-status-card, .plan-card { padding: var(--space-workspace-xl); } .plan-status-card { margin-bottom: var(--space-workspace-xl); } }

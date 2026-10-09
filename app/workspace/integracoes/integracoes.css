@@ -1,42 +1,236 @@
-.integra-row {
+/* Hallmark · macrostructure: Catalogue · genre: modern-minimal · theme: existing mila mineral
+ * tone: utilitarian / welcoming · audience: shop owners · use: connect store tools
+ * nav: existing workspace side rail · footer: Ft2 · enrichment: existing tool marks
+ * pre-emit critique: P4 H5 E4 S5 R5 V4 */
+@import "../../../tokens.css";
+
+.integrations-page {
+  display: grid;
+  gap: var(--space-integration-3xl);
+  font-family: var(--font-integration-body);
+  color: var(--color-integration-ink);
+  container-type: inline-size;
+}
+.integrations-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-integration-xl);
+  padding-bottom: var(--space-integration-xl);
+  border-bottom: var(--rule-integration) solid var(--color-integration-rule);
 }
-.integra-row-copy {
-  display: grid;
-  gap: 0.25rem;
+.integrations-header > div { min-width: 0; }
+.integrations-title {
+  font-family: var(--font-integration-display);
+  font-size: var(--text-integration-display);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
   min-width: 0;
-  flex: 1;
 }
-.integra-row-copy p {
+.integrations-intro {
+  margin-top: var(--space-integration-sm);
+  font-size: var(--text-integration-label);
+  color: var(--color-integration-muted);
+  line-height: 1.5;
+}
+.integrations-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-integration-sm);
+  color: var(--color-integration-muted);
+  font-size: var(--text-integration-body);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.integrations-summary strong { color: var(--color-integration-accent); }
+.integrations-summary svg { flex-shrink: 0; }
+.integrations-section { display: grid; gap: var(--space-integration-lg); min-width: 0; }
+.integrations-section-heading h2 {
+  font-family: var(--font-integration-display);
+  font-size: var(--text-integration-heading);
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.integrations-section-heading p {
+  margin-top: var(--space-integration-xs);
+  color: var(--color-integration-muted);
+  font-size: var(--text-integration-body);
+  line-height: 1.5;
+}
+.integrations-grid {
+  list-style: none;
   margin: 0;
-  font-size: 0.92rem;
-  color: rgba(30, 43, 40, 0.78);
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-integration-lg);
+  min-width: 0;
 }
-.integra-row-action {
+.integrations-grid-vendas { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.integrations-card {
   display: flex;
-  gap: 0.6rem;
+  flex-direction: column;
+  gap: var(--space-integration-lg);
+  min-width: 0;
+  padding: var(--space-integration-xl);
+  background: var(--color-integration-paper);
+  color: var(--color-integration-ink);
+  border: var(--rule-integration) solid var(--color-integration-rule);
+  border-radius: var(--radius-integration-card);
+}
+.integrations-card[data-state="connected"] { border-color: var(--color-integration-control); }
+.integrations-card-top {
+  display: flex;
   flex-wrap: wrap;
   align-items: center;
-  flex-shrink: 0;
-  margin-left: auto;
+  justify-content: space-between;
+  gap: var(--space-integration-sm);
+  min-height: 40px;
 }
-
-@media (max-width: 640px) {
-  .integra-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.75rem;
-  }
-  .integra-row-action {
-    margin-left: 0;
-    width: 100%;
-  }
-  .integra-row-action .btn {
-    width: 100%;
-    min-height: 44px;
-    justify-content: center;
-  }
+.integrations-mark {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  min-height: 40px;
+  color: var(--color-integration-ink);
+}
+.integrations-logo { display: block; width: auto; max-width: 108px; height: auto; max-height: 32px; object-fit: contain; }
+.integrations-logo-jueri { width: 76px; }
+.integrations-logo-olist { width: 58px; }
+.integrations-logo-nuvemshop { width: 106px; }
+.integrations-google-icons { display: flex; gap: var(--space-integration-sm); align-items: center; }
+.integrations-google-icons img { display: block; object-fit: contain; }
+.integrations-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-integration-xs);
+  white-space: nowrap;
+  color: var(--color-integration-muted);
+  font-size: var(--text-integration-small);
+  line-height: 1.4;
+}
+.integrations-status-dot { width: 5px; height: 5px; border-radius: var(--radius-integration-pill); background: currentColor; }
+.integrations-card[data-state="connected"] .integrations-status {
+  background: var(--color-integration-soft);
+  color: var(--color-integration-accent);
+  padding: var(--space-integration-xs) var(--space-integration-sm);
+  border-radius: var(--radius-integration-pill);
+}
+.integrations-card-copy h3 {
+  font-family: var(--font-integration-display);
+  font-size: var(--text-integration-heading);
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.integrations-tool-detail { font-size: var(--text-integration-small); color: var(--color-integration-muted); margin-top: var(--space-integration-xs); line-height: 1.5; }
+.integrations-description { font-size: var(--text-integration-body); color: var(--color-integration-muted); line-height: 1.6; margin-top: var(--space-integration-md); }
+.integrations-card-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-integration-sm);
+  margin-top: auto;
+  padding-top: var(--space-integration-xs);
+}
+.integrations-connect,
+.integrations-card-footer .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-integration-sm);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-integration-sm) var(--space-integration-md);
+  background: var(--color-integration-paper);
+  color: var(--color-integration-accent);
+  border: var(--rule-integration) solid var(--color-integration-control);
+  border-radius: var(--radius-integration-control);
+  text-decoration: none;
+  font: inherit;
+  font-size: var(--text-platform-control);
+  font-weight: 600;
+  white-space: nowrap;
+  transition: transform var(--dur-integration-micro) var(--ease-integration-out);
+}
+.integrations-card-footer .btn { justify-content: center; }
+.integrations-card-footer > span { min-width: 0; width: 100%; }
+.integrations-card-footer .hint { font-size: var(--text-integration-body); color: var(--color-integration-muted); }
+.integrations-connect:active,
+.integrations-card-footer .btn:active { transform: translateY(1px); }
+.integrations-page a:focus-visible,
+.integrations-page button:focus-visible,
+.integrations-page summary:focus-visible { outline: 2px solid var(--color-integration-focus); outline-offset: 3px; }
+.integrations-card-footer .btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+.integrations-unavailable { font-size: var(--text-integration-body); color: var(--color-integration-muted); min-height: 44px; display: flex; align-items: center; }
+.integrations-grid-fornecedores { align-items: start; }
+.integrations-grid-fornecedores .integrations-description { min-height: 4.8em; }
+.integrations-grid-fornecedores .integrations-card-footer { margin-top: 0; }
+.integrations-access { margin-top: auto; font-size: var(--text-integration-body); color: var(--color-integration-muted); }
+.integrations-access summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-integration-sm);
+  list-style: none;
+  cursor: pointer;
+  min-height: 44px;
+  font-size: var(--text-platform-control);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.integrations-access summary::-webkit-details-marker { display: none; }
+.integrations-access summary::after { content: "+"; font-size: var(--text-integration-label); margin-left: auto; }
+.integrations-access[open] summary::after { content: "−"; }
+.integrations-access p { line-height: 1.6; padding-bottom: var(--space-integration-sm); }
+.integrations-notice {
+  border-left: 3px solid var(--color-integration-control);
+  padding: var(--space-integration-md) var(--space-integration-lg);
+  background: var(--color-integration-paper);
+  color: var(--color-integration-ink);
+  font-size: var(--text-integration-body);
+  line-height: 1.6;
+}
+.integrations-notice-success { border-color: var(--color-integration-accent); }
+.integrations-notice-error { border-color: var(--color-integration-error); color: var(--color-integration-error); background: var(--color-integration-error-paper); }
+.integrations-footnote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-integration-md);
+  border-top: var(--rule-integration) solid var(--color-integration-rule);
+  padding-top: var(--space-integration-xl);
+  color: var(--color-integration-muted);
+  font-size: var(--text-integration-body);
+  line-height: 1.6;
+}
+.integrations-footnote svg { flex-shrink: 0; margin-top: var(--space-integration-xs); }
+@media (hover: hover) {
+  .integrations-connect:hover { background: var(--color-integration-accent); color: var(--color-integration-accent-ink); border-color: var(--color-integration-accent); }
+  .integrations-card-footer .btn:hover { background: var(--color-integration-soft); color: var(--color-integration-accent); }
+  .integrations-access summary:hover { color: var(--color-integration-accent); }
+}
+@container (max-width: 750px) {
+  .integrations-grid-fornecedores .integrations-description { min-height: 6.4em; }
+  .integrations-grid-vendas { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .integrations-grid-vendas > :last-child { grid-column: 1 / -1; }
+}
+@container (max-width: 540px) {
+  .integrations-header { flex-direction: column; align-items: flex-start; gap: var(--space-integration-lg); }
+  .integrations-grid { grid-template-columns: minmax(0, 1fr); }
+  .integrations-grid-fornecedores .integrations-description { min-height: 0; }
+  .integrations-grid-vendas > :last-child { grid-column: auto; }
+  .integrations-page { gap: var(--space-integration-2xl); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .integrations-page a,
+  .integrations-page button { transition: none; }
+  .integrations-page a:active,
+  .integrations-page button:active { transform: none; }
 }

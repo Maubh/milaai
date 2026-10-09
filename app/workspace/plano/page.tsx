@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import "./plano.css";
 
 interface SessionData {
@@ -126,18 +125,15 @@ export default function WorkspacePlanoPage() {
   }
 
   return (
-    <div className="work-wrap">
-      <p className="work-back">
-        <Link href="/workspace">← Visão geral</Link>
-      </p>
-        <h1 className="work-title">Meu plano</h1>
+    <div className="work-wrap workspace-plan-page">
+              <h1 className="work-title">Meu plano</h1>
         <p className="work-lede">
           O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua.
         </p>
 
         {loading ? (
           <div className="work-card">
-            <p>Carregando...</p>
+            <p>Carregando…</p>
           </div>
         ) : (
           <>
@@ -152,7 +148,7 @@ export default function WorkspacePlanoPage() {
                         WhatsApp <strong>{session.phone}</strong>
                       </>
                     )}
-                    {session?.store_name && ` · ${session.store_name}`}
+                    {session?.store_name && `${session.phone ? " · " : ""}${session.store_name}`}
                   </p>
                 </div>
                 <div>
@@ -196,11 +192,11 @@ export default function WorkspacePlanoPage() {
             )}
 
             {/* Grade com os 2 Planos */}
-            <div className="work-grid-2">
+            <div className="work-grid-2 plan-grid">
               {/* PLANO ESSENCIAL */}
               <div className={`card work-card plan-card${currentIsEssencial ? " plan-card-current" : ""}`}>
                 <div>
-                  {currentIsEssencial ? <p className="plan-card-flag">Seu plano</p> : null}
+                  <p className={`plan-card-flag${currentIsEssencial ? "" : " is-placeholder"}`} aria-hidden={!currentIsEssencial}>Seu plano</p>
                   <h3 className="plan-card-name">
                     Plano Essencial
                   </h3>
@@ -247,10 +243,10 @@ export default function WorkspacePlanoPage() {
                       disabled={orderingPlan !== null}
                     >
                       {orderingPlan === "essencial"
-                        ? "Processando..."
+                        ? "Processando…"
                         : isPaid && currentPlan === "pro"
                         ? "Mudar para Essencial"
-                        : "Contratar Plano Essencial"}
+                        : "Contratar Essencial"}
                     </button>
                   )}
                 </div>
@@ -259,7 +255,7 @@ export default function WorkspacePlanoPage() {
               {/* PLANO PRO */}
               <div className={`card work-card plan-card${currentIsPro ? " plan-card-current" : ""}`}>
                 <div>
-                  {currentIsPro ? <p className="plan-card-flag">Seu plano</p> : null}
+                  <p className={`plan-card-flag${currentIsPro ? "" : " is-placeholder"}`} aria-hidden={!currentIsPro}>Seu plano</p>
                   <h3 className="plan-card-name">
                     Plano Pro
                   </h3>
@@ -306,10 +302,10 @@ export default function WorkspacePlanoPage() {
                       disabled={orderingPlan !== null}
                     >
                       {orderingPlan === "pro"
-                        ? "Processando..."
+                        ? "Processando…"
                         : isPaid && currentPlan === "essencial"
                         ? "Mudar para Pro"
-                        : "Contratar Plano Pro"}
+                        : "Contratar Pro"}
                     </button>
                   )}
                 </div>

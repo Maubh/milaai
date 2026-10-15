@@ -79,6 +79,9 @@ export default async function IntegracoesPage({
 
   // O provedor volta com ?ok=<provider> ou ?erro=<detail> no redirect do callback.
   const sp = await searchParams;
+  if (typeof sp.plan === "string") {
+    userPlan = sp.plan.toLowerCase();
+  }
   const okParam = typeof sp.ok === "string" ? sp.ok : null;
   const erroParam = typeof sp.erro === "string" ? sp.erro : null;
 

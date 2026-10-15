@@ -45,6 +45,7 @@ export async function proxyOAuth(
           tenant: "loja_sandbox_local",
           store_name: "Loja Sandbox (Local Dev)",
           display_name: "Maurício (Sandbox)",
+          plan: "essencial",
           providers: [
             { id: "jueri", name: "Jueri", mode: "guided_key", connected: false, app_configured: true },
             { id: "olist", name: "Olist", mode: "oauth", connected: false, app_configured: true },

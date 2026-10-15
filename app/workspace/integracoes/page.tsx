@@ -132,7 +132,10 @@ export default async function IntegracoesPage({
       {GROUPS.map((group) => (
         <section className="integrations-section" key={group.id} aria-labelledby={`integrations-${group.id}`}>
           <div className="integrations-section-heading">
-            <h2 id={`integrations-${group.id}`}>{group.title}</h2>
+            <h2 id={`integrations-${group.id}`}>
+              {group.title}
+              {group.id === "vendas" ? <span className="integrations-badge-pro" style={{ marginLeft: 8, verticalAlign: "middle" }}>Exclusivo Pro</span> : null}
+            </h2>
             <p>{group.description}</p>
           </div>
           <ul className={`integrations-grid integrations-grid-${group.id}`}>
@@ -148,14 +151,13 @@ export default async function IntegracoesPage({
                 <li key={i.id} className="integrations-card" data-state={state}>
                   <div className="integrations-card-top">
                     <div className="integrations-mark"><ToolMark provider={i.id} /></div>
-                    {bloqueadoPro ? (
-                      <span className="integrations-badge-pro">Plano Pro</span>
-                    ) : (
+                    <div className="integrations-card-badges">
+                      {isVendas ? <span className="integrations-badge-pro">Plano Pro</span> : null}
                       <span className="integrations-status">
                         {state === "connected" ? <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg> : <span className="integrations-status-dot" aria-hidden="true" />}
                         {label}
                       </span>
-                    )}
+                    </div>
                   </div>
                   <div className="integrations-card-copy">
                     <h3>{i.nome}</h3>

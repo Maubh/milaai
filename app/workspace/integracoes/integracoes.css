@@ -116,6 +116,12 @@
   line-height: 1.4;
 }
 .integrations-status-dot { width: 5px; height: 5px; border-radius: var(--radius-integration-pill); background: currentColor; }
+.integrations-card-badges {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-integration-xs, 6px);
+}
 .integrations-badge-pro {
   display: inline-flex;
   align-items: center;

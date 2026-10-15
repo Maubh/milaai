@@ -64,10 +64,14 @@ export default async function IntegracoesPage({
 
   let providers: ProviderStatus[] = [];
   let consultou = false;
+  let userPlan = "pro";
   if (token) {
     const { status, data } = await proxyOAuth("/api/oauth/providers");
     if (status === 200) {
       consultou = true;
+      if (typeof data?.plan === "string") {
+        userPlan = data.plan.toLowerCase();
+      }
       const safe = sanitizeOAuthResponse(data, ["providers"]);
       providers = sanitizeProviderList(safe.providers) as unknown as ProviderStatus[];
     }
@@ -134,14 +138,21 @@ export default async function IntegracoesPage({
               const state = live?.connected ? "connected" : live ? live.app_configured ? "available" : "soon" : "unknown";
               const label = { connected: "Conectado", available: "Disponível", soon: "Em breve", unknown: "Não verificado" }[state];
               const presentation = PRESENTATION[i.id];
+              const isVendas = group.id === "vendas";
+              const bloqueadoPro = isVendas && userPlan !== "pro" && !live?.connected;
+
               return (
                 <li key={i.id} className="integrations-card" data-state={state}>
                   <div className="integrations-card-top">
                     <div className="integrations-mark"><ToolMark provider={i.id} /></div>
-                    <span className="integrations-status">
-                      {state === "connected" ? <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg> : <span className="integrations-status-dot" aria-hidden="true" />}
-                      {label}
-                    </span>
+                    {bloqueadoPro ? (
+                      <span className="integrations-badge-pro">Plano Pro</span>
+                    ) : (
+                      <span className="integrations-status">
+                        {state === "connected" ? <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg> : <span className="integrations-status-dot" aria-hidden="true" />}
+                        {label}
+                      </span>
+                    )}
                   </div>
                   <div className="integrations-card-copy">
                     <h3>{i.nome}</h3>
@@ -155,7 +166,13 @@ export default async function IntegracoesPage({
                     </details>
                   ) : null}
                   <div className="integrations-card-footer">
-                    {state === "soon" ? <span className="integrations-unavailable">Conexão ainda não disponível</span> : (
+                    {bloqueadoPro ? (
+                      <Link href="/workspace/plano" className="integrations-connect integrations-connect-upgrade" aria-label={`Disponível no Plano Pro: ${i.nome}`}>
+                        <span>Disponível no Pro</span><Arrow />
+                      </Link>
+                    ) : state === "soon" ? (
+                      <span className="integrations-unavailable">Conexão ainda não disponível</span>
+                    ) : (
                       <Link href={`/integrations/${i.id}`} className="integrations-connect" aria-label={`${live?.connected ? "Reconectar" : "Conectar"} ${i.nome}`}>
                         {live?.connected ? "Reconectar" : "Conectar"}<Arrow />
                       </Link>

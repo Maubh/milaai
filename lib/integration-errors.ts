@@ -58,6 +58,7 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   token_exchange_failed: "O provedor recusou a autorização. Tente conectar de novo.",
   token_exchange_error: "Não conseguimos concluir a autorização. Tente de novo.",
   unauthorized: "Não foi possível validar a sessão com a mila. Entre novamente.",
+  plan_pro_required: "Este conector é exclusivo do Plano Pro. Acesse o menu Plano para fazer upgrade.",
 };
 
 export function integrationErrorText(detail?: string | null): string {

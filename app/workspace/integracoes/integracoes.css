@@ -87,7 +87,7 @@
 .integrations-card[data-state="connected"] { border-color: var(--color-integration-control); }
 .integrations-card-top {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-integration-sm);
@@ -119,8 +119,9 @@
 .integrations-card-badges {
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: var(--space-integration-xs, 6px);
+  flex-shrink: 0;
 }
 .integrations-badge-pro {
   display: inline-flex;
@@ -134,6 +135,7 @@
   color: var(--color-integration-accent);
   padding: 3px 8px;
   border-radius: var(--radius-integration-pill);
+  white-space: nowrap;
 }
 .integrations-card[data-state="connected"] .integrations-status {
   background: var(--color-integration-soft);

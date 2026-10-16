@@ -17,6 +17,7 @@ export default function SiteFooter() {
         <nav aria-label="Legal">
           <Link href="/privacidade">Política de privacidade</Link>
           <Link href="/termos">Termos de uso</Link>
+          <Link href="/exclusao-de-dados">Exclusão de dados</Link>
         </nav>
       </div>
     </footer>

@@ -18,6 +18,34 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.2.0",
+    date: "2026-10-15",
+    title: "Concorrentes da sua região, pesquisa de fornecedores e integrações",
+    summary: "A mila agora mapeia concorrentes na sua cidade, levanta fichas de fornecedores e sincroniza catálogo com ERPs e loja virtual.",
+    changes: [
+      {
+        type: "new",
+        title: "Mapeamento de concorrentes locais no WhatsApp",
+        description: "Basta informar a sua cidade e a mila localiza os concorrentes reais de joias e semijoias da sua região, com nomes, endereços e canais de atendimento direto na conversa.",
+      },
+      {
+        type: "new",
+        title: "Pesquisa de fornecedores com ficha completa",
+        description: "A mila investiga fornecedores na web e levanta dados de banho, milésimos e tempo de garantia para você organizar suas compras e reposições no Notion ou Google Planilhas.",
+      },
+      {
+        type: "improvement",
+        title: "Sincronização de catálogo com fotos reais",
+        description: "Cadastre e atualize produtos na Nuvemshop e nos ERPs Jueri e Olist/Tiny enviando as fotos diretamente pelo chat do WhatsApp, com cálculo de margem e códigos SKU organizados.",
+      },
+      {
+        type: "improvement",
+        title: "Painel de conexões mais claro por plano",
+        description: "Identificação visual imediata das ferramentas disponíveis para a sua loja e dos conectores exclusivos do Plano Pro.",
+      },
+    ],
+  },
+  {
     version: "0.1.0",
     date: "2026-10-09",
     title: "Sua loja, com tudo mais fácil de encontrar",

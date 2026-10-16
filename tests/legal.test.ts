@@ -48,6 +48,7 @@ const { renderToStaticMarkup } = req("react-dom/server");
 const PAGINAS = [
   { caminho: "app/(site)/privacidade/page.tsx", nome: "política" },
   { caminho: "app/(site)/termos/page.tsx", nome: "termos" },
+  { caminho: "app/(site)/exclusao-de-dados/page.tsx", nome: "exclusão" },
 ] as const;
 
 const FONTE = "lib/legal.ts";
@@ -175,6 +176,15 @@ const CONGELADOS: Array<[string, string]> = [
   // conectores não prontos
   ["olist", "Olist"],
   ["bling", "Bling"],
+  // Meta app review (2026-10-16): identidade, permissões e canal de exclusão.
+  ["controlador-nome", "MVRO TECNOLOGIA E CONSULTORIA LTDA"],
+  ["controlador-cnpj", "32.736.745/0001-00"],
+  ["controlador-endereco", "Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052"],
+  ["dpo-anpd", "Resolução CD/ANPD nº 2/2022"],
+  ["meta-login", "Login do Facebook para Empresas"],
+  ["meta-catalog", "catalog_management"],
+  ["meta-business", "business_management"],
+  ["exclusao-url", "https://milaai.com.br/exclusao-de-dados"],
 ];
 
 /** Trechos congelados que vivem FORA das páginas jurídicas (home/pricing). */
@@ -437,6 +447,36 @@ test("legal: os valores de runtime são exatamente os esperados", async () => {
   assert.ok((f.NAO_FEITO as unknown[]).length >= 4, "negações faltando");
   assert.ok((f.RETENCAO as unknown[]).length >= 4, "retenção faltando");
   assert.equal(f.DECISAO_AUTOMATIZADA, false);
+  assert.equal(f.ATUALIZADO_EM, "16 de outubro de 2026");
+  assert.equal(f.CONTROLADOR_NOME, "MVRO TECNOLOGIA E CONSULTORIA LTDA");
+  assert.equal(f.CONTROLADOR_CNPJ, "32.736.745/0001-00");
+  assert.equal(
+    f.CONTROLADOR_ENDERECO,
+    "Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052",
+  );
+  assert.equal(f.SECAO_CONTATO, 16);
+  assert.ok(
+    (f.CONECTORES_VALIDACAO_PENDENTE as string[]).some((c) =>
+      c.startsWith("Meta (Facebook/Instagram):"),
+    ),
+    "a integração Meta precisa constar como validação pendente",
+  );
+  assert.ok(
+    (f.RETENCAO as Array<{ item: string; alvo: string }>).some(
+      (r) =>
+        r.item === "Dados da integração Meta (token, IDs de portfólio e catálogo)" &&
+        r.alvo === "até 30 dias após desconectar",
+    ),
+    "a retenção da integração Meta precisa estar na fonte",
+  );
+  assert.ok(
+    (f.DADOS_TRATADOS as Array<{ dado: string; destino: string }>).some(
+      (d) =>
+        d.dado === "Dados da conta Meta autorizada" &&
+        d.destino === "infraestrutura da mila. (hospedagem)",
+    ),
+    "os dados da conta Meta precisam estar na fonte",
+  );
 });
 
 test("legal: todo subprocessador aparece no HTML, com país", async () => {
@@ -557,17 +597,17 @@ test("legal: cada seção aparece uma única vez (sem texto duplicado)", async (
   for (const p of PAGINAS) {
     const html = await htmlDe(p.caminho);
     const f = await fatos();
-    // §9 = retenção SÓ na política (a canônica). Os termos têm numeração
-    // própria ("1. Aceite", "2. O que é a mila.") — assumir o mesmo número nos
-    // dois dava falso positivo.
-    const s9 = p.nome === "política" ? texto(secao(html, 9)) : "";
-    if (s9) {
+    // §10 = retenção SÓ na política (a canônica). A seção Meta entrou como 8 em
+    // 2026-10-16 e empurrou a retenção de 9 para 10. Os termos e a exclusão têm
+    // numeração própria — assumir o mesmo número neles dava falso positivo.
+    const s10 = p.nome === "política" ? texto(secao(html, 10)) : "";
+    if (s10) {
       for (const r of f.RETENCAO as Array<{ item: string }>) {
-        const n = s9.split(r.item).length - 1;
-        assert.equal(n, 1, `${p.nome} §9: "${r.item}" aparece ${n}× (esperado 1)`);
+        const n = s10.split(r.item).length - 1;
+        assert.equal(n, 1, `${p.nome} §10: "${r.item}" aparece ${n}× (esperado 1)`);
       }
-      const e = s9.split("rotina automática de expurgo ainda não está no ar").length - 1;
-      assert.equal(e, 1, `${p.nome} §9: declaração de expurgo aparece ${e}×`);
+      const e = s10.split("rotina automática de expurgo ainda não está no ar").length - 1;
+      assert.equal(e, 1, `${p.nome} §10: declaração de expurgo aparece ${e}×`);
     }
     // toda seção numerada da fonte aparece uma vez só no documento
     const numeros = [...html.matchAll(/<h2>(\d+)\./g)].map((m) => m[1]);
@@ -1075,6 +1115,12 @@ test("legal: as duas páginas declaram a mesma data, vinda da fonte", async () =
   }
 });
 
+test("legal: o rodapé aponta a página de exclusão de dados", () => {
+  const footer = readFileSync(join(RAIZ, "components/SiteFooter.tsx"), "utf8");
+  assert.match(footer, /href="\/exclusao-de-dados"/);
+  assert.match(footer, />Exclusão de dados</);
+});
+
 test("legal: os termos linkam a política e explicam os papéis", async () => {
   assert.match(
     await htmlDe(PAGINAS[1].caminho),
@@ -1119,14 +1165,15 @@ Esta política descreve o tratamento de dados no site
 milaai.com.br
 , no workspace web e no canal WhatsApp da
 mila.
-. O serviço é operado pela § — a empresa ainda não está constituída, e por isso não há CNPJ a informar. Quando estiver, ele será publicado aqui.
+. O serviço é operado pela § (CNPJ §). Endereço: §.
 Na relação com a loja — conta, plano e cobrança — a mila. é a
 controladora
 dos dados. Nos dados que a loja cadastra ou envia sobre a própria operação (custos, notas, fornecedores, destinatários que aparecem na nota), a mila. atua como
 operadora
 , a serviço da loja, que é quem decide o que registrar.
 Encarregado (DPO):
-a mila. é operada hoje sem CNPJ — é um serviço em lançamento, e o enquadramento formal como agente de pequeno porte depende de constituição da empresa. O canal do titular não depende disso e já funciona: é o contato no fim desta página, com resposta em até 15 dias.
+como agente de tratamento de pequeno porte (Resolução CD/ANPD nº 2/2022), a mila. não é obrigada a indicar um encarregado. O canal do titular é o e-mail
+, com resposta em até 15 dias.
 2. De quem são os dados
 Titulares dos dados tratados neste serviço:
 A mila.
@@ -1151,13 +1198,35 @@ Não recebe dado das APIs do Google.
 Não recebe dado das APIs do Google.
 7. Google: o que a mila acessa e o que não acessa
 Escopos solicitados ao conectar: §, §.
-8. Integrações que a loja conecta
+8. Meta (Facebook e Instagram): o que a mila acessa
+A lojista pode, se quiser, conectar a conta empresarial dela na Meta pelo Login do Facebook para Empresas. A mila. existe para sincronizar as peças cadastradas na mila. com o catálogo da loja na Meta, que é usado no Instagram Shopping e no Facebook. Essa conexão é opcional e só acontece com a autorização expressa da lojista.
+Permissões solicitadas:
+catalog_management (criar, atualizar e remover itens do catálogo da loja) e business_management (identificar o portfólio empresarial e os catálogos aos quais a lojista deu acesso).
+Dados recebidos da Meta:
+identificador da conta e nome do usuário que autorizou; ID e nome do portfólio empresarial; ID e nome dos catálogos autorizados; token de acesso; e os itens do catálogo e o status de cada um (por exemplo, se foi aprovado ou rejeitado).
+Dados enviados à Meta:
+os dados das peças que a própria loja cadastrou na mila., como nome, descrição, preço, disponibilidade, fotos, marca, condição e link.
+Uso:
+apenas para sincronizar e exibir o status do catálogo para a própria lojista.
+Não
+usamos dados da Meta para publicidade, criação de perfis, venda ou treinamento de modelos de IA.
+Não
+acessamos mensagens, seguidores, publicações nem dados de clientes da loja.
+Compartilhamento:
+os dados da Meta não são vendidos nem cedidos. Eles ficam guardados na nossa infraestrutura de hospedagem, listada na seção de subprocessadores, só para operar a sincronização.
+Retenção:
+o token e os IDs ficam guardados enquanto a integração estiver ativa. Eles são apagados em até 30 dias depois que a lojista desconecta a mila. (pelo painel ou removendo o app nas configurações do Facebook) ou pede a exclusão. Os itens publicados no catálogo pertencem à loja e continuam na conta Meta dela até que ela os remova.
+Exclusão:
+veja as instruções em
+https://milaai.com.br/exclusao-de-dados
+9. Integrações que a loja conecta
 Quando a lojista autoriza um conector, a mila. age na conta
 em nome dela
 , nos limites da permissão concedida. Isso é distinto dos subprocessadores acima.
 Disponíveis hoje:
 Disponíveis, com validação em andamento:
-9. Por quanto tempo guardamos
+10. Por quanto tempo guardamos
+— § Alvo: §.
 — § Alvo: §.
 — § Alvo: §.
 — § Alvo: §.
@@ -1165,21 +1234,25 @@ Disponíveis, com validação em andamento:
 — § Alvo: §.
 — § Alvo: §.
 § Especificamente: a rotina automática de expurgo ainda não está no ar.
-10. Isolamento entre lojas
-11. Seus direitos (LGPD)
+11. Isolamento entre lojas
+12. Seus direitos (LGPD)
 Você pode pedir:
 Os pedidos são atendidos pelo e-mail
 , em até 15 dias, prorrogáveis na forma da LGPD. Também é possível reclamar à ANPD.
-12. Segurança
+Para excluir os dados, inclusive os da integração com a Meta, siga as
+instruções de exclusão de dados
+13. Segurança
 Controles proporcionais ao porte do serviço: segredos de autenticação fora do navegador, acesso por lista de números autorizados, limite de tentativas, código de verificação guardado apenas em hash com salt, credenciais de integração em cofre cifrado e sessão de login com registro por loja.
 Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço, estoque e textos importantes antes de usar.
-13. O que não fazemos
-14. Crianças
+14. O que não fazemos
+15. Crianças
 O serviço é voltado a titulares de negócio adultos. Não coletamos de forma consciente dados de menores de 18 anos.
-15. Contato
+16. Contato
+Controlador: §, CNPJ §. Endereço: §.
 Privacidade e dados:
-. Instagram: §.
-16. Mudanças
+. Instagram: §. Para excluir dados, inclusive os da integração com a Meta, siga as
+instruções de exclusão de dados
+17. Mudanças
 Podemos atualizar esta política. A versão vigente fica sempre nesta página, com a data no topo. Mudanças materiais serão comunicadas de forma razoável (site e/ou WhatsApp).`;
 
 const GOLDEN_TERMOS = `← Voltar
@@ -1236,6 +1309,49 @@ Privacidade e dados:
 . Suporte: Instagram §.
 Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`;
 
+const GOLDEN_EXCLUSAO = `← Voltar
+Exclusão de dados
+Última atualização: §.
+A mila. é operada por
+, CNPJ §, §. Você pode pedir a exclusão dos seus dados a qualquer momento, como garante a LGPD (Lei 13.709/2018, art. 18).
+1. Remover a mila. da sua conta do Facebook/Instagram
+Assim você revoga o acesso da mila. aos dados da Meta na hora:
+No Facebook, abra
+Configurações e privacidade → Configurações
+Entre em
+Integrações comerciais
+(ou
+Apps e sites
+).
+Encontre
+Mila AI
+e clique em
+Remover
+Confirme. Se quiser, marque a opção de excluir as publicações e atividades feitas pelo app.
+Também dá para remover pelo Meta Business Suite:
+Configurações → Integrações → Integrações comerciais
+Quando o app é removido, a mila. deixa de acessar sua conta Meta. O token de acesso e os identificadores de portfólio e catálogo guardados por nós são apagados em até 30 dias.
+2. Pedir a exclusão de todos os seus dados na mila.
+Mande um e-mail para
+com o assunto
+"Exclusão de dados"
+e informe:
+o nome da loja;
+o número de WhatsApp cadastrado na mila.;
+se a exclusão é total (conta inteira) ou só da integração com a Meta.
+Para proteger sua conta, podemos pedir uma confirmação pelo WhatsApp cadastrado. Confirmamos o recebimento e concluímos a exclusão em até
+15 dias
+. No fim, mandamos a confirmação junto com um código do pedido.
+3. O que é excluído
+Dados da integração Meta: token de acesso, IDs e nomes do portfólio e dos catálogos, e o status de sincronização.
+Dados da conta: cadastro, histórico de conversas, produtos cadastrados, notas fiscais processadas e credenciais de integração.
+4. O que pode ser mantido
+Dados que a lei nos obriga a guardar, como registros de cobrança e fiscais, pelo prazo legal (LGPD, art. 16).
+Os itens publicados no seu catálogo da Meta pertencem à sua conta Meta. A mila. pode removê-los se você pedir antes de desconectar. Depois de desconectar, a remoção é feita por você no Gerenciador de Comércio.
+5. Dúvidas
+· Instagram § ·
+Política de privacidade`;
+
 /** Normaliza o HTML renderizado: sentinelas → `§`, tags → quebra, entidades. */
 function normalizar(html: string): string {
   return html
@@ -1283,20 +1399,22 @@ function prosaDe(html: string): string {
 const GOLDEN_TEXTO: Record<string, string> = {
   "política": `← Voltar
 Política de privacidade
-Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de setembro de 2026.
+Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 16 de outubro de 2026.
 1. Quem somos
 Esta política descreve o tratamento de dados no site
 milaai.com.br
 , no workspace web e no canal WhatsApp da
 mila.
-. O serviço é operado pela equipe fundadora da mila. — a empresa ainda não está constituída, e por isso não há CNPJ a informar. Quando estiver, ele será publicado aqui.
+. O serviço é operado pela MVRO TECNOLOGIA E CONSULTORIA LTDA (CNPJ 32.736.745/0001-00). Endereço: Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052.
 Na relação com a loja — conta, plano e cobrança — a mila. é a
 controladora
 dos dados. Nos dados que a loja cadastra ou envia sobre a própria operação (custos, notas, fornecedores, destinatários que aparecem na nota), a mila. atua como
 operadora
 , a serviço da loja, que é quem decide o que registrar.
 Encarregado (DPO):
-a mila. é operada hoje sem CNPJ — é um serviço em lançamento, e o enquadramento formal como agente de pequeno porte depende de constituição da empresa. O canal do titular não depende disso e já funciona: é o contato no fim desta página, com resposta em até 15 dias.
+como agente de tratamento de pequeno porte (Resolução CD/ANPD nº 2/2022), a mila. não é obrigada a indicar um encarregado. O canal do titular é o e-mail
+contato@milaai.com.br
+, com resposta em até 15 dias.
 2. De quem são os dados
 Titulares dos dados tratados neste serviço:
 A lojista (dona ou pessoa autorizada da loja) — usuária do serviço.
@@ -1343,6 +1461,8 @@ Dados de cobrança (quando houver plano pago)
 — Processados pela operadora de pagamentos. Dados de cartão são coletados e guardados por ela; não passam nem repousam nos servidores da mila.
 Credenciais de integração, quando a lojista conecta uma conta
 — Guardadas em cofre cifrado com Fernet (AES-128-CBC + HMAC), com a chave de decifragem em arquivo de permissão restrita (600).
+Dados da conta Meta autorizada
+— infraestrutura da mila. (hospedagem)
 6. Com quem compartilhamos (subprocessadores)
 Não vendemos dados. Para operar, usamos prestadores que processam informações
 em nosso nome e por nossa conta
@@ -1374,12 +1494,34 @@ Não recebe dado das APIs do Google.
 Asaas
 (Brasil) — Processamento de pagamento, quando houver cobrança.
 Não recebe dado das APIs do Google.
-Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente enquanto a empresa não estiver constituída. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai.
+Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai.
 7. Google: o que a mila acessa e o que não acessa
 Ao conectar o Google, a mila recebe um identificador da conta (escopo openid). Ela NÃO recebe seu endereço de e-mail. Na prática, quem mantém o vínculo entre a conexão e a sua loja é a sessão autenticada no WhatsApp — a mila não usa o identificador para saber de qual conta se trata, e a tela não mostra o endereço da conta conectada. Acesso a arquivos fica restrito ao escopo drive.file: só os arquivos que a própria mila cria. Ela não abre, não lista e não altera o restante do seu Drive, não lê sua caixa de e-mail e não acessa sua agenda ou seu calendário.
 Escopos solicitados ao conectar: openid, auth/drive.file.
 Uso de dados do Google. O que a mila recebe das APIs do Google é usado somente para fornecer e melhorar as funcionalidades que você vê: criar e manter a planilha do caderno de fornecedores que ela mesma cria, e registrar a conexão da conta. Não usamos esses dados para publicidade, não os vendemos, não os usamos para avaliar crédito, pontuação ou risco de pessoas, nem para treinar modelos de inteligência artificial. Esses dados só são repassados a prestador que nos atende sob contrato e apenas no necessário para a finalidade contratada, para segurança ou para cumprir a lei. Nenhuma pessoa lê o conteúdo do seu Drive ou da sua conta sem a sua autorização específica para aquela situação — o suporte a que você dá acesso é feito em conversa conosco, não pela leitura do seu Drive. O uso segue a Política de Dados de Usuário dos Serviços de API do Google, incluindo os requisitos de Limited Use.
-8. Integrações que a loja conecta
+8. Meta (Facebook e Instagram): o que a mila acessa
+A lojista pode, se quiser, conectar a conta empresarial dela na Meta pelo Login do Facebook para Empresas. A mila. existe para sincronizar as peças cadastradas na mila. com o catálogo da loja na Meta, que é usado no Instagram Shopping e no Facebook. Essa conexão é opcional e só acontece com a autorização expressa da lojista.
+Permissões solicitadas:
+catalog_management (criar, atualizar e remover itens do catálogo da loja) e business_management (identificar o portfólio empresarial e os catálogos aos quais a lojista deu acesso).
+Dados recebidos da Meta:
+identificador da conta e nome do usuário que autorizou; ID e nome do portfólio empresarial; ID e nome dos catálogos autorizados; token de acesso; e os itens do catálogo e o status de cada um (por exemplo, se foi aprovado ou rejeitado).
+Dados enviados à Meta:
+os dados das peças que a própria loja cadastrou na mila., como nome, descrição, preço, disponibilidade, fotos, marca, condição e link.
+Uso:
+apenas para sincronizar e exibir o status do catálogo para a própria lojista.
+Não
+usamos dados da Meta para publicidade, criação de perfis, venda ou treinamento de modelos de IA.
+Não
+acessamos mensagens, seguidores, publicações nem dados de clientes da loja.
+Compartilhamento:
+os dados da Meta não são vendidos nem cedidos. Eles ficam guardados na nossa infraestrutura de hospedagem, listada na seção de subprocessadores, só para operar a sincronização.
+Retenção:
+o token e os IDs ficam guardados enquanto a integração estiver ativa. Eles são apagados em até 30 dias depois que a lojista desconecta a mila. (pelo painel ou removendo o app nas configurações do Facebook) ou pede a exclusão. Os itens publicados no catálogo pertencem à loja e continuam na conta Meta dela até que ela os remova.
+Exclusão:
+veja as instruções em
+https://milaai.com.br/exclusao-de-dados
+.
+9. Integrações que a loja conecta
 Quando a lojista autoriza um conector, a mila. age na conta
 em nome dela
 , nos limites da permissão concedida. Isso é distinto dos subprocessadores acima.
@@ -1389,8 +1531,9 @@ Notion — a mila grava o caderno numa base que a loja já tem; não cria base.
 Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.
 Disponíveis, com validação em andamento:
 Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
+Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.
 Anunciados anteriormente e ainda não disponíveis: Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.
-9. Por quanto tempo guardamos
+10. Por quanto tempo guardamos
 Código de verificação (OTP)
 — Vida curta; expira sozinho. Alvo: minutos.
 Arquivo de diagnóstico da mensagem recebida
@@ -1403,11 +1546,13 @@ Logs técnicos de visão e download
 — Só metadado (data, modelo, latência, erro) — sem o conteúdo da mensagem. Alvo: até cerca de 30 dias.
 Credenciais de integração
 — Mantidas enquanto a integração estiver conectada. Alvo: até a lojista desconectar.
+Dados da integração Meta (token, IDs de portfólio e catálogo)
+— Mantidos enquanto a integração estiver conectada. Alvo: até 30 dias após desconectar.
 Estes prazos são alvo, ainda não são automáticos: hoje a exclusão é feita pela equipe sob pedido, pelo canal de privacidade. A mila não substitui a obrigação da loja de guardar documentos fiscais nos prazos legais. Especificamente: a rotina automática de expurgo ainda não está no ar.
-10. Isolamento entre lojas
+11. Isolamento entre lojas
 Praticado: cada loja é um espaço separado; o acesso é restrito por lista de números autorizados e o registro de sessão é por loja.
 Em implantação: registro sistemático de acesso excepcional da equipe fundadora. A estrutura de auditoria existe, mas o registro automático ainda não está ligado.
-11. Seus direitos (LGPD)
+12. Seus direitos (LGPD)
 Você pode pedir:
 confirmação de que tratamos seus dados e acesso a eles
 correção de dados incompletos, inexatos ou desatualizados
@@ -1420,27 +1565,33 @@ revogação do consentimento e oposição a tratamento fundado em legítimo inte
 Os pedidos são atendidos pelo e-mail
 contato@milaai.com.br
 , em até 15 dias, prorrogáveis na forma da LGPD. Também é possível reclamar à ANPD.
-12. Segurança
+Para excluir os dados, inclusive os da integração com a Meta, siga as
+instruções de exclusão de dados
+.
+13. Segurança
 Controles proporcionais ao porte do serviço: segredos de autenticação fora do navegador, acesso por lista de números autorizados, limite de tentativas, código de verificação guardado apenas em hash com salt, credenciais de integração em cofre cifrado e sessão de login com registro por loja.
 Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço, estoque e textos importantes antes de usar.
-13. O que não fazemos
+14. O que não fazemos
 Não vendemos nem cedemos dados a terceiros fora dos prestadores listados acima.
 Não usamos o conteúdo da loja para treinar modelo próprio, nem enviamos esse conteúdo a terceiros para treinar modelos de fundação.
 Não acessamos o endereço, a caixa de e-mail, a agenda ou o calendário da conta Google da loja.
 Não mantemos CRM, histórico de vendas a consumidores finais nem base de compradores da loja.
 O site não usa rastreadores de marketing: sem analytics de terceiros, pixel ou cookie de publicidade.
 Não há decisão totalmente automatizada que afete a lojista ou seus clientes.
-14. Crianças
+15. Crianças
 O serviço é voltado a titulares de negócio adultos. Não coletamos de forma consciente dados de menores de 18 anos.
-15. Contato
+16. Contato
+Controlador: MVRO TECNOLOGIA E CONSULTORIA LTDA, CNPJ 32.736.745/0001-00. Endereço: Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052.
 Privacidade e dados:
 contato@milaai.com.br
-. Instagram: @usemila.ai.
-16. Mudanças
+. Instagram: @usemila.ai. Para excluir dados, inclusive os da integração com a Meta, siga as
+instruções de exclusão de dados
+.
+17. Mudanças
 Podemos atualizar esta política. A versão vigente fica sempre nesta página, com a data no topo. Mudanças materiais serão comunicadas de forma razoável (site e/ou WhatsApp).`,
   "termos": `← Voltar
 Termos de uso
-Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de setembro de 2026.
+Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 16 de outubro de 2026.
 1. Aceite
 Ao acessar milaai.com.br, solicitar código de verificação, usar o WhatsApp da mila. ou o workspace, você concorda com estes termos e com a
 política de privacidade
@@ -1492,11 +1643,60 @@ Privacidade e dados:
 contato@milaai.com.br
 . Suporte: Instagram @usemila.ai.
 Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`,
+  "exclusão": `← Voltar
+Exclusão de dados
+Última atualização: 16 de outubro de 2026.
+A mila. é operada por
+MVRO TECNOLOGIA E CONSULTORIA LTDA
+, CNPJ 32.736.745/0001-00, Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052. Você pode pedir a exclusão dos seus dados a qualquer momento, como garante a LGPD (Lei 13.709/2018, art. 18).
+1. Remover a mila. da sua conta do Facebook/Instagram
+Assim você revoga o acesso da mila. aos dados da Meta na hora:
+No Facebook, abra
+Configurações e privacidade → Configurações
+.
+Entre em
+Integrações comerciais
+(ou
+Apps e sites
+).
+Encontre
+Mila AI
+e clique em
+Remover
+.
+Confirme. Se quiser, marque a opção de excluir as publicações e atividades feitas pelo app.
+Também dá para remover pelo Meta Business Suite:
+Configurações → Integrações → Integrações comerciais
+.
+Quando o app é removido, a mila. deixa de acessar sua conta Meta. O token de acesso e os identificadores de portfólio e catálogo guardados por nós são apagados em até 30 dias.
+2. Pedir a exclusão de todos os seus dados na mila.
+Mande um e-mail para
+contato@milaai.com.br
+com o assunto
+"Exclusão de dados"
+e informe:
+o nome da loja;
+o número de WhatsApp cadastrado na mila.;
+se a exclusão é total (conta inteira) ou só da integração com a Meta.
+Para proteger sua conta, podemos pedir uma confirmação pelo WhatsApp cadastrado. Confirmamos o recebimento e concluímos a exclusão em até
+15 dias
+. No fim, mandamos a confirmação junto com um código do pedido.
+3. O que é excluído
+Dados da integração Meta: token de acesso, IDs e nomes do portfólio e dos catálogos, e o status de sincronização.
+Dados da conta: cadastro, histórico de conversas, produtos cadastrados, notas fiscais processadas e credenciais de integração.
+4. O que pode ser mantido
+Dados que a lei nos obriga a guardar, como registros de cobrança e fiscais, pelo prazo legal (LGPD, art. 16).
+Os itens publicados no seu catálogo da Meta pertencem à sua conta Meta. A mila. pode removê-los se você pedir antes de desconectar. Depois de desconectar, a remoção é feita por você no Gerenciador de Comércio.
+5. Dúvidas
+contato@milaai.com.br
+· Instagram @usemila.ai ·
+Política de privacidade`,
 };
 
 const GOLDEN_POR_PAGINA: Record<string, string> = {
   "política": GOLDEN_POLITICA,
   "termos": GOLDEN_TERMOS,
+  "exclusão": GOLDEN_EXCLUSAO,
 };
 
 test("legal: a prosa fixa de cada página é exatamente o golden", async () => {
@@ -1569,7 +1769,7 @@ function canonico(v: unknown, ind = 0): string {
  * Regenerar: `scripts/gerar_golden_legal.sh`.
  */
 const GOLDEN_FONTE = `{
-  "ATUALIZADO_EM": "30 de setembro de 2026",
+  "ATUALIZADO_EM": "16 de outubro de 2026",
   "BASES_LEGAIS": [
     {
       "base": "Execução de contrato (art. 7, V)",
@@ -1601,11 +1801,13 @@ const GOLDEN_FONTE = `{
     "Bling"
   ],
   "CONECTORES_VALIDACAO_PENDENTE": [
-    "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente."
+    "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.",
+    "Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas."
   ],
   "CONTATO_PRIVACIDADE": "contato@milaai.com.br",
-  "CONTROLADOR_CNPJ": null,
-  "CONTROLADOR_NOME": "equipe fundadora da mila.",
+  "CONTROLADOR_CNPJ": "32.736.745/0001-00",
+  "CONTROLADOR_ENDERECO": "Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052",
+  "CONTROLADOR_NOME": "MVRO TECNOLOGIA E CONSULTORIA LTDA",
   "DADOS_TRATADOS": [
     {
       "dado": "Mensagens de texto enviadas pela lojista no WhatsApp",
@@ -1638,6 +1840,10 @@ const GOLDEN_FONTE = `{
     {
       "dado": "Credenciais de integração, quando a lojista conecta uma conta",
       "destino": "Guardadas em cofre cifrado com Fernet (AES-128-CBC + HMAC), com a chave de decifragem em arquivo de permissão restrita (600)."
+    },
+    {
+      "dado": "Dados da conta Meta autorizada",
+      "destino": "infraestrutura da mila. (hospedagem)"
     }
   ],
   "DECISAO_AUTOMATIZADA": false,
@@ -1712,10 +1918,15 @@ const GOLDEN_FONTE = `{
       "alvo": "até a lojista desconectar",
       "item": "Credenciais de integração",
       "praticado": "Mantidas enquanto a integração estiver conectada."
+    },
+    {
+      "alvo": "até 30 dias após desconectar",
+      "item": "Dados da integração Meta (token, IDs de portfólio e catálogo)",
+      "praticado": "Mantidos enquanto a integração estiver conectada."
     }
   ],
   "RETENCAO_NOTA": "Estes prazos são alvo, ainda não são automáticos: hoje a exclusão é feita pela equipe sob pedido, pelo canal de privacidade. A mila não substitui a obrigação da loja de guardar documentos fiscais nos prazos legais.",
-  "SECAO_CONTATO": 15,
+  "SECAO_CONTATO": 16,
   "SUBCONTROLADORES": [
     {
       "nome": "Google",
@@ -1777,7 +1988,7 @@ const GOLDEN_FONTE = `{
     "O representante do fornecedor, quando a lojista o cadastra no caderno.",
     "O destinatário que aparece na nota fiscal, quando a lojista envia uma nota para leitura."
   ],
-  "TRANSFERENCIA_INTERNACIONAL": "Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente enquanto a empresa não estiver constituída. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai."
+  "TRANSFERENCIA_INTERNACIONAL": "Vários prestadores acima processam dados fora do Brasil — Estados Unidos (Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de adesão (termos de serviço) desses fornecedores preveem as salvaguardas de proteção de dados, e a formalização das cláusulas-padrão segue pendente. Enquanto isso, transferimos o mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai para os modelos alternativos. Chips de fornecedor chinês aparecem nominalmente porque você tem o direito de saber para onde o dado vai."
 }`;
 
 /**
@@ -1788,7 +1999,7 @@ const GOLDEN_FONTE = `{
  * `className`. Aqui o vocabulário é FECHADO: tag ou atributo novo falha, e
  * acrescentar `img`/`alt` a uma página de política passa a ser decisão explícita.
  */
-const GOLDEN_TAGS: string[] = ["a", "div", "em", "h1", "h2", "li", "p", "strong", "ul"];
+const GOLDEN_TAGS: string[] = ["a", "div", "em", "h1", "h2", "li", "ol", "p", "strong", "ul"];
 const GOLDEN_ATRIBUTOS: string[] = ["class", "href"];
 
 function vocabulario(html: string): { tags: string[]; atributos: string[] } {
@@ -1884,10 +2095,10 @@ const ENTORNO_REVISADO: Record<string, string> = {
   "app/(site)/login/auth.css": "89474c9f6c60fd5166ae78c28376f4bca192008ddf6561cbafa4d03cc8e2706e",
   "app/globals.css": "84e3d5f415c9a5ae300726302eae47d7980ea67ca288d9c560531429d5497262",
   "app/layout.tsx": "813ab8bb4dca69c6e268fb81b0fe7c4c4283a12f24a47b56781f54dcfbf0da4f",
-  "app/site.css": "ca3623319020534e47b727a824fb0ca06e1d2feea82e355faf24cc757e3297ef",
+  "app/site.css": "276948370cd787f0cd31164f0b3417ac5d8b06d8d1d04719cff3c90fcfe0cfb2",
   "app/workspace/workspace.css": "8dcf6352f84a4755bcd434a8b5abc9500b2024c0098d397a0c01454ccd8be02b",
   "components/BrandLogo.tsx": "eadd3ecf16e11bb0fc69d40c528727afc971142daec9367c51266b1f633fabb2",
-  "components/SiteFooter.tsx": "ad99ecad2676aa6cd47f635785fd2a11fc366c4e112c4fa316bbfb4a3f713f59",
+  "components/SiteFooter.tsx": "419606c3e9ac75a18e41e3928d87409279985a216f27b250bfebc2bed8ed60c4",
   "components/SiteHeader.tsx": "ea089f55205cc6a40156232c611d0d162121fc22204acf558b7f7f958ba4b817"
 };
 test("legal: layout, componentes do entorno e CSS permanecem revisados", () => {

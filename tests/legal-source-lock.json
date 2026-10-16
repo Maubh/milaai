@@ -58,7 +58,7 @@
   "site/app/(site)/login/page.tsx": "f5f189539e85663a39c2abf4070182d5ceafb2ee6965d7e21e538e0feb565f78",
   "site/app/(site)/login/verify/page.tsx": "3d4450292c9ce2c5504644c9a811f241aac08e438284f9f8a04ab0603c852e69",
   "site/app/(site)/page.tsx": "3494f9266572eb86553e616bc8eb36c73fe1aa812312fe4292a4877a12c817ce",
-  "site/app/(site)/privacidade/page.tsx": "c9445f8709bab8956c34500be92c2be7cba6c23cf46d4348c9c43f4093a4d46f",
+  "site/app/(site)/privacidade/page.tsx": "bab7608c0081a087322ac071997c8ad731d1e60be18c02b58de490fc8872378a",
   "site/app/(site)/termos/page.tsx": "7a2e06976629ee047dc67d141e93fcc2bc09395cfa1875e521538edc5c8490db",
   "site/app/api/auth/logout/route.ts": "8753fa2af392389bbc47a04597d6daa79fd9614435e20a4155f82bf88cf4e90a",
   "site/app/api/auth/otp/start/route.ts": "fa0ac175730a830d9f51f7f5b6cf02302dafbd7d75193619263f6a41a5cbf29c",
@@ -75,7 +75,7 @@
   "site/app/integrations/[app]/page.tsx": "134687a54dd1f68b9a42331d8027590e94e95da2ee66c9d032bd4eff54df0dab",
   "site/app/layout.tsx": "813ab8bb4dca69c6e268fb81b0fe7c4c4283a12f24a47b56781f54dcfbf0da4f",
   "site/app/not-found.tsx": "8e91be195b2626360a8a5f07d602a71c368f2c7937c6f35c7f1e8a1fd16f3d90",
-  "site/app/site.css": "ca3623319020534e47b727a824fb0ca06e1d2feea82e355faf24cc757e3297ef",
+  "site/app/site.css": "276948370cd787f0cd31164f0b3417ac5d8b06d8d1d04719cff3c90fcfe0cfb2",
   "site/app/vitrine/[slugLoja]/[slugColecao]/VitrineView.tsx": "20d1c2f5f7728daf80f4e5fcb75a6aaf2589e111211114ddaf74f4d518e19142",
   "site/app/vitrine/[slugLoja]/[slugColecao]/page.tsx": "57371c97b88d1a99cd722a51ae48d4e922ce67f8295884dca27df5fd876049f3",
   "site/app/vitrine/vitrine.css": "50f4ab1c31bb52b74cc982f71c43c1356e5239922b5c1ceb3a40417c0c28676c",
@@ -100,7 +100,7 @@
   "site/components/NotionConnection.tsx": "fcf18603fc7005c8f5eed3c5a7cdedcc6e20f2142dd279027ce35161ed054036",
   "site/components/PriceCalculator.tsx": "ae874438974017ece840da7e53cd108a566ae46d0277c526ad91234decef402a",
   "site/components/PricingSection.tsx": "d490b3d15602ab750c58b5ddcd2083473623b644878c445b957cdb2c3c5764a2",
-  "site/components/SiteFooter.tsx": "ad99ecad2676aa6cd47f635785fd2a11fc366c4e112c4fa316bbfb4a3f713f59",
+  "site/components/SiteFooter.tsx": "419606c3e9ac75a18e41e3928d87409279985a216f27b250bfebc2bed8ed60c4",
   "site/components/SiteHeader.tsx": "ea089f55205cc6a40156232c611d0d162121fc22204acf558b7f7f958ba4b817",
   "site/components/TurnstileWidget.tsx": "0993c33f3346f02954ac689a761c55c842cc06803b01664d6ea97c51cf6297c7",
   "site/components/WorkspaceShell.tsx": "84b8667e546aa22bb90820a42f765462df8f84950b9fdc0a3b5c8dfeadb2b6a1",
@@ -114,7 +114,7 @@
   "site/lib/demo-data.ts": "d750e63de9b6b8135ae6fdfd278b18bdb3478af216cac59734693730e8f827fa",
   "site/lib/google-workspace.ts": "f7da69799f71953dc0d650aabb130e61dd118d62e1c0a166832123a52e94c4dc",
   "site/lib/integration-errors.ts": "d50167d079039cf6573a7e11c24aed5863926f83465ad6cc7708b79e94f04b44",
-  "site/lib/legal.ts": "446e3798906ebb5aa1258dee95f8a0130ad32dc91ad9b2ff27d74cf01a2030da",
+  "site/lib/legal.ts": "46f914871731ce11befd89c08c49c5683bd640684a5800604c1cd30135b3bb4b",
   "site/lib/notion.ts": "40c4ee0856bc78dda682e9c19f66b459e8dee7f9f3060ed76a68232dcf86ca40",
   "site/lib/onboarding.ts": "2cbd84f8135e53c8ff82962188dd76d947cf8157439b7c9c47dcc97cc4eb1204",
   "site/lib/pricing.ts": "fdafa3255771efddf706bfbe2b45837df3ad3df93f9daf2d16ae739592418e78",
@@ -172,5 +172,6 @@
   "site/scripts/legal/atualizar_golden.py": "04f563f19480d909c5a1028f3be85d0a67bd251e7d9662241c3191246984e435",
   "site/scripts/legal/prova_v8.py": "8aa66cc08008e4d6f668bf6e09c5f091a65afb5197703be1e0067cacf35a27b7",
   "site/scripts/legal/prova_v9.py": "8773cd3fbe0406fd4564b3add8358b5fedd66b8c7f109d290a8e17ffb8c8bd98",
-  "site/tsconfig.json": "c2dbc5363e8c568e8d0bbde862bd88033ba08c4c34ddae4d9742bca0725c2b2d"
+  "site/tsconfig.json": "c2dbc5363e8c568e8d0bbde862bd88033ba08c4c34ddae4d9742bca0725c2b2d",
+  "site/app/(site)/exclusao-de-dados/page.tsx": "8d55164a4bc937074be867087e7f4e4bcfeb6f82b4e8f6346febcc7a72a51053"
 }

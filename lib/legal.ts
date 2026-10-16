@@ -52,15 +52,16 @@ export const CONTATO_PRIVACIDADE = "contato@milaai.com.br";
 
 export const INSTAGRAM = "@usemila.ai";
 
-export const ATUALIZADO_EM = "30 de setembro de 2026";
+export const ATUALIZADO_EM = "16 de outubro de 2026";
 
 /**
- * Identificação do controlador. Honesto: a empresa ainda não está constituída.
- * A LGPD (art. 41) e o revisor do Google exigem um responsável identificável —
- * enquanto não houver CNPJ, a equipe fundadora é nomeada como tal.
+ * Identificação do controlador (publicada em 2026-10-16 para a revisão do app
+ * Meta "Mila AI"). A LGPD (art. 41) exige um responsável identificável.
  */
-export const CONTROLADOR_NOME = "equipe fundadora da mila.";
-export const CONTROLADOR_CNPJ = null;
+export const CONTROLADOR_NOME = "MVRO TECNOLOGIA E CONSULTORIA LTDA";
+export const CONTROLADOR_CNPJ = "32.736.745/0001-00";
+export const CONTROLADOR_ENDERECO =
+  "Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052";
 
 /** Quem são os titulares dos dados tratados. */
 export const TITULARES = [
@@ -170,6 +171,10 @@ export const DADOS_TRATADOS: Array<{ dado: string; destino: string }> = [
     destino:
       "Guardadas em cofre cifrado com Fernet (AES-128-CBC + HMAC), com a chave de " +
       "decifragem em arquivo de permissão restrita (600).",
+  },
+  {
+    dado: "Dados da conta Meta autorizada",
+    destino: "infraestrutura da mila. (hospedagem)",
   },
 ];
 
@@ -323,17 +328,18 @@ export const SUBCONTROLADORES: Array<{
  * carregam a DECISÃO (mecanismo em formalização, o que se transfere, o que
  * NÃO vai) estão congelados em `tests/legal.test.ts`. A revisão do Grok 4.7 mostrou que a 1ª versão
  * afirmava "usamos cláusulas contratuais-padrão" como se o art. 33 já estivesse
- * fechado — e não há instrumento nenhum nem pessoa jurídica constituída para
- * assinar. O texto passa a ser honesto: a transferência acontece, o mecanismo
- * ainda não está formalizado, e a responsabilidade fica com quem opera.
+ * fechado — e não havia instrumento assinado. O texto segue honesto: a
+ * transferência acontece e a formalização das cláusulas-padrão continua
+ * pendente. Desde 2026-10-16 o controlador é a MVRO (CNPJ publicado); isso não
+ * significa que as cláusulas já tenham sido firmadas.
  */
 export const TRANSFERENCIA_INTERNACIONAL =
   "Vários prestadores acima processam dados fora do Brasil — Estados Unidos " +
   "(Google, TypeSafe, Serper, Vercel, Cloudflare) e China (Alibaba, Zhipu). Isso " +
   "é transferência internacional (LGPD, art. 33). Mecanismo: os contratos de " +
   "adesão (termos de serviço) desses fornecedores preveem as salvaguardas de " +
-  "proteção de dados, e a formalização das cláusulas-padrão segue pendente " +
-  "enquanto a empresa não estiver constituída. Enquanto isso, transferimos o " +
+  "proteção de dados, e a formalização das cláusulas-padrão segue pendente. " +
+  "Enquanto isso, transferimos o " +
   "mínimo necessário: o texto da mensagem que você envia à mila. Nada de arquivo " +
   "do seu Drive, de credencial da sua conta ou de conteúdo da sua planilha vai " +
   "para os modelos alternativos. Chips de fornecedor chinês aparecem " +
@@ -377,6 +383,11 @@ export const RETENCAO: Array<{ item: string; alvo: string; praticado: string }> 
     alvo: "até a lojista desconectar",
     praticado: "Mantidas enquanto a integração estiver conectada.",
   },
+  {
+    item: "Dados da integração Meta (token, IDs de portfólio e catálogo)",
+    alvo: "até 30 dias após desconectar",
+    praticado: "Mantidos enquanto a integração estiver conectada.",
+  },
 ];
 
 export const RETENCAO_NOTA =
@@ -402,8 +413,9 @@ export const DIREITOS = [
   "revogação do consentimento e oposição a tratamento fundado em legítimo interesse",
 ] as const;
 
-/** Número da seção de contato — o guard usa para não depender de texto solto. */
-export const SECAO_CONTATO = 15;
+/** Número da seção de contato — o guard usa para não depender de texto solto.
+ *  A seção Meta entrou como 8 em 2026-10-16; o contato passou a ser 16. */
+export const SECAO_CONTATO = 16;
 
 /**
  * O que NÃO é feito. Cada linha aqui é uma verificação em disco, não uma
@@ -428,6 +440,7 @@ export const CONECTORES_DISPONIVEIS = [
 /** Construídos, mas ainda sem validação com credencial de produção. */
 export const CONECTORES_VALIDACAO_PENDENTE = [
   "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.",
+  "Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.",
 ] as const;
 
 /** Anunciados em algum momento e que NÃO funcionam: a tela genérica de conexão

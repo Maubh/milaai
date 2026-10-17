@@ -23,6 +23,8 @@ interface IntegrationConfig {
   tools?: typeof FERRAMENTAS_GOOGLE;
   /** O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo. */
   escopoNota?: string;
+  /** Rótulo personalizado do botão de ação primária (ex.: 'Continuar com o Facebook'). */
+  buttonLabel?: string;
   isApiKeyGuided?: boolean;
   /** Conectores que exigem DOIS valores (Jueri: código de cliente + token). */
   precisaClienteId?: boolean;
@@ -100,6 +102,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Meta",
     title: "Conectar com a Meta",
     desc: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos no Facebook e Instagram.",
+    buttonLabel: "Continuar com o Facebook",
     escopoNota:
       "A mila sincroniza seus produtos e fotos diretamente no catálogo de produtos da Meta (Facebook e Instagram). Ela acessa apenas os catálogos do seu negócio, em seu nome.",
     isApiKeyGuided: false,
@@ -375,7 +378,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                   disabled={connecting}
                   style={{ width: "100%" }}
                 >
-                  {connecting ? "Conectando…" : "Conectar com a mila"}
+                  {connecting ? "Conectando…" : info.buttonLabel ?? "Conectar com a mila"}
                 </button>
                 <Link
                   href="/workspace/integracoes"

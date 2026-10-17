@@ -102,4 +102,10 @@ export const INTEGRACOES: Integracao[] = [
     status: "disponível",
     desc: NOTION_DESC,
   },
+  {
+    id: "meta",
+    nome: "Meta",
+    status: "disponível",
+    desc: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos no Facebook e Instagram.",
+  },
 ];

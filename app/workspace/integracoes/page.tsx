@@ -19,7 +19,7 @@ interface ProviderStatus {
 
 
 const GROUPS = [
-  { id: "vendas", title: "Estoque e vendas", description: "As peças da sua loja, do estoque à vitrine.", providers: ["jueri", "olist", "nuvemshop"] },
+  { id: "vendas", title: "Estoque e vendas", description: "As peças da sua loja, do estoque à vitrine.", providers: ["jueri", "olist", "nuvemshop", "meta"] },
   { id: "fornecedores", title: "Fornecedores e compras", description: "Escolha onde organizar seus fornecedores e compras.", providers: ["google", "notion"] },
 ];
 
@@ -27,6 +27,7 @@ const PRESENTATION: Record<string, { detail: string; description: string; logo?:
   jueri: { detail: "Gestão de joias e semijoias", description: "Organize peças, consignados, estoque e custos com seu sistema de gestão.", logo: "/integrations/jueri.png" },
   olist: { detail: "Gestão da loja", description: "Mantenha o estoque e os custos de cada peça organizados no seu sistema.", logo: "/integrations/olist.svg" },
   nuvemshop: { detail: "Loja virtual", description: "Cadastre produtos com foto, descrição e preço na loja virtual pelo WhatsApp.", logo: "/integrations/nuvemshop-wordmark.png" },
+  meta: { detail: "Catálogo do Facebook e Instagram", description: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos na Meta." },
   google: { detail: "Drive e Planilhas", description: "Sua lista de fornecedores em uma planilha criada e mantida pela mila no seu Drive." },
   notion: { detail: "Bases de dados", description: "Sua lista de fornecedores e suas notas de compra na base que você indicar. A mila não cria a base." },
 };
@@ -40,6 +41,13 @@ function ToolMark({ provider }: { provider: string }) {
   }
   if (provider === "notion") {
     return <svg viewBox="0 0 24 24" width="38" height="38" fill="currentColor" aria-hidden="true"><path d="M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z" /></svg>;
+  }
+  if (provider === "meta") {
+    return (
+      <svg viewBox="0 0 24 24" width="36" height="36" fill="#0081FB" aria-hidden="true">
+        <path d="M6.502 6.5C3.766 6.5 2 8.653 2 11.53c0 2.984 1.838 5.758 4.414 7.644 1.58.156 3.167-.32 4.457-1.34 1.13 1.02 2.717 1.496 4.297 1.34C17.744 17.288 19.582 14.514 19.582 11.53c0-2.877-1.766-5.03-4.502-5.03-2.035 0-3.864 1.2-4.83 2.977C9.284 7.7 7.455 6.5 5.42 6.5h1.082zm.006 2.378c1.633 0 3.09 1.19 3.65 2.766-.455 1.545-1.42 2.87-2.695 3.738-1.72-1.272-2.92-3.18-2.92-5.074 0-1.848 1.066-2.99 2.457-2.99l-.492.56zm7.986 0c1.39 0 2.456 1.142 2.456 2.99 0 1.894-1.2 3.802-2.92 5.074-1.275-.868-2.24-2.193-2.695-3.738.56-1.576 2.017-2.766 3.65-2.766l-.491-.56z" />
+      </svg>
+    );
   }
   const logo = PRESENTATION[provider]?.logo;
   return logo ? <img src={logo} alt="" className={`integrations-logo integrations-logo-${provider}`} /> : null;
@@ -91,7 +99,9 @@ export default async function IntegracoesPage({
   const okConectado = okParam ? byId.get(okParam)?.connected === true : false;
   const okPendente = !!okParam && !okConectado && consultou;
 
-  const catalog = INTEGRACOES.filter((i) => i.id !== "bling");
+  // Meta fica condicionado à allowlist do backend (byId.has("meta")): fora da
+  // allowlist o card não aparece no catálogo visível nem soma na contagem.
+  const catalog = INTEGRACOES.filter((i) => i.id !== "bling" && (i.id !== "meta" || byId.has("meta")));
   const connectedCount = catalog.filter((i) => byId.get(i.id)?.connected).length;
 
   return (

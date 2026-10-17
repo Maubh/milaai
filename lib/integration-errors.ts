@@ -80,6 +80,8 @@ export const AUTHORIZE_HOSTS = [
   "tiendanube.com",
   "www.nuvemshop.com.br",
   "nuvemshop.com.br",
+  "www.facebook.com",
+  "facebook.com",
 ];
 
 /** Só deixamos o browser sair para um host de provedor conhecido, via https. */

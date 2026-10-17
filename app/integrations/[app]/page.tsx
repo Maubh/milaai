@@ -96,6 +96,14 @@ const KNOWN: Record<string, IntegrationConfig> = {
     // fluxo protegido de chave colada do Jueri (não inicia OAuth inválido).
     isApiKeyGuided: true,
   },
+  meta: {
+    nome: "Meta",
+    title: "Conectar com a Meta",
+    desc: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos no Facebook e Instagram.",
+    escopoNota:
+      "A mila sincroniza seus produtos e fotos diretamente no catálogo de produtos da Meta (Facebook e Instagram). Ela acessa apenas os catálogos do seu negócio, em seu nome.",
+    isApiKeyGuided: false,
+  },
 };
 
 export default function IntegrationTransition({ params }: { params: Promise<{ app: string }> }) {

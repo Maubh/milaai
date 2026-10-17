@@ -220,6 +220,9 @@ test("authorize_url: só https em host oficial de provedor", () => {
   assert.equal(isSafeAuthorizeUrl("https://accounts.tiny.com.br/oauth/nv2"), true);
   assert.equal(isSafeAuthorizeUrl("https://accounts.google.com/o/oauth2/v2/auth"), true);
   assert.equal(isSafeAuthorizeUrl("https://www.tiendanube.com/apps/44907/authorize"), true);
+  assert.equal(isSafeAuthorizeUrl("https://www.facebook.com/v23.0/dialog/oauth"), true);
+  assert.equal(isSafeAuthorizeUrl("https://facebook.com/v23.0/dialog/oauth"), true);
+  assert.equal(isSafeAuthorizeUrl("http://facebook.com/v23.0/dialog/oauth"), false);
   assert.equal(isSafeAuthorizeUrl("http://accounts.tiny.com.br/oauth"), false);
   assert.equal(isSafeAuthorizeUrl("https://evil.example.com/oauth"), false);
   assert.equal(isSafeAuthorizeUrl("javascript:alert(1)"), false);

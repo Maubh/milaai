@@ -1,29 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { FERRAMENTAS_GOOGLE } from "@/lib/google-workspace";
+import "./integrations-beam.css";
 
 interface IntegrationItem {
   id: string;
   name?: string;
   showName?: boolean;
-  badge?: string;
-  color: string;
   icon: React.ReactNode;
 }
 
 function GoogleWorkspaceIcons() {
   return (
     <span className="google-workspace-icons" aria-hidden="true">
-      <svg viewBox="0 0 48 42" focusable="false">
-        <polygon fill="#0F9D58" points="16,2 30,2 46,30 32,30" />
-        <polygon fill="#F4B400" points="32,30 46,30 39,40 11,40" />
-        <polygon fill="#4285F4" points="16,2 2,30 9,40 23,12" />
-      </svg>
-      <svg viewBox="0 0 28 32" focusable="false">
-        <path fill="#34A853" d="M4 0h14l6 6v24a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2Z" />
-        <path fill="#8BCF9B" d="M18 0v6h6z" />
-        <path fill="#FFF" d="M7 13h12v2H7zm0 5h5v2h-5zm7 0h5v2h-5zm-7 5h5v2H7zm7 0h5v2h-5z" />
-      </svg>
+      {FERRAMENTAS_GOOGLE.map((tool) => (
+        <img key={tool.slug} src={tool.icone} alt="" width={22} height={22} />
+      ))}
     </span>
   );
 }
@@ -31,61 +25,46 @@ function GoogleWorkspaceIcons() {
 function GoogleWorkspaceBrand() {
   return (
     <span className="google-workspace-brand">
-      <img src="/integrations/google-workspace.svg" alt="" />
+      <img src="/integrations/google-workspace.svg" alt="" width={130} height={24} />
       <GoogleWorkspaceIcons />
     </span>
   );
 }
 
-/* Wordmarks do Bling e da Olist são os SVGs distribuídos pelas próprias marcas,
+/* Wordmarks são os assets das próprias marcas,
    mantidos localmente para não depender do carregamento de terceiros. */
 const INTEGRATIONS: IntegrationItem[] = [
   {
     id: "jueri",
     name: "Jueri",
     showName: false,
-    color: "#EA580C",
     icon: (
-      <img src="/integrations/jueri.png" alt="Jueri" />
-    ),
-  },
-  {
-    id: "bling",
-    name: "Bling",
-    showName: false,
-    badge: "Em breve",
-    color: "#002726",
-    icon: (
-      <img src="/integrations/bling-ink.svg" alt="" />
+      <img src="/integrations/jueri.png" alt="" width={80} height={26} />
     ),
   },
   {
     id: "olist",
     name: "Olist",
     showName: false,
-    color: "#0A4EE4",
     icon: (
-      <img src="/integrations/olist.svg" alt="" />
+      <img src="/integrations/olist.svg" alt="" width={80} height={28} />
     ),
   },
   {
     id: "nuvemshop",
     name: "Nuvemshop",
     showName: false,
-    color: "#5D42E8",
-    icon: <img src="/integrations/nuvemshop-wordmark.png" alt="Nuvemshop" />,
+    icon: <img src="/integrations/nuvemshop-wordmark.png" alt="" width={110} height={28} />,
   },
   {
     id: "google-workspace",
     name: "Google Workspace",
     showName: false,
-    color: "#5F6368",
     icon: <GoogleWorkspaceBrand />,
   },
   {
     id: "notion",
     name: "Notion",
-    color: "#111111",
     icon: (
       /* Ícone oficial do Notion (cubo isométrico 3D com 'N' chanfrado do Simple Icons) */
       <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
@@ -93,50 +72,87 @@ const INTEGRATIONS: IntegrationItem[] = [
       </svg>
     ),
   },
-  {
-    id: "outlook",
-    name: "Outlook",
-    color: "#0078D4",
-    icon: (
-      /* Ícone oficial do Microsoft Outlook (Fluent Design / Simple Icons v11) */
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true">
-        <path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.33-.32-.33-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6.5V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72h.01q.1.07.18.18.07.12.07.25zm-6-8.25v3h3v-3zm0 4.5v3h3v-3zm0 4.5v1.83l3.05-1.83zm-5.25-9v3h3.75v-3zm0 4.5v3h3.75v-3zm0 4.5v2.03l2.41 1.5 1.34-.8v-2.73zM9 3.75V6h2l.13.01.12.04v-2.3zM5.98 15.98q.9 0 1.6-.3.7-.32 1.19-.86.48-.55.73-1.28.25-.74.25-1.61 0-.83-.25-1.55-.24-.71-.71-1.24t-1.15-.83q-.68-.3-1.55-.3-.92 0-1.64.3-.71.3-1.2.85-.5.54-.75 1.3-.25.74-.25 1.63 0 .85.26 1.56.26.72.74 1.23.48.52 1.17.81.69.3 1.56.3zM7.5 21h12.39L12 16.08V17q0 .41-.3.7-.29.3-.7.3H7.5zm15-.13v-7.24l-5.9 3.54Z" />
-      </svg>
-    ),
-  },
+
 ];
 
-function BrandMark({ item }: { item: IntegrationItem }) {
-  const label = item.name ?? item.id;
-
-  return (
-    <div className={`marquee-mark integration-${item.id}`} aria-label={label}>
-      <span className="marquee-mark-logo" style={{ color: item.color }}>{item.icon}</span>
-      {item.showName !== false ? <span className="marquee-mark-name">{item.name}</span> : null}
-      {item.badge ? <span className="marquee-mark-badge">{item.badge}</span> : null}
-    </div>
-  );
-}
-
-function BrandGroup({ hidden = false }: { hidden?: boolean }) {
-  // Lista duplicada dentro do grupo: garante cobertura total em telas ultrawide
-  // sem quebrar o loop contínuo (grupos idênticos, deslocamento de -1/3).
-  const items = [...INTEGRATIONS.filter((item) => item.id !== "outlook"), ...INTEGRATIONS.filter((item) => item.id !== "outlook")];
-  return (
-    <div className="marquee-group" aria-hidden={hidden || undefined}>
-      {items.map((item, i) => <BrandMark key={`${item.id}-${i}`} item={item} />)}
-    </div>
-  );
-}
+const PURPOSES: Record<string, string> = {
+  jueri: "Estoque e custos",
+  olist: "Gestão da loja",
+  nuvemshop: "Sua loja virtual",
+  "google-workspace": "Lista de fornecedores",
+  notion: "Fornecedores e notas de compra",
+};
 
 export default function IntegrationsMarquee() {
+  const graphRef = useRef<HTMLDivElement>(null);
+  const [paths, setPaths] = useState<string[]>([]);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph) return;
+    const center = graph.querySelector<HTMLElement>(".integrations-hub");
+    const nodes = Array.from(graph.querySelectorAll<HTMLElement>(".integrations-node"));
+    if (!center) return;
+
+    function measure() {
+      const bounds = graph!.getBoundingClientRect();
+      const hub = center!.getBoundingClientRect();
+      const targetY = hub.top + hub.height / 2 - bounds.top;
+      setPaths(nodes.map((node) => {
+        const rect = node.getBoundingClientRect();
+        const left = rect.left < hub.left;
+        const x1 = (left ? rect.right : rect.left) - bounds.left;
+        const y1 = rect.top + rect.height / 2 - bounds.top;
+        const x2 = (left ? hub.left : hub.right) - bounds.left;
+        const bend = (x1 + x2) / 2;
+        return `M ${x1} ${y1} C ${bend} ${y1}, ${bend} ${targetY}, ${x2} ${targetY}`;
+      }));
+    }
+
+    measure();
+    const resize = new ResizeObserver(measure);
+    resize.observe(graph);
+    resize.observe(center);
+    nodes.forEach((node) => resize.observe(node));
+    const intersection = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    intersection.observe(graph);
+    return () => { resize.disconnect(); intersection.disconnect(); };
+  }, []);
+
   return (
-    <section className="marquee-section" aria-label="Integrações da mila">
-      <div className="marquee-viewport" tabIndex={0} aria-label="Marcas integradas à mila">
-        <div className="marquee-track">
-          <BrandGroup />
-          <BrandGroup hidden />
-          <BrandGroup hidden />
+    <section id="integracoes" className="integrations-section" aria-labelledby="integrations-title">
+      <div className="wrap integrations-layout">
+        <div className="integrations-copy">
+          <h2 id="integrations-title">As ferramentas da sua loja, na mesma conversa.</h2>
+          <p>Conecte seus sistemas à Mila e acompanhe sua operação pelo WhatsApp.</p>
+          <Link href="/workspace/integracoes" className="integrations-link">Conhecer as integrações</Link>
+          <p className="integrations-note">As conexões dependem do seu plano e da autorização da sua loja.</p>
+        </div>
+        <div className={`integrations-graph${visible ? " is-visible" : ""}`} ref={graphRef}>
+          <svg className="integrations-paths" aria-hidden="true" focusable="false">
+            {paths.map((path, index) => (
+              <g key={index}>
+                <path d={path} className="integrations-path" />
+                <path d={path} pathLength={1} className="integrations-pulse" style={{ animationDelay: `${index * 1.6}s` }} />
+              </g>
+            ))}
+          </svg>
+          <div className="integrations-hub" role="img" aria-label="mila. no WhatsApp">
+            <img src="/brand/vectors/symbol-ivory.svg" width={48} height={48} alt="" />
+            <span className="integrations-hub-caption">No seu WhatsApp</span>
+          </div>
+          <ul className="integrations-nodes" aria-label="Ferramentas que você pode conectar">
+            {INTEGRATIONS.map((item) => (
+              <li key={item.id} className={`integrations-node integrations-node-${item.id}`}>
+                <span className="integrations-node-brand" role="img" aria-label={item.name}>
+                  {item.icon}
+                  {item.showName !== false ? <span>{item.name}</span> : null}
+                </span>
+                <span className="integrations-node-purpose">{PURPOSES[item.id]}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>

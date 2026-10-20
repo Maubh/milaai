@@ -53,7 +53,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Marquee infinito de integrações e conectores */}
+      {/* Mapa das integrações, com a Mila ao centro */}
       <IntegrationsMarquee />
 
       {/* Tabela de Preços Minimalista */}

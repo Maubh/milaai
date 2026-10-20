@@ -56,6 +56,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 
 import * as GW from "../lib/google-workspace.ts";
 import * as NO from "../lib/notion.ts";
@@ -580,7 +581,7 @@ test("google: nenhum arquivo de app/ ou components/ promete o que não entrega",
   //     promessa disfarçada de suíte. Medido: 0 falso positivo nos 37 arquivos.
   // Os genéricos soltos ("Página não encontrada", "documentos fiscais") são
   // português legítimo e vivem fora da copy; não devem quebrar o teste.
-  const raiz = new URL("..", import.meta.url).pathname;
+  const raiz = fileURLToPath(new URL("..", import.meta.url));
   const arquivos = [...listar(`${raiz}app`), ...listar(`${raiz}components`)]
     .filter((p) => /\.(tsx|ts)$/.test(p) && !p.includes("node_modules"));
   assert.ok(arquivos.length > 10, `esperava varrer app/ e components/, achei ${arquivos.length}`);

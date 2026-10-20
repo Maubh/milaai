@@ -18,6 +18,24 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.2.1",
+    date: "2026-10-20",
+    title: "Integrações mais claras e novidades à mão",
+    summary: "Conheça as conexões da Mila na página inicial e acompanhe as novidades sem sair da sua área.",
+    changes: [
+      {
+        type: "improvement",
+        title: "Um mapa das ferramentas que você pode conectar",
+        description: "A página inicial mostra a Mila no centro das integrações, com conexões animadas e uma descrição do uso de cada ferramenta, como a lista de fornecedores.",
+      },
+      {
+        type: "improvement",
+        title: "Atualizações em um painel lateral",
+        description: "O botão Atualizações abre as novidades mais recentes com datas e versões. O histórico completo continua disponível na sua área.",
+      },
+    ],
+  },
+  {
     version: "0.2.0",
     date: "2026-10-15",
     title: "Concorrentes da sua região, pesquisa de fornecedores e integrações",

@@ -6,8 +6,8 @@
 .integrations-copy > .integrations-note { margin-top: .75rem; font-size: .76rem; line-height: 1.7; color: var(--mineral); }
 .integrations-graph { position: relative; height: 380px; min-width: 0; }
 .integrations-paths { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.integrations-path { fill: none; stroke: color-mix(in srgb, var(--sage) 34%, transparent); stroke-width: 1.5; }
-.integrations-pulse { fill: none; stroke: var(--sage); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: .12 .88; stroke-dashoffset: 1; opacity: 0; animation: integrations-beam 8s cubic-bezier(.4, 0, .2, 1) infinite; animation-play-state: paused; }
+.integrations-path { fill: none; stroke: color-mix(in srgb, var(--mineral) 22%, transparent); stroke-width: 1.5; }
+.integrations-pulse { fill: none; stroke: var(--mineral); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: .12 .88; stroke-dashoffset: 1; opacity: 0; animation: integrations-beam 8s cubic-bezier(.4, 0, .2, 1) infinite; animation-play-state: paused; }
 .integrations-graph.is-visible .integrations-pulse { animation-play-state: running; }
 .integrations-hub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 86px; height: 86px; border-radius: 24px; display: grid; place-items: center; background: var(--mineral); }
 .integrations-hub img { width: 48px; height: 48px; object-fit: contain; }

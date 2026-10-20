@@ -186,7 +186,8 @@ export async function proxyMilaAuth(
 
   // Teto de 30 s: sem clamp, NaN/negativo/Infinity fazem
   // AbortSignal.timeout lançar RangeError (viraria 502 mentiroso).
-  const timeoutMs = Math.min(Math.max(Number(init?.timeoutMs) || 8_000, 1_000), 30_000);
+  // Default de 15 s garante folga para o despacho via MegaAPI/WhatsApp na VPS.
+  const timeoutMs = Math.min(Math.max(Number(init?.timeoutMs) || 15_000, 1_000), 30_000);
   // sessionToken/timeoutMs são controles do proxy, não opções do fetch.
   const { sessionToken: _sessao, timeoutMs: _teto, ...fetchInit } = init ?? {};
   try {

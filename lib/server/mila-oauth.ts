@@ -59,6 +59,7 @@ export async function proxyOAuth(
               connected: true,
               app_configured: true,
               catalog_id: "sandbox-catalogo-1",
+              catalog_name: "Catálogo Ritrovarsi (Sandbox)",
               business_id: "sandbox-negocio-1",
               product_source: "site_nuvemshop",
               sync_only_published: true,

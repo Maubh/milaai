@@ -26,6 +26,7 @@ export interface MetaProviderData {
   name: string;
   connected: boolean;
   catalog_id?: string | null;
+  catalog_name?: string | null;
   business_id?: string | null;
   product_source?: string | null;
   sync_only_published?: boolean;
@@ -41,10 +42,10 @@ interface MetaCatalogManagerProps {
 }
 
 const FONTES = [
-  { id: "site_nuvemshop", nome: "Nuvemshop (Loja Virtual)", providerId: "nuvemshop" },
+  { id: "site_nuvemshop", nome: "Nuvemshop", providerId: "nuvemshop" },
   { id: "erp_olist", nome: "Olist / Tiny ERP", providerId: "olist" },
   { id: "erp_jueri", nome: "Jueri ERP", providerId: "jueri" },
-  { id: "mila", nome: "Mila (WhatsApp / Fotos manuais)", providerId: null },
+  { id: "mila", nome: "Mila (WhatsApp)", providerId: null },
 ];
 
 function formatarDataHora(ts?: number | null): string {
@@ -87,6 +88,7 @@ export default function MetaCatalogManager({
     : true;
 
   const catalogId = meta.catalog_id || "Não identificado";
+  const catalogName = meta.catalog_name;
 
   async function salvarFonte() {
     setSalvando(true);
@@ -220,16 +222,35 @@ export default function MetaCatalogManager({
   return (
     <div className="meta-catalog-manager">
       <div className="meta-catalog-header">
-        <span className="meta-catalog-label">Catálogo do Instagram & Facebook</span>
+        <div className="meta-catalog-header-info">
+          <span className="meta-catalog-label">Catálogo do Instagram & Facebook</span>
+          {catalogName ? (
+            <span className="meta-catalog-name">{catalogName}</span>
+          ) : null}
+        </div>
         <span className="meta-catalog-id" title="Identificador do catálogo no Gerenciador de Comércio da Meta">
           ID: <strong>{catalogId}</strong>
         </span>
       </div>
 
       <div className="meta-catalog-controls">
-        <label className="meta-catalog-field">
-          <span className="meta-catalog-field-title">Fonte dos produtos</span>
+        <div className="meta-catalog-field">
+          <div className="meta-catalog-field-header">
+            <label htmlFor="meta-product-source-select" className="meta-catalog-field-title">
+              Fonte dos produtos
+            </label>
+            {fonteAtualObj?.providerId ? (
+              <span
+                className={`meta-catalog-source-pill ${
+                  fonteConectada ? "meta-source-pill-ok" : "meta-source-pill-warn"
+                }`}
+              >
+                {fonteConectada ? "✓ Conectada" : "⚠ Não conectada"}
+              </span>
+            ) : null}
+          </div>
           <select
+            id="meta-product-source-select"
             className="meta-catalog-select"
             value={fonte}
             onChange={(e) => {
@@ -238,18 +259,13 @@ export default function MetaCatalogManager({
             }}
             disabled={salvando || sincronizando}
           >
-            {FONTES.map((f) => {
-              const conectado = f.providerId
-                ? connectedProviders.find((p) => p.id === f.providerId)?.connected
-                : true;
-              return (
-                <option key={f.id} value={f.id}>
-                  {f.nome} {f.providerId ? (conectado ? "✓ Conectado" : "⚠ Não conectado") : ""}
-                </option>
-              );
-            })}
+            {FONTES.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.nome}
+              </option>
+            ))}
           </select>
-        </label>
+        </div>
 
         {fonteAtualObj?.providerId && !fonteConectada ? (
           <p className="meta-catalog-source-warning">

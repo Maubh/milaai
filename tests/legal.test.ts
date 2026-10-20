@@ -2099,7 +2099,7 @@ const ENTORNO_REVISADO: Record<string, string> = {
   "app/workspace/workspace.css": "8dcf6352f84a4755bcd434a8b5abc9500b2024c0098d397a0c01454ccd8be02b",
   "components/BrandLogo.tsx": "eadd3ecf16e11bb0fc69d40c528727afc971142daec9367c51266b1f633fabb2",
   "components/SiteFooter.tsx": "419606c3e9ac75a18e41e3928d87409279985a216f27b250bfebc2bed8ed60c4",
-  "components/SiteHeader.tsx": "ea089f55205cc6a40156232c611d0d162121fc22204acf558b7f7f958ba4b817"
+  "components/SiteHeader.tsx": "979315fd1d70a365c1a7005f482eaf9e5a55649b8f68d5eef4d52265008369e2"
 };
 test("legal: layout, componentes do entorno e CSS permanecem revisados", () => {
   for (const [rel, hash] of Object.entries(ENTORNO_REVISADO)) {

@@ -18,6 +18,7 @@ interface ProviderStatus {
   connected: boolean;
   app_configured: boolean;
   catalog_id?: string | null;
+  catalog_name?: string | null;
   business_id?: string | null;
   product_source?: string | null;
   sync_only_published?: boolean;

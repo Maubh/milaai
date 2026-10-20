@@ -14,6 +14,7 @@ export const PROVIDER_PUBLIC_KEYS = [
   "app_configured",
   // Metadados públicos seguros para catálogo (Meta Catalog, etc.)
   "catalog_id",
+  "catalog_name",
   "business_id",
   "product_source",
   "sync_only_published",

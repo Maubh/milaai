@@ -187,6 +187,7 @@ test("providers: projeta só os campos públicos", () => {
     connected: true,
     app_configured: true,
     catalog_id: "1880237649466370",
+    catalog_name: "Catálogo Ritrovarsi",
     business_id: "123456",
     product_source: "site_nuvemshop",
     sync_only_published: true,
@@ -203,6 +204,7 @@ test("providers: projeta só os campos públicos", () => {
   assert.deepEqual(Object.keys(out ?? {}).sort(), [...PROVIDER_PUBLIC_KEYS].sort());
   assert.equal(out?.connected, true);
   assert.equal(out?.catalog_id, "1880237649466370");
+  assert.equal(out?.catalog_name, "Catálogo Ritrovarsi");
   assert.equal("access_token" in (out ?? {}), false);
   assert.equal("client_secret" in (out ?? {}), false);
   assert.equal("tenant_id" in (out ?? {}), false);

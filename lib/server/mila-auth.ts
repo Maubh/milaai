@@ -166,7 +166,7 @@ export function sanitizeVerifyResponse(data: Record<string, unknown>): Record<st
 
 export async function proxyMilaAuth(
   path: string,
-  init?: RequestInit & { sessionToken?: string | null },
+  init?: RequestInit & { sessionToken?: string | null; timeoutMs?: number },
 ): Promise<{ status: number; data: Record<string, unknown>; setCookie: string[] }> {
   const secret = milaAuthSecret();
   if (!secret) {
@@ -184,12 +184,17 @@ export async function proxyMilaAuth(
     headers.set("X-Mila-Session", init.sessionToken);
   }
 
+  // Teto de 30 s: sem clamp, NaN/negativo/Infinity fazem
+  // AbortSignal.timeout lançar RangeError (viraria 502 mentiroso).
+  const timeoutMs = Math.min(Math.max(Number(init?.timeoutMs) || 8_000, 1_000), 30_000);
+  // sessionToken/timeoutMs são controles do proxy, não opções do fetch.
+  const { sessionToken: _sessao, timeoutMs: _teto, ...fetchInit } = init ?? {};
   try {
     const res = await fetch(url, {
-      ...init,
+      ...fetchInit,
       headers,
       cache: "no-store",
-      signal: AbortSignal.timeout(8_000),
+      signal: fetchInit.signal ?? AbortSignal.timeout(timeoutMs),
     });
     let data: Record<string, unknown> = {};
     try {

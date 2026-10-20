@@ -28,7 +28,7 @@ export function isGuidedProvider(slug: string): boolean {
 /** Repassa a chamada de integração para o VPS com a identidade da loja. */
 export async function proxyOAuth(
   path: string,
-  init?: RequestInit,
+  init?: RequestInit & { timeoutMs?: number },
 ): Promise<{ status: number; data: Record<string, unknown> }> {
   const token = await currentSessionToken();
   if (!token) {
@@ -49,10 +49,59 @@ export async function proxyOAuth(
           providers: [
             { id: "jueri", name: "Jueri", mode: "guided_key", connected: false, app_configured: true },
             { id: "olist", name: "Olist", mode: "oauth", connected: false, app_configured: true },
-            { id: "nuvemshop", name: "Nuvemshop", mode: "oauth", connected: false, app_configured: true },
+            { id: "nuvemshop", name: "Nuvemshop", mode: "oauth", connected: true, app_configured: true },
             { id: "google", name: "Google Workspace", mode: "oauth", connected: false, app_configured: true },
             { id: "notion", name: "Notion", mode: "guided_key", connected: false, app_configured: true },
+            {
+              id: "meta",
+              name: "Meta",
+              mode: "oauth",
+              connected: true,
+              app_configured: true,
+              catalog_id: "sandbox-catalogo-1",
+              business_id: "sandbox-negocio-1",
+              product_source: "site_nuvemshop",
+              sync_only_published: true,
+              last_sync_at: null,
+              last_sync_status: null,
+              last_sync_summary: null,
+              suggested_source: "site_nuvemshop",
+            },
           ],
+        },
+      };
+    }
+    if (path.includes("/meta/catalog/source")) {
+      return {
+        status: 200,
+        data: {
+          ok: true,
+          product_source: "site_nuvemshop",
+          sync_only_published: true,
+          expurgados: 0,
+        },
+      };
+    }
+    if (path.includes("/meta/catalog/sync-now")) {
+      return {
+        status: 200,
+        data: {
+          ok: true,
+          status: "sucesso",
+          source: "site_nuvemshop",
+          mensagem: "Sincronização de catálogo simulada em modo sandbox.",
+          enviados: 5,
+          summary: {
+            total: 5,
+            totalAvaliados: 5,
+            enviados: 5,
+            falhas: 0,
+            erros: [],
+            avisos: [],
+            conjuntos: [{ id: "sandbox-set-1", nome: "Sandbox", totalProdutos: 5 }],
+          },
+          erros: [],
+          avisos: [],
         },
       };
     }
@@ -68,7 +117,7 @@ export async function proxyOAuth(
     };
   }
 
-  return proxyMilaAuth(path, { ...init, sessionToken: token });
+  return proxyMilaAuth(path, { ...init, sessionToken: token, timeoutMs: init?.timeoutMs });
 }
 
 /** Campos que o browser pode ver de um item da lista de conectores. */

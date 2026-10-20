@@ -25,8 +25,13 @@ import {
 import {
   sanitizeProviderList,
   sanitizeProviderStatus,
+  sanitizeSyncSummary,
   PROVIDER_PUBLIC_KEYS,
 } from "../lib/provider-status.ts";
+import {
+  isValidProductSource,
+  sanitizeMetaCatalogResponse,
+} from "../lib/meta-catalog.ts";
 import { integrationErrorText, isSafeAuthorizeUrl } from "../lib/integration-errors.ts";
 import { isSameOriginRequest, requestHost, sameOriginDenial } from "../lib/request-origin.ts";
 import { readJsonBounded } from "../lib/bounded-json.ts";
@@ -181,6 +186,14 @@ test("providers: projeta só os campos públicos", () => {
     mode: "oauth",
     connected: true,
     app_configured: true,
+    catalog_id: "1880237649466370",
+    business_id: "123456",
+    product_source: "site_nuvemshop",
+    sync_only_published: true,
+    last_sync_at: 1729440000000,
+    last_sync_status: "sucesso",
+    last_sync_summary: { totalEnviados: 10 },
+    suggested_source: "site_nuvemshop",
     /* campos que não devem passar para o browser */
     access_token: "secreto",
     client_secret: "secreto",
@@ -189,9 +202,99 @@ test("providers: projeta só os campos públicos", () => {
   const out = sanitizeProviderStatus(raw);
   assert.deepEqual(Object.keys(out ?? {}).sort(), [...PROVIDER_PUBLIC_KEYS].sort());
   assert.equal(out?.connected, true);
+  assert.equal(out?.catalog_id, "1880237649466370");
   assert.equal("access_token" in (out ?? {}), false);
   assert.equal("client_secret" in (out ?? {}), false);
   assert.equal("tenant_id" in (out ?? {}), false);
+});
+
+test("providers: resumo de sync aninhado é projetado, sem vazar campo cru", () => {
+  const raw = {
+    id: "meta",
+    connected: true,
+    last_sync_summary: {
+      total: 10,
+      totalAvaliados: 12,
+      enviados: 9,
+      falhas: 1,
+      erros: [{ item: "sku-1", erro: "falha de upload" }],
+      avisos: [{ item: "sku-2", aviso: "sem foto pública" }],
+      conjuntos: [{ id: "123", nome: "Coleção", totalProdutos: 5 }],
+      // Campos que o VPS venha a acrescentar NÃO passam.
+      token_debug: "secreto",
+      access_token: "secreto",
+    },
+  };
+  const out = sanitizeProviderStatus(raw);
+  const summary = out?.last_sync_summary as Record<string, unknown>;
+  assert.equal(summary.total, 10);
+  assert.equal(summary.enviados, 9);
+  assert.deepEqual(summary.erros, [{ item: "sku-1", erro: "falha de upload" }]);
+  assert.equal("token_debug" in summary, false);
+  assert.equal("access_token" in summary, false);
+  assert.equal(sanitizeSyncSummary(null), null);
+  assert.equal(sanitizeSyncSummary("lixo"), null);
+});
+
+test("meta-catalog: allowlist de fontes recusa valor arbitrário", () => {
+  assert.equal(isValidProductSource("site_nuvemshop"), true);
+  assert.equal(isValidProductSource("erp_olist"), true);
+  assert.equal(isValidProductSource("erp_jueri"), true);
+  assert.equal(isValidProductSource("mila"), true);
+  assert.equal(isValidProductSource("evil_source"), false);
+  assert.equal(isValidProductSource(""), false);
+  assert.equal(isValidProductSource(null), false);
+  assert.equal(isValidProductSource(" site_nuvemshop "), true);
+});
+
+test("meta-catalog: resposta do VPS é sanitizada antes do browser", () => {
+  const out = sanitizeMetaCatalogResponse({
+    ok: true,
+    status: "sucesso",
+    mensagem: "Sincronização concluída.",
+    enviados: 9,
+    erros: [],
+    avisos: [],
+    // Nada disso passa para o browser.
+    access_token: "secreto",
+    catalog_token_debug: "secreto",
+  });
+  assert.equal(out.ok, true);
+  assert.equal(out.enviados, 9);
+  assert.equal("access_token" in out, false);
+  assert.equal("catalog_token_debug" in out, false);
+});
+
+test("meta-catalog: elemento primitivo em erros/avisos não quebra o BFF", () => {
+  // Regressão rodada 2: `in` sobre número lançava TypeError (500 no BFF).
+  const out = sanitizeMetaCatalogResponse({ ok: true, erros: [42], avisos: [true, null] });
+  assert.deepEqual(out.erros, [{ item: "", erro: "42" }]);
+  assert.deepEqual(out.avisos, [
+    { item: "", erro: "true" },
+    { item: "", erro: "" },
+  ]);
+});
+
+test("meta-catalog: tetos de tamanho e summary recursivo com conjuntos", () => {
+  const longas = Array.from({ length: 30 }, (_, i) => ({ item: `sku-${i}`, erro: "x".repeat(500) }));
+  const out = sanitizeMetaCatalogResponse({
+    ok: true,
+    erros: longas,
+    summary: {
+      enviados: 5,
+      conjuntos: [{ id: "set-1", nome: "Coleção", totalProdutos: 5, segredo: "nao-passa" }],
+      token_debug: "nao-passa",
+    },
+  });
+  assert.equal((out.erros as unknown[]).length, 20);
+  assert.equal(((out.erros as Array<{ erro: string }>)[0].erro as string).length, 300);
+  const summary = out.summary as Record<string, unknown>;
+  assert.equal(summary.enviados, 5);
+  assert.deepEqual(summary.conjuntos, [{ id: "set-1", nome: "Coleção", totalProdutos: 5 }]);
+  assert.equal("token_debug" in summary, false);
+  assert.equal(isValidProductSource(42), false);
+  assert.equal(isValidProductSource({}), false);
+  assert.equal(isValidProductSource(undefined), false);
 });
 
 test("providers: descarta item sem id e lixo não-array", () => {
@@ -262,6 +365,18 @@ test("same-origin: 403 numa Request real, e liberado quando é o próprio site",
 
   const fromCurl = new Request("https://milaai.com.br/api/oauth/olist/revoke", { method: "POST" });
   assert.equal(sameOriginDenial(fromCurl), null);
+
+  const metaSourceAttacker = new Request("https://milaai.com.br/api/meta/catalog/source", {
+    method: "POST",
+    headers: { origin: "https://evil.com" },
+  });
+  assert.notEqual(sameOriginDenial(metaSourceAttacker), null);
+
+  const metaSyncAttacker = new Request("https://milaai.com.br/api/meta/catalog/sync-now", {
+    method: "POST",
+    headers: { origin: "https://evil.com" },
+  });
+  assert.notEqual(sameOriginDenial(metaSyncAttacker), null);
 });
 
 test("requestHost normaliza porta e caixa", () => {

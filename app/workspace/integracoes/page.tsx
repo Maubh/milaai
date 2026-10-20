@@ -1,5 +1,7 @@
 import Link from "next/link";
 import DisconnectButton from "@/components/DisconnectButton";
+import IntegrationsNotice from "@/components/IntegrationsNotice";
+import MetaCatalogManager, { type LastSyncSummary } from "@/components/MetaCatalogManager";
 import { INTEGRACOES } from "@/lib/demo-data";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
@@ -15,6 +17,14 @@ interface ProviderStatus {
   mode: string;
   connected: boolean;
   app_configured: boolean;
+  catalog_id?: string | null;
+  business_id?: string | null;
+  product_source?: string | null;
+  sync_only_published?: boolean;
+  last_sync_at?: number | null;
+  last_sync_status?: string | null;
+  last_sync_summary?: LastSyncSummary | null;
+  suggested_source?: string | null;
 }
 
 
@@ -117,22 +127,13 @@ export default async function IntegracoesPage({
         </span> : null}
       </header>
 
-      {okConectado ? (
-        <p className="integrations-notice integrations-notice-success" role="status">
-          <strong>{byId.get(okParam as string)?.name ?? okParam}</strong> conectado a esta loja.
-        </p>
-      ) : null}
-      {okPendente ? (
-        <p className="integrations-notice" role="status">
-          O {byId.get(okParam as string)?.name ?? okParam} voltou, mas a chave ainda não
-          aparece nesta loja. Conecte de novo ou fale com a mila.
-        </p>
-      ) : null}
-      {erroParam ? (
-        <p className="integrations-notice integrations-notice-error" role="alert">
-          {integrationErrorText(erroParam)}
-        </p>
-      ) : null}
+      <IntegrationsNotice
+        okParam={okParam}
+        okConectado={okConectado}
+        okPendente={okPendente}
+        providerName={okParam ? byId.get(okParam)?.name ?? null : null}
+        erroParam={erroParam}
+      />
       {!token ? (
         <p className="integrations-notice" role="status">Entre com o WhatsApp para ver as conexões desta loja.</p>
       ) : !consultou ? (
@@ -182,6 +183,12 @@ export default async function IntegracoesPage({
                       <summary>Como seus dados são usados</summary>
                       <p>{i.desc.replaceAll("caderno de fornecedores", "caderno").replaceAll("o caderno", "a lista de fornecedores").replaceAll("O caderno", "A lista de fornecedores").replaceAll("fica salvo", "fica salva")}</p>
                     </details>
+                  ) : null}
+                  {i.id === "meta" && live?.connected ? (
+                    <MetaCatalogManager
+                      meta={live}
+                      connectedProviders={providers}
+                    />
                   ) : null}
                   <div className="integrations-card-footer">
                     {bloqueadoPro ? (

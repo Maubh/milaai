@@ -28,6 +28,7 @@ function LoginInner() {
   const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [captchaErro, setCaptchaErro] = useState<string | null>(null);
   const [enviando, setEnviando] = useState(false);
+  const [canGoToVerify, setCanGoToVerify] = useState(false);
 
   // O callback do OAuth volta para cá como /login?erro=sessao_expirada quando o
   // cookie não chegou. Sem ler o parâmetro, a lojista cai num login mudo.
@@ -90,6 +91,7 @@ function LoginInner() {
     }
 
     const phone = toInternational(numero, iso);
+    saveTelefone(phone);
     try {
       const res = await fetch("/api/auth/otp/start", {
         method: "POST",
@@ -103,13 +105,13 @@ function LoginInner() {
       }
       if (res.status === 429) {
         setErro("Aguarde um instante antes de pedir outro código.");
+        setCanGoToVerify(true);
         return;
       }
       if (!res.ok || data?.ok === false) {
         setErro("Não foi possível enviar o código. Tente de novo em instantes.");
         return;
       }
-      saveTelefone(phone);
       router.push("/login/verify");
     } catch {
       setErro("Falha de conexão. Verifique a internet e tente de novo.");
@@ -197,9 +199,22 @@ function LoginInner() {
             />
           </div>
           {erro ? (
-            <p id="login-tel-erro" role="alert" className="error">
-              {erro}
-            </p>
+            <>
+              <p id="login-tel-erro" role="alert" className="error">
+                {erro}
+              </p>
+              {canGoToVerify ? (
+                <div style={{ marginTop: "0.75rem" }}>
+                  <Link
+                    href="/login/verify"
+                    className="btn btn-ghost"
+                    style={{ width: "100%", justifyContent: "center", textDecoration: "none" }}
+                  >
+                    Já recebi o código no WhatsApp → Digitar código
+                  </Link>
+                </div>
+              ) : null}
+            </>
           ) : (
             <p id="login-tel-ajuda" className="hint">
               O código chega no WhatsApp deste número.

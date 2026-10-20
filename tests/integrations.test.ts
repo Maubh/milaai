@@ -265,6 +265,8 @@ test("meta-catalog: resposta do VPS é sanitizada antes do browser", () => {
   assert.equal(out.enviados, 9);
   assert.equal("access_token" in out, false);
   assert.equal("catalog_token_debug" in out, false);
+  assert.deepEqual(sanitizeMetaCatalogResponse(null as any), {});
+  assert.deepEqual(sanitizeMetaCatalogResponse(undefined as any), {});
 });
 
 test("meta-catalog: elemento primitivo em erros/avisos não quebra o BFF", () => {

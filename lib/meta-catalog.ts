@@ -76,6 +76,7 @@ function listaConjuntos(v: unknown): Array<{ id: string; nome: string; totalProd
 export function sanitizeMetaCatalogResponse(
   data: Record<string, unknown>,
 ): Record<string, unknown> {
+  if (!data || typeof data !== "object") return {};
   const out: Record<string, unknown> = {};
   if (typeof data.ok === "boolean") out.ok = data.ok;
   if (typeof data.detail === "string") out.detail = textoSeguro(data.detail);

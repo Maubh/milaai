@@ -55,6 +55,7 @@ function formatarDataHora(ts?: number | null): string {
     return new Intl.DateTimeFormat("pt-BR", {
       dateStyle: "short",
       timeStyle: "short",
+      timeZone: "America/Sao_Paulo",
     }).format(new Date(ts));
   } catch {
     return "Data recente";
@@ -93,7 +94,7 @@ export default function MetaCatalogManager({
   const defaultCatalogName =
     storeName && !storeName.toLowerCase().includes("sua loja")
       ? `Catálogo ${storeName}`
-      : "Catálogo Ritrovarsi";
+      : "Catálogo da Loja";
   const catalogName = meta.catalog_name || defaultCatalogName;
 
   async function salvarFonte() {
@@ -374,7 +375,9 @@ export default function MetaCatalogManager({
             {statusLabel}
           </span>
         </div>
-        <p className="meta-catalog-summary-date">{formatarDataHora(meta.last_sync_at)}</p>
+        <p className="meta-catalog-summary-date" suppressHydrationWarning>
+          {formatarDataHora(meta.last_sync_at)}
+        </p>
 
         {summary ? (
           <div className="meta-catalog-stats-grid">

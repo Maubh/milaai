@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { getTelefone, markVerified } from "@/lib/onboarding";
+import { getTelefone, markVerified, saveTelefone } from "@/lib/onboarding";
 import { shouldShowMissingPhoneNote } from "@/lib/verify-ui";
 import "../auth.css";
 
@@ -27,16 +27,17 @@ export default function VerifyPage() {
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    setTelefone(getTelefone());
-    // Antes daqui saía `if (isVerified()) router.replace("/workspace")`, que
-    // mandava para o workspace com base no localStorage — a mesma fonte que
-    // qualquer um escreve à mão — enquanto o cookie HttpOnly (a sessão de
-    // verdade) podia estar morto. Era a semente do split-brain: a lojista
-    // entrava e as chamadas voltavam "sessão expirada". Não redireciona mais
-    // por storage; se um dia quiserem o atalho de "já logada", ele lê o cookie
-    // no servidor, que é o critério do gate do workspace.
-    // Sem estado de "carregando": o efeito não espera nada, então não há o que
-    // bloquear — o formulário fica visível desde o primeiro render de servidor.
+    let t = getTelefone();
+    if (!t && typeof window !== "undefined") {
+      const sp = new URLSearchParams(window.location.search);
+      const urlPhone = sp.get("phone")?.replace(/\D/g, "");
+      if (urlPhone && urlPhone.length >= 10) {
+        const full = urlPhone.startsWith("55") ? urlPhone : `55${urlPhone}`;
+        saveTelefone(full);
+        t = full;
+      }
+    }
+    setTelefone(t);
   }, []);
 
   useEffect(() => {
@@ -179,9 +180,60 @@ export default function VerifyPage() {
         .
       </p>
       {shouldShowMissingPhoneNote(telefone) ? (
-        <p className="auth-prereq" role="note">
-          Sem número ainda. <Link href="/login">Informe seu WhatsApp</Link> para receber o código.
-        </p>
+        <div className="auth-prereq" role="note" style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <p style={{ margin: 0 }}>
+            Sem número ainda. Digite seu WhatsApp ou <Link href="/login">volte para o início</Link>:
+          </p>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <input
+              type="tel"
+              placeholder="(31) 98559-2591"
+              style={{
+                flex: 1,
+                padding: "0.5rem 0.75rem",
+                borderRadius: "8px",
+                border: "1px solid var(--color-integration-control, #ccc)",
+                background: "var(--color-integration-paper, #fff)",
+                color: "var(--color-integration-ink, #111)",
+                font: "inherit",
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const val = (e.target as HTMLInputElement).value.replace(/\D/g, "");
+                  if (val.length >= 10) {
+                    const full = val.startsWith("55") ? val : `55${val}`;
+                    saveTelefone(full);
+                    setTelefone(full);
+                  }
+                }
+              }}
+              onBlur={(e) => {
+                const val = e.target.value.replace(/\D/g, "");
+                if (val.length >= 10) {
+                  const full = val.startsWith("55") ? val : `55${val}`;
+                  saveTelefone(full);
+                  setTelefone(full);
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm"
+              onClick={(e) => {
+                const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                const val = input?.value.replace(/\D/g, "") || "";
+                if (val.length >= 10) {
+                  const full = val.startsWith("55") ? val : `55${val}`;
+                  saveTelefone(full);
+                  setTelefone(full);
+                }
+              }}
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
       ) : null}
       <form className="auth-minimal-form" onSubmit={submit} aria-label="Verificar código">
         <fieldset className="otp-fieldset" onPaste={onPaste} disabled={!telefone}>

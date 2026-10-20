@@ -301,7 +301,9 @@
   align-items: flex-start;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-integration-xs);
+  gap: var(--space-integration-sm);
+  padding-bottom: var(--space-integration-xs);
+  border-bottom: var(--rule-integration) solid var(--color-integration-rule);
 }
 
 .meta-catalog-header-info {
@@ -311,7 +313,7 @@
 }
 
 .meta-catalog-label {
-  font-size: var(--text-integration-small);
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -322,6 +324,7 @@
   font-size: var(--text-integration-body);
   font-weight: 600;
   color: var(--color-integration-ink);
+  line-height: 1.35;
 }
 
 .meta-catalog-id {
@@ -377,13 +380,22 @@
 
 .meta-catalog-select {
   width: 100%;
-  padding: var(--space-integration-sm) var(--space-integration-md);
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: 0.625rem 2.5rem 0.625rem 0.875rem;
   font: inherit;
   font-size: var(--text-integration-body);
-  background: var(--color-integration-paper);
+  background-color: var(--color-integration-paper);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23344b47' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  background-size: 16px 16px;
   color: var(--color-integration-ink);
   border: var(--rule-integration) solid var(--color-integration-control);
   border-radius: var(--radius-integration-control);
+  cursor: pointer;
+  line-height: 1.4;
 }
 
 .meta-catalog-select:focus-visible {

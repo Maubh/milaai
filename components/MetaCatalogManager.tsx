@@ -39,6 +39,7 @@ export interface MetaProviderData {
 interface MetaCatalogManagerProps {
   meta: MetaProviderData;
   connectedProviders: Array<{ id: string; name: string; connected: boolean }>;
+  storeName?: string | null;
 }
 
 const FONTES = [
@@ -63,6 +64,7 @@ function formatarDataHora(ts?: number | null): string {
 export default function MetaCatalogManager({
   meta,
   connectedProviders,
+  storeName,
 }: MetaCatalogManagerProps) {
   const router = useRouter();
 
@@ -88,7 +90,11 @@ export default function MetaCatalogManager({
     : true;
 
   const catalogId = meta.catalog_id || "Não identificado";
-  const catalogName = meta.catalog_name;
+  const defaultCatalogName =
+    storeName && !storeName.toLowerCase().includes("sua loja")
+      ? `Catálogo ${storeName}`
+      : "Catálogo Ritrovarsi";
+  const catalogName = meta.catalog_name || defaultCatalogName;
 
   async function salvarFonte() {
     setSalvando(true);

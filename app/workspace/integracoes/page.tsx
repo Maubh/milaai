@@ -84,12 +84,16 @@ export default async function IntegracoesPage({
   let providers: ProviderStatus[] = [];
   let consultou = false;
   let userPlan = "pro";
+  let storeName: string | null = null;
   if (token) {
     const { status, data } = await proxyOAuth("/api/oauth/providers");
     if (status === 200) {
       consultou = true;
       if (typeof data?.plan === "string") {
         userPlan = data.plan.toLowerCase();
+      }
+      if (typeof data?.store_name === "string" && data.store_name) {
+        storeName = data.store_name;
       }
       const safe = sanitizeOAuthResponse(data, ["providers"]);
       providers = sanitizeProviderList(safe.providers) as unknown as ProviderStatus[];
@@ -189,6 +193,7 @@ export default async function IntegracoesPage({
                     <MetaCatalogManager
                       meta={live}
                       connectedProviders={providers}
+                      storeName={storeName}
                     />
                   ) : null}
                   <div className="integrations-card-footer">

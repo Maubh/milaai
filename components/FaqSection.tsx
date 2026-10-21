@@ -41,10 +41,10 @@ const FAQ_ITEMS: FaqItem[] = [
     ),
   },
   {
-    question: "O que são as Vitrines Web e Catálogos em PDF?",
+    question: "O que são as Vitrines Web?",
     answer: (
       <>
-        São páginas públicas interativas e catálogos elegantes em PDF gerados automaticamente com as fotos reais das suas peças. O cliente navega pelas coleções no celular e clica em um botão direto para comprar com você no WhatsApp, sem intermediários de pagamento nem taxas sobre as suas vendas.
+        São links públicos e interativos, montados automaticamente com as fotos reais das suas peças, que funcionam como o catálogo da sua loja. O cliente navega pelas coleções no celular e clica em um botão direto para comprar com você no WhatsApp, sem intermediários de pagamento nem taxas sobre as suas vendas.
       </>
     ),
   },
@@ -68,7 +68,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Qual é a diferença entre o Plano Essencial e o Plano Pro?",
     answer: (
       <>
-        O <strong>Essencial (R$ 39/mês)</strong> é ideal para quem quer precificação precisa com margem real, radar de concorrentes, leitor de notas fiscais, caderno sincronizado no Google Planilhas e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> desbloqueia a automação completa da loja: integração com Nuvemshop no WhatsApp, vitrines e catálogos PDF ilimitados, conexões com ERPs (Jueri, Olist e planilha pronta para Phibo), projeção de faturamento e criação de conteúdo para Instagram.
+        O <strong>Essencial (R$ 39/mês)</strong> é ideal para quem quer precificação precisa com margem real, radar de concorrentes, leitor de notas fiscais, caderno sincronizado no Google Planilhas e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> desbloqueia a automação completa da loja: integração com Nuvemshop no WhatsApp, vitrines web ilimitadas, conexões com ERPs (Jueri, Olist e planilha pronta para Phibo), projeção de faturamento e criação de conteúdo para Instagram.
       </>
     ),
   },

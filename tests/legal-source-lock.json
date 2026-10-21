@@ -80,7 +80,7 @@
   "site/app/not-found.tsx": "7d903d8f26d2f6c7e317fb98fa0cd0d5132bc26737b55ba3de1abed886a4211a",
   "site/app/site.css": "276948370cd787f0cd31164f0b3417ac5d8b06d8d1d04719cff3c90fcfe0cfb2",
   "site/app/vitrine/[slugLoja]/[slugColecao]/VitrineView.tsx": "20d1c2f5f7728daf80f4e5fcb75a6aaf2589e111211114ddaf74f4d518e19142",
-  "site/app/vitrine/[slugLoja]/[slugColecao]/page.tsx": "57371c97b88d1a99cd722a51ae48d4e922ce67f8295884dca27df5fd876049f3",
+  "site/app/vitrine/[slugLoja]/[slugColecao]/page.tsx": "beeb995d5688d9e2bf6ee55175e5fe053cf313b55cbdf7ff9a368fa76fc304a0",
   "site/app/vitrine/vitrine.css": "50f4ab1c31bb52b74cc982f71c43c1356e5239922b5c1ceb3a40417c0c28676c",
   "site/app/workspace/integracoes/integracoes.css": "7ec838788c773b7e828afcf18f674c97b24148c536d75a2b5f2a36da8da48cfc",
   "site/app/workspace/integracoes/page.tsx": "ede212ff1c5b89e1f45ebc19603553ee69196e2c178edc88d9e3f9576ce68012",

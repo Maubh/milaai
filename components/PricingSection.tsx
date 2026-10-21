@@ -13,10 +13,10 @@ export const PLANO_ERP =
   " ainda não)";
 
 export const PLANO_VITRINE_ESSENCIAL =
-  "Vitrine web interativa (1 ativa por vez) e até 2 catálogos em PDF/mês com fotos reais";
+  "Vitrine web interativa (1 ativa por vez) com fotos reais";
 
 export const PLANO_VITRINE_PRO =
-  "Vitrines web ilimitadas e catálogos em PDF ilimitados com fotos reais";
+  "Vitrines web ilimitadas com fotos reais";
 
 export const PLANO_NUVEMSHOP_PRO =
   "Integração com Nuvemshop: consulta de estoque, preços e publicação de produtos direto no WhatsApp";

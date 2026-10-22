@@ -1,0 +1,49 @@
+/* Dados da loja · seções empilhadas, cada uma com o próprio "Editar".
+ * Mesmos tokens do workspace (ver plano.css). */
+.dados-secoes { display: grid; gap: var(--space-workspace-2xl); max-width: 860px; }
+.dados-secao { border-bottom: 1px solid var(--color-workspace-rule); padding-bottom: var(--space-workspace-xl); }
+.dados-secao-header { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-workspace-lg); border-bottom: 1px solid var(--color-workspace-ink); padding-bottom: var(--space-workspace-md); margin-bottom: var(--space-workspace-lg); }
+.dados-secao-titulo { margin: 0; font-size: var(--text-workspace-heading); line-height: 1.3; color: var(--color-workspace-ink); letter-spacing: -0.02em; }
+.dados-secao-descricao { margin: var(--space-workspace-xs) 0 0; font-size: var(--text-workspace-sm); color: var(--color-workspace-muted); line-height: 1.5; max-width: 64ch; }
+.dados-editar,
+.dados-salvar,
+.dados-cancelar { min-height: 40px; padding: var(--space-workspace-sm) var(--space-workspace-lg); border: 1px solid var(--color-workspace-control); border-radius: var(--radius-workspace); font-family: var(--font-workspace); font-weight: 600; font-size: var(--text-workspace-sm); cursor: pointer; background: var(--color-workspace-surface); color: var(--color-workspace-accent); white-space: nowrap; }
+.dados-salvar { background: var(--color-workspace-accent); color: var(--color-workspace-accent-ink); border-color: var(--color-workspace-accent); }
+.dados-editar:disabled,
+.dados-salvar:disabled,
+.dados-cancelar:disabled { cursor: not-allowed; opacity: 0.55; }
+.dados-editar:focus-visible,
+.dados-salvar:focus-visible,
+.dados-cancelar:focus-visible,
+.dados-campo input:focus-visible,
+.dados-campo textarea:focus-visible { outline: 2px solid var(--color-workspace-accent); outline-offset: 2px; }
+.dados-lista { margin: 0; display: grid; gap: var(--space-workspace-md); }
+.dados-item { display: grid; grid-template-columns: minmax(140px, 220px) 1fr; gap: var(--space-workspace-lg); align-items: baseline; }
+.dados-item dt { font-size: var(--text-workspace-sm); color: var(--color-workspace-muted); }
+.dados-item dd { margin: 0; font-size: var(--text-workspace-body); color: var(--color-workspace-ink); overflow-wrap: anywhere; white-space: pre-line; }
+.dados-item dd.is-vazio,
+.dados-vazio { color: var(--color-workspace-muted); font-size: var(--text-workspace-sm); margin: 0; }
+.dados-form { display: grid; gap: var(--space-workspace-lg); }
+.dados-campo { display: grid; gap: var(--space-workspace-xs); }
+.dados-campo-rotulo { font-size: var(--text-workspace-sm); font-weight: 600; color: var(--color-workspace-ink); }
+.dados-campo input,
+.dados-campo textarea { width: 100%; max-width: 420px; min-height: 44px; padding: var(--space-workspace-sm) var(--space-workspace-md); border: 1px solid var(--color-workspace-control); border-radius: var(--radius-workspace); font-family: var(--font-workspace); font-size: var(--text-workspace-body); background: var(--color-workspace-surface); color: var(--color-workspace-ink); }
+.dados-campo textarea { max-width: 640px; resize: vertical; }
+.dados-campo-ajuda { font-size: var(--text-workspace-xs); color: var(--color-workspace-muted); }
+.dados-acoes { display: flex; gap: var(--space-workspace-sm); flex-wrap: wrap; }
+.dados-aviso { margin: 0; font-size: var(--text-workspace-sm); }
+.dados-aviso.is-ok { color: var(--color-workspace-accent); }
+.dados-aviso.is-erro { color: var(--color-workspace-error); }
+.dados-nota { margin: 0 0 var(--space-workspace-md); font-size: var(--text-workspace-sm); color: var(--color-workspace-muted); }
+.dados-concorrentes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-workspace-sm); }
+.dados-concorrentes a { color: var(--color-workspace-accent); font-weight: 600; text-decoration: none; }
+.dados-concorrentes a:hover { text-decoration: underline; }
+@media (hover: hover) {
+  .dados-editar:hover:not(:disabled),
+  .dados-cancelar:hover:not(:disabled) { background: var(--color-workspace-active); }
+  .dados-salvar:hover:not(:disabled) { background: var(--color-workspace-ink); }
+}
+@media (max-width: 640px) {
+  .dados-item { grid-template-columns: 1fr; gap: var(--space-workspace-xs); }
+  .dados-campo input, .dados-campo textarea { max-width: none; }
+}

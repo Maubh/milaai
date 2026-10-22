@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import "./plano.css";
+import { lerFaturaAberta } from "@/lib/fatura-aberta";
 
 interface SessionData {
   ok: boolean;
@@ -13,6 +14,9 @@ interface SessionData {
   role: string;
   trial_ends_at: string | null;
   store_name: string | null;
+  fatura_aberta_url?: string | null;
+  pausa_em?: string | null;
+  acesso_pausado?: boolean;
 }
 
 export default function WorkspacePlanoPage() {
@@ -55,7 +59,8 @@ export default function WorkspacePlanoPage() {
 
   const billing = session?.billing ?? "";
   const isFounder = session?.role === "founder" || billing === "comped" || billing === "cortesia";
-  const isPaid = billing === "pago" || billing === "atrasado";
+  const fatura = lerFaturaAberta(session);
+  const isPaid = billing === "pago";
   const isPilot = billing === "pilot" || billing === "piloto";
   const isTrialExpired =
     !isFounder && (billing === "trial_expirado" || (isPilot && trialEndsDate !== null && now >= trialEndsDate));
@@ -76,7 +81,9 @@ export default function WorkspacePlanoPage() {
 
   const statusTitle = isFounder
     ? "Plano Pro · founder"
-    : isPaid
+    : fatura
+      ? "Fatura em aberto"
+      : isPaid
       ? currentPlan === "pro"
         ? "Plano Pro"
         : "Plano Essencial"
@@ -174,6 +181,9 @@ export default function WorkspacePlanoPage() {
                 <div>
                   {isFounder && <span className="plan-status-badge">Sem cobrança</span>}
                   {isPaid && <span className="plan-status-badge">Em dia</span>}
+                  {fatura && (
+                    <span className="plan-status-badge is-ended">{fatura.pausado ? "WhatsApp pausado" : "Pagamento pendente"}</span>
+                  )}
                   {trialOpen && <span className="plan-status-badge">Em teste</span>}
                   {isTrialExpired && <span className="plan-status-badge is-ended">Teste encerrado</span>}
                 </div>
@@ -206,6 +216,27 @@ export default function WorkspacePlanoPage() {
                   Sua assinatura não está ativa. Peças e cálculos continuam guardados. Escolha
                   Essencial ou Pro abaixo para voltar.
                 </p>
+              )}
+
+              {fatura && (
+                <>
+                  <p className="plan-note is-ended">
+                    {fatura.pausado
+                      ? "A fatura do seu plano está em aberto há mais de 7 dias, então o atendimento pelo WhatsApp está pausado. Peças, cálculos e fornecedores continuam guardados: assim que o pagamento cair, a mila volta na hora."
+                      : `A fatura do seu plano ${currentPlan === "pro" ? "Pro" : "Essencial"} venceu e ainda não foi paga.${
+                          fatura.pausaEm ? ` O atendimento pelo WhatsApp segue até ${fatura.pausaEm}; depois, pausa até o pagamento cair.` : ""
+                        }`}
+                  </p>
+                  {fatura.url ? (
+                    <div>
+                      <a className="btn btn-plum plan-action-btn" href={fatura.url} target="_blank" rel="noopener noreferrer">
+                        Pagar a fatura
+                      </a>
+                    </div>
+                  ) : (
+                    <p className="plan-note">Para pagar, use a fatura que o Asaas enviou para o seu e-mail.</p>
+                  )}
+                </>
               )}
 
               {isPaid && (
@@ -324,7 +355,7 @@ export default function WorkspacePlanoPage() {
                     <button className="plan-action-btn" disabled>
                       Sem cobrança
                     </button>
-                  ) : isPaid ? (
+                  ) : isPaid || fatura ? (
                     <button className="plan-action-btn" disabled>
                       Troca de plano em breve
                     </button>
@@ -392,7 +423,7 @@ export default function WorkspacePlanoPage() {
                     <button className="plan-action-btn" disabled>
                       Sem cobrança
                     </button>
-                  ) : isPaid ? (
+                  ) : isPaid || fatura ? (
                     <button className="plan-action-btn" disabled>
                       Troca de plano em breve
                     </button>

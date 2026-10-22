@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
+import { linkDeFaturaAsaas } from "@/lib/fatura-aberta";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,6 +31,9 @@ export async function GET() {
       billing: typeof data.billing === "string" ? data.billing : "pilot",
       role: typeof data.role === "string" ? data.role : "user",
       trial_ends_at: typeof data.trial_ends_at === "string" ? data.trial_ends_at : null,
+      fatura_aberta_url: linkDeFaturaAsaas(data.fatura_aberta_url),
+      pausa_em: typeof data.pausa_em === "string" ? data.pausa_em : null,
+      acesso_pausado: data.acesso_pausado === true,
       display_name: typeof data.display_name === "string" ? data.display_name : null,
       store_name: typeof data.store_name === "string" ? data.store_name : null,
       connected: providers.filter((p) => p.connected).map((p) => p.id),

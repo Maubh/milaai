@@ -535,12 +535,12 @@ test("google: o essencial diz que o caderno fica salvo mesmo sem destino", () =>
   // E a escolha do destino aparece nas duas telas.
   assert.match(GW.PLANO_GOOGLE, /planilha/i);
   assert.match(GW.PLANO_GOOGLE, /Notion/);
-  // A linha do espelho NÃO pode repetir "Caderno de fornecedores": a feature
-  // anterior já diz isso, e repetir deixou o plano redundante.
-  assert.match(TELAS[0][1], /Caderno de fornecedores validados/,
-    "a feature do caderno deve seguir no plano");
-  assert.doesNotMatch(GW.PLANO_GOOGLE, /Caderno de fornecedores/,
-    "a linha do espelho não repete a feature anterior");
+  // O caderno e o espelho são uma linha só (Maurício, 2026-10-22): duas
+  // linhas, uma do caderno e outra do espelho, deixavam o plano redundante.
+  assert.match(GW.PLANO_GOOGLE, /Caderno de fornecedores validados/,
+    "a linha única nomeia o caderno");
+  assert.doesNotMatch(TELAS[0][1], /Caderno de fornecedores/,
+    "o card não repete o caderno numa linha à parte");
 });
 
 test("google: o marquee mantém a marca compacta com ícones menores", () => {

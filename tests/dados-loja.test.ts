@@ -7,6 +7,8 @@ import {
   formatarPercentual,
   formatarReais,
   lerNumeroDigitado,
+  lojaSemDados,
+  mensagemDeCarga,
   mensagemDeErro,
   projetarConcorrentes,
   projetarDadosLoja,
@@ -76,4 +78,13 @@ test("dados da loja: página no menu e rotas sem repassar a resposta crua do ser
     assert.match(src, /requireSameOrigin/, `${rota}: POST precisa da guarda de mesma origem`);
     assert.doesNotMatch(src, /NextResponse\.json\(data/, `${rota}: não repassa o corpo do serviço sem projeção`);
   }
+});
+
+test("dados da loja: erro de carga não fala em salvar; loja sem nenhum dado é detectada", () => {
+  assert.doesNotMatch(mensagemDeCarga("upstream_timeout"), /salvar/);
+  assert.match(mensagemDeCarga("no_session"), /sessão expirou/);
+  const vazio = projetarDadosLoja({});
+  assert.equal(lojaSemDados(vazio, []), true);
+  assert.equal(lojaSemDados(vazio, ["loja_x"]), false, "concorrente salvo já não é loja vazia");
+  assert.equal(lojaSemDados({ ...vazio, taxa_cartao_percent: 17 }, []), false);
 });

@@ -7,6 +7,8 @@ import {
   formatarPercentual,
   formatarReais,
   lerNumeroDigitado,
+  lojaSemDados,
+  mensagemDeCarga,
   MAX_CONCORRENTES,
   mensagemDeErro,
   projetarConcorrentes,
@@ -83,7 +85,8 @@ export default function DadosDaLojaPage() {
   const [dados, setDados] = useState<DadosLoja | null>(null);
   const [concorrentes, setConcorrentes] = useState<string[]>([]);
   const [analiseNoPlano, setAnaliseNoPlano] = useState(true);
-  const [erroCarga, setErroCarga] = useState<string | null>(null);
+  const [erroCarga, setErroCarga] = useState<{ texto: string; detalhe: string | null } | null>(null);
+  const [tentativa, setTentativa] = useState(0);
   const [editando, setEditando] = useState<string | null>(null);
   const [rascunho, setRascunho] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
@@ -91,12 +94,14 @@ export default function DadosDaLojaPage() {
 
   useEffect(() => {
     async function carregar() {
+      setErroCarga(null);
       try {
         const [r1, r2] = await Promise.all([fetch("/api/dados-loja"), fetch("/api/concorrentes")]);
-        const d1 = await r1.json();
-        const d2 = await r2.json();
+        const d1 = await r1.json().catch(() => ({}));
+        const d2 = await r2.json().catch(() => ({}));
         if (!r1.ok || !d1.ok) {
-          setErroCarga(mensagemDeErro(d1.detail));
+          const detalhe = typeof d1.detail === "string" ? d1.detail : `http_${r1.status}`;
+          setErroCarga({ texto: mensagemDeCarga(d1.detail), detalhe });
           return;
         }
         setDados(projetarDadosLoja(d1.dados));
@@ -105,11 +110,11 @@ export default function DadosDaLojaPage() {
           setAnaliseNoPlano(d2.analise_no_plano !== false);
         }
       } catch {
-        setErroCarga("Não foi possível carregar os dados da loja. Tente de novo em alguns minutos.");
+        setErroCarga({ texto: mensagemDeCarga(null), detalhe: "falha_rede" });
       }
     }
     carregar();
-  }, []);
+  }, [tentativa]);
 
   function abrir(secao: Secao | "concorrentes") {
     setAviso(null);
@@ -237,17 +242,35 @@ export default function DadosDaLojaPage() {
   return (
     <div className="work-wrap workspace-dados-page">
       <h1 className="work-title">Dados da loja</h1>
-      <p className="work-lede">
-        O que a mila sabe da sua loja e usa nos cálculos, descrições e análises. O que você salvar aqui vale na hora;
-        também dá para mudar pelo WhatsApp, é só pedir para a mila.
-      </p>
+      <p className="work-lede">O que a mila usa nos preços, descrições e análises da sua loja.</p>
 
       {erroCarga ? (
-        <div className="work-card"><p role="alert">{erroCarga}</p></div>
+        <div className="dados-estado" role="alert">
+          <h2 className="dados-estado-titulo">{erroCarga.texto}</h2>
+          <p className="dados-estado-texto">
+            Seus dados continuam salvos. Tente de novo em instantes; enquanto isso, a mila segue usando tudo normalmente no WhatsApp.
+          </p>
+          <div className="dados-acoes">
+            <button type="button" className="dados-salvar" onClick={() => setTentativa((n) => n + 1)}>Tentar de novo</button>
+          </div>
+          {erroCarga.detalhe ? <p className="dados-estado-codigo">Código: {erroCarga.detalhe}</p> : null}
+        </div>
       ) : !dados ? (
-        <div className="work-card"><p>Carregando…</p></div>
+        <div className="dados-estado" aria-busy="true"><p className="dados-estado-texto">Carregando os dados da loja…</p></div>
       ) : (
         <div className="dados-secoes">
+          {lojaSemDados(dados, concorrentes) ? (
+            <div className="dados-estado">
+              <h2 className="dados-estado-titulo">A mila ainda não conhece os números da sua loja</h2>
+              <p className="dados-estado-texto">
+                Comece pela taxa da maquininha e pelo markup: com eles, todo preço que a mila sugerir já sai com a sua margem.
+                O que você salvar aqui vale na hora, e dá para mudar também pelo WhatsApp.
+              </p>
+              <div className="dados-acoes">
+                <button type="button" className="dados-salvar" onClick={() => abrir(SECOES[0])}>Informar custos e taxas</button>
+              </div>
+            </div>
+          ) : null}
           {SECOES.map((secao) => (
             <section key={secao.id} className="dados-secao" aria-labelledby={`secao-${secao.id}`}>
               {cabecalho(secao.id, secao.titulo, secao.descricao, () => abrir(secao))}

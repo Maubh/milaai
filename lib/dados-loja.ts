@@ -112,6 +112,17 @@ const LIMITES: Partial<Record<CampoDadosLoja, string>> = {
   instagram: "um @ válido do Instagram",
 };
 
+/** Mensagem quando a página não consegue carregar os dados (não é erro de salvar). */
+export function mensagemDeCarga(detail: unknown): string {
+  if (detail === "no_session") return "Sua sessão expirou. Entre de novo para ver os dados da loja.";
+  return "Não consegui carregar os dados da loja agora.";
+}
+
+/** A loja ainda não informou nada: nenhum campo do perfil e nenhum concorrente. */
+export function lojaSemDados(dados: DadosLoja, concorrentes: string[]): boolean {
+  return concorrentes.length === 0 && Object.values(dados).every((v) => v === null);
+}
+
 /** Mensagem para a lojista a partir do `detail` (e do `campo`) que o serviço devolveu. */
 export function mensagemDeErro(detail: unknown, campo?: unknown): string {
   if (detail === "no_session") return "Sua sessão expirou. Entre de novo para salvar.";

@@ -47,3 +47,8 @@
   .dados-item { grid-template-columns: 1fr; gap: var(--space-workspace-xs); }
   .dados-campo input, .dados-campo textarea { max-width: none; }
 }
+/* Estados da página: erro de carga, carregando e loja sem nenhum dado. */
+.dados-estado { display: grid; gap: var(--space-workspace-md); max-width: 860px; padding: var(--space-workspace-xl); border: 1px solid var(--color-workspace-rule); border-radius: var(--radius-workspace); background: var(--color-workspace-paper); }
+.dados-estado-titulo { margin: 0; font-size: var(--text-workspace-heading); line-height: 1.3; color: var(--color-workspace-ink); letter-spacing: -0.02em; }
+.dados-estado-texto { margin: 0; font-size: var(--text-workspace-body); line-height: 1.6; color: var(--color-workspace-muted); max-width: 64ch; }
+.dados-estado-codigo { margin: 0; font-size: var(--text-workspace-xs); color: var(--color-workspace-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }

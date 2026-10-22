@@ -18,6 +18,39 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.3.0",
+    date: "2026-10-22",
+    title: "Dados da loja, concorrentes no Instagram e assinatura pela sua área",
+    summary: "Veja e edite o que a mila usa nos seus preços, salve seus concorrentes no Instagram e assine o plano sem sair da sua área.",
+    changes: [
+      {
+        type: "new",
+        title: "Dados da loja num só lugar",
+        description: "A nova página Dados da loja mostra a taxa usada no preço, o markup, a embalagem, o banho, o nome, o Instagram e as observações da sua loja. O que você salvar ali a mila usa na hora, e dá para mudar também pelo WhatsApp.",
+      },
+      {
+        type: "new",
+        title: "Seus concorrentes no Instagram, salvos",
+        description: "Guarde até 3 perfis de concorrentes em Dados da loja ou pelo WhatsApp. A análise do nicho usa esses perfis e sempre diz em quais se baseou.",
+      },
+      {
+        type: "new",
+        title: "Leitura do nicho no Instagram (Plano Pro)",
+        description: "Pergunte o que está bombando no ramo e a mila mostra o formato que mais performa nos concorrentes, o post de maior engajamento e as hashtags com o tamanho real de cada uma. São até 4 análises por mês.",
+      },
+      {
+        type: "new",
+        title: "Assinatura pela sua área",
+        description: "Em Meu plano você escolhe o plano e paga no Asaas por Pix, boleto ou cartão. Quando o pagamento cai, o plano entra na hora no WhatsApp e aqui.",
+      },
+      {
+        type: "improvement",
+        title: "Meu plano mostra o que está incluído",
+        description: "A lista de cada plano foi revisada para mostrar exatamente o que a mila faz, incluindo a calculadora de custo da peça comprada no bruto.",
+      },
+    ],
+  },
+  {
     version: "0.2.1",
     date: "2026-10-20",
     title: "Integrações mais claras e novidades à mão",

@@ -292,6 +292,9 @@ export default function WorkspacePlanoPage() {
                       Raio-X da margem, com a taxa da maquininha e a embalagem
                     </li>
                     <li>
+                      Custo da peça comprada no bruto: peso, milésimos de banho e perdas
+                    </li>
+                    <li>
                       Radar de concorrentes no Google Shopping
                     </li>
                     <li>

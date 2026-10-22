@@ -79,6 +79,7 @@ const PLANS: PlanItem[] = [
       "Pesquisa de fornecedores: a mila lê o site, o catálogo ou o Instagram do fornecedor e monta a ficha",
       PLANO_ERP,
       "Marketing de Instagram: carrosséis, roteiros de Reels e planejamento semanal de posts",
+      "Leitura do nicho no Instagram: o que está em alta no ramo, nas hashtags da sua loja e nos perfis que se destacam",
     ],
     ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",

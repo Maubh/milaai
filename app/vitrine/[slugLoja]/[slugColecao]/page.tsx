@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import "../../vitrine.css";
 import VitrineView from "./VitrineView";
+import VitrineExpirada from "./VitrineExpirada";
+import { vitrineExpirada, type ResultadoVitrine } from "@/lib/vitrine";
 
-async function getShowcase(slugLoja: string, slugColecao: string): Promise<any | null> {
+async function getShowcase(slugLoja: string, slugColecao: string): Promise<ResultadoVitrine | null> {
   const apiUrl = process.env.MILA_INTERNAL_API_URL || "https://wa.milaai.com.br";
   // Sem segredo configurado não há consulta: um valor padrão no código público
   // autenticaria qualquer um na API interna da vitrine.
@@ -24,7 +26,10 @@ async function getShowcase(slugLoja: string, slugColecao: string): Promise<any |
       }
     );
 
-    if (res.status === 404 || res.status === 410) {
+    if (res.status === 410) {
+      return vitrineExpirada(await res.json().catch(() => ({})));
+    }
+    if (res.status === 404) {
       return null;
     }
 
@@ -33,7 +38,7 @@ async function getShowcase(slugLoja: string, slugColecao: string): Promise<any |
       return null;
     }
 
-    return await res.json();
+    return { tipo: "ativa", data: await res.json() };
   } catch (err) {
     console.error("Falha de rede ao consultar API interna da vitrine:", err);
     return null;
@@ -46,7 +51,14 @@ export async function generateMetadata({
   params: Promise<{ slugLoja: string; slugColecao: string }>;
 }): Promise<Metadata> {
   const { slugLoja, slugColecao } = await params;
-  const data = await getShowcase(slugLoja, slugColecao);
+  const resultado = await getShowcase(slugLoja, slugColecao);
+  if (resultado?.tipo === "expirada") {
+    return {
+      title: resultado.loja.nomeExibicao ? `Catálogo expirado — ${resultado.loja.nomeExibicao}` : "Catálogo expirado | Mila",
+      robots: { index: false },
+    };
+  }
+  const data = resultado?.data;
 
   if (!data || !data.ok || !data.loja || !data.vitrine) {
     return {
@@ -72,7 +84,11 @@ export default async function VitrinePage({
   params: Promise<{ slugLoja: string; slugColecao: string }>;
 }) {
   const { slugLoja, slugColecao } = await params;
-  const data = await getShowcase(slugLoja, slugColecao);
+  const resultado = await getShowcase(slugLoja, slugColecao);
+  if (resultado?.tipo === "expirada") {
+    return <VitrineExpirada loja={resultado.loja} tituloColecao={resultado.tituloColecao} />;
+  }
+  const data = resultado?.data;
 
   if (!data || !data.ok || !data.loja || !data.vitrine) {
     notFound();

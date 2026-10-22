@@ -507,3 +507,45 @@
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* --------------------------------------------------------------------------
+   VITRINE EXPIRADA
+   -------------------------------------------------------------------------- */
+.vitrine-expirada {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 4rem 1rem 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.vitrine-expirada-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.vitrine-expirada-titulo {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 0.75rem 0 0 0;
+}
+
+.vitrine-expirada-texto {
+  color: var(--vitrine-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.vitrine-expirada-botao {
+  margin-top: 1rem;
+  display: inline-block;
+  padding: 0.85rem 1.25rem;
+  border-radius: 9999px;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}

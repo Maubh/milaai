@@ -295,7 +295,7 @@ export default function WorkspacePlanoPage() {
                       Custo da peça comprada no bruto: peso, milésimos de banho e perdas
                     </li>
                     <li>
-                      Radar de concorrentes no Google Shopping
+                      Radar de preços dos concorrentes no Google Shopping
                     </li>
                     <li>
                       Descrições prontas para a loja virtual

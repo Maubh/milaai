@@ -46,7 +46,7 @@ const PLANS: PlanItem[] = [
     description: "Precificação, margem e descrição de peças desde o primeiro dia",
     features: [
       "Precificação ilimitada com Raio-X e margem real",
-      "Radar de concorrentes no Google Shopping",
+      "Radar de preços dos concorrentes no Google Shopping",
       "Descrições técnicas prontas para loja virtual",
       "Leitor de notas fiscais de compra (XML e PDF)",
       "Legenda de Instagram para cada peça, com gancho e hashtags",

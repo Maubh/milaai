@@ -104,7 +104,7 @@ const NOMES_CAMPOS: Record<CampoDadosLoja, string> = {
 
 const LIMITES: Partial<Record<CampoDadosLoja, string>> = {
   custo_embalagem: "entre R$ 0 e R$ 1.000",
-  taxa_cartao_percent: "entre 0% e 30%",
+  taxa_cartao_percent: "entre 0% e 20%",
   markup_padrao: "entre 1x e 20x",
   nome_loja: "com até 80 caracteres",
   tipo_banho: "com até 120 caracteres",

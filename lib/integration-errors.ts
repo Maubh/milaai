@@ -59,6 +59,10 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   token_exchange_error: "Não conseguimos concluir a autorização. Tente de novo.",
   unauthorized: "Não foi possível validar a sessão com a mila. Entre novamente.",
   plan_pro_required: "Este conector é exclusivo do Plano Pro. Acesse o menu Plano para fazer upgrade.",
+  // Catálogo da Meta
+  meta_not_connected: "A conta da Meta não está conectada. Conecte de novo para escolher o catálogo.",
+  catalog_not_found: "Esse catálogo não está na sua conta da Meta. Atualize a página e escolha de novo.",
+  invalid_catalog: "Catálogo inválido. Atualize a página e escolha de novo.",
 };
 
 export function integrationErrorText(detail?: string | null): string {

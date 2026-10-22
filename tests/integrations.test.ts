@@ -29,8 +29,11 @@ import {
   PROVIDER_PUBLIC_KEYS,
 } from "../lib/provider-status.ts";
 import {
+  isValidMetaId,
   isValidProductSource,
+  sanitizeMetaCatalogList,
   sanitizeMetaCatalogResponse,
+  sanitizeMetaCatalogSelect,
 } from "../lib/meta-catalog.ts";
 import { integrationErrorText, isSafeAuthorizeUrl } from "../lib/integration-errors.ts";
 import { isSameOriginRequest, requestHost, sameOriginDenial } from "../lib/request-origin.ts";
@@ -381,6 +384,12 @@ test("same-origin: 403 numa Request real, e liberado quando é o próprio site",
     headers: { origin: "https://evil.com" },
   });
   assert.notEqual(sameOriginDenial(metaSyncAttacker), null);
+
+  const metaSelectAttacker = new Request("https://milaai.com.br/api/meta/catalog/select", {
+    method: "POST",
+    headers: { origin: "https://evil.com" },
+  });
+  assert.notEqual(sameOriginDenial(metaSelectAttacker), null);
 });
 
 test("requestHost normaliza porta e caixa", () => {
@@ -555,4 +564,36 @@ test("chave colada: cada recusa do provedor tem o SEU texto", () => {
   ]) {
     assert.notEqual(integrationErrorText(codigo), generico, codigo);
   }
+});
+
+test("meta-catalog: lista de catálogos só leva id, nome e negócio ao browser", () => {
+  const out = sanitizeMetaCatalogList({
+    ok: true,
+    selected_catalog_id: "1880237649466370",
+    business_permission: true,
+    catalogs: [
+      { id: "1880237649466370", name: "Catálogo Loja", business_id: "1821983948449549", business_name: "Ritrovarsi", access_token: "EAA-x" },
+      { id: "nao-numerico", name: "Injetado" },
+      "primitivo",
+    ],
+    access_token: "EAA-nunca",
+  });
+  assert.deepEqual(out, {
+    ok: true,
+    selected_catalog_id: "1880237649466370",
+    business_permission: true,
+    catalogs: [{ id: "1880237649466370", name: "Catálogo Loja", business_name: "Ritrovarsi" }],
+  });
+  assert.equal(sanitizeMetaCatalogList({ ok: true, selected_catalog_id: "x" }).selected_catalog_id, null);
+});
+
+test("meta-catalog: escolha de catálogo valida o id e sanitiza a resposta", () => {
+  assert.equal(isValidMetaId("1880237649466370"), true);
+  assert.equal(isValidMetaId("188023764946637a"), false);
+  assert.equal(isValidMetaId(1880237649466370), false);
+  assert.equal(isValidMetaId(""), false);
+  assert.deepEqual(
+    sanitizeMetaCatalogSelect({ ok: false, detail: "catalog_not_found", error: "Esse catálogo não está na sua conta.", extra: 1 }),
+    { ok: false, detail: "catalog_not_found", error: "Esse catálogo não está na sua conta.", catalog_id: null },
+  );
 });

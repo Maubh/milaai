@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { integrationErrorText } from "@/lib/integration-errors";
 
@@ -49,6 +49,142 @@ const FONTES = [
   { id: "mila", nome: "Mila (WhatsApp)", providerId: null },
 ];
 
+interface CatalogoOpcao {
+  id: string;
+  name: string | null;
+  business_name: string | null;
+}
+
+/**
+ * Escolha do catálogo da Meta. Com vários catálogos na conta, a Mila não
+ * escolhe sozinha: a lojista escolhe uma vez e a escolha vale até ela trocar.
+ */
+function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancelar?: () => void }) {
+  const router = useRouter();
+  const [catalogos, setCatalogos] = useState<CatalogoOpcao[] | null>(null);
+  const [semPermissao, setSemPermissao] = useState(false);
+  const [escolha, setEscolha] = useState<string>(atual ?? "");
+  const [gravando, setGravando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+    fetch("/api/meta/catalog/catalogs", { cache: "no-store" })
+      .then(async (res) => {
+        const data = (await res.json().catch(() => ({}))) as {
+          ok?: boolean;
+          detail?: string;
+          business_permission?: boolean;
+          catalogs?: CatalogoOpcao[];
+        };
+        if (!ativo) return;
+        if (!res.ok || !data.ok) {
+          setErro(integrationErrorText(data.detail));
+          setCatalogos([]);
+          return;
+        }
+        setSemPermissao(data.business_permission === false);
+        setCatalogos(data.catalogs ?? []);
+      })
+      .catch(() => {
+        if (ativo) {
+          setErro("Não foi possível buscar seus catálogos na Meta agora. Tente novamente.");
+          setCatalogos([]);
+        }
+      });
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
+  async function usarCatalogo() {
+    if (!escolha) return;
+    setGravando(true);
+    setErro(null);
+    try {
+      const res = await fetch("/api/meta/catalog/select", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ catalog_id: escolha }),
+      });
+      const data = (await res.json().catch(() => ({}))) as { ok?: boolean; detail?: string; error?: string };
+      if (res.ok && data.ok) {
+        router.refresh();
+        onCancelar?.();
+      } else {
+        setErro(data.error || integrationErrorText(data.detail));
+      }
+    } catch {
+      setErro("Não foi possível salvar o catálogo agora. Tente novamente.");
+    } finally {
+      setGravando(false);
+    }
+  }
+
+  if (catalogos === null) {
+    return <p className="meta-catalog-summary-date">Buscando seus catálogos na Meta…</p>;
+  }
+
+  return (
+    <div className="meta-catalog-field">
+      <div className="meta-catalog-field-header">
+        <label htmlFor="meta-catalog-choice" className="meta-catalog-field-title">
+          Qual catálogo a Mila deve usar?
+        </label>
+      </div>
+      {semPermissao ? (
+        <p className="meta-catalog-source-warning">
+          A Meta não liberou a lista de catálogos desta conta. Reconecte a Meta e autorize o acesso aos seus negócios para escolher o catálogo.
+        </p>
+      ) : catalogos.length === 0 && !erro ? (
+        <p className="meta-catalog-source-warning">
+          Não encontramos nenhum catálogo nesta conta da Meta. Crie um no Gerenciador de Comércio e volte aqui.
+        </p>
+      ) : catalogos.length > 0 ? (
+        <>
+          <select
+            id="meta-catalog-choice"
+            className="meta-catalog-select"
+            value={escolha}
+            onChange={(e) => setEscolha(e.target.value)}
+            disabled={gravando}
+          >
+            <option value="" disabled>
+              Escolha o catálogo
+            </option>
+            {catalogos.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name || `Catálogo ${c.id}`}
+                {c.business_name ? ` · ${c.business_name}` : ""}
+              </option>
+            ))}
+          </select>
+          <div className="meta-catalog-actions">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={usarCatalogo}
+              disabled={gravando || !escolha || escolha === atual}
+            >
+              {gravando ? "Salvando…" : "Usar este catálogo"}
+            </button>
+            {onCancelar ? (
+              <button type="button" className="btn btn-ghost" onClick={onCancelar} disabled={gravando}>
+                Cancelar
+              </button>
+            ) : null}
+          </div>
+        </>
+      ) : null}
+      {erro ? (
+        <p className="meta-catalog-feedback meta-catalog-feedback-error" role="alert">
+          ✕ {erro}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 function formatarDataHora(ts?: number | null): string {
   if (!ts) return "Nunca sincronizado";
   try {
@@ -69,9 +205,11 @@ export default function MetaCatalogManager({
 }: MetaCatalogManagerProps) {
   const router = useRouter();
 
-  const initialSource =
-    meta.product_source || meta.suggested_source || "site_nuvemshop";
-  const [fonte, setFonte] = useState<string>(initialSource);
+  // Sem fonte salva, o seletor começa vazio ("Escolha a fonte"): a sugestão
+  // aparece marcada, mas só vale depois que a lojista escolhe e salva.
+  const [fonte, setFonte] = useState<string>(meta.product_source || "");
+  const sugerida = meta.product_source ? null : meta.suggested_source || null;
+  const [trocandoCatalogo, setTrocandoCatalogo] = useState(false);
   const [apenasPublicados, setApenasPublicados] = useState<boolean>(
     meta.sync_only_published !== false
   );
@@ -90,7 +228,7 @@ export default function MetaCatalogManager({
     ? connectedProviders.find((p) => p.id === fonteAtualObj.providerId)?.connected
     : true;
 
-  const catalogId = meta.catalog_id || "Não identificado";
+  const catalogId = meta.catalog_id || null;
   const defaultCatalogName =
     storeName && !storeName.toLowerCase().includes("sua loja")
       ? `Catálogo ${storeName}`
@@ -186,7 +324,7 @@ export default function MetaCatalogManager({
         detail?: string;
       };
 
-      if (res.status === 409 || data.status === "bloqueado_duplicacao") {
+      if (data.status === "bloqueado_duplicacao") {
         setBloqueioDuplicacao({
           mensagem:
             data.mensagem ||
@@ -226,6 +364,23 @@ export default function MetaCatalogManager({
       ? "Concluído"
       : "Pendente";
 
+  if (!catalogId || trocandoCatalogo) {
+    return (
+      <div className="meta-catalog-manager">
+        <div className="meta-catalog-header">
+          <div className="meta-catalog-header-info">
+            <span className="meta-catalog-label">Catálogo do Instagram & Facebook</span>
+            {catalogId ? <span className="meta-catalog-name">{catalogName}</span> : null}
+          </div>
+        </div>
+        <SeletorCatalogo
+          atual={catalogId}
+          onCancelar={catalogId ? () => setTrocandoCatalogo(false) : undefined}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="meta-catalog-manager">
       <div className="meta-catalog-header">
@@ -238,6 +393,14 @@ export default function MetaCatalogManager({
         <span className="meta-catalog-id" title="Identificador do catálogo no Gerenciador de Comércio da Meta">
           ID: <strong>{catalogId}</strong>
         </span>
+        <button
+          type="button"
+          className="btn btn-ghost btn-sm"
+          onClick={() => setTrocandoCatalogo(true)}
+          disabled={salvando || sincronizando}
+        >
+          Trocar catálogo
+        </button>
       </div>
 
       <div className="meta-catalog-controls">
@@ -266,9 +429,13 @@ export default function MetaCatalogManager({
             }}
             disabled={salvando || sincronizando}
           >
+            <option value="" disabled>
+              Escolha a fonte
+            </option>
             {FONTES.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.nome}
+                {f.id === sugerida ? " (sugerida)" : ""}
               </option>
             ))}
           </select>
@@ -338,7 +505,7 @@ export default function MetaCatalogManager({
           type="button"
           className="btn btn-primary meta-btn-sync"
           onClick={() => sincronizarAgora(false)}
-          disabled={sincronizando || salvando || (fonteAtualObj?.providerId ? !fonteConectada : false)}
+          disabled={!fonte || sincronizando || salvando || (fonteAtualObj?.providerId ? !fonteConectada : false)}
         >
           {sincronizando ? (
             <>
@@ -362,7 +529,7 @@ export default function MetaCatalogManager({
           type="button"
           className="btn btn-ghost meta-btn-save-source"
           onClick={salvarFonte}
-          disabled={salvando || sincronizando}
+          disabled={!fonte || salvando || sincronizando}
         >
           {salvando ? "Salvando…" : "Salvar fonte"}
         </button>

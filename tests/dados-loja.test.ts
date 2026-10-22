@@ -88,3 +88,11 @@ test("dados da loja: erro de carga não fala em salvar; loja sem nenhum dado é 
   assert.equal(lojaSemDados(vazio, ["loja_x"]), false, "concorrente salvo já não é loja vazia");
   assert.equal(lojaSemDados({ ...vazio, taxa_cartao_percent: 17 }, []), false);
 });
+
+test("dados da loja: no Essencial a seção de concorrentes fica bloqueada com o selo Pro", () => {
+  const src = readFileSync(new URL("../app/workspace/dados-loja/page.tsx", import.meta.url), "utf8");
+  assert.match(src, /!analiseNoPlano \? \(/);
+  assert.match(src, /dados-selo-pro">Pro</);
+  assert.match(src, /href="\/workspace\/plano"[^>]*>Conhecer o Pro</);
+  assert.match(mensagemDeErro("plan_pro_required"), /Plano Pro/);
+});

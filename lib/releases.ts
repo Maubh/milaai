@@ -33,9 +33,9 @@ export const RELEASES: readonly Release[] = [
       },
       {
         type: "new",
-        plan: "all",
+        plan: "pro",
         title: "Seus concorrentes no Instagram, salvos",
-        description: "Guarde até 3 perfis de concorrentes em Dados da loja ou pelo WhatsApp. A análise do nicho, do Plano Pro, usa esses perfis e sempre diz em quais se baseou.",
+        description: "Guarde até 3 perfis de concorrentes em Dados da loja ou pelo WhatsApp. A análise do nicho usa esses perfis e sempre diz em quais se baseou.",
       },
       {
         type: "new",

@@ -357,6 +357,9 @@ export default function WorkspacePlanoPage() {
                       Carrosséis, roteiros de Reels e planejamento semanal para o Instagram
                     </li>
                     <li>
+                      Leitura do nicho e dos concorrentes no Instagram
+                    </li>
+                    <li>
                       Pesquisa de fornecedores pelo site, catálogo ou Instagram
                     </li>
                     <li>

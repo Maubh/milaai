@@ -83,6 +83,23 @@ export async function proxyOAuth(
         },
       };
     }
+    if (path.includes("/meta/catalog/catalogs")) {
+      return {
+        status: 200,
+        data: {
+          ok: true,
+          selected_catalog_id: null,
+          business_permission: true,
+          catalogs: [
+            { id: "1000000000000001", name: "Catálogo Ritrovarsi (Sandbox)", business_name: "Ritrovarsi" },
+            { id: "1000000000000002", name: "Catálogo Antigo (Sandbox)", business_name: "Ritrovarsi" },
+          ],
+        },
+      };
+    }
+    if (path.includes("/meta/catalog/select")) {
+      return { status: 200, data: { ok: true, catalog_id: "1000000000000001", catalog_name: "Catálogo Ritrovarsi (Sandbox)" } };
+    }
     if (path.includes("/meta/catalog/sync-now")) {
       return {
         status: 200,

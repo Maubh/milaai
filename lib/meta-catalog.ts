@@ -118,3 +118,47 @@ export function sanitizeMetaCatalogResponse(
   }
   return out;
 }
+
+/** ID numérico da Meta (catálogo, negócio). */
+export function isValidMetaId(v: unknown): v is string {
+  return typeof v === "string" && /^\d{1,32}$/.test(v.trim());
+}
+
+const META_MAX_CATALOGS = 50;
+
+function idOuNulo(v: unknown): string | null {
+  return isValidMetaId(v) ? v.trim() : null;
+}
+
+/** Lista de catálogos da conta Meta da lojista (rota `catalogs`), só com os campos que a tela usa. */
+export function sanitizeMetaCatalogList(data: Record<string, unknown>): Record<string, unknown> {
+  if (!data || typeof data !== "object") return {};
+  const out: Record<string, unknown> = {};
+  if (typeof data.ok === "boolean") out.ok = data.ok;
+  if (typeof data.detail === "string") out.detail = textoSeguro(data.detail);
+  out.selected_catalog_id = idOuNulo(data.selected_catalog_id);
+  if (typeof data.business_permission === "boolean") out.business_permission = data.business_permission;
+  if (Array.isArray(data.catalogs)) {
+    out.catalogs = data.catalogs
+      .slice(0, META_MAX_CATALOGS)
+      .filter((c): c is Record<string, unknown> => typeof c === "object" && c !== null && isValidMetaId((c as Record<string, unknown>).id))
+      .map((c) => ({
+        id: String(c.id).trim(),
+        name: typeof c.name === "string" ? textoSeguro(c.name) : null,
+        business_name: typeof c.business_name === "string" ? textoSeguro(c.business_name) : null,
+      }));
+  }
+  return out;
+}
+
+/** Resposta da escolha de catálogo (rota `select`). */
+export function sanitizeMetaCatalogSelect(data: Record<string, unknown>): Record<string, unknown> {
+  if (!data || typeof data !== "object") return {};
+  const out: Record<string, unknown> = {};
+  if (typeof data.ok === "boolean") out.ok = data.ok;
+  if (typeof data.detail === "string") out.detail = textoSeguro(data.detail);
+  if (typeof data.error === "string") out.error = textoSeguro(data.error);
+  out.catalog_id = idOuNulo(data.catalog_id);
+  if (typeof data.catalog_name === "string") out.catalog_name = textoSeguro(data.catalog_name);
+  return out;
+}

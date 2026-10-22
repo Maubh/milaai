@@ -70,11 +70,13 @@ export const GOOGLE_DESC =
   "caderno de fornecedores no seu Drive e mexe só nela. Sem escolher destino, " +
   "o caderno fica salvo e consultável no WhatsApp.";
 
-/** Título da feature no plano pago. A linha anterior do plano já diz que o
- *  caderno vive no WhatsApp — aqui entra só o espelhamento. */
+/** Linha única do caderno de fornecedores no plano: onde ele fica (WhatsApp) e
+ *  para onde pode ser espelhado (Google ou Notion). Antes eram duas linhas, uma
+ *  do caderno e outra do espelho, e o card repetia a mesma feature
+ *  (Maurício, 2026-10-22). */
 export const PLANO_GOOGLE =
-  "Espelho do caderno de fornecedores no seu Google (planilha) ou no seu Notion " +
-  "(base) — se você não escolher, ele fica salvo e consultável no WhatsApp";
+  "Caderno de fornecedores validados, salvo e consultável no WhatsApp e, se " +
+  "você quiser, também no seu Google (planilha) ou no seu Notion (base)";
 
 /**
  * O que a lojista autoriza, dito sem enfeite, antes de clicar em conectar.

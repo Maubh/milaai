@@ -48,7 +48,6 @@ const PLANS: PlanItem[] = [
       "Precificação ilimitada com Raio-X e margem real",
       "Radar de concorrentes no Google Shopping",
       "Descrições técnicas prontas para loja virtual",
-      "Caderno de fornecedores validados no WhatsApp",
       "Leitor de notas fiscais de compra (XML e PDF)",
       "Legenda de Instagram para cada peça, com gancho e hashtags",
       PLANO_VITRINE_ESSENCIAL,

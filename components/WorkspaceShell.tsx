@@ -15,15 +15,17 @@ import "./workspace-shell.css";
 
 const LINKS = [
   { href: "/workspace", label: "Visão geral", icon: "overview" as const },
+  { href: "/workspace/dados-loja", label: "Dados da loja", icon: "store" as const },
   { href: "/workspace/integracoes", label: "Integrações", icon: "integrations" as const },
   { href: "/workspace/plano", label: "Meu plano", icon: "plan" as const },
 ];
 
 
-type WorkspaceIconName = "overview" | "integrations" | "plan" | "chat" | "logout" | "panel" | "menu" | "close" | "arrow" | "chevron";
+type WorkspaceIconName = "overview" | "store" | "integrations" | "plan" | "chat" | "logout" | "panel" | "menu" | "close" | "arrow" | "chevron";
 function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
   const paths: Record<WorkspaceIconName, React.ReactNode> = {
     overview: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
+    store: <><path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5 12v8h14v-8M10 20v-5h4v5" /></>,
     integrations: <><path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" /></>,
     plan: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>,
     chat: <><path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.5a9 9 0 1 1 16.6-5Z" /><path d="M8 11h8m-8 4h5" /></>,

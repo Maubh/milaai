@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getTelefone, markVerified, saveTelefone } from "@/lib/onboarding";
 import { shouldShowMissingPhoneNote } from "@/lib/verify-ui";
+import { consumirDestinoPosLogin } from "@/lib/pos-login";
 import "../auth.css";
 
 const CODE_LEN = 6;
@@ -117,7 +118,7 @@ export default function VerifyPage() {
         waLink: typeof data?.wa_link === "string" ? data.wa_link : undefined,
         plan: typeof data?.plan === "string" ? data.plan : undefined,
       });
-      router.replace("/workspace");
+      router.replace(consumirDestinoPosLogin());
       // keep enviando=true until navigate unmounts — evita double-submit
       return;
     } catch {

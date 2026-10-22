@@ -44,25 +44,34 @@ export default function WorkspacePlanoPage() {
   }, []);
 
   const now = new Date();
-  const trialEndsDate = session?.trial_ends_at
-    ? new Date(session.trial_ends_at)
-    : new Date("2026-11-04T23:14:28Z");
+  // trial_ends_at é o instante em que o teste acaba (00:00 do dia seguinte ao
+  // último dia, em Brasília); o último dia de uso é o anterior a esse instante.
+  const trialEndsDate = session?.trial_ends_at ? new Date(session.trial_ends_at) : null;
+  const ultimoDiaTeste = trialEndsDate
+    ? new Intl.DateTimeFormat("pt-BR", { timeZone: "America/Sao_Paulo", day: "2-digit", month: "2-digit", year: "numeric" }).format(
+        new Date(trialEndsDate.getTime() - 1),
+      )
+    : null;
+  const ultimoDiaCurto = ultimoDiaTeste ? ultimoDiaTeste.slice(0, 5) : null;
 
-  const isFounder = session?.role === "founder" || session?.billing === "comped";
-  const isPaid = session?.billing === "pago";
+  const billing = session?.billing ?? "";
+  const isFounder = session?.role === "founder" || billing === "comped" || billing === "cortesia";
+  const isPaid = billing === "pago" || billing === "atrasado";
+  const isPilot = billing === "pilot" || billing === "piloto";
   const isTrialExpired =
-    !isFounder &&
-    !isPaid &&
-    (session?.billing === "trial_expirado" ||
-      (session?.billing === "pilot" && now > trialEndsDate) ||
-      (!session?.billing && now > trialEndsDate));
-  const trialOpen = now <= trialEndsDate && !isPaid && !isFounder && !isTrialExpired;
+    !isFounder && (billing === "trial_expirado" || (isPilot && trialEndsDate !== null && now >= trialEndsDate));
+  const isCanceled = !isFounder && (billing === "cancelado" || billing === "expired");
+  const trialOpen = isPilot && !isTrialExpired;
   const hiringLocked = isFounder || trialOpen;
+  const [contratando, setContratando] = useState<"essencial" | "pro" | null>(null);
+  const [nome, setNome] = useState("");
+  const [documento, setDocumento] = useState("");
 
   const currentPlan: "essencial" | "pro" =
     isTrialExpired ? "pro" : session?.plan === "essencial" ? "essencial" : "pro";
-  const currentIsEssencial = !isTrialExpired && currentPlan === "essencial";
-  const currentIsPro = !isTrialExpired && currentPlan === "pro";
+  const semPlano = isTrialExpired || isCanceled;
+  const currentIsEssencial = !semPlano && currentPlan === "essencial";
+  const currentIsPro = !semPlano && currentPlan === "pro";
 
   const statusTitle = isFounder
     ? "Plano Pro · founder"
@@ -71,12 +80,22 @@ export default function WorkspacePlanoPage() {
         ? "Plano Pro"
         : "Plano Essencial"
       : trialOpen
-        ? "Plano Pro · 30 dias de teste"
+        ? "Plano Pro · período de teste"
         : isTrialExpired
-          ? "Teste de 30 dias encerrado"
-          : currentPlan === "essencial"
+          ? "Período de teste encerrado"
+          : isCanceled
+            ? "Assinatura inativa"
+            : currentPlan === "essencial"
             ? "Plano Essencial"
             : "Plano Pro";
+
+  const ERROS_PEDIDO: Record<string, string> = {
+    cpf_cnpj_invalido: "Confira o CPF ou CNPJ: os números não batem.",
+    nome_obrigatorio: "Informe o nome completo ou a razão social.",
+    assinatura_ativa: "Sua assinatura já está ativa. A troca de plano ainda não é feita por aqui.",
+    asaas_indisponivel: "O sistema de pagamento não respondeu agora. Tente de novo em alguns minutos.",
+    pagamento_indisponivel: "O pagamento pelo site ainda não está disponível. Tente de novo mais tarde.",
+  };
 
   async function handleAssinar(planToOrder: "essencial" | "pro") {
     setOrderingPlan(planToOrder);
@@ -85,13 +104,13 @@ export default function WorkspacePlanoPage() {
       const res = await fetch("/api/billing/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ plan: planToOrder }),
+        body: JSON.stringify({ plan: planToOrder, nome: nome.trim(), cpf_cnpj: documento }),
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
         setOrderResult({
           ok: false,
-          msg: data.detail || "Não foi possível gerar o pedido no momento. Tente novamente.",
+          msg: ERROS_PEDIDO[data.detail] || "Não foi possível gerar o pedido no momento. Tente novamente.",
         });
         return;
       }
@@ -161,18 +180,29 @@ export default function WorkspacePlanoPage() {
 
               {trialOpen && (
                 <p className="plan-note">
-                  Você está nos 30 dias de teste do Pro, sem cobrança, até{" "}
-                  <strong>04/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
-                  balanço no WhatsApp já valem. Os botões de contratar aparecem aqui depois
-                  dessa data.
+                  Você está no período de teste do Pro, sem cobrança
+                  {ultimoDiaTeste ? (
+                    <>
+                      , até <strong>{ultimoDiaTeste}</strong>
+                    </>
+                  ) : null}
+                  . Jueri, Olist, alerta de carência e balanço no WhatsApp já valem. Os botões de
+                  contratar aparecem aqui quando o teste acabar.
                 </p>
               )}
 
               {isTrialExpired && (
                 <p className="plan-note is-ended">
-                  Os 30 dias de teste acabaram em 04/11/2026. Peças e cálculos continuam
-                  guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp
-                  e este painel voltam na hora.
+                  O período de teste acabou{ultimoDiaTeste ? ` em ${ultimoDiaTeste}` : ""}. Peças e
+                  cálculos continuam guardados. Escolha Essencial ou Pro abaixo. Depois do
+                  pagamento, o WhatsApp e este painel voltam na hora.
+                </p>
+              )}
+
+              {isCanceled && (
+                <p className="plan-note is-ended">
+                  Sua assinatura não está ativa. Peças e cálculos continuam guardados. Escolha
+                  Essencial ou Pro abaixo para voltar.
                 </p>
               )}
 
@@ -182,6 +212,50 @@ export default function WorkspacePlanoPage() {
                 </p>
               )}
             </div>
+
+            {/* Dados de quem paga: o Asaas exige nome e CPF/CNPJ na cobrança */}
+            {contratando && (
+              <form
+                className="work-card plan-status-card"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void handleAssinar(contratando);
+                }}
+              >
+                <p className="plan-note">
+                  Plano {contratando === "pro" ? "Pro" : "Essencial"}: para gerar a cobrança no Asaas,
+                  informe quem paga. O CPF ou CNPJ vai só para o Asaas.
+                </p>
+                <div className="integration-field">
+                  <label htmlFor="plano-nome">Nome completo ou razão social</label>
+                  <input
+                    id="plano-nome"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    autoComplete="name"
+                    required
+                    minLength={3}
+                    maxLength={120}
+                  />
+                </div>
+                <div className="integration-field">
+                  <label htmlFor="plano-documento">CPF ou CNPJ</label>
+                  <input
+                    id="plano-documento"
+                    value={documento}
+                    onChange={(e) => setDocumento(e.target.value)}
+                    inputMode="numeric"
+                    required
+                    maxLength={18}
+                  />
+                </div>
+                <div>
+                  <button className="btn btn-plum plan-action-btn" type="submit" disabled={orderingPlan !== null}>
+                    {orderingPlan ? "Gerando cobrança…" : "Ir para o pagamento"}
+                  </button>
+                </div>
+              </form>
+            )}
 
             {/* Feedback de pedido / checkout */}
             {orderResult && (
@@ -237,19 +311,19 @@ export default function WorkspacePlanoPage() {
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      No Pro até 04/11
+                      {isFounder ? "Sem cobrança" : `No Pro até ${ultimoDiaCurto ?? "o fim do teste"}`}
+                    </button>
+                  ) : isPaid ? (
+                    <button className="plan-action-btn" disabled>
+                      Troca de plano em breve
                     </button>
                   ) : (
                     <button
                       className="btn plan-action-btn"
-                      onClick={() => handleAssinar("essencial")}
+                      onClick={() => setContratando("essencial")}
                       disabled={orderingPlan !== null}
                     >
-                      {orderingPlan === "essencial"
-                        ? "Processando…"
-                        : isPaid && currentPlan === "pro"
-                        ? "Mudar para Essencial"
-                        : "Contratar Essencial"}
+                      Contratar Essencial
                     </button>
                   )}
                 </div>
@@ -295,23 +369,23 @@ export default function WorkspacePlanoPage() {
                 <div>
                   {currentIsPro ? (
                     <button className="plan-action-btn is-current" disabled>
-                      {trialOpen ? "Seu plano · até 04/11" : "Seu plano agora"}
+                      {trialOpen && ultimoDiaCurto ? `Seu plano · até ${ultimoDiaCurto}` : "Seu plano agora"}
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      No Essencial até 04/11
+                      {isFounder ? "Sem cobrança" : `No Essencial até ${ultimoDiaCurto ?? "o fim do teste"}`}
+                    </button>
+                  ) : isPaid ? (
+                    <button className="plan-action-btn" disabled>
+                      Troca de plano em breve
                     </button>
                   ) : (
                     <button
                       className="btn btn-plum plan-action-btn"
-                      onClick={() => handleAssinar("pro")}
+                      onClick={() => setContratando("pro")}
                       disabled={orderingPlan !== null}
                     >
-                      {orderingPlan === "pro"
-                        ? "Processando…"
-                        : isPaid && currentPlan === "essencial"
-                        ? "Mudar para Pro"
-                        : "Contratar Pro"}
+                      Contratar Pro
                     </button>
                   )}
                 </div>
@@ -320,7 +394,7 @@ export default function WorkspacePlanoPage() {
 
             {/* Informação sobre liberação imediata e segurança */}
             <p className="plan-pay-note">
-              Pagamento no Asaas, Pix ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.
+              Pagamento no Asaas, por Pix, boleto ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.
             </p>
           </>
         )}

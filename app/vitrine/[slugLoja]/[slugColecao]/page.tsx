@@ -5,7 +5,13 @@ import VitrineView from "./VitrineView";
 
 async function getShowcase(slugLoja: string, slugColecao: string): Promise<any | null> {
   const apiUrl = process.env.MILA_INTERNAL_API_URL || "https://wa.milaai.com.br";
-  const token = process.env.MILA_INTERNAL_HMAC_SECRET || "mila_internal_hmac_secret_2026";
+  // Sem segredo configurado não há consulta: um valor padrão no código público
+  // autenticaria qualquer um na API interna da vitrine.
+  const token = (process.env.MILA_INTERNAL_HMAC_SECRET || "").trim();
+  if (!token) {
+    console.error("MILA_INTERNAL_HMAC_SECRET ausente: vitrine não consultada");
+    return null;
+  }
 
   try {
     const res = await fetch(

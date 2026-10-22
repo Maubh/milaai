@@ -9,6 +9,9 @@
 }
 .work-lede {
   line-height: 1.5;
+  /* O texto de abertura acompanha a largura do conteúdo (workspace.css
+     limitava a 70ch e a linha quebrava no meio da página). */
+  max-width: none;
 }
 
 .work-more {

@@ -289,19 +289,25 @@ export default function WorkspacePlanoPage() {
                       Preço a partir da foto e do custo da peça
                     </li>
                     <li>
-                      Raio-X de margem, taxas e impostos
+                      Raio-X da margem, com a taxa da maquininha e a embalagem
                     </li>
                     <li>
                       Radar de concorrentes no Google Shopping
                     </li>
                     <li>
+                      Descrições prontas para a loja virtual
+                    </li>
+                    <li>
                       Legenda de Instagram para cada peça
                     </li>
                     <li>
-                      Caderno de fornecedores no Notion ou no Google Planilhas
+                      Leitura de notas de compra (XML e PDF)
                     </li>
                     <li>
-                      Leitura de notas de compra (XML e PDF)
+                      Caderno de fornecedores no WhatsApp, no Notion ou no Google Planilhas
+                    </li>
+                    <li>
+                      1 vitrine web ativa por vez, com fotos reais
                     </li>
                   </ul>
                 </div>
@@ -354,16 +360,19 @@ export default function WorkspacePlanoPage() {
                       Nuvemshop (produtos e pedidos), Jueri e Olist; planilha pronta para a Phibo
                     </li>
                     <li>
+                      Vitrines web ilimitadas
+                    </li>
+                    <li>
                       Carrosséis, roteiros de Reels e planejamento semanal para o Instagram
                     </li>
                     <li>
-                      Leitura do nicho e dos concorrentes no Instagram
+                      Leitura do nicho e dos concorrentes no Instagram (4 análises por mês)
                     </li>
                     <li>
                       Pesquisa de fornecedores pelo site, catálogo ou Instagram
                     </li>
                     <li>
-                      Balanço no WhatsApp no dia 15 e último dia do mês
+                      Balanço no WhatsApp no dia 15 e no último dia do mês
                     </li>
                     <li>
                       Aviso de carência de fornecedor

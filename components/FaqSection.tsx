@@ -12,7 +12,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Como a mila ajuda quem vende joias e semijoias no dia a dia?",
     answer: (
       <>
-        A <span className="mila-highlight">mila</span> atua como o braço direito da empresária de semijoias: calcula o preço de venda com margem real (Raio-X), analisa custos de banho e pedraria, pesquisa preços da concorrência no Google Shopping, lê notas fiscais de compra (XML e PDF) e cria legendas e carrosséis magnéticos para o Instagram.
+        A <span className="mila-highlight">mila</span> atua como o braço direito da empresária de semijoias: calcula o preço de venda com margem real (Raio-X), analisa custos de banho e pedraria, pesquisa preços da concorrência no Google Shopping, lê notas fiscais de compra (XML e PDF) e cria legendas magnéticas para o Instagram (no Pro, também carrosséis, Reels e o planejamento de posts).
       </>
     ),
   },
@@ -68,7 +68,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Qual é a diferença entre o Plano Essencial e o Plano Pro?",
     answer: (
       <>
-        O <strong>Essencial (R$ 39/mês)</strong> é ideal para quem quer precificação precisa com margem real, radar de concorrentes, leitor de notas fiscais, caderno sincronizado no Google Planilhas e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> desbloqueia a automação completa da loja: integração com Nuvemshop no WhatsApp, vitrines web ilimitadas, conexões com ERPs (Jueri, Olist e planilha pronta para Phibo), projeção de faturamento e criação de conteúdo para Instagram.
+        O <strong>Essencial (R$ 39/mês)</strong> é ideal para quem quer precificação precisa com margem real, radar de concorrentes, leitor de notas fiscais, legenda de Instagram para cada peça, caderno sincronizado no Google Planilhas e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> desbloqueia a automação completa da loja: integração com Nuvemshop no WhatsApp, vitrines web ilimitadas, conexões com ERPs (Jueri, Olist e planilha pronta para Phibo), projeção de faturamento, pesquisa de fornecedores e marketing de Instagram (carrosséis, Reels e planejamento semanal).
       </>
     ),
   },

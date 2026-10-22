@@ -219,7 +219,10 @@ export default function WorkspacePlanoPage() {
                       Radar de concorrentes no Google Shopping
                     </li>
                     <li>
-                      Legendas para Reels, posts e carrosséis
+                      Legenda de Instagram para cada peça
+                    </li>
+                    <li>
+                      Caderno de fornecedores no Notion ou no Google Planilhas
                     </li>
                     <li>
                       Leitura de notas de compra (XML e PDF)
@@ -272,10 +275,13 @@ export default function WorkspacePlanoPage() {
                       Tudo do Essencial, e ainda:
                     </li>
                     <li>
-                      Nuvemshop, Jueri e Olist; planilha pronta para a Phibo
+                      Nuvemshop (produtos e pedidos), Jueri e Olist; planilha pronta para a Phibo
                     </li>
                     <li>
-                      Notion e Google Planilhas
+                      Carrosséis, roteiros de Reels e planejamento semanal para o Instagram
+                    </li>
+                    <li>
+                      Pesquisa de fornecedores pelo site, catálogo ou Instagram
                     </li>
                     <li>
                       Balanço no WhatsApp no dia 15 e último dia do mês

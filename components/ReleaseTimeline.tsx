@@ -1,4 +1,4 @@
-import { RELEASE_CHANGE_LABELS, type Release } from "@/lib/releases";
+import { RELEASE_CHANGE_LABELS, RELEASE_PLAN_LABELS, type Release } from "@/lib/releases";
 
 const dateFormat = new Intl.DateTimeFormat("pt-BR", {
   day: "numeric", month: "long", year: "numeric", timeZone: "UTC",
@@ -24,7 +24,10 @@ export default function ReleaseTimeline({ releases, compact = false }: {
             <ul className="release-changes">
               {(compact ? release.changes.slice(0, 2) : release.changes).map((change) => (
                 <li key={change.title}>
-                  <span className="release-change-type" data-type={change.type}>{RELEASE_CHANGE_LABELS[change.type]}</span>
+                  <span className="release-change-tags">
+                    <span className="release-change-type" data-type={change.type}>{RELEASE_CHANGE_LABELS[change.type]}</span>
+                    <span className="release-change-plan" data-plan={change.plan}>{RELEASE_PLAN_LABELS[change.plan]}</span>
+                  </span>
                   <h3>{change.title}</h3>
                   {!compact ? <p>{change.description}</p> : null}
                 </li>

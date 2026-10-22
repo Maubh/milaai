@@ -18,6 +18,7 @@ test("release history has unique versions, valid dates and customer-facing chang
     assert.ok(release.changes.length > 0);
     for (const change of release.changes) {
       assert.ok(["new", "improvement", "fix"].includes(change.type));
+      assert.ok(["all", "pro"].includes(change.plan), `${change.title}: diga se vale para os dois planos ou só para o Pro`);
       assert.ok(change.title.trim() && change.description.trim());
     }
   }

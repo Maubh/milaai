@@ -96,7 +96,7 @@ const NOMES_CAMPOS: Record<CampoDadosLoja, string> = {
   nome_loja: "Nome da loja",
   instagram: "Instagram da loja",
   custo_embalagem: "Custo de embalagem",
-  taxa_cartao_percent: "Taxa da maquininha",
+  taxa_cartao_percent: "Taxa usada no preço",
   markup_padrao: "Markup padrão",
   tipo_banho: "Banho padrão",
   observacoes: "Observações",

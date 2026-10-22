@@ -39,7 +39,7 @@ const SECOES: Secao[] = [
     titulo: "Custos e taxas",
     descricao: "Entram no preço sugerido e na margem de cada peça.",
     campos: [
-      { chave: "taxa_cartao_percent", rotulo: "Taxa da maquininha", tipo: "percentual", ajuda: "Taxa média que a maquininha ou o link de pagamento cobra, em %." },
+      { chave: "taxa_cartao_percent", rotulo: "Taxa usada no preço", tipo: "percentual", ajuda: "Taxa da maquininha ou do link de pagamento, em %. Se você oferece parcelado sem juros, use a taxa do maior parcelamento: assim o preço cobre o pior caso." },
       { chave: "custo_embalagem", rotulo: "Custo de embalagem", tipo: "reais", ajuda: "Embalagem e tag por peça, em reais." },
     ],
   },

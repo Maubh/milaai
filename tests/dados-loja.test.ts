@@ -63,7 +63,7 @@ test("dados da loja: @ do Instagram e lista de concorrentes", () => {
 });
 
 test("dados da loja: mensagem de erro nomeia o campo e o limite", () => {
-  assert.match(mensagemDeErro("invalid_field", "taxa_cartao_percent"), /taxa da maquininha.*entre 0% e 30%/);
+  assert.match(mensagemDeErro("invalid_field", "taxa_cartao_percent"), /taxa usada no preço.*entre 0% e 30%/);
   assert.match(mensagemDeErro("no_session"), /sessão expirou/);
   assert.match(mensagemDeErro("qualquer"), /Tente de novo/);
 });

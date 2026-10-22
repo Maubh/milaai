@@ -4,6 +4,8 @@ export const SYSTEM_VERSION = packageJson.version;
 
 export type ReleaseChange = {
   type: "new" | "improvement" | "fix";
+  /** Para quem vale: os dois planos ou só o Pro (`docs/especificacao_planos.md`). */
+  plan: "all" | "pro";
   title: string;
   description: string;
 };
@@ -18,6 +20,44 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.3.0",
+    date: "2026-10-22",
+    title: "Dados da loja, concorrentes no Instagram e assinatura pela sua área",
+    summary: "Veja e edite o que a mila usa nos seus preços, salve seus concorrentes no Instagram e assine o plano sem sair da sua área.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Dados da loja num só lugar",
+        description: "A nova página Dados da loja mostra a taxa usada no preço, o markup, a embalagem, o banho, o nome, o Instagram e as observações da sua loja. O que você salvar ali a mila usa na hora, e dá para mudar também pelo WhatsApp.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Seus concorrentes no Instagram, salvos",
+        description: "Guarde até 3 perfis de concorrentes em Dados da loja ou pelo WhatsApp. A análise do nicho usa esses perfis e sempre diz em quais se baseou.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Leitura do nicho no Instagram",
+        description: "Pergunte o que está bombando no ramo e a mila mostra o formato que mais performa nos concorrentes, o post de maior engajamento e as hashtags com o tamanho real de cada uma. São até 4 análises por mês.",
+      },
+      {
+        type: "new",
+        plan: "all",
+        title: "Assinatura pela sua área",
+        description: "Em Meu plano você escolhe o plano e paga no Asaas por Pix, boleto ou cartão. Quando o pagamento cai, o plano entra na hora no WhatsApp e aqui.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Meu plano mostra o que está incluído",
+        description: "A lista de cada plano foi revisada para mostrar exatamente o que a mila faz, incluindo a calculadora de custo da peça comprada no bruto.",
+      },
+    ],
+  },
+  {
     version: "0.2.1",
     date: "2026-10-20",
     title: "Integrações mais claras e novidades à mão",
@@ -25,11 +65,13 @@ export const RELEASES: readonly Release[] = [
     changes: [
       {
         type: "improvement",
+        plan: "all",
         title: "Um mapa das ferramentas que você pode conectar",
         description: "A página inicial mostra a Mila no centro das integrações, com conexões animadas e uma descrição do uso de cada ferramenta, como a lista de fornecedores.",
       },
       {
         type: "improvement",
+        plan: "all",
         title: "Atualizações em um painel lateral",
         description: "O botão Atualizações abre as novidades mais recentes com datas e versões. O histórico completo continua disponível na sua área.",
       },
@@ -43,21 +85,25 @@ export const RELEASES: readonly Release[] = [
     changes: [
       {
         type: "new",
+        plan: "all",
         title: "Mapeamento de concorrentes locais no WhatsApp",
         description: "Basta informar a sua cidade e a mila localiza os concorrentes reais de joias e semijoias da sua região, com nomes, endereços e canais de atendimento direto na conversa.",
       },
       {
         type: "new",
+        plan: "pro",
         title: "Pesquisa de fornecedores com ficha completa",
         description: "A mila investiga fornecedores na web e levanta dados de banho, milésimos e tempo de garantia para você organizar suas compras e reposições no Notion ou Google Planilhas.",
       },
       {
         type: "improvement",
+        plan: "pro",
         title: "Sincronização de catálogo com fotos reais",
         description: "Cadastre e atualize produtos na Nuvemshop e nos ERPs Jueri e Olist/Tiny enviando as fotos diretamente pelo chat do WhatsApp, com cálculo de margem e códigos SKU organizados.",
       },
       {
         type: "improvement",
+        plan: "all",
         title: "Painel de conexões mais claro por plano",
         description: "Identificação visual imediata das ferramentas disponíveis para a sua loja e dos conectores exclusivos do Plano Pro.",
       },
@@ -71,22 +117,30 @@ export const RELEASES: readonly Release[] = [
     changes: [
       {
         type: "improvement",
+        plan: "all",
         title: "Um menu mais simples, no computador e no celular",
         description: "O menu lateral recolhe pelo botão, identifica cada ícone e dá mais destaque ao WhatsApp. As opções da conta ficam no seu perfil, e o menu no celular tem uma abertura mais suave.",
       },
       {
         type: "improvement",
+        plan: "all",
         title: "Suas ferramentas, mais fáceis de reconhecer",
         description: "As integrações agora mostram os ícones das ferramentas e estão organizadas por uso. Você pode consultar como seus dados são usados em cada ferramenta, separadamente.",
       },
       {
         type: "new",
+        plan: "all",
         title: "Um lugar para acompanhar as atualizações",
         description: "A versão da mila aparece junto de Atualizações no topo da tela. Aqui você encontra a data e o resumo do que mudou em cada versão.",
       },
     ],
   },
 ];
+
+export const RELEASE_PLAN_LABELS: Record<ReleaseChange["plan"], string> = {
+  all: "Essencial e Pro",
+  pro: "Plano Pro",
+};
 
 export const RELEASE_CHANGE_LABELS: Record<ReleaseChange["type"], string> = {
   new: "Novo",

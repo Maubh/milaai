@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   contaDoInstagram,
@@ -329,6 +330,23 @@ export default function DadosDaLojaPage() {
             </section>
           ))}
 
+          {!analiseNoPlano ? (
+            // Só a análise do nicho (Pro) usa os concorrentes: no Essencial a
+            // seção aparece bloqueada, sem edição (o serviço também recusa).
+            <section className="dados-secao is-bloqueada" aria-labelledby="secao-concorrentes">
+              <div className="dados-secao-header">
+                <div>
+                  <h2 className="dados-secao-titulo" id="secao-concorrentes">
+                    Concorrentes no Instagram <span className="dados-selo-pro">Pro</span>
+                  </h2>
+                  <p className="dados-secao-descricao">
+                    No Plano Pro, a mila lê até {MAX_CONCORRENTES} perfis de concorrentes e mostra o formato que mais performa, o post do topo e as hashtags que eles usam.
+                  </p>
+                </div>
+                <Link href="/workspace/plano" className="dados-editar">Conhecer o Pro</Link>
+              </div>
+            </section>
+          ) : (
           <section className="dados-secao" aria-labelledby="secao-concorrentes">
             {cabecalho(
               "concorrentes",
@@ -336,9 +354,6 @@ export default function DadosDaLojaPage() {
               `Até ${MAX_CONCORRENTES} perfis. A análise do nicho lê estes perfis e mostra o formato que mais performa, o post do topo e as hashtags que eles usam.`,
               () => abrir("concorrentes"),
             )}
-            {!analiseNoPlano ? (
-              <p className="dados-nota">A análise do nicho é do Plano Pro. Você já pode deixar seus concorrentes salvos.</p>
-            ) : null}
             {editando === "concorrentes" ? (
               <form
                 className="dados-form"
@@ -382,6 +397,7 @@ export default function DadosDaLojaPage() {
               </>
             )}
           </section>
+          )}
         </div>
       )}
     </div>

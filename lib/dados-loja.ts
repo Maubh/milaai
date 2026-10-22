@@ -132,6 +132,7 @@ export function mensagemDeErro(detail: unknown, campo?: unknown): string {
   }
   if (detail === "invalid_username") return "Algum @ não é válido. Use só letras, números, ponto e _.";
   if (detail === "too_many") return `São até ${MAX_CONCORRENTES} concorrentes.`;
+  if (detail === "plan_pro_required") return "Os concorrentes no Instagram fazem parte do Plano Pro.";
   if (detail === "nothing_to_update") return "Nada mudou para salvar.";
   return "Não foi possível salvar agora. Tente de novo em alguns minutos.";
 }

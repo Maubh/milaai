@@ -19,7 +19,7 @@ export const PLANO_VITRINE_PRO =
   "Vitrines web ilimitadas com fotos reais";
 
 export const PLANO_NUVEMSHOP_PRO =
-  "Integração com Nuvemshop: consulta de estoque, preços e publicação de produtos direto no WhatsApp";
+  "Integração com Nuvemshop: consulta de estoque, preços e pedidos e publicação de produtos direto no WhatsApp";
 
 interface PlanItem {
   id: string;
@@ -50,6 +50,7 @@ const PLANS: PlanItem[] = [
       "Descrições técnicas prontas para loja virtual",
       "Caderno de fornecedores validados no WhatsApp",
       "Leitor de notas fiscais de compra (XML e PDF)",
+      "Legenda de Instagram para cada peça, com gancho e hashtags",
       PLANO_VITRINE_ESSENCIAL,
       // Fonte única (lib/google-workspace.ts): a mesma frase vale para o plano,
       // a lista da área logada e a tela de conexão. Antes cada tela repetia o
@@ -75,8 +76,9 @@ const PLANS: PlanItem[] = [
       PLANO_VITRINE_PRO,
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",
       "Alertas ativos de carência de fornecedores (aviso antes de perder pedido sem mínimo)",
+      "Pesquisa de fornecedores: a mila lê o site, o catálogo ou o Instagram do fornecedor e monta a ficha",
       PLANO_ERP,
-      "Marketing de Instagram: legendas magnéticas, carrosséis, ideias de Reels e planejamento semanal",
+      "Marketing de Instagram: carrosséis, roteiros de Reels e planejamento semanal de posts",
     ],
     ctaLabel: "Conhecer o Pro",
     ctaHref: "/login",

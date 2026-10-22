@@ -52,7 +52,6 @@ export default function WorkspacePlanoPage() {
         new Date(trialEndsDate.getTime() - 1),
       )
     : null;
-  const ultimoDiaCurto = ultimoDiaTeste ? ultimoDiaTeste.slice(0, 5) : null;
 
   const billing = session?.billing ?? "";
   const isFounder = session?.role === "founder" || billing === "comped" || billing === "cortesia";
@@ -62,7 +61,9 @@ export default function WorkspacePlanoPage() {
     !isFounder && (billing === "trial_expirado" || (isPilot && trialEndsDate !== null && now >= trialEndsDate));
   const isCanceled = !isFounder && (billing === "cancelado" || billing === "expired");
   const trialOpen = isPilot && !isTrialExpired;
-  const hiringLocked = isFounder || trialOpen;
+  // Durante o teste já dá para contratar: o pagamento confirmado vira `pago`
+  // e o fim do teste não corta quem pagou.
+  const hiringLocked = isFounder;
   const [contratando, setContratando] = useState<"essencial" | "pro" | null>(null);
   const [nome, setNome] = useState("");
   const [documento, setDocumento] = useState("");
@@ -186,8 +187,9 @@ export default function WorkspacePlanoPage() {
                       , até <strong>{ultimoDiaTeste}</strong>
                     </>
                   ) : null}
-                  . Jueri, Olist, alerta de carência e balanço no WhatsApp já valem. Os botões de
-                  contratar aparecem aqui quando o teste acabar.
+                  . Jueri, Olist, alerta de carência e balanço no WhatsApp já valem. Se quiser, já
+                  pode contratar abaixo: a primeira cobrança vence no dia da contratação e o
+                  WhatsApp segue sem pausa quando o teste acabar.
                 </p>
               )}
 
@@ -305,13 +307,13 @@ export default function WorkspacePlanoPage() {
                 </div>
 
                 <div>
-                  {currentIsEssencial ? (
+                  {currentIsEssencial && !trialOpen ? (
                     <button className="plan-action-btn is-current" disabled>
                       Seu plano agora
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      {isFounder ? "Sem cobrança" : `No Pro até ${ultimoDiaCurto ?? "o fim do teste"}`}
+                      Sem cobrança
                     </button>
                   ) : isPaid ? (
                     <button className="plan-action-btn" disabled>
@@ -367,13 +369,13 @@ export default function WorkspacePlanoPage() {
                 </div>
 
                 <div>
-                  {currentIsPro ? (
+                  {currentIsPro && !trialOpen ? (
                     <button className="plan-action-btn is-current" disabled>
-                      {trialOpen && ultimoDiaCurto ? `Seu plano · até ${ultimoDiaCurto}` : "Seu plano agora"}
+                      Seu plano agora
                     </button>
                   ) : hiringLocked ? (
                     <button className="plan-action-btn" disabled>
-                      {isFounder ? "Sem cobrança" : `No Essencial até ${ultimoDiaCurto ?? "o fim do teste"}`}
+                      Sem cobrança
                     </button>
                   ) : isPaid ? (
                     <button className="plan-action-btn" disabled>

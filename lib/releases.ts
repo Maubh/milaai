@@ -20,6 +20,50 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.4.0",
+    date: "2026-10-23",
+    title: "Planilhas feitas pela mila, nota em PDF no balanço e fatura à mão",
+    summary: "Peça uma planilha e a mila monta no seu Google ou no seu Notion. A nota em PDF entra sozinha no balanço, e a fatura em aberto aparece em Meu plano.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "A mila monta a planilha que você pedir",
+        description: "Peça um fluxo de caixa, um controle de encomendas ou de metas e a mila cria a planilha no seu Google Planilhas, com abas, listas de escolha e fórmulas que fazem as contas sozinhas. Ela confere as fórmulas antes de mandar o link e ajusta a mesma planilha quando você pedir.",
+      },
+      {
+        type: "new",
+        plan: "all",
+        title: "Tabelas sob medida no Notion",
+        description: "Para listas e acompanhamento, como encomendas, cobranças ou revendedoras, a mila cria uma tabela dentro da página do Notion que você escolher.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Você escolhe onde salvar no Notion",
+        description: "Antes de salvar o calendário de posts, a lista de fornecedores ou uma tabela nova, a mila mostra as páginas do seu Notion e pergunta em qual você quer guardar.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Nota fiscal em PDF e em foto no balanço",
+        description: "A nota de compra do mês em PDF entra sozinha no balanço, como o XML. Mandou uma foto da nota? A mila confere a chave e pergunta se registra a compra antes de gravar. A mesma nota nunca conta duas vezes.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Fatura em aberto em Meu plano",
+        description: "Se o pagamento do plano atrasar, Meu plano mostra a fatura em aberto com o botão para pagar e até quando o WhatsApp segue funcionando.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Foto da peça na vitrine pelo WhatsApp",
+        description: "Mande a foto e diga qual é a peça: a mila guarda a imagem certa na vitrine. Se o nome servir para mais de uma peça, ela pergunta qual antes de trocar a foto.",
+      },
+    ],
+  },
+  {
     version: "0.3.0",
     date: "2026-10-22",
     title: "Dados da loja, concorrentes no Instagram e assinatura pela sua área",

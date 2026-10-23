@@ -1,16 +1,17 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { SYSTEM_VERSION } from "@/lib/releases";
 import "./release-updates.css";
 
 const LAST_SEEN_KEY = "mila:last-seen-release:v1";
+const SEEN_EVENT = "mila:release-seen";
 export const RELEASES_PATH = "/workspace/novidades";
 
 /**
  * Estado do destino Atualizações: versão atual e se há novidade não lida.
- * Visitar a página marca a versão como vista.
+ * Visitar a página ou abrir o sino marca a versão como vista.
  */
 export function useReleaseStatus() {
   const pathname = usePathname();
@@ -31,7 +32,25 @@ export function useReleaseStatus() {
     }
   }, [active]);
 
+  // Várias instâncias do hook (sino, página) apagam o ponto juntas.
+  useEffect(() => {
+    const seen = () => setUnread(false);
+    window.addEventListener(SEEN_EVENT, seen);
+    return () => window.removeEventListener(SEEN_EVENT, seen);
+  }, []);
+
+  const markSeen = useCallback(() => {
+    try {
+      localStorage.setItem(LAST_SEEN_KEY, SYSTEM_VERSION);
+    } catch {
+      // Sem storage o ponto já não aparece.
+    }
+    setUnread(false);
+    window.dispatchEvent(new Event(SEEN_EVENT));
+  }, []);
+
   return {
+    markSeen,
     unread,
     active,
     version: SYSTEM_VERSION,

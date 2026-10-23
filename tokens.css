@@ -130,26 +130,39 @@
   --text-ledger-band: 1.5rem;
 }
 
-/* Hallmark · workspace desk ("mesa da loja") · revision 2 over the ledger
- * Ivory canvas one step below light tonal panels; mineral pill for the
- * current destination. Elevation is the panel shadow only (no border). */
+/* Hallmark · workspace desk ("mesa da loja") · revision 3 (Cadra-observed material)
+ * Ivory canvas with a soft mineral/sand wash; translucent ivory surfaces with a
+ * 1px light hairline, a top inner highlight and a long, faint drop shadow;
+ * mineral pill for the current destination, revealed by a clipped layer. */
 :root {
   --color-desk-canvas: oklch(95.6% 0.009 85);
   --color-desk-panel: oklch(99.2% 0.003 85);
+  --color-desk-glass: oklch(99.6% 0.003 85 / 0.62);
+  --color-desk-glass-hover: oklch(99.6% 0.003 85 / 0.82);
+  --color-desk-hairline: oklch(100% 0 0 / 0.82);
+  --color-desk-tint: oklch(27% 0.025 165 / 0.06);
+  --color-desk-wash-a: oklch(86% 0.04 184 / 0.45);
+  --color-desk-wash-b: oklch(90% 0.035 75 / 0.55);
   --color-desk-inset: oklch(96.8% 0.007 85);
   --color-desk-track: oklch(92.6% 0.01 85);
   --color-desk-pill: var(--color-ledger-mineral);
   --color-desk-pill-ink: var(--color-ledger-mineral-ink);
-  --shadow-desk-panel: 0 1px 2px oklch(27% 0.025 165 / 0.06), 0 14px 32px -22px oklch(27% 0.025 165 / 0.22);
+  --shadow-desk-panel: inset 0 1px 0 oklch(100% 0 0 / 0.7), 0 24px 48px -30px oklch(27% 0.025 165 / 0.24);
+  --shadow-desk-raised: 0 24px 48px -30px oklch(27% 0.025 165 / 0.32);
+  --shadow-desk-pop: 0 24px 60px -18px oklch(27% 0.025 165 / 0.3), 0 2px 6px oklch(27% 0.025 165 / 0.07);
   --shadow-desk-bar: 0 1px 0 oklch(27% 0.025 165 / 0.06);
   --shadow-desk-dock: 0 -1px 0 oklch(27% 0.025 165 / 0.08), 0 -10px 28px -20px oklch(27% 0.025 165 / 0.3);
-  --radius-desk-panel: 20px;
+  --radius-desk-panel: 24px;
+  --radius-desk-pop: 16px;
   --radius-desk-inset: 14px;
   --radius-desk-pill: 999px;
   --size-desk-bar: 72px;
   --size-desk-dock: 64px;
   --size-desk-avatar: 40px;
+  --size-desk-round: 44px;
   --dur-desk-pill: 320ms;
+  --dur-desk-lift: 450ms;
+  --lift-desk-tile: -4px;
 }
 
 /* Route skeletons */

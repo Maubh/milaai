@@ -1,29 +1,20 @@
-/* Hallmark · store desk · overview: conversation (2/3) + real account state (1/3) + latest release · existing mila mineral */
+/* Hallmark · store desk · overview: compact conversation band + strip of three clickable tiles (Cadra-observed hierarchy by density) · existing mila mineral */
 @import "../../../tokens.css";
 
 .overview-store { margin-top: var(--space-workspace-xs); }
 
-.overview-desk {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  grid-template-areas: "chat status" "chat release";
-  grid-template-rows: auto 1fr;
-  gap: var(--space-workspace-xl);
-  margin-top: var(--space-workspace-sm);
-}
-
 /* Conversa: o único painel mineral da área logada. */
 .overview-chat {
-  grid-area: chat;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-workspace-2xl);
-  padding: var(--space-workspace-3xl);
+  margin-top: var(--space-workspace-sm);
+  padding: var(--space-workspace-2xl) var(--space-workspace-3xl);
   border-radius: var(--radius-desk-panel);
   background: var(--color-ledger-mineral);
   color: var(--color-ledger-mineral-ink);
-  box-shadow: var(--shadow-desk-panel);
+  box-shadow: var(--shadow-desk-raised);
 }
 .overview-chat :focus-visible { outline-color: var(--color-ledger-focus-on-mineral); }
 .overview-chat-copy { display: grid; justify-items: start; gap: var(--space-workspace-md); min-width: 0; }
@@ -53,39 +44,35 @@
 .overview-chat-action:disabled { opacity: 0.6; cursor: not-allowed; }
 .overview-chat .overview-chat-hint { color: var(--color-ledger-mineral-muted); font-size: var(--text-workspace-sm); }
 
-.overview-qr { display: grid; justify-items: center; gap: var(--space-workspace-md); margin: 0; text-align: center; }
-.overview-qr-code { display: block; width: 148px; height: 148px; padding: var(--space-workspace-sm); border-radius: var(--radius-desk-inset); background: var(--color-ledger-surface); }
-.overview-qr figcaption { display: grid; gap: 2px; font-size: var(--text-workspace-sm); line-height: 1.4; }
+.overview-qr { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: var(--space-workspace-lg); margin: 0; }
+.overview-qr-code { display: block; width: 132px; height: 132px; padding: var(--space-workspace-sm); border-radius: var(--radius-desk-inset); background: var(--color-ledger-surface); }
+.overview-qr figcaption { display: grid; gap: 2px; max-width: 16ch; font-size: var(--text-workspace-sm); line-height: 1.4; }
 .overview-qr figcaption span { color: var(--color-ledger-mineral-muted); }
 
-/* Estado real da conta */
-.overview-status { grid-area: status; display: flex; flex-direction: column; }
-.overview-status-list { display: grid; margin: 0; flex: 1; }
-.overview-status-item { display: grid; gap: 2px; padding-block: var(--space-workspace-lg); border-bottom: var(--rule-ledger) solid var(--color-ledger-rule); }
-.overview-status-item:last-child { border-bottom: 0; padding-bottom: 0; }
-.overview-status-item dt { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); font-weight: 600; }
-.overview-status-item dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
-.overview-status-value { font-size: var(--text-workspace-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+.overview-notice { margin-top: var(--space-workspace-xl); }
+
+/* Três cartões que levam a uma página. */
+.overview-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-workspace-lg);
+  margin-top: var(--space-workspace-lg);
+}
+.overview-tile-label { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); font-weight: 600; line-height: 1.4; }
+.overview-tile-meta { margin-top: calc(var(--space-workspace-xs) * -1); color: var(--color-ledger-muted); font-size: var(--text-workspace-xs); font-variant-numeric: tabular-nums; }
+.overview-tile-value { margin-top: var(--space-workspace-xs); font-size: var(--text-workspace-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; overflow-wrap: anywhere; }
+.overview-release-title { font-size: var(--text-workspace-body); line-height: 1.45; letter-spacing: 0; }
 .overview-figure { font-variant-numeric: tabular-nums; color: var(--color-ledger-mineral); }
 .overview-status-empty { color: var(--color-ledger-muted); font-size: var(--text-workspace-body); font-weight: 500; letter-spacing: 0; }
-.overview-status-detail { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.5; }
-.overview-status-detail:empty { display: none; }
-.overview-status-action { margin-top: var(--space-workspace-xs) !important; }
-.overview-status .ledger-notice { margin-top: var(--space-workspace-md); }
-
-/* Última versão: compacta, com o histórico como está publicado. */
-.overview-release { grid-area: release; display: grid; align-content: start; gap: var(--space-workspace-xs); }
-.overview-release .ledger-section-head { margin-bottom: var(--space-workspace-sm); }
-.overview-release h3 { font-size: var(--text-workspace-body); font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
-.overview-release > p { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.55; }
+/* Ocupa a largura do cartão: os blocos de espera em % precisam de uma largura real. */
+.overview-tile-detail { align-self: stretch; color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.5; overflow-wrap: anywhere; }
 
 @media (max-width: 1100px) {
-  .overview-chat { grid-template-columns: minmax(0, 1fr); }
-  .overview-qr { justify-items: start; text-align: left; grid-template-columns: auto minmax(0, 1fr); align-items: center; }
+  .overview-chat { padding-inline: var(--space-workspace-2xl); }
   .overview-qr-code { width: 112px; height: 112px; }
 }
 @media (max-width: 860px) {
-  .overview-desk { grid-template-columns: minmax(0, 1fr); grid-template-areas: "chat" "status" "release"; grid-template-rows: auto; }
+  .overview-tiles { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
   .overview-chat { padding: var(--space-workspace-2xl) var(--space-workspace-xl); }

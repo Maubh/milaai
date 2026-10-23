@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import "./workspace-skeleton.css";
 
 type BoneSize = "title" | "heading" | "line" | "short" | "tiny" | "button" | "logo" | "qr" | "figure";
@@ -9,14 +9,31 @@ export function Bone({ size = "line" }: { size?: BoneSize }) {
 }
 
 /**
+ * Bloco de uma linha de texto que ainda não chegou. Vai dentro do próprio
+ * elemento de texto (título, valor, detalhe): a altura da linha é a real.
+ */
+export function TextBone({ w = "100%" }: { w?: string }) {
+  return <span className="skeleton-text" style={{ "--skeleton-w": w } as CSSProperties} aria-hidden="true" />;
+}
+
+/**
+ * Texto fixo já conhecido, coberto por um bloco em cada linha: mantém as
+ * quebras e a altura reais sem mostrar o conteúdo antes da hora.
+ */
+export function TextMask({ children }: { children: ReactNode }) {
+  return <span className="skeleton-mask">{children}</span>;
+}
+
+/**
  * Moldura de carregamento de uma rota: anuncia uma vez para leitor de tela e
- * esconde os blocos, que são só a geometria da página que está chegando.
+ * deixa a página que está chegando oculta e inerte: ela só dá a geometria.
  */
 export default function WorkspaceSkeleton({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="workspace-skeleton" role="status" aria-live="polite" aria-busy="true">
       <span className="sr-only">{label}</span>
-      <div aria-hidden="true">{children}</div>
+      {/* Inerte: a página dentro pode ter links e botões reais, que não podem receber foco escondidos. */}
+      <div aria-hidden="true" inert>{children}</div>
     </div>
   );
 }

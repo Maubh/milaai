@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Bone, TextBone } from "./WorkspaceSkeleton";
 import "./integration-row.css";
 
 export type IntegrationTone = "positive" | "neutral" | "pro" | "error";
@@ -6,9 +7,9 @@ export type IntegrationTone = "positive" | "neutral" | "pro" | "error";
 interface Props {
   /** Marca da ferramenta (logo). */
   mark: ReactNode;
-  name: string;
-  detail: string;
-  description: string;
+  name: ReactNode;
+  detail: ReactNode;
+  description: ReactNode;
   /** Consentimento / uso dos dados, abaixo da descrição. */
   details?: ReactNode;
   /** Nível exigido (ex.: Pro). Vazio mantém o lugar para alinhar as colunas. */
@@ -47,5 +48,23 @@ export default function IntegrationRow({ mark, name, detail, description, detail
       <div className="integration-item-actions">{actions}</div>
       {expansion ? <div className="integration-item-expansion">{expansion}</div> : null}
     </li>
+  );
+}
+
+/**
+ * Lugar de uma linha enquanto o vault não respondeu: as mesmas colunas, sem
+ * nome nem estado. Não diz qual ferramenta está conectada nem se a Meta entra.
+ */
+export function IntegrationRowPending() {
+  return (
+    <IntegrationRow
+      state="loading"
+      mark={<Bone size="logo" />}
+      name={<TextBone w="9ch" />}
+      detail={<TextBone w="14ch" />}
+      description={<><TextBone /><TextBone w="45%" /></>}
+      status={null}
+      actions={<Bone size="button" />}
+    />
   );
 }

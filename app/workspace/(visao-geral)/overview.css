@@ -1,5 +1,5 @@
 /* Hallmark · store desk · overview: conversation (2/3) + real account state (1/3) + latest release · existing mila mineral */
-@import "../../tokens.css";
+@import "../../../tokens.css";
 
 .overview-store { margin-top: var(--space-workspace-xs); }
 

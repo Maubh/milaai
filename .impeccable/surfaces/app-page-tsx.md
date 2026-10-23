@@ -2,7 +2,7 @@
 version: 1
 slug: "app-page-tsx"
 primary_target: "app/page.tsx"
-related_targets: ["app/workspace/page.tsx"]
+related_targets: ["app/workspace/(visao-geral)/page.tsx"]
 ---
 
 THESIS: A bancada de avaliação une a peça e a matemática do preço; recusa o hero SaaS centralizado e a repetição de cartões de recursos.

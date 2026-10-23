@@ -437,7 +437,7 @@
     ],
     "breakpoints": [
       {
-        "name": "nav-second-row",
+        "name": "mobile-dock",
         "value": "1023px"
       },
       {
@@ -482,22 +482,35 @@
       }
     ],
     "review": {
-      "scope": "Acabamento material Cadra — proposta A — 2026-10-23",
+      "scope": "Preferência de navegação mobile, proposta A, 2026-10-23",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "review_cadra_material; fechamento final confirmado pelo coordenador",
+      "reviewer": "review_mobile_dock; fechamento final confirmado pelo coordenador",
       "evidence": [
-        "CADRA-LIVE-PLAN.md",
-        "CADRA-A-PACKAGE.md",
-        "cadra-live/final/final.json (build-a7; material/motion/sino)",
-        "cadra-live/close/close.json (build-a8; topo320 e smoke de rotas)",
-        "cadra-live/skel-tiles/skel-tiles.json (build-a9; slot final de skeleton)"
+        "DOCK-PACKAGE.md",
+        "cadra-live/dock/dock.json e PNGs (build-a10)"
       ],
-      "validation": "Claude reportou npm test 94 pass, 1 skip, 0 fail; TypeScript limpo e build-a9. Coordenador comparou 103 arquivos runtime contra build-a9, zero divergências e BUILD_ID presente; git diff --check limpo na conferência do coordenador. Slot overview-tile-detail: align-self:stretch; zeroBones 0; detalhe do Plano 270x42 em 1440 e 309x42 em 375 nos estados loading/ready. Três caixas iguais: 1440 todas336x198;375 alturas161/182/153. Reviewer confirmou o slot final de skeleton e encerrou com ship, remaining clear; SHIP anteriores de material/menu/sino/topo320 mantidos. Documenter leu fontes e JSONs e validou documentação, sem executar checks de aplicação. Código commitado por Claude em a7afea3, confirmado pelo coordenador; documentação em commit separado.",
-      "limits": "Checks visuais usam sandbox e APIs interceptadas para espera; não comprovam OAuth real nem backend de produção, cuja matriz não foi refeita. Skip de paridade backend mantido. qa1 e divergências antigas do skeleton em close.json são históricas; skel-tiles.json é a prova final do slot. Seed imagem N/A; code-led; Cadra critique-reference, sem bundles/assets copiados.",
+      "validation": "Reviewer encerrou com ship, remaining clear, sem material_fix no escopo: layouts de 320/375/414/768px e desktop de 1440px; quatro links, ativo, foco, fim das quatro rotas, estado não lido e movimento reduzido. Claude reportou 94 pass, 1 skip e 0 fail, TypeScript e build-a10. Coordenador comparou 103 arquivos runtime com build-a10, zero divergências e BUILD_ID presente; conferiu os hashes dos dois arquivos Shell no lock e git diff --check limpo. Código commitado por Claude em 44e74e0, confirmado pelo coordenador. Documenter leu fontes, pacote e JSON de evidência; não executou checks de aplicação.",
+      "limits": "Headless com inset de área segura igual a zero; a área segura física não foi comprovada. Dados do sandbox não comprovam OAuth real nem backend de produção. Movimento reduzido salta entre destinos sem posições intermediárias. Refinamento code-led, sem seed, novo estudo ou assets. B e main fora do escopo, sem merge ou push.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Acabamento material Cadra — proposta A — 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "review_cadra_material; fechamento final confirmado pelo coordenador",
+        "evidence": [
+          "CADRA-LIVE-PLAN.md",
+          "CADRA-A-PACKAGE.md",
+          "cadra-live/final/final.json (build-a7; material/motion/sino)",
+          "cadra-live/close/close.json (build-a8; topo320 e smoke de rotas)",
+          "cadra-live/skel-tiles/skel-tiles.json (build-a9; slot final de skeleton)"
+        ],
+        "validation": "Claude reportou npm test 94 pass, 1 skip, 0 fail; TypeScript limpo e build-a9. Coordenador comparou 103 arquivos runtime contra build-a9, zero divergências e BUILD_ID presente; git diff --check limpo na conferência do coordenador. Slot overview-tile-detail: align-self:stretch; zeroBones 0; detalhe do Plano 270x42 em 1440 e 309x42 em 375 nos estados loading/ready. Três caixas iguais: 1440 todas336x198;375 alturas161/182/153. Reviewer confirmou o slot final de skeleton e encerrou com ship, remaining clear; SHIP anteriores de material/menu/sino/topo320 mantidos. Documenter leu fontes e JSONs e validou documentação, sem executar checks de aplicação. Código commitado por Claude em a7afea3, confirmado pelo coordenador; documentação em commit separado.",
+        "limits": "Checks visuais usam sandbox e APIs interceptadas para espera; não comprovam OAuth real nem backend de produção, cuja matriz não foi refeita. Skip de paridade backend mantido. qa1 e divergências antigas do skeleton em close.json são históricas; skel-tiles.json é a prova final do slot. Seed imagem N/A; code-led; Cadra critique-reference, sem bundles/assets copiados.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Correção de esqueletos — 2026-10-23",
         "disposition": "ship",
@@ -538,7 +551,7 @@
       "name": "Cápsula de navegação",
       "kind": "nav",
       "refersTo": "nav-track",
-      "description": "Três destinos em cápsula translúcida; amostra estática do estado ativo. Na aplicação, clip-path lead/trail acompanha clique, teclado e histórico; movimento reduzido salta direto.",
+      "description": "Três destinos no desktop em cápsula translúcida; amostra estática do estado ativo. Na aplicação, clip-path lead/trail acompanha clique, teclado e histórico; movimento reduzido salta direto. Até 1023px, dock fixo com quatro destinos, ícones, rótulos e estado de versão não lida em Atualizações; área segura e espaço inferior reservados.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Sua loja\"><a class=\"ds-nav-item\" aria-current=\"page\" href=\"/workspace\">Visão geral</a><a class=\"ds-nav-item\" href=\"/workspace/integracoes\">Integrações</a><a class=\"ds-nav-item\" href=\"/workspace/plano\">Meu plano</a></nav>",
       "css": ".ds-nav { position:relative; font-family:var(--font-workspace,Manrope,sans-serif); display:inline-flex; gap:2px; padding:4px; border-radius:999px; background:var(--color-desk-glass); box-shadow:inset 0 0 0 1px var(--color-desk-hairline); } .ds-nav-item { display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border-radius:999px; color:var(--color-ledger-ink); font-size:.875rem; font-weight:600; text-decoration:none; white-space:nowrap; } a.ds-nav-item:hover { background:var(--color-desk-tint); } a.ds-nav-item:focus-visible { position:relative; z-index:1; outline:2px solid var(--color-ledger-focus); outline-offset:-2px; } a.ds-nav-item[aria-current]:focus-visible { color:var(--color-ledger-mineral-ink); outline-color:var(--color-ledger-focus-on-mineral); } .ds-nav-item[aria-current] { background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); }"
     },
@@ -600,7 +613,7 @@
   ],
   "narrative": {
     "northStar": "A mesa da loja",
-    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.\n\nA Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, a navegação fica sob a marca; o sino abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.",
+    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.\n\nA Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, quatro destinos ficam no dock inferior; o sino do topo também abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.",
     "keyCharacteristics": [
       "Canvas marfim com pano tonal fixo; painéis translúcidos com filete claro de 1px, brilho interno e sombra longa suave.",
       "Preenchimento mineral concentrado no destino ativo, na ação principal e no painel da conversa; texto mineral também sinaliza marca, links e pequenos destaques.",
@@ -639,7 +652,7 @@
       "Do usar linhas pautadas para listas de trabalho e cartões inteiros como links para destinos; manter a hierarquia entre conversa, dados da conta e versões.",
       "Do mostrar só estado lido da sessão ou do vault; quando a leitura falha, dizer \"Não deu para ler…\" com \"Tentar de novo\".",
       "Do preservar os controles em 320px: encurtar rótulos ou usar ícone com nome acessível, como o WhatsApp do topo até 360px.",
-      "Do respeitar `prefers-reduced-motion`: pílula e rolagem saltam ao destino; cartões não sobem; botões e sino não escalam; esqueletos não pulsam."
+      "Do respeitar `prefers-reduced-motion`: pílulas mudam de destino sem deslocamento; cartões não sobem; botões e sino não escalam; esqueletos não pulsam."
     ],
     "donts": [
       "Don't inventar métricas, gráficos, notificações ou números que a sessão e o histórico real não informam; a faixa de três cartões representa destinos, sem dados promocionais.",

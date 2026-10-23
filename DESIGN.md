@@ -165,7 +165,7 @@ Este documento registra a proposta A da área logada, na branch `feat/workspace-
 
 A área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.
 
-A Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, a navegação fica sob a marca; o sino abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.
+A Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, quatro destinos ficam no dock inferior; o sino do topo também abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.
 
 **Key Characteristics:**
 - Canvas marfim com pano tonal fixo; painéis translúcidos com filete claro de 1px, brilho interno e sombra longa suave.
@@ -219,7 +219,7 @@ Restrito: neutros marfim quentes, um acento mineral, cores semânticas só para 
 
 ## Layout
 
-Conteúdo em coluna de até 1120px com respiro lateral de 16 a 40px. A barra flutua no fluxo: marca e loja à esquerda, três destinos no centro, WhatsApp, sino e conta à direita. Abaixo de 1024px a cápsula ocupa uma segunda faixa sob a marca, com rolagem horizontal interna, máscara nas bordas e destino ativo trazido à vista. Não há dock inferior nem barra fixa.
+Conteúdo em coluna de até 1120px com respiro lateral de 16 a 40px. A barra flutua no fluxo: marca e loja à esquerda, três destinos no centro, WhatsApp, sino e conta à direita. Até 1023px a cápsula dá lugar ao dock fixo inferior com quatro destinos, enquanto marca, WhatsApp, sino e conta permanecem no topo em fluxo. O dock respeita a área segura do aparelho; o conteúdo reserva espaço inferior para ele e para essa área.
 
 Na visão geral, uma faixa mineral compacta reúne conversa e QR; abaixo, três cartões levam a Integrações, Plano e Última versão. Até 860px a faixa de cartões vira uma coluna. O QR mede 132px, passa a 112px até 1100px e sai até 720px. Espaçamento em degraus de 4px. Linhas de integração herdam cinco colunas por subgrid: marca (6,5rem) · texto (flexível) · nível (3,5rem) · estado (8,5rem) · ação (11,5rem), com intervalo de 24px. Abaixo de 760px do container, marca, nível e estado ficam na primeira linha; texto, ação e expansão ocupam a largura.
 
@@ -264,8 +264,8 @@ Raios coordenados: controles 10px, áreas de recuo 14px, popovers 16px, painéis
 
 ### Navigation
 - **Desktop (≥1024px):** cápsula translúcida com três destinos: Visão geral, Integrações e Meu plano. Abas de 40px; hover apenas acrescenta tinta suave. O ativo é uma cópia mineral dos rótulos, oculta da árvore acessível e recortada por `clip-path`. A borda da frente parte primeiro (320ms), a de trás segue (380ms após 110ms), com `cubic-bezier(0.22, 1, 0.36, 1)`.
-- **Mudança de destino:** começa no clique simples e se reconcilia com a rota; teclado e voltar/avançar usam o mesmo caminho. Cliques modificados não movem a pílula. Em Atualizações, sem aba correspondente, ela desaparece. Não há slide da página.
-- **Celular e tablet:** cápsula na faixa abaixo da marca; abas de 44px, rolagem horizontal e máscara de 12px nas bordas. A aba ativa rola à vista. Com movimento reduzido, posição e rolagem mudam diretamente, sem slide.
+- **Mudança de destino no desktop:** começa no clique simples e se reconcilia com a rota; teclado e voltar/avançar usam o mesmo caminho. Cliques modificados não movem a pílula. Em Atualizações, sem aba correspondente, ela desaparece. Não há slide da página.
+- **Celular e tablet (≤1023px):** dock fixo inferior com Visão geral, Integrações, Meu plano e Atualizações, cada um com ícone e rótulo. Links de pelo menos 56px de altura; o ativo recebe pílula mineral compartilhada e `aria-current="page"`. Atualizações usa o mesmo estado de versão não lida e nome acessível do sino. O dock respeita `safe-area-inset-bottom`; o conteúdo reserva espaço inferior. Movimento reduzido remove o deslocamento da pílula.
 - **Topo estreito (≤360px):** WhatsApp vira controle circular de 44px só com ícone visível; o nome permanece como texto oculto para tecnologia assistiva, preservando espaço para a marca.
 - **Conta:** avatar em pílula translúcida com filete; menu sólido com nome, loja e "Sair da conta", foco no sair ao abrir, Esc devolve o foco.
 
@@ -310,7 +310,7 @@ Registro do acabamento material: `review_cadra_material` encerrou com `ship` e `
 - **Do** usar linhas pautadas para listas de trabalho e cartões inteiros como links para destinos; manter a hierarquia entre conversa, dados da conta e versões.
 - **Do** mostrar só estado lido da sessão ou do vault; quando a leitura falha, dizer "Não deu para ler…" com "Tentar de novo".
 - **Do** preservar os controles em 320px: encurtar rótulos ou usar ícone com nome acessível, como o WhatsApp do topo até 360px.
-- **Do** respeitar `prefers-reduced-motion`: pílula e rolagem saltam ao destino; cartões não sobem; botões e sino não escalam; esqueletos não pulsam.
+- **Do** respeitar `prefers-reduced-motion`: pílulas mudam de destino sem deslocamento; cartões não sobem; botões e sino não escalam; esqueletos não pulsam.
 
 ### Don't:
 - **Don't** inventar métricas, gráficos, notificações ou números que a sessão e o histórico real não informam; a faixa de três cartões representa destinos, sem dados promocionais.

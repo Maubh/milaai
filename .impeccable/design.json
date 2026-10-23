@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T16:01:17+00:00",
+  "generatedAt": "2026-10-23T16:42:28.238043+00:00",
   "title": "Design System: mila. área logada",
   "extensions": {
     "colorMeta": {
@@ -342,7 +342,7 @@
       {
         "name": "route-skeleton-pulse",
         "value": "1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1 → 0.5, infinite alternate",
-        "purpose": "Esqueletos das quatro rotas; desligado em prefers-reduced-motion. Anúncio único de carregamento e formas aria-hidden."
+        "purpose": "Formas, TextBone, TextMask e QR pendente nas rotas e no carregamento cliente; animation: none em prefers-reduced-motion. O fallback RSC usa conteúdo aria-hidden e inert; o cliente mantém um único status de leitura."
       }
     ],
     "breakpoints": [
@@ -386,7 +386,24 @@
         "name": "conversation-action-full",
         "value": "360px"
       }
-    ]
+    ],
+    "review": {
+      "scope": "Correção de esqueletos — 2026-10-23",
+      "disposition": "ship",
+      "remaining": "clear",
+      "reviewer": "review_skeleton_fix; fechamento confirmado pelo coordenador",
+      "evidence": [
+        "proof-a-1440",
+        "proof-a-375",
+        "proof-a-fail",
+        "nov-a-1440",
+        "nov-a-375",
+        "rm.mjs"
+      ],
+      "validation": "Claude: 94 pass, 1 skip, 0 fail; TypeScript e build-a6 exit 0; logs confirmados pelo coordenador. Fontes e capturas das quatro rotas em 1440/375px, reload/menu, API cliente/RSC, falha/retry e reduced-motion revisados. Atualizações: 41 máscaras para zero, caixas iguais, cabeçalho com largura positiva, sem overflow. Lock CSS atualizado após revisão, sem frozen drift, segundo o coordenador.",
+      "limits": "Checks de aplicação não executados pelo documenter; fixtures/APIs interceptadas e capturas não comprovam OAuth real nem backend de produção; skip de paridade com backend mantido.",
+      "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+    }
   },
   "components": [
     {

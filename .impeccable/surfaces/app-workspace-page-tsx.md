@@ -1,8 +1,8 @@
 ---
 version: 1
 slug: "app-workspace-page-tsx"
-primary_target: "app/workspace/page.tsx"
-related_targets: ["app/workspace/layout.tsx","components/WorkspaceShell.tsx","app/workspace/integracoes/page.tsx","app/workspace/plano/page.tsx","app/workspace/novidades/page.tsx","app/integrations/[app]/page.tsx"]
+primary_target: "app/workspace/(visao-geral)/page.tsx"
+related_targets: ["app/workspace/(visao-geral)/loading.tsx","app/workspace/(visao-geral)/overview.css","app/workspace/(visao-geral)/OverviewView.tsx","app/workspace/plano/PlanView.tsx","app/workspace/novidades/UpdatesView.tsx","components/WorkspaceSkeleton.tsx","components/workspace-skeleton.css","components/IntegrationRow.tsx","components/ReleaseTimeline.tsx","app/workspace/layout.tsx","components/WorkspaceShell.tsx","app/workspace/integracoes/page.tsx","app/workspace/plano/page.tsx","app/workspace/novidades/page.tsx","app/integrations/[app]/page.tsx"]
 ---
 
 Proposal: A — "A mesa da loja", branch `feat/workspace-opus-proposal`. Proposta independente, inspirada nos princípios visuais da Cadra. A proposta B está em outro worktree e tem documentação própria; este registro não a descreve nem autoriza merge.
@@ -42,7 +42,7 @@ Commit `0122676`: `loading.tsx` nas quatro rotas e `WorkspaceSkeleton`, com geom
 
 Commit `a668e69`: plano não lido não recebe nome deduzido. Correções finais no commit `7fff761`: `informedPlan` deriva somente do plano reconhecido na sessão e `isShownCurrentPlan` impede selo de plano atual quando o dado está ausente; o parâmetro `sp.plan` deixa de alterar a UI. Catálogo/estado das integrações ficam em `lib/integration-catalog.ts`, módulo puro compartilhado; conexão continua derivada do vault e plano não lido produz "Não verificado" nas ferramentas que o exigem. A fonte foi conferida nesta atualização documental. O orquestrador confirmou `planfix-a/result.json` e capturas; o reviewer final deu `ship` para os dois achados, conforme relato do orquestrador, com fontes iguais às da A.
 
-## Estado da documentação e revisão
+## Estado da documentação e revisão — lote anterior
 
 `DESIGN.md` e `.impeccable/design.json` atualizados para a proposta A. Os ajustes de Pro e seleção Meta foram conferidos diretamente nas fontes; agrupamento final e CTA foram conferidos pelo orquestrador e reviewer. A revisão terminou com disposition `ship` no lote anterior e também no delta final (remaining clear), conforme reportado pelo orquestrador. A proposta B permanece independente em outro worktree; este fechamento abrange somente A, sem concluir o objetivo global das duas propostas nem autorizar merge.
 
@@ -51,3 +51,13 @@ Checks finais da A após as correções: 94 testes aprovados, 1 skip e 0 falhas,
 Evidência visual reportada: capturas finais de Meta e das seções em 1440px, 375px e 320px, conferidas pelo orquestrador após os ajustes. Repositório de evidência: `/private/tmp/claude-501/-Users-msvasconcelos-Code-personal-milaai/6feefd7e-805c-470b-8c13-3b65042316ad/scratchpad`. As capturas anteriores `a-final` das 09:14 e os estados das 09:15 pertencem à sequência de trabalho; o fechamento se apoia na conferência final reportada, sem inferir aprovação apenas do nome de arquivo.
 
 Raster de interface: QR gerado localmente a partir do link de WhatsApp da sessão/fallback configurado; logos das ferramentas e vetores da marca preexistem em `public/integrations/` e `public/brand/vectors/`. Não houve geração de imagem nesta revisão documental.
+
+## Correção de esqueletos — 2026-10-23
+
+Delta conferido nas fontes e encerrado com `disposition: ship`, `remaining: clear` por `review_skeleton_fix`, conforme confirmação final do coordenador. A visão geral saiu do segmento pai para `app/workspace/(visao-geral)/{page.tsx,loading.tsx,overview.css}`; `/workspace` e o gate pai permanecem, e o fallback da visão geral deixa de capturar Integrações, Meu plano e Atualizações. `OverviewView` e `PlanView` agora são a apresentação compartilhada por página e `loading.tsx`, inclusive durante fetch inicial e nova tentativa no cliente. `TextBone` herda a tipografia do elemento que reserva; o QR pendente usa as dimensões reais da moldura (A: 148px, 112px até 1100px, oculto até 720px).
+
+No RSC, `WorkspaceSkeleton` expõe um anúncio e torna o conteúdo `aria-hidden` e `inert`. No cliente há um único status de leitura; links estáticos continuam acessíveis e ações dependentes de dados aguardam sua leitura. Integrações reserva três áreas neutras com `IntegrationRowPending`/`IntegrationRow` e subgrid, sem inferir conectadas, contagem ou allowlist da Meta. `UpdatesView` e `ReleaseTimeline` compartilham a prop `loading` e `TextMask`, conservando textos, quebras e estrutura do histórico no skeleton e a apresentação pronta. O CSS de movimento reduzido desliga o pulso de formas, texto, máscara e QR pendente.
+
+Evidências finais, atribuídas ao reviewer e ao coordenador: fontes finais e capturas das quatro rotas em A/B, 1440px e 375px, cobrindo reload, navegação pelo menu, espera de API no cliente, fallback RSC, falha, nova tentativa e movimento reduzido. Neste worktree, provas `proof-a-1440`, `proof-a-375`, `proof-a-fail`, `nov-a-1440` e `nov-a-375`, no scratchpad `/private/tmp/claude-501/-Users-msvasconcelos-Code-personal-milaai/6feefd7e-805c-470b-8c13-3b65042316ad/scratchpad`; diagnóstico inicial em `DIAG-SKELETON.md`. Em Atualizações, 41 máscaras no esqueleto passam a zero na página pronta com caixas iguais; cabeçalho com largura positiva e sem overflow. `rm.mjs` confirmou `animation: none` com movimento reduzido, `skeleton-pulse` no modo normal e um único status acessível. O SHIP desta correção é independente dos SHIP históricos acima.
+
+Checks finais reportados por Claude e confirmados pelo coordenador a partir dos logs: 94 testes aprovados, 1 skip e 0 falhas neste worktree; TypeScript e build isolado `build-a6` com exit 0. O lock do hash CSS foi atualizado após a revisão, sem drift do conteúdo congelado, conforme confirmação do coordenador. O documenter não executou esses checks de aplicação. Limites: fixtures/APIs interceptadas e provas visuais não comprovam OAuth real nem backend de produção; o skip de paridade com o backend continua registrado. Fonte final encerrada pelo coordenador; documentação pronta para commit separado desta unidade por Claude, sem merge ou push.

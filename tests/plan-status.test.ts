@@ -45,6 +45,10 @@ test("plano: nenhum título carrega sufixo de situação", () => {
   }
 });
 
+test("plano: sem plan na sessão o nome não é deduzido", () => {
+  assert.equal(readPlanStatus({ billing: "pilot" }, BEFORE).title, "Plano não informado");
+});
+
 test("plano: founder, comped, pago e trial_expirado", () => {
   const founder = readPlanStatus({ role: "founder", billing: "pilot", plan: "essencial" }, AFTER);
   assert.deepEqual([founder.kind, founder.title, founder.situation, founder.hiringLocked], ["founder", "Plano Essencial", "Cortesia, sem cobrança", true]);

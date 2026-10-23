@@ -22,7 +22,7 @@ export interface PlanStatus {
   kind: PlanKind;
   /** Plano da regra de contratação (no teste encerrado a regra assume Pro). */
   currentPlan: "essencial" | "pro";
-  /** Nome do plano como a sessão informa: só "Plano Essencial" ou "Plano Pro". */
+  /** Nome do plano como a sessão informa: "Plano Essencial", "Plano Pro" ou "Plano não informado". */
   title: string;
   /** Situação comercial, separada do nome: em teste, cortesia, em dia, encerrado. */
   situation: string | null;
@@ -57,7 +57,8 @@ export function readPlanStatus(session: PlanSession, now: Date = new Date()): Pl
 
   const kind: PlanKind = isFounder ? "founder" : isPaid ? "paid" : trialOpen ? "trial" : isTrialExpired ? "trial_ended" : "plan";
   // O nome sai do `plan` da sessão; a condição comercial vai em `situation`.
-  const title = session.plan === "pro" ? "Plano Pro" : session.plan === "essencial" ? "Plano Essencial" : currentPlan === "pro" ? "Plano Pro" : "Plano Essencial";
+  // Plano ausente na sessão não vira um nome deduzido pela regra.
+  const title = session.plan === "pro" ? "Plano Pro" : session.plan === "essencial" ? "Plano Essencial" : "Plano não informado";
   const situation = {
     founder: "Cortesia, sem cobrança",
     paid: "Assinatura em dia",

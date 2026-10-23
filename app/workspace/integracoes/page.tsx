@@ -84,7 +84,8 @@ export default async function IntegracoesPage({
 
   let providers: ProviderStatus[] = [];
   let consultou = false;
-  let userPlan = "pro";
+  // Sem plano na resposta do vault a página não presume Pro.
+  let userPlan: string | null = null;
   let storeName: string | null = null;
   if (token) {
     const { status, data } = await proxyOAuth("/api/oauth/providers");
@@ -130,20 +131,22 @@ export default async function IntegracoesPage({
     const state = live?.connected ? "connected" : live ? live.app_configured ? "available" : "soon" : "unknown";
     const presentation = PRESENTATION[i.id];
     const isVendas = groupId === "vendas";
-    const bloqueadoPro = isVendas && userPlan !== "pro" && !live?.connected;
+    // Plano não lido: o que depende dele fica "Não verificado", nunca liberado.
+    const planoNaoLido = isVendas && userPlan === null && !live?.connected;
+    const bloqueadoPro = isVendas && userPlan !== null && userPlan !== "pro" && !live?.connected;
     // Estado da conexão (vault) e nível do plano ficam em lugares separados.
     // Bloqueado no plano: o selo Pro já diz a exigência; o estado fica vazio.
     const status: { label: string; tone: IntegrationTone } | null = live?.connected
       ? { label: "Conectado", tone: "positive" }
       : bloqueadoPro ? null
       : state === "soon" ? { label: "Em breve", tone: "neutral" }
-      : state === "unknown" ? { label: "Não verificado", tone: "neutral" }
+      : state === "unknown" || planoNaoLido ? { label: "Não verificado", tone: "neutral" }
       : { label: "Disponível", tone: "neutral" };
 
     return (
       <IntegrationRow
         key={i.id}
-        state={bloqueadoPro ? "locked" : state}
+        state={bloqueadoPro ? "locked" : planoNaoLido ? "unknown" : state}
         mark={<ToolMark provider={i.id} />}
         name={i.nome}
         detail={presentation.detail}

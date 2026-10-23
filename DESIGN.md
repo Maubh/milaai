@@ -138,7 +138,7 @@ components:
 
 **Creative North Star: "A mesa da loja"**
 
-Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B será independente e ainda não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.
+Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.
 
 A área logada é uma mesa de trabalho: um canvas marfim um tom abaixo dos painéis, onde cada painel tem uma densidade própria e um trabalho só. A conversa com a mila é o único painel mineral; o estado da conta (conexões, plano, versão) fica num painel claro ao lado; as listas de trabalho (integrações, histórico, recursos do plano) vivem em linhas pautadas dentro de painéis. É uma interface Operate: sóbria e próxima, familiar no uso, com a marca nos detalhes (o verde mineral, o ponto do `mila.`, o raio largo).
 
@@ -253,10 +253,13 @@ Uma área de recuo sob a linha conectada: resumo legível com nome do catálogo,
 O salvamento da fonte e do filtro antecede o envio; se falhar, a sincronização para. O resumo mostra a fonte selecionada e distingue alterações não salvas da configuração salva, inclusive quando "Configurar" está fechado. Uma nota informa que "Sincronizar" salva antes a seleção. Alterações de fonte e filtro são indicadas separadamente ou juntas; fonte ainda não salva e sugestão também são nomeadas. O container da área fica num wrapper próprio, permitindo que o recuo e suas ações respondam à largura disponível. A fonte antiga não substitui a seleção atual no resumo.
 
 ### Plano e situação
-O nome do plano e sua situação são informações distintas. Na visão geral, o plano ocupa o valor principal e a situação aparece abaixo; em "Meu plano", ficam em linhas separadas. "Em teste, sem cobrança", "Teste encerrado" e datas dependem da sessão. Não concatenar situação ao nome do plano nos exemplos do sistema.
+O nome do plano e sua situação são informações distintas. Na visão geral, o plano ocupa o valor principal e a situação aparece abaixo; em "Meu plano", ficam em linhas separadas. "Em teste, sem cobrança", "Teste encerrado" e datas dependem da sessão. Não concatenar situação ao nome do plano nos exemplos do sistema. Sem `session.plan` reconhecido, mostrar "Plano não informado" e não marcar nenhuma opção da comparação como plano atual. `informedPlan` e `isShownCurrentPlan` mantêm o nome e o selo vinculados ao dado recebido, sem transformar o fallback comercial em informação exibida. Parâmetros de URL não alteram o plano lido do vault; com plano não lido, ferramentas que o exigem ficam "Não verificado", sem presumir Pro.
 
 ### Esqueleto de carregamento
 Cada rota da área logada tem um `loading.tsx` que repete a geometria da página real com blocos neutros (raio 6px, pulso de opacidade, parado em movimento reduzido): cabeçalho, painéis e, em Integrações, as mesmas cinco colunas da lista. A barra e a navegação continuam visíveis. O bloco inteiro anuncia uma frase de carregamento para leitor de tela e esconde os ossos. Dentro do painel mineral os ossos usam o marfim translúcido do próprio painel. Dado que chega pela sessão continua com esqueleto local no valor, sem inventar número.
+
+### Carregamento de rotas
+As quatro rotas (visão geral, integrações, plano e atualizações) usam esqueletos com a geometria da página correspondente. As formas têm fundo neutro `--color-ledger-skeleton` (oklch(91% 0.008 85)); no painel mineral, marfim translúcido `--color-skeleton-on-mineral` (oklch(96.6% 0.008 85 / 0.16)). Linhas têm altura de 0,875rem e raio de 6px; títulos, 2rem de altura e raio de 8px. Botões reservam 44px e QR, 148px. O pulso alterna opacidade de 1 a 0,5 em 1,4s e fica desligado em movimento reduzido. A moldura anuncia o carregamento uma vez (`role="status"`, `aria-live="polite"`, `aria-busy="true"`); as formas ficam ocultas da árvore acessível. Elas indicam espera, sem sugerir dados da conta.
 
 ## Do's and Don'ts
 

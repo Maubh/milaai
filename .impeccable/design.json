@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T12:32:46+00:00",
+  "generatedAt": "2026-10-23T16:01:17+00:00",
   "title": "Design System: mila. área logada",
   "extensions": {
     "colorMeta": {
@@ -338,6 +338,11 @@
         "name": "press",
         "value": "translateY(1px) ou scale(0.97)",
         "purpose": "Feedback de toque em botões."
+      },
+      {
+        "name": "route-skeleton-pulse",
+        "value": "1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1 → 0.5, infinite alternate",
+        "purpose": "Esqueletos das quatro rotas; desligado em prefers-reduced-motion. Anúncio único de carregamento e formas aria-hidden."
       }
     ],
     "breakpoints": [
@@ -458,7 +463,7 @@
   ],
   "narrative": {
     "northStar": "A mesa da loja",
-    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B será independente e ainda não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho: um canvas marfim um tom abaixo dos painéis, onde cada painel tem uma densidade própria e um trabalho só. A conversa com a mila é o único painel mineral; o estado da conta (conexões, plano, versão) fica num painel claro ao lado; as listas de trabalho (integrações, histórico, recursos do plano) vivem em linhas pautadas dentro de painéis. É uma interface Operate: sóbria e próxima, familiar no uso, com a marca nos detalhes (o verde mineral, o ponto do `mila.`, o raio largo).\n\nA mesa evoluiu do \"livro da loja\" (linhas pautadas sobre papel), que segue como a gramática interna dos painéis. Referências usadas como princípio, nunca como fonte de dados, assets ou código: a demo Cadra (cápsula de navegação com destino ativo cheio, painéis tonais, composição assimétrica de densidades), Refero Superhuman/Ramp (cor pontual e superfícies tonais com escala controlada), MagicUI e 21st.dev (vocabulário do indicador compartilhado e do dock), landing.love, motionsites e scroll-craft (respiro e economia de movimento).",
+    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho: um canvas marfim um tom abaixo dos painéis, onde cada painel tem uma densidade própria e um trabalho só. A conversa com a mila é o único painel mineral; o estado da conta (conexões, plano, versão) fica num painel claro ao lado; as listas de trabalho (integrações, histórico, recursos do plano) vivem em linhas pautadas dentro de painéis. É uma interface Operate: sóbria e próxima, familiar no uso, com a marca nos detalhes (o verde mineral, o ponto do `mila.`, o raio largo).\n\nA mesa evoluiu do \"livro da loja\" (linhas pautadas sobre papel), que segue como a gramática interna dos painéis. Referências usadas como princípio, nunca como fonte de dados, assets ou código: a demo Cadra (cápsula de navegação com destino ativo cheio, painéis tonais, composição assimétrica de densidades), Refero Superhuman/Ramp (cor pontual e superfícies tonais com escala controlada), MagicUI e 21st.dev (vocabulário do indicador compartilhado e do dock), landing.love, motionsites e scroll-craft (respiro e economia de movimento).",
     "keyCharacteristics": [
       "Canvas marfim + painéis claros com sombra curta; nenhum painel tem borda.",
       "Preenchimento mineral concentrado no destino ativo, na ação principal e no painel da conversa; texto mineral também sinaliza marca, links e pequenos destaques.",

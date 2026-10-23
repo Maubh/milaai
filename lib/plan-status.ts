@@ -22,6 +22,8 @@ export interface PlanStatus {
   kind: PlanKind;
   /** Plano da regra de contratação (no teste encerrado a regra assume Pro). */
   currentPlan: "essencial" | "pro";
+  /** Plano que a sessão informa de forma explícita; null quando ausente ou desconhecido. */
+  informedPlan: "essencial" | "pro" | null;
   /** Nome do plano como a sessão informa: "Plano Essencial", "Plano Pro" ou "Plano não informado". */
   title: string;
   /** Situação comercial, separada do nome: em teste, cortesia, em dia, encerrado. */
@@ -58,7 +60,8 @@ export function readPlanStatus(session: PlanSession, now: Date = new Date()): Pl
   const kind: PlanKind = isFounder ? "founder" : isPaid ? "paid" : trialOpen ? "trial" : isTrialExpired ? "trial_ended" : "plan";
   // O nome sai do `plan` da sessão; a condição comercial vai em `situation`.
   // Plano ausente na sessão não vira um nome deduzido pela regra.
-  const title = session.plan === "pro" ? "Plano Pro" : session.plan === "essencial" ? "Plano Essencial" : "Plano não informado";
+  const informedPlan = session.plan === "pro" || session.plan === "essencial" ? session.plan : null;
+  const title = informedPlan === "pro" ? "Plano Pro" : informedPlan === "essencial" ? "Plano Essencial" : "Plano não informado";
   const situation = {
     founder: "Cortesia, sem cobrança",
     paid: "Assinatura em dia",
@@ -67,7 +70,15 @@ export function readPlanStatus(session: PlanSession, now: Date = new Date()): Pl
     plan: null,
   }[kind];
 
-  return { kind, currentPlan, title, situation, trialEnd, hiringLocked: isFounder || trialOpen };
+  return { kind, currentPlan, informedPlan, title, situation, trialEnd, hiringLocked: isFounder || trialOpen };
+}
+
+/**
+ * O cartão marcado como "seu plano" na tela. Só a sessão diz qual é: o
+ * `currentPlan` da regra continua decidindo os botões, mas nunca vira selo.
+ */
+export function isShownCurrentPlan(status: PlanStatus, planId: "essencial" | "pro"): boolean {
+  return status.kind !== "trial_ended" && status.informedPlan === planId;
 }
 
 const dayFormat = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "America/Sao_Paulo" });

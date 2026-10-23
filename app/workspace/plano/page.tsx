@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { formatTrialEnd, formatTrialEndShort, orderErrorText, readPlanStatus } from "@/lib/plan-status";
+import { formatTrialEnd, formatTrialEndShort, orderErrorText, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
 import "./plano.css";
 
 interface SessionData {
@@ -142,7 +142,7 @@ export default function WorkspacePlanoPage() {
 
   function action(planId: "essencial" | "pro") {
     if (!status) return null;
-    const isCurrent = status.kind !== "trial_ended" && status.currentPlan === planId;
+    const isCurrent = isShownCurrentPlan(status, planId);
     if (isCurrent) {
       return <button className="ledger-button plan-action" disabled>
         {status.kind === "trial" ? (trialShort ? `Seu plano · até ${trialShort}` : "Seu plano durante o teste") : "Seu plano agora"}
@@ -151,7 +151,9 @@ export default function WorkspacePlanoPage() {
     if (status.hiringLocked) {
       const label = status.kind === "founder"
         ? "Sem cobrança na sua conta"
-        : `No ${status.currentPlan === "pro" ? "Pro" : "Essencial"} ${trialShort ? `até ${trialShort}` : "durante o teste"}`;
+        : status.informedPlan
+          ? `No ${status.informedPlan === "pro" ? "Pro" : "Essencial"} ${trialShort ? `até ${trialShort}` : "durante o teste"}`
+          : trialShort ? `Disponível depois de ${trialShort}` : "Disponível quando o teste acabar";
       return <button className="ledger-button plan-action" disabled>{label}</button>;
     }
     const other = planId === "pro" ? "Pro" : "Essencial";
@@ -160,7 +162,7 @@ export default function WorkspacePlanoPage() {
       onClick={() => handleAssinar(planId)}
       disabled={orderingPlan !== null}
     >
-      {orderingPlan === planId ? "Processando…" : isPaid && status.currentPlan !== planId ? `Mudar para ${other}` : `Contratar ${other}`}
+      {orderingPlan === planId ? "Processando…" : isPaid && status.informedPlan !== null && status.informedPlan !== planId ? `Mudar para ${other}` : `Contratar ${other}`}
     </button>;
   }
 
@@ -231,7 +233,7 @@ export default function WorkspacePlanoPage() {
         </div>
         <div className="plan-compare">
           {PLANS.map((plan) => {
-            const isCurrent = !!status && status.kind !== "trial_ended" && status.currentPlan === plan.id;
+            const isCurrent = !!status && isShownCurrentPlan(status, plan.id);
             return <article className="plan-column" key={plan.id} data-current={isCurrent} aria-labelledby={`plan-${plan.id}`}>
               <div className="plan-column-head">
                 <h3 id={`plan-${plan.id}`}>{plan.name}</h3>

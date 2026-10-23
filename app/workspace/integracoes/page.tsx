@@ -1,9 +1,10 @@
 import Link from "next/link";
 import DisconnectButton from "@/components/DisconnectButton";
-import IntegrationRow, { IntegrationList, type IntegrationTone } from "@/components/IntegrationRow";
+import IntegrationRow, { IntegrationList } from "@/components/IntegrationRow";
 import IntegrationsNotice from "@/components/IntegrationsNotice";
 import MetaCatalogManager, { type LastSyncSummary } from "@/components/MetaCatalogManager";
 import { INTEGRACOES } from "@/lib/demo-data";
+import { rowStatus } from "@/lib/integration-catalog";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
@@ -104,9 +105,6 @@ export default async function IntegracoesPage({
 
   // O provedor volta com ?ok=<provider> ou ?erro=<detail> no redirect do callback.
   const sp = await searchParams;
-  if (typeof sp.plan === "string") {
-    userPlan = sp.plan.toLowerCase();
-  }
   const okParam = typeof sp.ok === "string" ? sp.ok : null;
   const erroParam = typeof sp.erro === "string" ? sp.erro : null;
 
@@ -123,49 +121,33 @@ export default async function IntegracoesPage({
 
   // Uma regra só para cada linha, onde quer que ela apareça. O plano exigido
   // depende da categoria original da ferramenta, nunca da seção em que está.
-  const groupOf = (id: string) => GROUPS.find((g) => g.providers.includes(id))?.id ?? "";
   const renderRow = (i: (typeof catalog)[number]) => {
-    const groupId = groupOf(i.id);
-
     const live = byId.get(i.id);
-    const state = live?.connected ? "connected" : live ? live.app_configured ? "available" : "soon" : "unknown";
+    const row = rowStatus(i.id, live, userPlan);
     const presentation = PRESENTATION[i.id];
-    const isVendas = groupId === "vendas";
-    // Plano não lido: o que depende dele fica "Não verificado", nunca liberado.
-    const planoNaoLido = isVendas && userPlan === null && !live?.connected;
-    const bloqueadoPro = isVendas && userPlan !== null && userPlan !== "pro" && !live?.connected;
-    // Estado da conexão (vault) e nível do plano ficam em lugares separados.
-    // Bloqueado no plano: o selo Pro já diz a exigência; o estado fica vazio.
-    const status: { label: string; tone: IntegrationTone } | null = live?.connected
-      ? { label: "Conectado", tone: "positive" }
-      : bloqueadoPro ? null
-      : state === "soon" ? { label: "Em breve", tone: "neutral" }
-      : state === "unknown" || planoNaoLido ? { label: "Não verificado", tone: "neutral" }
-      : { label: "Disponível", tone: "neutral" };
-
     return (
       <IntegrationRow
         key={i.id}
-        state={bloqueadoPro ? "locked" : planoNaoLido ? "unknown" : state}
+        state={row.state}
         mark={<ToolMark provider={i.id} />}
         name={i.nome}
         detail={presentation.detail}
         description={presentation.description}
-        tier={isVendas ? "Pro" : null}
-        status={status}
+        tier={row.requiresPro ? "Pro" : null}
+        status={row.status}
         details={(i.id === "google" || i.id === "notion") ? (
           <details className="integrations-access">
             <summary>Como seus dados são usados</summary>
             <p>{i.desc.replaceAll("caderno de fornecedores", "caderno").replaceAll("o caderno", "a lista de fornecedores").replaceAll("O caderno", "A lista de fornecedores").replaceAll("fica salvo", "fica salva")}</p>
           </details>
         ) : null}
-        actions={live?.connected ? (
+        actions={row.state === "connected" ? (
           <DisconnectButton provider={i.id} providerName={i.nome} />
-        ) : bloqueadoPro ? (
+        ) : row.state === "locked" ? (
           <Link href="/workspace/plano" className="ledger-button" aria-label={`Assinar plano Pro para conectar ${i.nome}`}>
             Assinar plano Pro <Arrow />
           </Link>
-        ) : state === "soon" ? (
+        ) : row.state === "soon" ? (
           <span className="integrations-unavailable">Ainda não disponível</span>
         ) : (
           <Link href={`/integrations/${i.id}`} className="ledger-button ledger-button-primary" aria-label={`Conectar ${i.nome}`}>

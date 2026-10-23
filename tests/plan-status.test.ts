@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { formatTrialEnd, formatTrialEndShort, orderErrorText, readPlanStatus } from "../lib/plan-status.ts";
+import { formatTrialEnd, formatTrialEndShort, isShownCurrentPlan, orderErrorText, readPlanStatus } from "../lib/plan-status.ts";
 
 const BEFORE = new Date("2026-10-23T12:00:00Z");
 const AFTER = new Date("2026-12-01T12:00:00Z");
@@ -72,4 +72,25 @@ test("pedido: erro do backend vira português com o próximo passo, sem código 
   for (const status of [0, 500, 502, 504]) {
     assert.doesNotMatch(orderErrorText(status), /cobrad/i, "sem confirmação do pagamento, a tela não promete nada sobre cobrança");
   }
+});
+
+test("plano: sem plan na sessão nenhum cartão vira \"seu plano\"; a regra interna fica igual", () => {
+  for (const plan of [null, undefined, "", "ouro"]) {
+    const s = readPlanStatus({ billing: "pilot", plan }, BEFORE);
+    assert.equal(s.informedPlan, null);
+    assert.equal(s.currentPlan, "pro", "a regra de contratação continua com o fallback");
+    assert.equal(s.hiringLocked, true);
+    assert.equal(isShownCurrentPlan(s, "pro"), false, `plan=${String(plan)}: Pro não pode aparecer como atual`);
+    assert.equal(isShownCurrentPlan(s, "essencial"), false);
+  }
+});
+
+test("plano: o cartão atual só sai do plan explícito e some no teste encerrado", () => {
+  const essencial = readPlanStatus({ billing: "pilot", plan: "essencial" }, BEFORE);
+  assert.equal(isShownCurrentPlan(essencial, "essencial"), true);
+  assert.equal(isShownCurrentPlan(essencial, "pro"), false);
+  assert.equal(isShownCurrentPlan(readPlanStatus({ billing: "pago", plan: "pro" }, BEFORE), "pro"), true);
+  const encerrado = readPlanStatus({ billing: "trial_expirado", plan: "pro" }, BEFORE);
+  assert.equal(isShownCurrentPlan(encerrado, "pro"), false);
+  assert.equal(isShownCurrentPlan(encerrado, "essencial"), false);
 });

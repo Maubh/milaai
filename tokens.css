@@ -151,3 +151,8 @@
   --size-desk-avatar: 40px;
   --dur-desk-pill: 320ms;
 }
+
+/* Route skeletons */
+:root {
+  --color-skeleton-on-mineral: oklch(96.6% 0.008 85 / 0.16);
+}

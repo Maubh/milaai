@@ -255,6 +255,9 @@ O salvamento da fonte e do filtro antecede o envio; se falhar, a sincronização
 ### Plano e situação
 O nome do plano e sua situação são informações distintas. Na visão geral, o plano ocupa o valor principal e a situação aparece abaixo; em "Meu plano", ficam em linhas separadas. "Em teste, sem cobrança", "Teste encerrado" e datas dependem da sessão. Não concatenar situação ao nome do plano nos exemplos do sistema.
 
+### Esqueleto de carregamento
+Cada rota da área logada tem um `loading.tsx` que repete a geometria da página real com blocos neutros (raio 6px, pulso de opacidade, parado em movimento reduzido): cabeçalho, painéis e, em Integrações, as mesmas cinco colunas da lista. A barra e a navegação continuam visíveis. O bloco inteiro anuncia uma frase de carregamento para leitor de tela e esconde os ossos. Dentro do painel mineral os ossos usam o marfim translúcido do próprio painel. Dado que chega pela sessão continua com esqueleto local no valor, sem inventar número.
+
 ## Do's and Don'ts
 
 ### Do:

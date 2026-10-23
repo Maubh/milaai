@@ -95,3 +95,59 @@
   --text-platform-title: clamp(1.75rem, 2.6vw, 2.125rem);
   --text-platform-price: 2.25rem;
 }
+
+/* Hallmark · workspace ledger ("livro da loja") · existing mila mineral theme
+ * Rows on ivory paper, hairline rules, mineral only for the conversation band,
+ * the primary action and the current tab. */
+:root {
+  --color-ledger-paper: var(--color-workspace-paper);
+  --color-ledger-surface: var(--color-workspace-surface);
+  --color-ledger-sand: oklch(93.5% 0.018 75);
+  --color-ledger-rule: var(--color-workspace-rule);
+  --color-ledger-rule-strong: oklch(78% 0.012 165);
+  --color-ledger-ink: var(--color-workspace-ink);
+  --color-ledger-muted: var(--color-workspace-muted);
+  --color-ledger-mineral: oklch(33.5% 0.045 184);
+  --color-ledger-mineral-hover: oklch(29% 0.042 184);
+  --color-ledger-mineral-ink: oklch(96.6% 0.008 85);
+  --color-ledger-mineral-muted: oklch(86% 0.022 170);
+  --color-ledger-active: var(--color-workspace-active);
+  --color-ledger-positive: oklch(42% 0.09 155);
+  --color-ledger-error: var(--color-integration-error);
+  --color-ledger-error-paper: var(--color-integration-error-paper);
+  --color-ledger-skeleton: oklch(91% 0.008 85);
+  --color-ledger-focus: var(--color-integration-focus);
+  --color-ledger-focus-on-mineral: oklch(96.6% 0.008 85);
+  --size-ledger-content: 1120px;
+  --size-ledger-masthead: 64px;
+  --size-ledger-tabs: 48px;
+  --size-ledger-label: 11rem;
+  --radius-ledger-band: 16px;
+  --radius-ledger-control: 10px;
+  --rule-ledger: 1px;
+  --rule-ledger-tab: 2px;
+  --text-ledger-display: 2rem;
+  --text-ledger-band: 1.5rem;
+}
+
+/* Hallmark · workspace desk ("mesa da loja") · revision 2 over the ledger
+ * Ivory canvas one step below light tonal panels; mineral pill for the
+ * current destination. Elevation is the panel shadow only (no border). */
+:root {
+  --color-desk-canvas: oklch(95.6% 0.009 85);
+  --color-desk-panel: oklch(99.2% 0.003 85);
+  --color-desk-inset: oklch(96.8% 0.007 85);
+  --color-desk-track: oklch(92.6% 0.01 85);
+  --color-desk-pill: var(--color-ledger-mineral);
+  --color-desk-pill-ink: var(--color-ledger-mineral-ink);
+  --shadow-desk-panel: 0 1px 2px oklch(27% 0.025 165 / 0.06), 0 14px 32px -22px oklch(27% 0.025 165 / 0.22);
+  --shadow-desk-bar: 0 1px 0 oklch(27% 0.025 165 / 0.06);
+  --shadow-desk-dock: 0 -1px 0 oklch(27% 0.025 165 / 0.08), 0 -10px 28px -20px oklch(27% 0.025 165 / 0.3);
+  --radius-desk-panel: 20px;
+  --radius-desk-inset: 14px;
+  --radius-desk-pill: 999px;
+  --size-desk-bar: 72px;
+  --size-desk-dock: 64px;
+  --size-desk-avatar: 40px;
+  --dur-desk-pill: 320ms;
+}

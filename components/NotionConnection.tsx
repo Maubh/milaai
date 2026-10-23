@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
 import IntegrationConnectionLayout from "./IntegrationConnectionLayout";
 
 interface Props {
@@ -15,6 +16,9 @@ interface Props {
 
 export default function NotionConnection({ token, onTokenChange, onSubmit, connecting, connected, error }: Props) {
   const [visible, setVisible] = useState(false);
+  const [waLink, setWaLink] = useState<string | null>(null);
+
+  useEffect(() => { setWaLink(getVerifiedWaLink() ?? defaultWaLink()); }, []);
 
   return (
     <IntegrationConnectionLayout
@@ -37,7 +41,8 @@ export default function NotionConnection({ token, onTokenChange, onSubmit, conne
             <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m7 12 3 3 7-7" /></svg>
             <h2>Conexão confirmada</h2>
             <p>A Mila validou seu token com o Notion. Na conversa, ela vai ajudar você a escolher uma das bases compartilhadas.</p>
-            <Link className="notion-connect-submit" href="/conversa">Voltar à conversa com a Mila</Link>
+            {waLink ? <a className="notion-connect-submit" href={waLink} target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a> : null}
+            <Link className="connect-secondary" href="/workspace/integracoes">Ver integrações</Link>
           </div>
         ) : (
           <form className="notion-connect-panel" onSubmit={onSubmit} aria-busy={connecting}>

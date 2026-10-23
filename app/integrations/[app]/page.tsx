@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
+import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
 import NotionConnection from "@/components/NotionConnection";
 import IntegrationConnectionLayout from "@/components/IntegrationConnectionLayout";
 import "../../workspace/workspace.css";
@@ -119,6 +120,10 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   const [connecting, setConnecting] = useState(false);
   const [connected, setConnected] = useState(false);
   const [erro, setErro] = useState("");
+  const [waLink, setWaLink] = useState<string | null>(null);
+
+  // Depois da montagem, como no workspace: o link verificado mora no storage.
+  useEffect(() => { setWaLink(getVerifiedWaLink() ?? defaultWaLink()); }, []);
 
   /** Conectores sem OAuth (Jueri, Notion): a lojista cola a chave. */
   async function handleGuidedKey(e: React.FormEvent) {
@@ -169,24 +174,26 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     }
   }
 
+  const back = (
+    <Link href="/workspace/integracoes" className="connect-secondary">Voltar às integrações</Link>
+  );
+
   if (!info) {
     return (
-      <div className="wrap auth-wrap">
-        <p className="tag">Transição simulada</p>
-        <h1 className="auth-title">Integração desconhecida</h1>
-        <p className="auth-lede">
-          “{app}” não está entre os conectores previstos (Bling, Olist, Nuvemshop, Jueri, Google, Notion). Nada foi
-          conectado. Escolha um caminho válido abaixo.
-        </p>
-        <p style={{ display: "flex", gap: "0.7rem", flexWrap: "wrap", marginTop: "1.5rem" }}>
-          <Link href="/conversa" className="btn btn-plum">
-            Voltar à conversa
-          </Link>
-          <Link href="/workspace/integracoes" className="btn btn-ghost">
-            Ver integrações
-          </Link>
-        </p>
-      </div>
+      <IntegrationConnectionLayout
+        name="mila."
+        title="Integração desconhecida"
+        description={<>“{app}” não está entre as integrações da mila. Nada foi conectado.</>}
+        brand={<span>mila.</span>}
+      >
+        <div className="notion-connect-panel">
+          <h2>Escolha um caminho</h2>
+          <div className="connect-actions">
+            <Link href="/workspace/integracoes" className="notion-connect-submit">Ver integrações</Link>
+            <Link href="/workspace" className="connect-secondary">Ir para a sua área</Link>
+          </div>
+        </div>
+      </IntegrationConnectionLayout>
     );
   }
 
@@ -209,33 +216,25 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               <Link href="/workspace/integracoes" className="notion-connect-submit">Ver outras integrações</Link>
             </>
           ) : connected ? (
-            <div className="integration-success-card">
-              <div className="integration-success-icon" aria-hidden="true">
-                ✓
-              </div>
-              <h2 className="integration-success-title">Conectado com sucesso!</h2>
-              <p className="integration-success-text">
-                Pronto! Conexão realizada com sucesso. Pode voltar para sua conversa com a <span className="mila-highlight">mila</span> no WhatsApp.
+            <div className="notion-connect-success" role="status">
+              <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m7 12 3 3 7-7" /></svg>
+              <h2>{info.nome} conectado</h2>
+              <p>
+                A mila conferiu o acesso com o {info.nome}. Volte ao WhatsApp para continuar a conversa.
               </p>
-              <Link href="/conversa" className="btn btn-whatsapp" style={{ width: "100%", textDecoration: "none" }}>
-                Voltar para o WhatsApp
-              </Link>
-              <Link href="/workspace/integracoes" className="hint" style={{ textDecoration: "underline" }}>
-                ← Ver todas as integrações no workspace
+              {waLink ? (
+                <a href={waLink} className="notion-connect-submit" target="_blank" rel="noopener noreferrer">
+                  Abrir WhatsApp
+                </a>
+              ) : null}
+              <Link href="/workspace/integracoes" className="connect-secondary">
+                Ver todas as integrações no workspace
               </Link>
             </div>
           ) : info.isApiKeyGuided ? (
-            /* Layout Guiado Específico do Jueri */
-            <form onSubmit={handleGuidedKey}>
-              <div className="integration-brand-badge">
-                {info.logo ? (
-                  <img src={info.logo} alt={info.nome} />
-                ) : (
-                  <span style={{ fontWeight: 700 }}>{info.nome}</span>
-                )}
-                <span className="integration-badge-tag">Passo a passo</span>
-              </div>
-
+            /* Layout guiado (Jueri): passo a passo, código de cliente e token. */
+            <form onSubmit={handleGuidedKey} aria-busy={connecting}>
+              <h2>Passo a passo</h2>
               <ol className="integration-steps">
                 <li>
                   <span className="step-num">1</span>
@@ -256,7 +255,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </ol>
 
               {info.ondeGerar ? (
-                <p className="hint" style={{ marginBottom: "0.9rem" }}>
+                <p className="connect-where">
                   <strong>Onde gerar:</strong> {info.ondeGerar}
                 </p>
               ) : null}
@@ -273,10 +272,11 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                     placeholder="Ex.: 1"
                     value={clienteId}
                     onChange={(e) => setClienteId(e.target.value)}
+                    aria-describedby={info.oQueEClienteId ? "integration-cliente-id-hint" : undefined}
                     required
                   />
                   {info.oQueEClienteId ? (
-                    <p className="hint" style={{ marginTop: "0.4rem" }}>
+                    <p id="integration-cliente-id-hint" className="connect-hint">
                       {info.oQueEClienteId}
                     </p>
                   ) : null}
@@ -298,48 +298,36 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                   }
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
+                  aria-describedby="integration-api-key-hint"
                   required
                 />
-                <p className="hint" style={{ marginTop: "0.4rem" }}>
+                <p id="integration-api-key-hint" className="connect-hint">
                   A mila <strong>confere</strong> com o {info.nome} antes de dizer que conectou.
                 </p>
               </div>
 
               {erro ? (
-                <p className="hint" role="alert" style={{ color: "#b3261e" }}>
+                <p className="connect-error" role="alert">
                   {erro}
                 </p>
               ) : null}
 
-              <div style={{ display: "grid", gap: "0.75rem", marginTop: "1.25rem" }}>
+              <div className="connect-actions">
                 <button
                   type="submit"
-                  className="btn btn-plum"
+                  className="notion-connect-submit"
                   disabled={connecting}
-                  style={{ width: "100%" }}
                 >
                   {connecting ? "Testando conexão…" : "Conectar com a mila"}
                 </button>
-                <Link
-                  href="/workspace/integracoes"
-                  className="btn btn-ghost"
-                  style={{ width: "100%", textAlign: "center" }}
-                >
-                  ← Voltar às integrações
-                </Link>
+                {back}
               </div>
             </form>
           ) : (
-            /* Conectores OAuth padrão (Bling, Olist, Google) */
-            <form onSubmit={handleOAuth}>
-              <div className="integration-brand-badge">
-                {info.logo ? (
-                  <img src={info.logo} alt={info.nome} />
-                ) : (
-                  <span style={{ fontWeight: 700 }}>{info.nome}</span>
-                )}
-                <span className="integration-badge-tag">OAuth seguro</span>
-              </div>
+            /* Conectores OAuth padrão (Olist, Nuvemshop, Google, Meta) */
+            <form onSubmit={handleOAuth} aria-busy={connecting}>
+              <h2>Autorização segura</h2>
+              <p className="notion-connect-panel-intro">Você entra na conta do {info.nome} e autoriza por lá.</p>
 
               {info.tools && info.tools.length > 0 ? (
                 <div className="integration-tools" aria-label={`O que a mila faz no ${info.nome}`}>
@@ -353,40 +341,32 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                 </div>
               ) : null}
 
-              <p style={{ fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1.25rem" }}>
+              <p className="connect-scope">
                 {info.escopoNota ? (
                   info.escopoNota
                 ) : (
                   <>
-                    Conecte sua conta {info.nome} para a{" "}
-                    <strong className="mila-highlight">mila</strong> gravar o que está
+                    Conecte sua conta {info.nome} para a mila gravar o que está
                     descrito acima. Ela acessa só o que é seu, em seu nome.
                   </>
                 )}
               </p>
 
               {erro ? (
-                <p className="hint" role="alert" style={{ color: "#b3261e" }}>
+                <p className="connect-error" role="alert">
                   {erro}
                 </p>
               ) : null}
 
-              <div style={{ display: "grid", gap: "0.75rem" }}>
+              <div className="connect-actions">
                 <button
                   type="submit"
-                  className="btn btn-plum"
+                  className="notion-connect-submit"
                   disabled={connecting}
-                  style={{ width: "100%" }}
                 >
                   {connecting ? "Conectando…" : info.buttonLabel ?? "Conectar com a mila"}
                 </button>
-                <Link
-                  href="/workspace/integracoes"
-                  className="btn btn-ghost"
-                  style={{ width: "100%", textAlign: "center" }}
-                >
-                  ← Voltar às integrações
-                </Link>
+                {back}
               </div>
             </form>
           )}

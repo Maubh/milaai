@@ -6,14 +6,16 @@ import "./novidades.css";
 export const metadata = { title: "Atualizações · mila." };
 
 export default function UpdatesPage() {
-  return <div className="workspace-releases-page">
-    <header className="releases-header">
+  return <div className="ledger-page releases-page">
+    <header className="ledger-page-head">
       <div>
-        <h1 className="work-title">Atualizações</h1>
-        <p className="work-lede">Histórico de melhorias, novas funcionalidades e correções de bugs da mila.</p>
+        <h1 className="ledger-title">Atualizações</h1>
+        <p className="ledger-lede">Melhorias, novidades e correções da mila, da mais recente para a mais antiga.</p>
       </div>
-      <span className="releases-current-version"><span>Versão atual</span><strong>v{SYSTEM_VERSION}</strong></span>
+      <p className="ledger-aside">Versão atual <strong>v{SYSTEM_VERSION}</strong></p>
     </header>
-    <ReleaseTimeline releases={RELEASES} />
+    <section className="desk-panel releases-ledger" aria-label="Histórico">
+      <ReleaseTimeline releases={RELEASES} />
+    </section>
   </div>;
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { formatTrialEnd, formatTrialEndShort, orderErrorText, readPlanStatus } from "@/lib/plan-status";
 import "./plano.css";
 
 interface SessionData {
@@ -15,9 +16,39 @@ interface SessionData {
   store_name: string | null;
 }
 
+const PLANS = [
+  {
+    id: "essencial" as const,
+    name: "Plano Essencial",
+    blurb: "Preço com margem, Raio-X e legendas para o Instagram.",
+    price: "39",
+    features: [
+      "Preço a partir da foto e do custo da peça",
+      "Raio-X de margem, taxas e impostos",
+      "Radar de concorrentes no Google Shopping",
+      "Legendas para Reels, posts e carrosséis",
+      "Leitura de notas de compra (XML e PDF)",
+    ],
+  },
+  {
+    id: "pro" as const,
+    name: "Plano Pro",
+    blurb: "Estoque, ERP e fechamento no WhatsApp.",
+    price: "69",
+    features: [
+      "Tudo do Essencial, e ainda:",
+      "Nuvemshop, Jueri e Olist; planilha pronta para a Phibo",
+      "Notion e Google Planilhas",
+      "Balanço no WhatsApp no dia 15 e último dia do mês",
+      "Aviso de carência de fornecedor",
+    ],
+  },
+];
+
 export default function WorkspacePlanoPage() {
   const [session, setSession] = useState<SessionData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
   const [orderingPlan, setOrderingPlan] = useState<string | null>(null);
   const [orderResult, setOrderResult] = useState<{
     ok: boolean;
@@ -26,57 +57,28 @@ export default function WorkspacePlanoPage() {
     msg?: string;
   } | null>(null);
 
-  useEffect(() => {
-    async function loadSession() {
-      try {
-        const res = await fetch("/api/session");
-        if (res.ok) {
-          const data = await res.json();
-          setSession(data);
-        }
-      } catch (err) {
-        console.error("Falha ao carregar sessão:", err);
-      } finally {
-        setLoading(false);
+  const loadSession = useCallback(async () => {
+    setLoading(true);
+    setFailed(false);
+    try {
+      const res = await fetch("/api/session");
+      const data = res.ok ? await res.json() : null;
+      if (data && data.ok === true) {
+        setSession(data);
+      } else {
+        setSession(null);
+        setFailed(true);
       }
+    } catch (err) {
+      console.error("Falha ao carregar sessão:", err);
+      setSession(null);
+      setFailed(true);
+    } finally {
+      setLoading(false);
     }
-    loadSession();
   }, []);
 
-  const now = new Date();
-  const trialEndsDate = session?.trial_ends_at
-    ? new Date(session.trial_ends_at)
-    : new Date("2026-11-04T23:14:28Z");
-
-  const isFounder = session?.role === "founder" || session?.billing === "comped";
-  const isPaid = session?.billing === "pago";
-  const isTrialExpired =
-    !isFounder &&
-    !isPaid &&
-    (session?.billing === "trial_expirado" ||
-      (session?.billing === "pilot" && now > trialEndsDate) ||
-      (!session?.billing && now > trialEndsDate));
-  const trialOpen = now <= trialEndsDate && !isPaid && !isFounder && !isTrialExpired;
-  const hiringLocked = isFounder || trialOpen;
-
-  const currentPlan: "essencial" | "pro" =
-    isTrialExpired ? "pro" : session?.plan === "essencial" ? "essencial" : "pro";
-  const currentIsEssencial = !isTrialExpired && currentPlan === "essencial";
-  const currentIsPro = !isTrialExpired && currentPlan === "pro";
-
-  const statusTitle = isFounder
-    ? "Plano Pro · founder"
-    : isPaid
-      ? currentPlan === "pro"
-        ? "Plano Pro"
-        : "Plano Essencial"
-      : trialOpen
-        ? "Plano Pro · 30 dias de teste"
-        : isTrialExpired
-          ? "Teste de 30 dias encerrado"
-          : currentPlan === "essencial"
-            ? "Plano Essencial"
-            : "Plano Pro";
+  useEffect(() => { loadSession(); }, [loadSession]);
 
   async function handleAssinar(planToOrder: "essencial" | "pro") {
     setOrderingPlan(planToOrder);
@@ -87,11 +89,11 @@ export default function WorkspacePlanoPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan: planToOrder }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) {
         setOrderResult({
           ok: false,
-          msg: data.detail || "Não foi possível gerar o pedido no momento. Tente novamente.",
+          msg: orderErrorText(res.status, data.detail),
         });
         return;
       }
@@ -117,207 +119,136 @@ export default function WorkspacePlanoPage() {
     } catch (err: unknown) {
       setOrderResult({
         ok: false,
-        msg: "Erro de conexão ao processar assinatura.",
+        msg: orderErrorText(0),
       });
     } finally {
       setOrderingPlan(null);
     }
   }
 
-  return (
-    <div className="work-wrap workspace-plan-page">
-              <h1 className="work-title">Meu plano</h1>
-        <p className="work-lede">
-          O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua.
-        </p>
+  const status = session ? readPlanStatus(session) : null;
+  const trialEnd = status?.trialEnd ?? null;
+  const trialShort = trialEnd ? formatTrialEndShort(trialEnd) : null;
+  const isPaid = status?.kind === "paid";
+  const lede = !status
+    ? "O plano da sua conta e os planos disponíveis."
+    : status.kind === "trial"
+      ? "O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua."
+      : status.kind === "trial_ended"
+        ? "Seu teste acabou. Escolha um plano para continuar."
+        : status.kind === "paid"
+          ? "O plano que está valendo hoje e a situação da assinatura."
+          : "O plano que está valendo hoje na sua conta.";
 
+  function action(planId: "essencial" | "pro") {
+    if (!status) return null;
+    const isCurrent = status.kind !== "trial_ended" && status.currentPlan === planId;
+    if (isCurrent) {
+      return <button className="ledger-button plan-action" disabled>
+        {status.kind === "trial" ? (trialShort ? `Seu plano · até ${trialShort}` : "Seu plano durante o teste") : "Seu plano agora"}
+      </button>;
+    }
+    if (status.hiringLocked) {
+      const label = status.kind === "founder"
+        ? "Sem cobrança na sua conta"
+        : `No ${status.currentPlan === "pro" ? "Pro" : "Essencial"} ${trialShort ? `até ${trialShort}` : "durante o teste"}`;
+      return <button className="ledger-button plan-action" disabled>{label}</button>;
+    }
+    const other = planId === "pro" ? "Pro" : "Essencial";
+    return <button
+      className={`ledger-button plan-action${planId === "pro" ? " ledger-button-primary" : ""}`}
+      onClick={() => handleAssinar(planId)}
+      disabled={orderingPlan !== null}
+    >
+      {orderingPlan === planId ? "Processando…" : isPaid && status.currentPlan !== planId ? `Mudar para ${other}` : `Contratar ${other}`}
+    </button>;
+  }
+
+  return (
+    <div className="ledger-page workspace-plan-page">
+      <header className="ledger-page-head">
+        <div>
+          <h1 className="ledger-title">Meu plano</h1>
+          <p className="ledger-lede">{lede}</p>
+        </div>
+      </header>
+
+      <div className="desk-stack">
+      <section className="ledger-section desk-panel plan-sheet" aria-labelledby="plan-sheet-title" aria-busy={loading}>
+        <div className="ledger-section-head">
+          <h2 id="plan-sheet-title">Sua conta</h2>
+        </div>
         {loading ? (
-          <div className="work-card">
-            <p>Carregando…</p>
+          <><p className="sr-only" role="status">Carregando seu plano…</p><dl className="ledger-rows">
+            {["Plano", "Situação"].map((label) => <div className="ledger-row plan-row" key={label}>
+              <dt className="ledger-row-label">{label}</dt>
+              <dd className="ledger-row-value"><span className="ledger-skeleton" aria-hidden="true" /></dd>
+            </div>)}
+          </dl></>
+        ) : failed || !status || !session ? (
+          <div className="ledger-notice" data-tone="error" role="alert">
+            <span>Não deu para ler seu plano agora. Nada mudou na sua conta.</span>
+            <button type="button" className="ledger-button" onClick={loadSession}>Tentar de novo</button>
           </div>
         ) : (
-          <>
-            {/* Card de Status do Plano Atual */}
-            <div className="plan-status-card">
-              <div className="plan-status-header">
-                <div>
-                  <h2 className="plan-status-name">{statusTitle}</h2>
-                  <p className="plan-status-meta">
-                    {session?.phone && (
-                      <>
-                        WhatsApp <strong>{session.phone}</strong>
-                      </>
-                    )}
-                    {session?.store_name && `${session.phone ? " · " : ""}${session.store_name}`}
-                  </p>
-                </div>
-                <div>
-                  {isFounder && <span className="plan-status-badge">Sem cobrança</span>}
-                  {isPaid && <span className="plan-status-badge">Em dia</span>}
-                  {trialOpen && <span className="plan-status-badge">Em teste</span>}
-                  {isTrialExpired && <span className="plan-status-badge is-ended">Teste encerrado</span>}
-                </div>
-              </div>
-
-              {trialOpen && (
-                <p className="plan-note">
-                  Você está nos 30 dias de teste do Pro, sem cobrança, até{" "}
-                  <strong>04/11/2026 às 23:14</strong>. Jueri, Olist, alerta de carência e
-                  balanço no WhatsApp já valem. Os botões de contratar aparecem aqui depois
-                  dessa data.
-                </p>
-              )}
-
-              {isTrialExpired && (
-                <p className="plan-note is-ended">
-                  Os 30 dias de teste acabaram em 04/11/2026. Peças e cálculos continuam
-                  guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp
-                  e este painel voltam na hora.
-                </p>
-              )}
-
-              {isPaid && (
-                <p className="plan-note">
-                  Sua assinatura está em dia. Dá para mudar de plano quando quiser.
-                </p>
-              )}
+          <dl className="ledger-rows">
+            <div className="ledger-row plan-row">
+              <dt className="ledger-row-label">Plano</dt>
+              <dd className="ledger-row-value plan-current">{status.title}</dd>
             </div>
-
-            {/* Feedback de pedido / checkout */}
-            {orderResult && (
-              <p className={`plan-note${orderResult.ok ? "" : " is-ended"}`} role="status">
-                {orderResult.msg}
-                {orderResult.orderRef ? ` Pedido ${orderResult.orderRef}.` : ""}
-              </p>
-            )}
-
-            {/* Grade com os 2 Planos */}
-            <div className="work-grid-2 plan-grid">
-              {/* PLANO ESSENCIAL */}
-              <div className={`card work-card plan-card${currentIsEssencial ? " plan-card-current" : ""}`}>
-                <div>
-                  <p className={`plan-card-flag${currentIsEssencial ? "" : " is-placeholder"}`} aria-hidden={!currentIsEssencial}>Seu plano</p>
-                  <h3 className="plan-card-name">
-                    Plano Essencial
-                  </h3>
-                  <p className="plan-card-blurb">
-                    Preço com margem, Raio-X e legendas para o Instagram.
-                  </p>
-
-                  <div className="plan-price-val">
-                    R$&nbsp;39 <span>/mês</span>
-                  </div>
-
-                  <ul className="plan-feat-list">
-                    <li>
-                      Preço a partir da foto e do custo da peça
-                    </li>
-                    <li>
-                      Raio-X de margem, taxas e impostos
-                    </li>
-                    <li>
-                      Radar de concorrentes no Google Shopping
-                    </li>
-                    <li>
-                      Legendas para Reels, posts e carrosséis
-                    </li>
-                    <li>
-                      Leitura de notas de compra (XML e PDF)
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  {currentIsEssencial ? (
-                    <button className="plan-action-btn is-current" disabled>
-                      Seu plano agora
-                    </button>
-                  ) : hiringLocked ? (
-                    <button className="plan-action-btn" disabled>
-                      No Pro até 04/11
-                    </button>
-                  ) : (
-                    <button
-                      className="btn plan-action-btn"
-                      onClick={() => handleAssinar("essencial")}
-                      disabled={orderingPlan !== null}
-                    >
-                      {orderingPlan === "essencial"
-                        ? "Processando…"
-                        : isPaid && currentPlan === "pro"
-                        ? "Mudar para Essencial"
-                        : "Contratar Essencial"}
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* PLANO PRO */}
-              <div className={`card work-card plan-card${currentIsPro ? " plan-card-current" : ""}`}>
-                <div>
-                  <p className={`plan-card-flag${currentIsPro ? "" : " is-placeholder"}`} aria-hidden={!currentIsPro}>Seu plano</p>
-                  <h3 className="plan-card-name">
-                    Plano Pro
-                  </h3>
-                  <p className="plan-card-blurb">
-                    Estoque, ERP e fechamento no WhatsApp.
-                  </p>
-
-                  <div className="plan-price-val">
-                    R$&nbsp;69 <span>/mês</span>
-                  </div>
-
-                  <ul className="plan-feat-list">
-                    <li>
-                      Tudo do Essencial, e ainda:
-                    </li>
-                    <li>
-                      Nuvemshop, Jueri e Olist; planilha pronta para a Phibo
-                    </li>
-                    <li>
-                      Notion e Google Planilhas
-                    </li>
-                    <li>
-                      Balanço no WhatsApp no dia 15 e último dia do mês
-                    </li>
-                    <li>
-                      Aviso de carência de fornecedor
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  {currentIsPro ? (
-                    <button className="plan-action-btn is-current" disabled>
-                      {trialOpen ? "Seu plano · até 04/11" : "Seu plano agora"}
-                    </button>
-                  ) : hiringLocked ? (
-                    <button className="plan-action-btn" disabled>
-                      No Essencial até 04/11
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-plum plan-action-btn"
-                      onClick={() => handleAssinar("pro")}
-                      disabled={orderingPlan !== null}
-                    >
-                      {orderingPlan === "pro"
-                        ? "Processando…"
-                        : isPaid && currentPlan === "essencial"
-                        ? "Mudar para Pro"
-                        : "Contratar Pro"}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Informação sobre liberação imediata e segurança */}
-            <p className="plan-pay-note">
-              Pagamento no Asaas, Pix ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.
-            </p>
-          </>
+            {status.situation ? <div className="ledger-row plan-row">
+              <dt className="ledger-row-label">Situação</dt>
+              <dd className="ledger-row-value">
+                <span className="ledger-state" data-tone={status.kind === "trial_ended" ? "error" : "positive"}>{status.situation}</span>
+                {status.kind === "trial" ? <small>{trialEnd ? <>Até <strong>{formatTrialEnd(trialEnd)}</strong>. Os botões de contratar aparecem aqui quando o teste acabar.</> : "Data de fim não informada. Os botões de contratar aparecem aqui quando o teste acabar."}</small> : null}
+                {status.kind === "trial_ended" ? <small>{trialEnd ? `Encerrado em ${formatTrialEnd(trialEnd)}. ` : ""}Peças e cálculos continuam guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp e este painel voltam na hora.</small> : null}
+                {status.kind === "paid" ? <small>Dá para mudar de plano quando quiser.</small> : null}
+              </dd>
+            </div> : null}
+            {session.phone ? <div className="ledger-row plan-row">
+              <dt className="ledger-row-label">WhatsApp</dt>
+              <dd className="ledger-row-value plan-number">{session.phone}</dd>
+            </div> : null}
+            {session.store_name ? <div className="ledger-row plan-row">
+              <dt className="ledger-row-label">Loja</dt>
+              <dd className="ledger-row-value">{session.store_name}</dd>
+            </div> : null}
+          </dl>
         )}
+      </section>
+
+      {orderResult && (
+        <p className="ledger-notice" data-tone={orderResult.ok ? "positive" : "error"} role="status">
+          {orderResult.msg}
+          {orderResult.orderRef ? ` Pedido ${orderResult.orderRef}.` : ""}
+        </p>
+      )}
+
+      <section className="ledger-section desk-panel" aria-labelledby="plan-compare-title">
+        <div className="ledger-section-head">
+          <h2 id="plan-compare-title">Planos</h2>
+          <p>Valores por mês.</p>
+        </div>
+        <div className="plan-compare">
+          {PLANS.map((plan) => {
+            const isCurrent = !!status && status.kind !== "trial_ended" && status.currentPlan === plan.id;
+            return <article className="plan-column" key={plan.id} data-current={isCurrent} aria-labelledby={`plan-${plan.id}`}>
+              <div className="plan-column-head">
+                <h3 id={`plan-${plan.id}`}>{plan.name}</h3>
+                {isCurrent ? <span className="ledger-state" data-tone="positive">Seu plano</span> : null}
+              </div>
+              <p className="plan-blurb">{plan.blurb}</p>
+              <p className="plan-price">R$&nbsp;{plan.price} <span>/mês</span></p>
+              <ul className="plan-features">
+                {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+              </ul>
+              <div className="plan-column-action">{action(plan.id)}</div>
+            </article>;
+          })}
+        </div>
+        <p className="plan-pay-note">Pagamento no Asaas, Pix ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.</p>
+      </section>
+      </div>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function DisconnectButton({
     return (
       <button
         type="button"
-        className="btn btn-ghost btn-sm"
+        className="ledger-button"
         onClick={() => {
           setErro("");
           setConfirmando(true);
@@ -57,21 +57,21 @@ export default function DisconnectButton({
   }
 
   return (
-    <span style={{ display: "inline-flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-      <span className="hint">Desconectar {providerName} desta loja?</span>
-      <button type="button" className="btn btn-ghost btn-sm" onClick={desconectar} disabled={trabalhando}>
+    <span className="disconnect-confirm" role="group" aria-label={`Confirmar desconexão de ${providerName}`}>
+      <span className="disconnect-question">Desconectar {providerName} desta loja?</span>
+      <button type="button" className="ledger-button disconnect-yes" onClick={desconectar} disabled={trabalhando}>
         {trabalhando ? "Desconectando…" : "Sim, desconectar"}
       </button>
       <button
         type="button"
-        className="btn btn-ghost btn-sm"
+        className="ledger-button ledger-button-quiet"
         onClick={() => setConfirmando(false)}
         disabled={trabalhando}
       >
         Cancelar
       </button>
       {erro ? (
-        <span className="hint" role="alert" style={{ color: "#b3261e" }}>
+        <span className="disconnect-error" role="alert">
           {erro}
         </span>
       ) : null}

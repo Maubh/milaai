@@ -1,67 +1,504 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-24T21:30:00Z",
-  "title": "Design System: mila.",
+  "generatedAt": "2026-10-23T12:32:46+00:00",
+  "title": "Design System: mila. área logada",
   "extensions": {
     "colorMeta": {
-      "plum": { "role": "primary", "displayName": "Ameixa profundo" },
-      "wine": { "role": "secondary", "displayName": "Vinho" },
-      "paper": { "role": "neutral", "displayName": "Papel mineral" },
-      "warm-white": { "role": "neutral", "displayName": "Branco quente" },
-      "ink": { "role": "neutral", "displayName": "Tinta" },
-      "gold": { "role": "tertiary", "displayName": "Ouro envelhecido" },
-      "blush": { "role": "tertiary", "displayName": "Rosa pálido" }
+      "mineral": {
+        "role": "primary",
+        "displayName": "Verde mineral",
+        "canonical": "oklch(33.5% 0.045 184)",
+        "tonalRamp": [
+          "oklch(15% 0.045 184)",
+          "oklch(25% 0.045 184)",
+          "oklch(35% 0.045 184)",
+          "oklch(48% 0.045 184)",
+          "oklch(62% 0.045 184)",
+          "oklch(76% 0.045 184)",
+          "oklch(88% 0.045 184)",
+          "oklch(95% 0.045 184)"
+        ]
+      },
+      "mineral-deep": {
+        "role": "primary",
+        "displayName": "Mineral profundo",
+        "canonical": "oklch(29% 0.042 184)",
+        "tonalRamp": [
+          "oklch(15% 0.042 184)",
+          "oklch(25% 0.042 184)",
+          "oklch(35% 0.042 184)",
+          "oklch(48% 0.042 184)",
+          "oklch(62% 0.042 184)",
+          "oklch(76% 0.042 184)",
+          "oklch(88% 0.042 184)",
+          "oklch(95% 0.042 184)"
+        ]
+      },
+      "mineral-ink": {
+        "role": "primary",
+        "displayName": "Marfim sobre mineral",
+        "canonical": "oklch(96.6% 0.008 85)",
+        "tonalRamp": [
+          "oklch(15% 0.008 85)",
+          "oklch(25% 0.008 85)",
+          "oklch(35% 0.008 85)",
+          "oklch(48% 0.008 85)",
+          "oklch(62% 0.008 85)",
+          "oklch(76% 0.008 85)",
+          "oklch(88% 0.008 85)",
+          "oklch(95% 0.008 85)"
+        ]
+      },
+      "mineral-muted": {
+        "role": "primary",
+        "displayName": "Mineral esmaecido",
+        "canonical": "oklch(86% 0.022 170)",
+        "tonalRamp": [
+          "oklch(15% 0.022 170)",
+          "oklch(25% 0.022 170)",
+          "oklch(35% 0.022 170)",
+          "oklch(48% 0.022 170)",
+          "oklch(62% 0.022 170)",
+          "oklch(76% 0.022 170)",
+          "oklch(88% 0.022 170)",
+          "oklch(95% 0.022 170)"
+        ]
+      },
+      "desk-canvas": {
+        "role": "neutral",
+        "displayName": "Canvas da mesa",
+        "canonical": "oklch(95.6% 0.009 85)",
+        "tonalRamp": [
+          "oklch(15% 0.009 85)",
+          "oklch(25% 0.009 85)",
+          "oklch(35% 0.009 85)",
+          "oklch(48% 0.009 85)",
+          "oklch(62% 0.009 85)",
+          "oklch(76% 0.009 85)",
+          "oklch(88% 0.009 85)",
+          "oklch(95% 0.009 85)"
+        ]
+      },
+      "desk-panel": {
+        "role": "neutral",
+        "displayName": "Painel",
+        "canonical": "oklch(99.2% 0.003 85)",
+        "tonalRamp": [
+          "oklch(15% 0.006 85)",
+          "oklch(25% 0.006 85)",
+          "oklch(35% 0.006 85)",
+          "oklch(48% 0.006 85)",
+          "oklch(62% 0.006 85)",
+          "oklch(76% 0.006 85)",
+          "oklch(88% 0.006 85)",
+          "oklch(95% 0.006 85)"
+        ]
+      },
+      "desk-inset": {
+        "role": "neutral",
+        "displayName": "Recuo",
+        "canonical": "oklch(96.8% 0.007 85)",
+        "tonalRamp": [
+          "oklch(15% 0.007 85)",
+          "oklch(25% 0.007 85)",
+          "oklch(35% 0.007 85)",
+          "oklch(48% 0.007 85)",
+          "oklch(62% 0.007 85)",
+          "oklch(76% 0.007 85)",
+          "oklch(88% 0.007 85)",
+          "oklch(95% 0.007 85)"
+        ]
+      },
+      "desk-track": {
+        "role": "neutral",
+        "displayName": "Trilho",
+        "canonical": "oklch(92.6% 0.01 85)",
+        "tonalRamp": [
+          "oklch(15% 0.01 85)",
+          "oklch(25% 0.01 85)",
+          "oklch(35% 0.01 85)",
+          "oklch(48% 0.01 85)",
+          "oklch(62% 0.01 85)",
+          "oklch(76% 0.01 85)",
+          "oklch(88% 0.01 85)",
+          "oklch(95% 0.01 85)"
+        ]
+      },
+      "sand": {
+        "role": "tertiary",
+        "displayName": "Areia",
+        "canonical": "oklch(93.5% 0.018 75)",
+        "tonalRamp": [
+          "oklch(15% 0.018 75)",
+          "oklch(25% 0.018 75)",
+          "oklch(35% 0.018 75)",
+          "oklch(48% 0.018 75)",
+          "oklch(62% 0.018 75)",
+          "oklch(76% 0.018 75)",
+          "oklch(88% 0.018 75)",
+          "oklch(95% 0.018 75)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(27% 0.025 165)",
+        "tonalRamp": [
+          "oklch(15% 0.025 165)",
+          "oklch(25% 0.025 165)",
+          "oklch(35% 0.025 165)",
+          "oklch(48% 0.025 165)",
+          "oklch(62% 0.025 165)",
+          "oklch(76% 0.025 165)",
+          "oklch(88% 0.025 165)",
+          "oklch(95% 0.025 165)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "oklch(46% 0.016 165)",
+        "tonalRamp": [
+          "oklch(15% 0.016 165)",
+          "oklch(25% 0.016 165)",
+          "oklch(35% 0.016 165)",
+          "oklch(48% 0.016 165)",
+          "oklch(62% 0.016 165)",
+          "oklch(76% 0.016 165)",
+          "oklch(88% 0.016 165)",
+          "oklch(95% 0.016 165)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Régua",
+        "canonical": "oklch(87% 0.009 160)",
+        "tonalRamp": [
+          "oklch(15% 0.009 160)",
+          "oklch(25% 0.009 160)",
+          "oklch(35% 0.009 160)",
+          "oklch(48% 0.009 160)",
+          "oklch(62% 0.009 160)",
+          "oklch(76% 0.009 160)",
+          "oklch(88% 0.009 160)",
+          "oklch(95% 0.009 160)"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Régua forte",
+        "canonical": "oklch(78% 0.012 165)",
+        "tonalRamp": [
+          "oklch(15% 0.012 165)",
+          "oklch(25% 0.012 165)",
+          "oklch(35% 0.012 165)",
+          "oklch(48% 0.012 165)",
+          "oklch(62% 0.012 165)",
+          "oklch(76% 0.012 165)",
+          "oklch(88% 0.012 165)",
+          "oklch(95% 0.012 165)"
+        ]
+      },
+      "positive": {
+        "role": "semantic",
+        "displayName": "Conectado",
+        "canonical": "oklch(42% 0.09 155)",
+        "tonalRamp": [
+          "oklch(15% 0.09 155)",
+          "oklch(25% 0.09 155)",
+          "oklch(35% 0.09 155)",
+          "oklch(48% 0.09 155)",
+          "oklch(62% 0.09 155)",
+          "oklch(76% 0.09 155)",
+          "oklch(88% 0.09 155)",
+          "oklch(95% 0.09 155)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Erro",
+        "canonical": "oklch(43% 0.15 28)",
+        "tonalRamp": [
+          "oklch(15% 0.15 28)",
+          "oklch(25% 0.15 28)",
+          "oklch(35% 0.15 28)",
+          "oklch(48% 0.15 28)",
+          "oklch(62% 0.15 28)",
+          "oklch(76% 0.15 28)",
+          "oklch(88% 0.15 28)",
+          "oklch(95% 0.15 28)"
+        ]
+      },
+      "error-paper": {
+        "role": "semantic",
+        "displayName": "Fundo de erro",
+        "canonical": "oklch(96% 0.016 28)",
+        "tonalRamp": [
+          "oklch(15% 0.016 28)",
+          "oklch(25% 0.016 28)",
+          "oklch(35% 0.016 28)",
+          "oklch(48% 0.016 28)",
+          "oklch(62% 0.016 28)",
+          "oklch(76% 0.016 28)",
+          "oklch(88% 0.016 28)",
+          "oklch(95% 0.016 28)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel herdado",
+        "canonical": "oklch(97% 0.008 85)",
+        "tonalRamp": [
+          "oklch(15% 0.008 85)",
+          "oklch(25% 0.008 85)",
+          "oklch(35% 0.008 85)",
+          "oklch(48% 0.008 85)",
+          "oklch(62% 0.008 85)",
+          "oklch(76% 0.008 85)",
+          "oklch(88% 0.008 85)",
+          "oklch(95% 0.008 85)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superfície herdada",
+        "canonical": "oklch(99% 0.002 85)",
+        "tonalRamp": [
+          "oklch(15% 0.002 85)",
+          "oklch(25% 0.002 85)",
+          "oklch(35% 0.002 85)",
+          "oklch(48% 0.002 85)",
+          "oklch(62% 0.002 85)",
+          "oklch(76% 0.002 85)",
+          "oklch(88% 0.002 85)",
+          "oklch(95% 0.002 85)"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Editorial", "purpose": "Títulos curtos e preços de destaque" },
-      "body": { "displayName": "Interface", "purpose": "Formulários, navegação e explicações" }
+      "display": {
+        "displayName": "Título da página",
+        "purpose": "Uma vez por página."
+      },
+      "headline": {
+        "displayName": "Título da conversa",
+        "purpose": "Painel mineral."
+      },
+      "title": {
+        "displayName": "Cabeçalho de painel",
+        "purpose": "Seções e valores do estado da conta."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Descrições até 62ch."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Navegação, botões, rótulos de linha."
+      },
+      "caption": {
+        "displayName": "Nota",
+        "purpose": "Datas, versão, observações."
+      }
     },
     "shadows": [
-      { "name": "card-ambient", "value": "0 1px 0 rgba(36,25,31,.05), 0 18px 44px -28px rgba(36,25,31,.35)", "purpose": "Separar cards do papel sem halo" }
+      {
+        "name": "panel",
+        "value": "0 1px 2px oklch(27% 0.025 165 / 0.06), 0 14px 32px -22px oklch(27% 0.025 165 / 0.22)",
+        "purpose": "Todo painel e o botão de conta."
+      },
+      {
+        "name": "bar",
+        "value": "0 1px 0 oklch(27% 0.025 165 / 0.06)",
+        "purpose": "Barra fixa."
+      },
+      {
+        "name": "dock",
+        "value": "0 -1px 0 oklch(27% 0.025 165 / 0.08), 0 -10px 28px -20px oklch(27% 0.025 165 / 0.3)",
+        "purpose": "Dock inferior."
+      },
+      {
+        "name": "menu",
+        "value": "0 1px 2px oklch(27% 0.025 165 / 0.08), 0 18px 40px -18px oklch(27% 0.025 165 / 0.35)",
+        "purpose": "Menu da conta."
+      }
     ],
     "motion": [
-      { "name": "control-state", "value": "180ms ease", "purpose": "Estados de botão e navegação" }
+      {
+        "name": "nav-pill",
+        "value": "spring stiffness 520, damping 42, mass 0.7 (framer-motion layoutId)",
+        "purpose": "Pílula do destino ativo; desligada em prefers-reduced-motion."
+      },
+      {
+        "name": "control-state",
+        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Cor e borda de controles."
+      },
+      {
+        "name": "press",
+        "value": "translateY(1px) ou scale(0.97)",
+        "purpose": "Feedback de toque em botões."
+      }
     ],
     "breakpoints": [
-      { "name": "compact", "value": "640px" },
-      { "name": "workspace-stack", "value": "900px" }
+      {
+        "name": "dock",
+        "value": "1023px"
+      },
+      {
+        "name": "chat-short",
+        "value": "1180px"
+      },
+      {
+        "name": "overview-stack",
+        "value": "860px"
+      },
+      {
+        "name": "integration-row-stack",
+        "value": "760px (container)"
+      },
+      {
+        "name": "compact",
+        "value": "640px"
+      },
+      {
+        "name": "store-name-hidden",
+        "value": "380px"
+      },
+      {
+        "name": "conversation-qr-stack",
+        "value": "1100px"
+      },
+      {
+        "name": "conversation-qr-hidden",
+        "value": "720px"
+      },
+      {
+        "name": "meta-compact",
+        "value": "520px (container)"
+      },
+      {
+        "name": "conversation-action-full",
+        "value": "360px"
+      }
     ]
   },
   "components": [
     {
-      "name": "Botão primário",
+      "name": "Botão principal",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Ação principal sobre papel claro.",
-      "html": "<button class=\"ds-btn-primary\">Explorar demonstração</button>",
-      "css": ".ds-btn-primary{background:#24191f;color:#fcfaf6;border:1px solid transparent;border-radius:999px;padding:.8rem 1.6rem;font:600 1rem Avenir Next,Arial,sans-serif;min-height:48px;cursor:pointer}.ds-btn-primary:hover{background:#4d1f2d}.ds-btn-primary:focus-visible{outline:2px solid #b99a62;outline-offset:3px}"
+      "description": "Ação principal de página: conectar, contratar, tentar de novo.",
+      "html": "<button class=\"ds-btn-primary\">Conectar</button>",
+      "css": ".ds-btn-primary { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--color-ledger-mineral); border-radius:10px; background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); font-size:0.875rem; font-weight:600; cursor:pointer; transition: background-color 180ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background:var(--color-ledger-mineral-hover); } .ds-btn-primary:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Botão secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Configurar e salvar; no bloqueio Pro, Assinar plano Pro → /workspace/plano. Conexão verificada oferece Desconectar.",
+      "html": "<button class=\"ds-btn-secondary\">Configurar</button>",
+      "css": ".ds-btn-secondary { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--color-ledger-rule-strong); border-radius:10px; background:var(--color-ledger-surface); color:var(--color-ledger-ink); font-size:0.875rem; font-weight:600; cursor:pointer; } .ds-btn-secondary:hover { border-color:var(--color-ledger-mineral); background:var(--color-ledger-paper); } .ds-btn-secondary:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-btn-secondary:active { transform:translateY(1px); }"
+    },
+    {
+      "name": "Cápsula de navegação",
+      "kind": "nav",
+      "refersTo": "nav-track",
+      "description": "Quatro destinos; o ativo é uma pílula mineral que desliza.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-item is-active\" href=\"#\">Visão geral</a><a class=\"ds-nav-item\" href=\"#\">Integrações</a><a class=\"ds-nav-item\" href=\"#\">Meu plano</a><a class=\"ds-nav-item\" href=\"#\">Atualizações <small>v0.2.1</small></a></nav>",
+      "css": ".ds-nav { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; gap:2px; padding:4px; border-radius:999px; background:var(--color-desk-track); } .ds-nav-item { display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:0 16px; border-radius:999px; color:var(--color-ledger-muted); font-size:0.875rem; font-weight:600; text-decoration:none; } .ds-nav-item:hover { color:var(--color-ledger-ink); } .ds-nav-item.is-active { background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); } .ds-nav-item small { font-size:0.8125rem; opacity:.72; } .ds-nav-item:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:1px; }"
+    },
+    {
+      "name": "Painel da mesa",
+      "kind": "card",
+      "refersTo": "desk-panel",
+      "description": "Superfície de seção com linhas pautadas; valores ilustrativos, substituídos pelos dados da sessão na interface.",
+      "html": "<section class=\"ds-panel\"><h2>Sua loja hoje</h2><div class=\"ds-row\"><span>Integrações</span><strong>2 conectadas</strong></div><div class=\"ds-row\"><span>Plano</span><strong>Plano Essencial</strong><small>Em teste, sem cobrança</small></div></section>",
+      "css": ".ds-panel { font-family: var(--font-workspace, Manrope, sans-serif); padding:24px 32px; border-radius:20px; background:var(--color-desk-panel); box-shadow:0 1px 2px oklch(27% 0.025 165 / 0.06), 0 14px 32px -22px oklch(27% 0.025 165 / 0.22); color:var(--color-ledger-ink); } .ds-panel h2 { margin:0; padding-bottom:12px; border-bottom:1px solid var(--color-ledger-rule); font-size:1.25rem; } .ds-row { display:grid; gap:2px; padding:16px 0; border-bottom:1px solid var(--color-ledger-rule); } .ds-row:last-child { border-bottom:0; } .ds-row span { color:var(--color-ledger-muted); font-size:0.875rem; font-weight:600; } .ds-row small { color:var(--color-ledger-muted); font-size:.875rem; line-height:1.5; }"
+    },
+    {
+      "name": "Painel da conversa",
+      "kind": "custom",
+      "refersTo": "conversation-panel",
+      "description": "Único painel mineral: título, frase e botão para o WhatsApp.",
+      "html": "<section class=\"ds-chat\"><h2>Conversar com a mila</h2><p>Preço, legenda ou ajuda com uma peça. A mila responde no WhatsApp.</p><a class=\"ds-chat-action\" href=\"#\">Abrir WhatsApp</a></section>",
+      "css": ".ds-chat { font-family: var(--font-workspace, Manrope, sans-serif); display:grid; justify-items:start; gap:12px; padding:40px; border-radius:20px; background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); } .ds-chat h2 { margin:0; font-size:1.5rem; letter-spacing:-0.025em; } .ds-chat p { margin:0; color:var(--color-ledger-mineral-muted); } .ds-chat-action { display:inline-flex; align-items:center; min-height:48px; padding:0 24px; border-radius:999px; background:var(--color-ledger-mineral-ink); color:var(--color-ledger-mineral); font-weight:700; text-decoration:none; } .ds-chat-action:hover { background:var(--color-ledger-surface); } .ds-chat-action:focus-visible { outline:2px solid var(--color-ledger-focus-on-mineral); outline-offset:3px; } .ds-chat-action:active { transform:scale(.97); } @media(prefers-reduced-motion:reduce) { .ds-chat-action:active { transform:none; } }"
+    },
+    {
+      "name": "Estado",
+      "kind": "chip",
+      "refersTo": "state",
+      "description": "Ponto e texto para estado de conexão ou situação da conta. O selo Pro fica em eixo separado.",
+      "html": "<span class=\"ds-state\" data-tone=\"positive\">Conectado</span> <span class=\"ds-state\">Disponível</span>",
+      "css": ".ds-state { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; align-items:center; gap:8px; color:var(--color-ledger-muted); font-size:0.875rem; font-weight:600; } .ds-state::before { content:''; width:7px; height:7px; border-radius:50%; border:1.5px solid currentColor; } .ds-state[data-tone=positive] { color:var(--color-ledger-positive); } .ds-state[data-tone=positive]::before { background:currentColor; }"
     },
     {
       "name": "Campo",
       "kind": "input",
-      "description": "Entrada operacional com rótulo sempre presente.",
-      "html": "<label class=\"ds-field\">Custo da peça <input value=\"48\"></label>",
-      "css": ".ds-field{display:grid;gap:.35rem;color:#272326;font:600 .85rem Avenir Next,Arial,sans-serif}.ds-field input{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:10px;padding:.7rem .85rem;font:400 1rem Avenir Next,Arial,sans-serif}.ds-field input:focus-visible{outline:2px solid #b99a62;outline-offset:1px}"
+      "refersTo": "input",
+      "description": "Token, código de cliente.",
+      "html": "<input class=\"ds-input\" placeholder=\"Cole seu token do Notion\" />",
+      "css": ".ds-input { font-family: var(--font-workspace, Manrope, sans-serif); min-height:48px; padding:0 12px; border:1px solid var(--color-ledger-rule-strong); border-radius:10px; background:var(--color-ledger-surface); color:var(--color-ledger-ink); caret-color:var(--color-ledger-mineral); font-size:0.9375rem; } .ds-input::placeholder { color:var(--color-ledger-muted); } .ds-input:focus { border-color:var(--color-ledger-mineral); outline:2px solid var(--color-ledger-focus); outline-offset:2px; }"
     },
     {
-      "name": "Card de resultado",
-      "kind": "card",
-      "refersTo": "card",
-      "description": "Uma tarefa ou resultado por superfície.",
-      "html": "<div class=\"ds-card\">Preço sugerido <strong>R$ 142,70</strong></div>",
-      "css": ".ds-card{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:14px;padding:1.4rem;box-shadow:0 1px 0 rgba(36,25,31,.05),0 18px 44px -28px rgba(36,25,31,.35);font:400 1rem Avenir Next,Arial,sans-serif}.ds-card strong{display:block;color:#24191f;font:500 2rem Bodoni Moda,Georgia,serif}"
+      "name": "Selo de nível",
+      "kind": "chip",
+      "refersTo": "integration-tier",
+      "description": "Nível Pro exigido, independente do estado da conexão; uma ocorrência por linha.",
+      "html": "<span class=\"ds-tier\">Pro</span>",
+      "css": ".ds-tier { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:999px; background:var(--color-ledger-sand); color:var(--color-ledger-mineral); font-family:var(--font-workspace,Manrope,sans-serif); font-size:.8125rem; font-weight:700; }"
+    },
+    {
+      "name": "Linha de integração",
+      "kind": "custom",
+      "description": "Cinco colunas alinhadas por subgrid; amostra conectada. Conectadas no topo, demais por finalidade abaixo, sem repetir linhas. Marca textual apenas para esta prévia, sem substituir o logo real na interface.",
+      "html": "<div class=\"ds-list-frame\"><ul class=\"ds-list\"><li class=\"ds-item\"><div class=\"ds-mark\">Olist</div><div class=\"ds-copy\"><h3>Olist <span>ERP e loja</span></h3><p>As peças da loja, do estoque à vitrine.</p></div><div class=\"ds-level\"><span class=\"ds-tier\">Pro</span></div><div class=\"ds-status\">Conectado</div><div class=\"ds-actions\"><button>Desconectar</button></div></li></ul></div>",
+      "css": ".ds-list-frame { container-type:inline-size; font-family:var(--font-workspace,Manrope,sans-serif); color:var(--color-ledger-ink); } .ds-list { display:grid; grid-template-columns:[mark] 6.5rem [copy] minmax(0,1fr) [tier] 3.5rem [status] 8.5rem [actions] 11.5rem; column-gap:24px; margin:0; padding:0; list-style:none; } .ds-item { display:grid; grid-column:1/-1; grid-template-columns:subgrid; align-items:start; row-gap:12px; padding:24px 0 8px; } .ds-mark { grid-column:mark; display:flex; align-items:center; min-height:44px; } .ds-copy { grid-column:copy; min-width:0; } .ds-copy h3 { margin:0; min-height:44px; font-size:.9375rem; line-height:1.45; display:flex; flex-wrap:wrap; align-items:center; gap:8px; } .ds-copy h3 span { color:var(--color-ledger-muted); font-size:.875rem; font-weight:500; } .ds-copy p { margin:0; color:var(--color-ledger-muted); font-size:.9375rem; line-height:1.6; } .ds-level { grid-column:tier; min-height:44px; display:flex; align-items:center; } .ds-tier { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:999px; background:var(--color-ledger-sand); color:var(--color-ledger-mineral); font-size:.8125rem; font-weight:700; } .ds-status { grid-column:status; display:flex; align-items:center; gap:8px; min-height:44px; color:var(--color-ledger-positive); font-size:.875rem; font-weight:600; } .ds-status::before { content:\"\"; width:7px; height:7px; border-radius:50%; background:currentColor; border:1.5px solid currentColor; } .ds-actions { grid-column:actions; display:grid; } .ds-actions button { min-height:44px; padding:0 8px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--color-ledger-muted); font:inherit; font-size:.875rem; font-weight:600; cursor:pointer; } .ds-actions button:hover { color:var(--color-ledger-ink); background:var(--color-ledger-active); } .ds-actions button:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-actions button:active { transform:translateY(1px); } @container(max-width:760px) { .ds-list { grid-template-columns:[mark] minmax(0,1fr) [tier] 2.75rem [status] 7rem; column-gap:8px; } .ds-mark,.ds-level,.ds-status { grid-row:1; } .ds-copy,.ds-actions { grid-column:1/-1; } } @media(prefers-reduced-motion:reduce) { .ds-actions button:active { transform:none; } }"
     }
   ],
   "narrative": {
-    "northStar": "A bancada de avaliação",
-    "overview": "A peça e seus números pertencem ao mesmo espaço. A landing usa fotografia de joia, papel mineral e tipografia editorial; o workspace conserva as cores e reduz a ornamentação para facilitar decisões frequentes.",
-    "keyCharacteristics": ["Fotografia tátil de produto", "Valores alinhados como instrumento de trabalho", "Ouro apenas como detalhe de precisão"],
-    "rules": [
-      { "name": "The Metal Rule", "body": "Use ouro em marca, foco e pequenas medições; ações principais usam ameixa sólido.", "section": "colors" },
-      { "name": "The Two Registers Rule", "body": "A voz editorial apresenta a proposta; a voz de interface explica custos e ações sem floreio.", "section": "typography" },
-      { "name": "The Price In View Rule", "body": "A primeira tela da landing mostra uma peça e um resumo de preço; a primeira tela do workspace mostra uma ação de trabalho.", "section": "layout" }
+    "northStar": "A mesa da loja",
+    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B será independente e ainda não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho: um canvas marfim um tom abaixo dos painéis, onde cada painel tem uma densidade própria e um trabalho só. A conversa com a mila é o único painel mineral; o estado da conta (conexões, plano, versão) fica num painel claro ao lado; as listas de trabalho (integrações, histórico, recursos do plano) vivem em linhas pautadas dentro de painéis. É uma interface Operate: sóbria e próxima, familiar no uso, com a marca nos detalhes (o verde mineral, o ponto do `mila.`, o raio largo).\n\nA mesa evoluiu do \"livro da loja\" (linhas pautadas sobre papel), que segue como a gramática interna dos painéis. Referências usadas como princípio, nunca como fonte de dados, assets ou código: a demo Cadra (cápsula de navegação com destino ativo cheio, painéis tonais, composição assimétrica de densidades), Refero Superhuman/Ramp (cor pontual e superfícies tonais com escala controlada), MagicUI e 21st.dev (vocabulário do indicador compartilhado e do dock), landing.love, motionsites e scroll-craft (respiro e economia de movimento).",
+    "keyCharacteristics": [
+      "Canvas marfim + painéis claros com sombra curta; nenhum painel tem borda.",
+      "Preenchimento mineral concentrado no destino ativo, na ação principal e no painel da conversa; texto mineral também sinaliza marca, links e pequenos destaques.",
+      "Linhas pautadas (hairline 1px) para qualquer lista; cartões iguais em grade não existem.",
+      "Manrope em escala fixa de rem; números tabulares em contagens, datas e preços.",
+      "Todo estado exibido vem da sessão ou do vault; vazio, carregando e falha têm linguagem própria."
     ],
-    "dos": ["Use dados de exemplo com identificação visível de demonstração.", "Preserve contraste, foco visível e leitura no celular."],
-    "donts": ["Não apresente integrações planejadas como ativas.", "Não substitua a fotografia por gradientes genéricos ou uma grade de cards de ícones."]
+    "rules": [
+      {
+        "name": "The Mineral Fill Rule",
+        "body": "O preenchimento mineral se concentra no destino ativo, na ação principal e no painel da conversa. Marca, links e pequenos destaques podem usar texto mineral sem criar outro painel de destaque.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Speaks Rule",
+        "body": "Positivo e erro sempre vêm com texto; a cor nunca é o único sinal. O selo Pro informa o nível exigido, separado do estado da conexão.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Rótulos, etiquetas e estados em frase (\"Catálogo do Instagram & Facebook\", \"Pendente\"). Caixa alta com tracking não volta.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Elevation Rule",
+        "body": "Cada superfície declara borda ou sombra, nunca as duas.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do colocar toda lista em linhas pautadas dentro de um painel (hairline 1px, sem borda no último item).",
+      "Do mostrar só estado lido da sessão ou do vault; quando a leitura falha, dizer \"Não deu para ler…\" com \"Tentar de novo\".",
+      "Do manter clicáveis numa linha só em 320px; encurtar o rótulo (ex.: \"WhatsApp\") antes de quebrar.",
+      "Do desligar a pílula deslizante e as transições com `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't criar grade de cartões iguais com ícone + título + texto, nem métricas, gráficos ou números que a sessão não informa.",
+      "Don't pôr caixa dentro de caixa: dentro de um painel use recuo tonal ou régua, nunca outro painel com sombra.",
+      "Don't usar borda lateral colorida acima de 1px, rótulo em caixa alta com tracking ou kicker acima de título.",
+      "Don't usar vinho, roxo ou dourado como cor de marca."
+    ]
   }
 }

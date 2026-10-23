@@ -246,6 +246,39 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 
 .desk-main { padding-block: var(--space-workspace-2xl) calc(var(--space-workspace-3xl) * 2); min-width: 0; }
 
+/* Dock (celular e tablet) */
+.desk-dock { display: none; }
+.desk-dock-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  min-width: 0;
+  min-height: 56px;
+  padding: var(--space-workspace-xs) 2px;
+  border-radius: var(--radius-desk-inset);
+  color: var(--color-ledger-muted);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  isolation: isolate;
+  transition: color var(--dur-workspace-short) var(--ease-workspace-out);
+}
+.desk-dock-item:hover { color: var(--color-ledger-ink); }
+.desk-dock-item.is-active { color: var(--color-desk-pill-ink); }
+.desk-dock-item:focus-visible { outline-offset: -2px; border-radius: var(--radius-desk-inset); }
+.desk-dock-item.is-active:focus-visible { outline-color: var(--color-ledger-focus-on-mineral); }
+.desk-dock-pill { position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: var(--color-desk-pill); }
+.desk-dock-icon { display: grid; }
+.desk-dock-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.desk-dock-dot { position: absolute; top: 8px; left: calc(50% + 8px); width: 7px; height: 7px; border-radius: 50%; background: var(--color-ledger-mineral); box-shadow: 0 0 0 2px var(--color-desk-panel); }
+.desk-dock-dot[data-unread="false"] { visibility: hidden; }
+.desk-dock-item.is-active .desk-dock-dot { background: var(--color-desk-pill-ink); box-shadow: none; }
+
 @media (max-width: 1180px) {
   .desk-chat-long { display: none; }
   .desk-chat-short { display: inline; }
@@ -253,19 +286,8 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 
 /* Celular e tablet: a cápsula desce para uma faixa sob a marca e rola por dentro. */
 @media (max-width: 1023px) {
-  .desk-bar { grid-template-columns: minmax(0, 1fr) auto; row-gap: var(--space-workspace-md); padding-top: var(--space-workspace-md); }
-  .desk-nav {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    overflow-x: auto;
-    margin-inline: calc(var(--space-workspace-xs) * -1);
-    padding-inline: var(--space-workspace-xs);
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
-    mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent);
-  }
-  .desk-nav::-webkit-scrollbar { display: none; }
-  .desk-nav-item { min-height: 44px; }
+  .desk-bar { grid-template-columns: minmax(0, 1fr) auto; padding-top: var(--space-workspace-md); }
+  .desk-nav { display: none; }
   .desk-brand-link { min-height: 44px; }
   /* O sino não é o último botão: o painel ancora na barra, entre as margens da página. */
   .desk-bell { position: static; }
@@ -278,7 +300,19 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
     margin-left: auto;
   }
   .desk-chat { padding-inline: var(--space-workspace-md); }
-  .desk-main { padding-block: var(--space-workspace-xl) calc(var(--space-workspace-3xl) * 2); }
+  /* O fim da página fica acima do dock, inclusive com a barra de gestos do aparelho. */
+  .desk-main { padding-block: var(--space-workspace-xl) calc(var(--size-desk-dock) + var(--space-workspace-3xl) + env(safe-area-inset-bottom)); }
+  .desk-dock {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: var(--z-workspace-sidebar);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    padding: var(--space-workspace-xs) var(--space-workspace-sm) max(var(--space-workspace-xs), env(safe-area-inset-bottom));
+    background: var(--color-desk-panel);
+    box-shadow: var(--shadow-desk-dock);
+  }
 }
 @media (max-width: 380px) {
   .desk-store { display: none; }

@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { MotionConfig, animate, motion, useMotionTemplate, useMotionValue, useReducedMotion } from "framer-motion";
 import BrandLogo from "@/components/BrandLogo";
+import { RELEASES_PATH, useReleaseStatus } from "@/components/ReleaseLink";
 import UpdatesBell from "@/components/UpdatesBell";
 import {
   clearOnboarding,
@@ -14,16 +15,23 @@ import {
 } from "@/lib/onboarding";
 import "./workspace-shell.css";
 
-// Destinos práticos. Atualizações mora no sino do topo.
-const LINKS: Array<{ href: string; label: string }> = [
-  { href: "/workspace", label: "Visão geral" },
-  { href: "/workspace/integracoes", label: "Integrações" },
-  { href: "/workspace/plano", label: "Meu plano" },
+// Destinos práticos. No desktop Atualizações mora no sino do topo; no dock do
+// celular entra como quarto destino, com o mesmo ponto de novidade do sino.
+type DestinationIcon = "overview" | "integrations" | "plan" | "updates";
+const LINKS: Array<{ href: string; label: string; icon: DestinationIcon }> = [
+  { href: "/workspace", label: "Visão geral", icon: "overview" },
+  { href: "/workspace/integracoes", label: "Integrações", icon: "integrations" },
+  { href: "/workspace/plano", label: "Meu plano", icon: "plan" },
 ];
+const DOCK_LINKS = [...LINKS, { href: RELEASES_PATH, label: "Atualizações", icon: "updates" as const }];
 
-type WorkspaceIconName = "chat" | "logout" | "chevron";
+type WorkspaceIconName = DestinationIcon | "chat" | "logout" | "chevron";
 function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
   const paths: Record<WorkspaceIconName, React.ReactNode> = {
+    overview: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /></>,
+    integrations: <path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" />,
+    plan: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>,
+    updates: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8m-8 4h8m-8 4h4" /></>,
     chat: <><path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.5a9 9 0 1 1 16.6-5Z" /><path d="M8 11h8m-8 4h5" /></>,
     logout: <path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m5-13 5 5-5 5m-5-5h11" />,
     chevron: <path d="m8 10 4 4 4-4" />,
@@ -51,7 +59,6 @@ function DeskNav() {
   const pathname = usePathname();
   const reduce = useReducedMotion();
   const [pending, setPending] = useState<string | null>(null);
-  const strip = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const left = useMotionValue(0);
   const right = useMotionValue(0);
@@ -109,13 +116,6 @@ function DeskNav() {
       Promise.all(controls).then(() => { if (running.current === controls) running.current = []; }, () => undefined);
       shown.jump(1);
     }
-    // No celular a faixa rola: o destino fica à vista.
-    const s = strip.current;
-    const item = box.querySelectorAll<HTMLElement>("a.desk-nav-item")[target];
-    if (s && item && s.scrollWidth > s.clientWidth) {
-      const x = item.offsetLeft - (s.clientWidth - item.offsetWidth) / 2;
-      s.scrollTo({ left: Math.max(0, x), behavior: reduce ? "auto" : "smooth" });
-    }
   }, [target, reduce, left, right, shown]);
 
   // Fonte carregada, janela redimensionada: a pílula reacompanha sem animar.
@@ -138,7 +138,7 @@ function DeskNav() {
     return () => observer.disconnect();
   }, [left, right]);
 
-  return <nav ref={strip} className="desk-nav" aria-label="Sua loja">
+  return <nav className="desk-nav" aria-label="Sua loja">
     <div ref={track} className="desk-nav-track">
       {LINKS.map((link) => {
         const current = isActive(pathname, link.href);
@@ -157,6 +157,24 @@ function DeskNav() {
         {LINKS.map((link) => <span key={link.href} className="desk-nav-item">{link.label}</span>)}
       </motion.span>
     </div>
+  </nav>;
+}
+
+/** Dock do celular e do tablet: os quatro destinos com ícone, como na versão anterior. */
+function DeskDock() {
+  const pathname = usePathname();
+  const release = useReleaseStatus();
+  return <nav className="desk-dock" aria-label="Sua loja">
+    {DOCK_LINKS.map((link) => {
+      const active = isActive(pathname, link.href);
+      const isRelease = link.href === RELEASES_PATH;
+      return <Link key={link.href} href={link.href} className={`desk-dock-item${active ? " is-active" : ""}`} aria-current={active ? "page" : undefined} aria-label={isRelease ? release.label : undefined}>
+        {active ? <motion.span layoutId="desk-dock-pill" className="desk-dock-pill" transition={{ type: "spring", stiffness: 520, damping: 42, mass: 0.7 }} aria-hidden="true" /> : null}
+        <span className="desk-dock-icon"><WorkspaceIcon name={link.icon} /></span>
+        <span className="desk-dock-label">{link.label}</span>
+        {isRelease ? <span className="desk-dock-dot" data-unread={release.unread} aria-hidden="true" /> : null}
+      </Link>;
+    })}
   </nav>;
 }
 
@@ -282,6 +300,7 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           </div>
         </header>
         <div className="desk-main">{children}</div>
+        <DeskDock />
       </div>
     </MotionConfig>
   );

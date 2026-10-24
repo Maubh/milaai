@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 /**
@@ -44,6 +44,13 @@ export function IntegrationSwitch({ checked, label, disabled, busy, expanded, co
 export function ConnectSwitch({ provider, providerName }: { provider: string; providerName: string }) {
   const router = useRouter();
   const [abrindo, setAbrindo] = useState(false);
+  // Voltar pelo navegador depois de sair para o provedor pode restaurar a
+  // página da memória (bfcache): a espera não pode ficar presa.
+  useEffect(() => {
+    const voltou = (e: PageTransitionEvent) => { if (e.persisted) setAbrindo(false); };
+    window.addEventListener("pageshow", voltou);
+    return () => window.removeEventListener("pageshow", voltou);
+  }, []);
   return (
     <span className="integration-switch-wrap">
       <IntegrationSwitch

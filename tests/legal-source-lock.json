@@ -118,7 +118,7 @@
   "site/components/IPhoneMockup.tsx": "111e84da0cbea946cfb9038127fed270a3fa987e882ac2ae66e02ca86afd5675",
   "site/components/IntegrationConnectionLayout.tsx": "36a6154b93278e12db93b43ad4bb3d1a8edcb79ac715387eb05381c1dafcc207",
   "site/components/IntegrationRow.tsx": "568236e982217eb103bb8c75a6a109e2394284f9ae425a6773ac766ce9b040d5",
-  "site/components/IntegrationSwitch.tsx": "aaeac695f5188ea840728e879e353d818b890a1382844860052088ebf71cc0b2",
+  "site/components/IntegrationSwitch.tsx": "ec6b1b0aa1b2448a2c9216b11b048b32a759de98c84b3be172e6b40121d58dc0",
   "site/components/IntegrationsMarquee.tsx": "ae372192ce8d3afb72cd634fb8fc78211bdcdcaa4064caf42eb88d5fbbc38947",
   "site/components/IntegrationsNotice.tsx": "0668f58d40adfaa70574580e633e9e4d2565a5805820f2a4a7fe9861907456fb",
   "site/components/LocalQr.tsx": "ec65371823346019d7edcc10c9eb66267f5ad62cf3504a14a7822691a28a0b21",

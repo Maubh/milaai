@@ -118,16 +118,17 @@ export function failureText(failed: StepsReading["failed"]): string | null {
 }
 
 /**
- * Mensagens prontas: assunto geral da mila, sem atribuir a uma integração, e só
+ * Mensagens prontas: assunto geral da mila, sem atribuir a uma integração (o bloco
+ * já se chama "Conversar com a mila", então o assunto vem sem prefixo), e só
  * tarefas que os dois planos incluem (Essencial e Pro, `components/PricingSection.tsx`):
  * precificação, descrição de peça para loja virtual e leitura de nota de compra.
  * Os recursos de Instagram mudam entre os planos (legenda por peça nos dois,
  * carrosséis e Reels só no Pro); os atalhos ficam fora desse assunto.
  */
 export const STARTERS = [
-  { id: "preco", context: "Mila · Precificação", label: "Calcular o preço de uma peça", text: "Oi, mila. Quero calcular o preço de uma peça." },
-  { id: "descricao", context: "Mila · Produtos", label: "Escrever a descrição de uma peça", text: "Oi, mila. Quero escrever a descrição de uma peça para minha loja virtual." },
-  { id: "nota", context: "Mila · Compras", label: "Ler uma nota de compra", text: "Oi, mila. Quero que você leia uma nota de compra." },
+  { id: "preco", context: "Precificação", label: "Calcular o preço de uma peça", text: "Oi, mila. Quero calcular o preço de uma peça." },
+  { id: "descricao", context: "Produtos", label: "Escrever a descrição de uma peça", text: "Oi, mila. Quero escrever a descrição de uma peça para minha loja virtual." },
+  { id: "nota", context: "Compras", label: "Ler uma nota de compra", text: "Oi, mila. Quero que você leia uma nota de compra." },
 ] as const;
 
 /** O mesmo link verificado, só com outra frase de abertura. Link inválido volta inteiro. */

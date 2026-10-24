@@ -112,9 +112,9 @@ Documentação escrita por Claude a partir da proposta do documenter (`document_
 Pedido do usuário: trazer da B as mensagens prontas e os Próximos passos, identificando sempre a integração ou o assunto de cada item. A composição da B não foi copiada: a A mantém a faixa de conversa, os três cartões, a cápsula, o sino, o dock no celular e os esqueletos.
 
 Mensagens prontas, dentro da faixa da conversa:
-- **Mila · Precificação:** "Calcular o preço de uma peça" → "Oi, mila. Quero calcular o preço de uma peça."
-- **Mila · Produtos:** "Escrever a descrição de uma peça" → "Oi, mila. Quero escrever a descrição de uma peça para minha loja virtual."
-- **Mila · Compras:** "Ler uma nota de compra" → "Oi, mila. Quero que você leia uma nota de compra."
+- **Precificação:** "Calcular o preço de uma peça" → "Oi, mila. Quero calcular o preço de uma peça."
+- **Produtos:** "Escrever a descrição de uma peça" → "Oi, mila. Quero escrever a descrição de uma peça para minha loja virtual."
+- **Compras:** "Ler uma nota de compra" → "Oi, mila. Quero que você leia uma nota de compra."
 
 Critério de plano, pedido da lojista: os atalhos só pedem tarefas que Essencial e Pro incluem. Fontes: precificação em `components/PricingSection.tsx:48`, descrição de peça para loja virtual em `:50` e leitura de nota em `:52`, todas no Essencial e herdadas pelo Pro ("Tudo do Essencial", `:73`); a matriz em `docs/brand/MILA_ARCHITECTURE_SKILLS.md:49,51,53` confirma. Conteúdo de Instagram é do Pro (`PricingSection.tsx:79`, `components/FaqSection.tsx:71`, matriz `:57`). Por isso a legenda da B virou descrição de peça, e a frase da faixa passou a "Preço, descrição ou ajuda com uma peça." `app/workspace/plano/PlanView.tsx` anunciava legendas no Essencial, em contradição com essas fontes: a promessa foi alinhada sem mudar permissão nem back-end. O Essencial passa a "Preço com margem, Raio-X e descrição de peças." com "Descrições de peças prontas para a loja virtual". O Pro ganha a linha existente "Legendas para Reels, posts e carrosséis", para a comparação não perder o recurso. Um teste fixa os atalhos em `preco`, `descricao` e `nota` e rejeita termos de legenda e Instagram.
 

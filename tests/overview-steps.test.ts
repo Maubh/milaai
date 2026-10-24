@@ -141,7 +141,8 @@ test("mensagens prontas: só o text muda, número e host preservados", () => {
     assert.equal(url.pathname, "/5511999999999");
     assert.equal(url.searchParams.get("text"), s.text);
     assert.deepEqual([...url.searchParams.keys()], ["text"]);
-    assert.match(s.context, /^Mila · /);
+    // Assunto da própria mila, sem prefixo repetido nem nome de integração.
+    assert.doesNotMatch(s.context, /Mila|·|Nuvemshop|Meta|Google|Notion|Jueri|Olist/);
     assert.ok(!url.search.includes("+"), "espaço sai como %20");
   }
   assert.equal(withText("não é link", "x"), "não é link");

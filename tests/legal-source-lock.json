@@ -156,7 +156,7 @@
   "site/lib/meta-catalog.ts": "581d9ce3472de1f857aec3418179b345e3acc0ade81b5eb9283b4efdc8dfcd80",
   "site/lib/notion.ts": "40c4ee0856bc78dda682e9c19f66b459e8dee7f9f3060ed76a68232dcf86ca40",
   "site/lib/onboarding.ts": "2cbd84f8135e53c8ff82962188dd76d947cf8157439b7c9c47dcc97cc4eb1204",
-  "site/lib/overview-steps.ts": "5b088589f3d707a151e88cd4ad83512502a7ffd8a83db802e8845d65ee30578a",
+  "site/lib/overview-steps.ts": "d279bf4e029bf27176e5fd81e22fbb9b6edb9970f427e9c7cb76216fb026c2cb",
   "site/lib/plan-status.ts": "31ffe3c44aa0a117d028b8f427939596d3756c92619b4c25319646e997ea835e",
   "site/lib/pos-login.ts": "45daa464031ada8d8ca9f608813d6c976823cf2c1aff842cdb3d170bc8963db9",
   "site/lib/pricing.ts": "fdafa3255771efddf706bfbe2b45837df3ad3df93f9daf2d16ae739592418e78",

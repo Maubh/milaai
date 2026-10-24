@@ -20,13 +20,13 @@ const PLANS = [
   {
     id: "essencial" as const,
     name: "Plano Essencial",
-    blurb: "Preço com margem, Raio-X e legendas para o Instagram.",
+    blurb: "Preço com margem, Raio-X e descrição de peças.",
     price: "39",
     features: [
       "Preço a partir da foto e do custo da peça",
       "Raio-X de margem, taxas e impostos",
       "Radar de concorrentes no Google Shopping",
-      "Legendas para Reels, posts e carrosséis",
+      "Descrições de peças prontas para a loja virtual",
       "Leitura de notas de compra (XML e PDF)",
     ],
   },
@@ -41,6 +41,7 @@ const PLANS = [
       "Notion e Google Planilhas",
       "Balanço no WhatsApp no dia 15 e último dia do mês",
       "Aviso de carência de fornecedor",
+      "Legendas para Reels, posts e carrosséis",
     ],
   },
 ];

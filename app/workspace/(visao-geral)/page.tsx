@@ -2,14 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
-import OverviewView, { type SessionState } from "./OverviewView";
+import type { ProviderLive } from "@/lib/integration-catalog";
+import OverviewView, { type ProvidersState, type SessionState } from "./OverviewView";
 
 export default function WorkspaceHome() {
   const [waLink, setWaLink] = useState<string | null>(null);
   const [session, setSession] = useState<SessionState>({ status: "loading" });
+  const [providers, setProviders] = useState<ProvidersState>({ status: "loading" });
 
   const load = useCallback(() => {
     setSession({ status: "loading" });
+    setProviders({ status: "loading" });
     fetch("/api/session")
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
@@ -26,11 +29,21 @@ export default function WorkspaceHome() {
             billing: typeof data.billing === "string" ? data.billing : null,
             role: typeof data.role === "string" ? data.role : null,
             trial_ends_at: typeof data.trial_ends_at === "string" ? data.trial_ends_at : null,
-            connected: Array.isArray(data.connected) ? data.connected.filter((id: unknown): id is string => typeof id === "string") : [],
           },
         });
       })
       .catch(() => setSession({ status: "error" }));
+    // Lista do vault, a mesma que a página de integrações lê no servidor.
+    fetch("/api/oauth/providers")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (!data || !Array.isArray(data.providers)) {
+          setProviders({ status: "error" });
+          return;
+        }
+        setProviders({ status: "ready", data: data.providers.filter((p: unknown): p is ProviderLive => !!p && typeof (p as ProviderLive).id === "string") });
+      })
+      .catch(() => setProviders({ status: "error" }));
   }, []);
 
   useEffect(() => {
@@ -38,5 +51,5 @@ export default function WorkspaceHome() {
     load();
   }, [load]);
 
-  return <OverviewView session={session} waLink={waLink} onRetry={load} />;
+  return <OverviewView session={session} providers={providers} waLink={waLink} onRetry={load} />;
 }

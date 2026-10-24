@@ -20,6 +20,8 @@ interface Props {
   /** Área própria abaixo da linha (ex.: catálogo da Meta). */
   expansion?: ReactNode;
   state: string;
+  /** Âncora estável da linha (ex.: destino dos próximos passos da visão geral). */
+  anchor?: string;
 }
 
 /**
@@ -34,9 +36,9 @@ export function IntegrationList({ children }: { children: ReactNode }) {
  * Uma linha do catálogo de integrações, com as mesmas posições para toda
  * ferramenta. Só apresentação: quem decide estado, plano e ação é a página.
  */
-export default function IntegrationRow({ mark, name, detail, description, details, tier, status, actions, expansion, state }: Props) {
+export default function IntegrationRow({ mark, name, detail, description, details, tier, status, actions, expansion, state, anchor }: Props) {
   return (
-    <li className="integration-item" data-state={state}>
+    <li id={anchor} className="integration-item" data-state={state}>
       <div className="integration-item-mark">{mark}</div>
       <div className="integration-item-copy">
         <h3>{name} <span className="integration-item-detail">{detail}</span></h3>

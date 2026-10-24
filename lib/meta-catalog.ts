@@ -17,6 +17,18 @@ export const META_PRODUCT_SOURCES = new Set([
   "other",
 ] as const);
 
+/**
+ * Fontes que a tela oferece e a ferramenta de que cada uma depende para
+ * sincronizar (`null`: não depende de nenhuma). O gerenciador do catálogo e a
+ * visão geral leem esta lista, para dizerem a mesma coisa.
+ */
+export const META_SOURCES: ReadonlyArray<{ id: string; nome: string; providerId: string | null }> = [
+  { id: "site_nuvemshop", nome: "Nuvemshop", providerId: "nuvemshop" },
+  { id: "erp_olist", nome: "Olist / Tiny ERP", providerId: "olist" },
+  { id: "erp_jueri", nome: "Jueri ERP", providerId: "jueri" },
+  { id: "mila", nome: "Mila (WhatsApp)", providerId: null },
+];
+
 export function isValidProductSource(v: unknown): v is string {
   if (typeof v !== "string") return false;
   const s = v.trim();

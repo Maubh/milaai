@@ -3,6 +3,7 @@
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { integrationErrorText } from "@/lib/integration-errors";
+import { META_SOURCES as FONTES } from "@/lib/meta-catalog";
 import "./meta-catalog.css";
 
 /**
@@ -42,13 +43,6 @@ interface MetaCatalogManagerProps {
   connectedProviders: Array<{ id: string; name: string; connected: boolean }>;
   storeName?: string | null;
 }
-
-const FONTES = [
-  { id: "site_nuvemshop", nome: "Nuvemshop", providerId: "nuvemshop" },
-  { id: "erp_olist", nome: "Olist / Tiny ERP", providerId: "olist" },
-  { id: "erp_jueri", nome: "Jueri ERP", providerId: "jueri" },
-  { id: "mila", nome: "Mila (WhatsApp)", providerId: null },
-];
 
 function nomeDaFonte(id?: string | null): string | null {
   if (!id) return null;

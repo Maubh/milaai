@@ -128,6 +128,7 @@ export default async function IntegracoesPage({
     return (
       <IntegrationRow
         key={i.id}
+        anchor={i.id === "meta" ? "integracao-meta" : undefined}
         state={row.state}
         mark={<ToolMark provider={i.id} />}
         name={i.nome}

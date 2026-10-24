@@ -10,6 +10,7 @@ import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
 import "./integracoes.css";
+import "./meta-catalog-producao.css";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

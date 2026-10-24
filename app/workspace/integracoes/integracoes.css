@@ -1,6 +1,6 @@
 /* Hallmark · macrostructure: store desk (catalogue rows inside tonal panels) · theme: existing mila mineral
  * tone: sober / close · audience: shop owners · use: connect store tools · enrichment: existing tool marks
- * rows: components/integration-row.css · Meta: components/meta-catalog.css
+ * rows: components/integration-row.css · Meta: ./meta-catalog-producao.css (estilos de main)
  * pre-emit critique: P5 H5 E5 S5 R5 V4 */
 @import "../../../tokens.css";
 

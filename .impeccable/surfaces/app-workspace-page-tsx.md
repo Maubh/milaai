@@ -197,3 +197,5 @@ Provas no scratchpad:
 - `cand8-lock`: build final UPw5RtkBoeL4bK4pHtciD, 1440/375/320, com Essencial, Pro e plano ausente.
 
 Fable, rodada 6 só deste delta: ship em a0e6200. Coordenador: gate do lote = ship em a0e6200. O ship em f46847c continua registrado e não cobre este lote.
+
+Entrega 0.5.1 (2026-10-24): no diálogo de desconectar, Cancelar ganha a mesma moldura do Desconectar. Antes ele herdava o anel geral do shell, 3px por fora, e parecia ter 54px contra 44px. O anel de foco ali fica inteiro por dentro da borda (offset -3px), sobre o fundo claro, com 11,2:1 também no Desconectar de borda vermelha. Vão de 12px no desktop e 16px no celular. Nas Atualizações, a nota técnica das chaves da 0.5.0 virou uma nota geral do visual novo, por pedido da usuária. Fable: fix na rodada 7 e ship na 7b, em 3a721c0.

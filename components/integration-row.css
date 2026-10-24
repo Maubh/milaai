@@ -116,8 +116,14 @@
 .disconnect-dialog-card { display: grid; gap: var(--space-workspace-md); padding: var(--space-workspace-xl); }
 .disconnect-dialog-title { font-size: var(--text-workspace-heading); font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; text-wrap: balance; overflow-wrap: anywhere; }
 .disconnect-dialog-text { display: grid; gap: var(--space-workspace-sm); color: var(--color-ledger-muted); line-height: 1.6; }
-.disconnect-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-workspace-sm); margin-top: var(--space-workspace-xs); }
+.disconnect-dialog-actions { display: flex; justify-content: flex-end; flex-wrap: wrap; gap: var(--space-workspace-md); margin-top: var(--space-workspace-xs); }
 .disconnect-dialog-actions .ledger-button { min-height: 44px; }
+/* Cancelar recebe o foco ao abrir. O anel geral do shell fica 3px fora do
+   botão, com raio de 8px: Cancelar parecia mais alto que Desconectar e quase
+   encostava nele. Aqui o anel continua visível, na mesma cor, mas por dentro
+   da borda (inteiro sobre o fundo, para contrastar até com a borda vermelha de
+   Desconectar) e no raio do botão, sem ocupar o vão entre os dois. */
+.disconnect-dialog-actions .ledger-button:focus-visible { outline-offset: -3px; border-radius: var(--radius-ledger-control); }
 @media (max-width: 640px) {
   .disconnect-dialog {
     width: 100%;
@@ -126,7 +132,7 @@
     border-radius: var(--radius-desk-pop) var(--radius-desk-pop) 0 0;
   }
   .disconnect-dialog-card { padding-bottom: calc(var(--space-workspace-xl) + env(safe-area-inset-bottom)); }
-  .disconnect-dialog-actions { flex-direction: column-reverse; }
+  .disconnect-dialog-actions { flex-direction: column-reverse; gap: var(--space-workspace-lg); }
   .disconnect-dialog-actions .ledger-button { width: 100%; }
 }
 @media (prefers-reduced-motion: no-preference) {

@@ -46,3 +46,14 @@ test("cadeado só no Pro bloqueado pelo plano, com texto acessível e sem duplic
   assert.equal(dados.match(/<ProBloqueado \/>/g)?.length, 1);
   assert.match(dados, /conc\.acesso === "bloqueado" \?[\s\S]*?<span className="dados-selo-pro"><ProBloqueado \/><\/span>/);
 });
+
+test("catálogo da Meta: Configurar é ação secundária com moldura, junto de Sincronizar", () => {
+  const meta = read("../components/MetaCatalogManager.tsx");
+  const css = read("../components/meta-catalog.css");
+  const acoes = meta.slice(meta.indexOf('className="meta-catalog-summary-actions"'), meta.indexOf("Sincronizar\"}"));
+  assert.match(acoes, /className="ledger-button meta-catalog-configure"[\s\S]*aria-expanded=\{configAberta\}[\s\S]*Configurar/);
+  assert.doesNotMatch(acoes, /ledger-button-quiet/);
+  assert.match(acoes, /ledger-button ledger-button-primary meta-catalog-sync/);
+  // Barra única, mesma altura: grade, não flex com quebra distribuída.
+  assert.match(css, /\.meta-catalog-summary-actions \{ display: grid;[^}]*align-items: stretch;/);
+});

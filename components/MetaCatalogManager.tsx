@@ -415,7 +415,7 @@ export default function MetaCatalogManager({
         <div className="meta-catalog-summary-actions">
           <button
             type="button"
-            className="ledger-button ledger-button-quiet"
+            className="ledger-button meta-catalog-configure"
             aria-expanded={configAberta}
             aria-controls={configId}
             onClick={() => setConfigAberta(!configAberta)}

@@ -7,7 +7,7 @@ import { INTEGRACOES } from "@/lib/demo-data";
 import type { ProviderLive } from "@/lib/integration-catalog";
 import { connectedTools, failureText, overviewSteps, STARTERS, withText, type Load } from "@/lib/overview-steps";
 import { formatTrialLastDay, readPlanStatus, type PlanSession, type PlanStatus } from "@/lib/plan-status";
-import { RELEASES, SYSTEM_VERSION } from "@/lib/releases";
+import { LATEST_PUBLIC } from "@/lib/releases";
 import "./overview.css";
 
 export interface SessionSnapshot extends PlanSession {
@@ -58,7 +58,7 @@ export default function OverviewView({ session, providers, waLink, onRetry }: { 
   const connectedNames = reach ? reach.ids.map((id) => NAMES.get(id) ?? id) : [];
   // Zero só é definitivo quando todas as ferramentas que voltaram dizem se estão conectadas.
   const unconfirmed = !!reach && !reach.complete && !connectedNames.length;
-  const latest = RELEASES[0];
+  const latest = LATEST_PUBLIC;
   const loading = session.status === "loading";
   const failed = session.status === "error";
   const toolsLoading = providers.status === "loading";
@@ -139,7 +139,7 @@ export default function OverviewView({ session, providers, waLink, onRetry }: { 
             : !failed && plan && planDetail(plan) ? <p className="overview-tile-detail">{planDetail(plan)}</p> : null}
         </Tile>
         {latest ? (
-          <Tile href="/workspace/novidades" label="Última versão" id="overview-release" action="Ver histórico" meta={`v${SYSTEM_VERSION} · ${releaseDate.format(new Date(`${latest.date}T12:00:00Z`))}`}>
+          <Tile href="/workspace/novidades" label="Última atualização" id="overview-release" action="Ver histórico" meta={`v${latest.version} · ${releaseDate.format(new Date(`${latest.date}T12:00:00Z`))}`}>
             <p className="overview-tile-value overview-release-title">{latest.title}</p>
           </Tile>
         ) : null}

@@ -79,3 +79,5 @@
 .meta-catalog-current { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-workspace-sm); max-width: none; }
 .meta-catalog-current span { color: var(--color-ledger-muted); font-weight: 400; }
 .meta-catalog-current strong { color: var(--color-ledger-ink); }
+
+.meta-catalog-reauth { justify-self: start; }

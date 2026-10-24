@@ -482,18 +482,9 @@
       }
     ],
     "review": {
-      "scope": "Mensagens prontas e próximos passos, proposta A, 2026-10-23",
-      "disposition": "ship",
-      "remaining": "clear",
-      "reviewer": "Fable fresco (veredito próprio deste delta: rodada 1 fix de docs e prova da copy, rodada 2 ship) e gate final do coordenador Codex",
-      "evidence": [
-        "FABLE-STEPS-REVIEW.md",
-        "steps/proof/report.json e PNGs (build-a12, comportamento das regras)",
-        "steps/contain/contain.json e PNGs (build-a13, contenção do esqueleto)",
-        "steps/copy/copy.json e PNGs (build-a15, copy comum aos planos)"
-      ],
-      "validation": "Claude: npm test 109 pass, 1 skip, 0 fail; build-a15 exit 0. Coordenador Codex: tsc --noEmit --incremental false no build-a15 com exit 0 e nenhuma saída, sem filtro; 106 fontes/config equivalentes ao build-a15; 10 hashes do lock válidos; arquivos congelados intactos. Código commitado por Claude em 21baa54.",
-      "limits": "Estados alternativos vêm de interceptação rotulada no browser; o sandbox real cobre só o passo de sincronização da Meta. Painel de passos 224px no esqueleto contra 153px pronto. Âncora da Meta a 375px chega 38px acima da tela. Tipos antigos em .next/types do servidor de dev são limite local. OAuth real e backend de produção não comprovados. B e main fora do escopo, sem merge ou push.",
+      "scope": "Integração da proposta A com a produção (main f07b005), 2026-10-24",
+      "disposition": "pending",
+      "remaining": "veredito final do Fable fresco sobre o candidato e gate do coordenador antes do merge",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
@@ -542,6 +533,21 @@
         "validation": "Reviewer encerrou com ship, remaining clear, sem material_fix no escopo: layouts de 320/375/414/768px e desktop de 1440px; quatro links, ativo, foco, fim das quatro rotas, estado não lido e movimento reduzido. Claude reportou 94 pass, 1 skip e 0 fail, TypeScript e build-a10. Coordenador comparou 103 arquivos runtime com build-a10, zero divergências e BUILD_ID presente; conferiu os hashes dos dois arquivos Shell no lock e git diff --check limpo. Código commitado por Claude em 44e74e0, confirmado pelo coordenador. Documenter leu fontes, pacote e JSON de evidência; não executou checks de aplicação.",
         "limits": "Headless com inset de área segura igual a zero; a área segura física não foi comprovada. Dados do sandbox não comprovam OAuth real nem backend de produção. Movimento reduzido salta entre destinos sem posições intermediárias. Refinamento code-led, sem seed, novo estudo ou assets. B e main fora do escopo, sem merge ou push.",
         "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
+      {
+        "scope": "Mensagens prontas e próximos passos, proposta A, 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable fresco (veredito próprio deste delta: rodada 1 fix de docs e prova da copy, rodada 2 ship) e gate final do coordenador Codex",
+        "evidence": [
+          "FABLE-STEPS-REVIEW.md",
+          "steps/proof/report.json e PNGs (build-a12, comportamento das regras)",
+          "steps/contain/contain.json e PNGs (build-a13, contenção do esqueleto)",
+          "steps/copy/copy.json e PNGs (build-a15, copy comum aos planos)"
+        ],
+        "validation": "Claude: npm test 109 pass, 1 skip, 0 fail; build-a15 exit 0. Coordenador Codex: tsc --noEmit --incremental false no build-a15 com exit 0 e nenhuma saída, sem filtro; 106 fontes/config equivalentes ao build-a15; 10 hashes do lock válidos; arquivos congelados intactos. Código commitado por Claude em 21baa54.",
+        "limits": "Estados alternativos vêm de interceptação rotulada no browser; o sandbox real cobre só o passo de sincronização da Meta. Painel de passos 224px no esqueleto contra 153px pronto. Âncora da Meta a 375px chega 38px acima da tela. Tipos antigos em .next/types do servidor de dev são limite local. OAuth real e backend de produção não comprovados. B e main fora do escopo, sem merge ou push.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
       }
     ]
   },
@@ -566,7 +572,7 @@
       "name": "Cápsula de navegação",
       "kind": "nav",
       "refersTo": "nav-track",
-      "description": "Três destinos no desktop em cápsula translúcida; amostra estática do estado ativo. Na aplicação, clip-path lead/trail acompanha clique, teclado e histórico; movimento reduzido salta direto. Até 1023px, dock fixo com quatro destinos, ícones, rótulos e estado de versão não lida em Atualizações; área segura e espaço inferior reservados.",
+      "description": "Quatro destinos no desktop em cápsula translúcida (Visão geral, Dados da loja, Integrações, Meu plano); amostra estática do estado ativo. Na aplicação, clip-path lead/trail acompanha clique, teclado e histórico; movimento reduzido salta direto. Até 1023px, dock fixo com cinco destinos (inclui Atualizações), rótulos inteiros e estado de versão não lida; área segura e espaço inferior reservados.",
       "html": "<nav class=\"ds-nav\" aria-label=\"Sua loja\"><a class=\"ds-nav-item\" aria-current=\"page\" href=\"/workspace\">Visão geral</a><a class=\"ds-nav-item\" href=\"/workspace/integracoes\">Integrações</a><a class=\"ds-nav-item\" href=\"/workspace/plano\">Meu plano</a></nav>",
       "css": ".ds-nav { position:relative; font-family:var(--font-workspace,Manrope,sans-serif); display:inline-flex; gap:2px; padding:4px; border-radius:999px; background:var(--color-desk-glass); box-shadow:inset 0 0 0 1px var(--color-desk-hairline); } .ds-nav-item { display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border-radius:999px; color:var(--color-ledger-ink); font-size:.875rem; font-weight:600; text-decoration:none; white-space:nowrap; } a.ds-nav-item:hover { background:var(--color-desk-tint); } a.ds-nav-item:focus-visible { position:relative; z-index:1; outline:2px solid var(--color-ledger-focus); outline-offset:-2px; } a.ds-nav-item[aria-current]:focus-visible { color:var(--color-ledger-mineral-ink); outline-color:var(--color-ledger-focus-on-mineral); } .ds-nav-item[aria-current] { background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); }"
     },
@@ -621,14 +627,14 @@
       "name": "Sino de atualizações",
       "kind": "custom",
       "refersTo": "updates-bell",
-      "description": "Botão circular; prévia do gatilho fechado. Na aplicação abre popover não modal das três versões reais de RELEASES, marca visto e fecha por Esc, fora, foco ou navegação.",
+      "description": "Botão circular; prévia do gatilho fechado. Na aplicação abre popover não modal das três versões reais de RELEASES, marca visto e fecha por Esc, fora, foco ou navegação. Até 1023px abre tela cheia modal (dialog nativo) acima da barra e do dock.",
       "html": "<button class=\"ds-bell\" type=\"button\" aria-label=\"Atualizações, novidade não lida\" aria-haspopup=\"dialog\" aria-expanded=\"false\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z\"/><path d=\"M10 20.5a2 2 0 0 0 4 0\"/></svg><span aria-hidden=\"true\"></span></button>",
       "css": ".ds-bell { position:relative; display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid var(--color-desk-hairline); border-radius:50%; background:var(--color-desk-glass); color:var(--color-ledger-ink); cursor:pointer; transition:background-color 180ms cubic-bezier(.16,1,.3,1); } .ds-bell:hover { background:var(--color-desk-glass-hover); } .ds-bell:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-bell span { position:absolute; top:9px; right:10px; width:8px; height:8px; border-radius:50%; background:var(--color-ledger-mineral); box-shadow:0 0 0 2px var(--color-desk-panel); } @media(prefers-reduced-motion:reduce) { .ds-bell { transition:none; } }"
     }
   ],
   "narrative": {
     "northStar": "A mesa da loja",
-    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.\n\nA Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, quatro destinos ficam no dock inferior; o sino do topo também abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.",
+    "overview": "Este documento registra a proposta A da área logada, integrada à produção pela branch `feat/workspace-a-producao` (merge sobre main). A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.\n\nA Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, quatro destinos ficam no dock inferior; o sino do topo também abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.",
     "keyCharacteristics": [
       "Canvas marfim com pano tonal fixo; painéis translúcidos com filete claro de 1px, brilho interno e sombra longa suave.",
       "Preenchimento mineral concentrado no destino ativo, na ação principal e no painel da conversa; texto mineral também sinaliza marca, links e pequenos destaques.",

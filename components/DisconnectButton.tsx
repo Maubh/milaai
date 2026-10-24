@@ -53,7 +53,6 @@ export default function DisconnectButton({
       label={`Desconectar ${providerName}`}
       busy={trabalhando}
       disabled={trabalhando}
-      expanded={confirmando}
       controls={confirmando ? confirmId : undefined}
       onClick={() => {
         setErro("");

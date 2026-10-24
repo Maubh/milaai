@@ -9,12 +9,11 @@ import { useRouter } from "next/navigation";
  * muda sozinha por otimismo. Inspiração visual: switches de uiverse.io
  * (Jay-9527/weak-dingo-78, njesenberger/friendly-otter-40), implementação própria.
  */
-export function IntegrationSwitch({ checked, label, disabled, busy, expanded, controls, onClick }: {
+export function IntegrationSwitch({ checked, label, disabled, busy, controls, onClick }: {
   checked: boolean;
   label: string;
   disabled?: boolean;
   busy?: boolean;
-  expanded?: boolean;
   controls?: string;
   onClick: () => void;
 }) {
@@ -25,7 +24,6 @@ export function IntegrationSwitch({ checked, label, disabled, busy, expanded, co
       aria-checked={checked}
       aria-label={label}
       aria-busy={busy || undefined}
-      aria-expanded={expanded}
       aria-controls={controls}
       className="integration-switch"
       data-busy={busy || undefined}

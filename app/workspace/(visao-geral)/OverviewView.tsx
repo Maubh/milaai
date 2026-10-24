@@ -136,7 +136,7 @@ export default function OverviewView({ session, providers, waLink, onRetry }: { 
             {loading ? <TextBone w="12ch" /> : failed || !plan ? <span className="overview-status-empty">Sem leitura</span> : plan.title}
           </p>
           {loading ? <p className="overview-tile-detail"><TextBone /><TextBone w="40%" /></p>
-            : !failed && plan ? <p className="overview-tile-detail">{planDetail(plan)}</p> : null}
+            : !failed && plan && planDetail(plan) ? <p className="overview-tile-detail">{planDetail(plan)}</p> : null}
         </Tile>
         {latest ? (
           <Tile href="/workspace/novidades" label="Última versão" id="overview-release" action="Ver histórico" meta={`v${SYSTEM_VERSION} · ${releaseDate.format(new Date(`${latest.date}T12:00:00Z`))}`}>

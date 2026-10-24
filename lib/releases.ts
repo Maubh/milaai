@@ -30,7 +30,7 @@ export const RELEASES: readonly Release[] = [
     date: "2026-10-24",
     internal: true,
     title: "Atualizações só com o que muda o uso e selos de plano iguais",
-    summary: "Ajustes de acabamento ficam fora das Atualizações. Nas notas, o tipo fica sempre acima do plano, e os dois selos de plano têm o mesmo formato.",
+    summary: "Ajustes de acabamento ficam fora das Atualizações. Nas notas, o tipo fica acima do plano; o Configurar da Meta vira botão ao lado de Sincronizar; no celular, o selo Pro fica junto da marca; página nova abre no topo.",
     changes: [
       {
         type: "fix",

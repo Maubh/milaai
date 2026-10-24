@@ -144,7 +144,11 @@
 .disconnect-error { color: var(--color-ledger-error); font-size: var(--text-workspace-sm); }
 
 @container (max-width: 760px) {
-  .integration-list { grid-template-columns: [mark] minmax(0, 1fr) [tier] 3.25rem [status] 7rem; column-gap: var(--space-workspace-sm); }
+  /* Selo Pro (com cadeado quando bloqueado) logo ao lado da marca, e não na
+     coluna perto do status: cada linha tem a própria grade aqui. */
+  .integration-list { grid-template-columns: minmax(0, 1fr); }
+  .integration-item { grid-template-columns: [mark] auto [tier] auto [status] minmax(0, 1fr); column-gap: var(--space-workspace-sm); }
+  .integration-item-status { justify-content: flex-end; }
   .integration-item-mark,
   .integration-item-tier,
   .integration-item-status { grid-row: 1; }

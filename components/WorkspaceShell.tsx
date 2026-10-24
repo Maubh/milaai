@@ -48,6 +48,29 @@ function isActive(pathname: string, href: string) {
   return pathname === href || (href !== "/workspace" && pathname.startsWith(`${href}/`));
 }
 
+// Página nova abre no topo: qualquer navegação interna para outro pathname
+// (menu, dock, cartões, "Ver histórico", CTAs). Ficam de fora voltar/avançar,
+// que mantêm a posição restaurada pelo navegador, links com âncora (#…), que
+// seguem o comportamento de antes, e o que não muda de rota (sino, conta, edição).
+let historyTarget: string | null = null;
+function useTopOnNewPage() {
+  const pathname = usePathname();
+  const first = useRef(true);
+  useEffect(() => {
+    const onPop = () => { historyTarget = window.location.pathname; };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  // Antes do primeiro paint da rota nova; "instant" ignora o scroll suave do html.
+  useLayoutEffect(() => {
+    if (first.current) { first.current = false; return; }
+    const fromHistory = historyTarget === pathname;
+    historyTarget = null;
+    if (fromHistory || window.location.hash) return;
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  }, [pathname]);
+}
+
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
@@ -238,6 +261,7 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
  */
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  useTopOnNewPage();
   const [loggingOut, setLoggingOut] = useState(false);
   const [telefone, setTelefone] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);

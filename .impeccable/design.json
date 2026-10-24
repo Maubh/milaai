@@ -483,9 +483,9 @@
     ],
     "review": {
       "scope": "Lote 0.6.1 (interno, sem nota pública), d91d4ee..2cc94b7 (2026-10-24): Dados da loja sem o teto local de 860px; cards no container comum (--size-ledger-content), borda direita alinhada à conta do topo. Limites de leitura dos campos mantidos.",
-      "disposition": "pending-gate",
-      "remaining": "gate Codex",
-      "reviewer": "Claude (implementação); gate Codex pendente.",
+      "disposition": "ship",
+      "remaining": "clear",
+      "reviewer": "Coordenador Codex: SHIP para a fonte 2cc94b7 e as provas cand18 (JSON e PNG 1920 revisados); a mudança de runtime é só a remoção do teto CSS e a versão interna, sem outra rodada visual nem testes novos.",
       "evidence": [
         "Build 2cc94b7 (XRMTQjH065abXVN6k74cW), Sandbox: borda direita dos cards = borda direita da conta = painel de Integrações em 1440 (1240), 1920 (1480), 375 (359) e 320 (304); esqueleto, página pronta e card em edição com a mesma caixa; sem overflow horizontal; inputs 420px no desktop e largura toda no celular."
       ],

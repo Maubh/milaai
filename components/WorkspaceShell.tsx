@@ -246,13 +246,16 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
   // Fecha quando o foco sai da conta, inclusive por Tab sem destino. No Safari,
   // tocar no avatar não o foca: o blur chega sem destino logo depois do
   // pointerdown no avatar e fechava antes do clique, que reabria. Esse blur
-  // fica para o clique no avatar decidir.
+  // fica para o clique no avatar decidir. Qualquer blur ou gesto cancelado
+  // consome a intenção, para um Tab seguinte não ser ignorado.
   return <div ref={account} className="desk-account" onBlur={(event) => {
     const next = event.relatedTarget as Node | null;
-    if (!next && pressingTrigger.current) { pressingTrigger.current = false; return; }
+    const pressed = pressingTrigger.current;
+    pressingTrigger.current = false;
+    if (!next && pressed) return;
     if (!event.currentTarget.contains(next)) setOpen(false);
   }}>
-    <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onPointerDown={() => { pressingTrigger.current = true; }} onClick={() => { pressingTrigger.current = false; setOpen(!open); }}>
+    <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onPointerDown={() => { pressingTrigger.current = true; }} onPointerCancel={() => { pressingTrigger.current = false; }} onClick={() => { pressingTrigger.current = false; setOpen(!open); }}>
       <span className="desk-avatar" aria-hidden="true">{initials}</span>
       <span className="desk-account-chevron"><WorkspaceIcon name="chevron" /></span>
     </button>

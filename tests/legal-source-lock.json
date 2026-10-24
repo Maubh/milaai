@@ -132,7 +132,7 @@
   "site/components/SiteHeader.tsx": "979315fd1d70a365c1a7005f482eaf9e5a55649b8f68d5eef4d52265008369e2",
   "site/components/TurnstileWidget.tsx": "0993c33f3346f02954ac689a761c55c842cc06803b01664d6ea97c51cf6297c7",
   "site/components/UpdatesBell.tsx": "87e880f2c3e1caf88a61188c27a3d4802806dde9fef01b5f9a7db9784f915c38",
-  "site/components/WorkspaceShell.tsx": "5c95af923f65d1b9cae13ebf3ab8795d48899804b472cf09bffa6825ddd5e69f",
+  "site/components/WorkspaceShell.tsx": "ce448f45bd945ea517d20394402cc7f7252267e57e092c16103785205ce62c0b",
   "site/components/WorkspaceSkeleton.tsx": "c33a2c585800823d6b85bcfebf05db8b2aee0d3dcb75a43bc3087c672150dd1e",
   "site/components/integration-row.css": "d19c16e0f03eebda0d7daf1b809c33c8227c917776653cef8d1563325f3ab928",
   "site/components/integrations-beam.css": "f01d4fe8e52508583bca536268dfe145f916c16ff225605d6b57ef2cc9a61077",

@@ -33,7 +33,9 @@
 }
 @media (prefers-reduced-motion: reduce) { .release-updates-dialog[open] { animation: none; } }
 /* Tipo da mudança e plano em que ela vale, lado a lado. */
-.releases-timeline .release-change-tags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-workspace-xs); margin-bottom: var(--space-workspace-sm); }
+/* Na linha de duas colunas, o par tipo + plano ocupa a coluna da esquerda inteira; título e texto ficam à direita. */
+.releases-timeline .release-change-tags { grid-row: span 2; display: flex; flex-wrap: wrap; align-content: start; align-items: center; gap: var(--space-workspace-xs); }
+@media (max-width: 640px) { .releases-timeline .release-change-tags { grid-row: auto; margin-bottom: var(--space-workspace-xs); } }
 .releases-timeline .release-change-tags .release-change-type { margin-bottom: 0; }
 .releases-timeline .release-change-plan { display: inline-block; padding: var(--space-workspace-xs) var(--space-workspace-sm); border: 1px solid var(--color-workspace-rule); border-radius: var(--radius-workspace); color: var(--color-workspace-muted); font-size: var(--text-workspace-xs); font-weight: 500; }
 .releases-timeline .release-change-plan[data-plan="pro"] { border-color: var(--color-workspace-accent); color: var(--color-workspace-accent); }

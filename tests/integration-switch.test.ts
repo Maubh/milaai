@@ -15,6 +15,11 @@ test("chave de integração: switch real, ligado só pelo vault, sem otimismo", 
   assert.match(desligar, /<IntegrationSwitch\s+checked\b/);
   assert.match(desligar, /\/api\/oauth\/\$\{provider\}\/revoke/);
   assert.match(desligar, /router\.refresh\(\)/);
+  // Confirmação em diálogo nativo, com Cancelar como foco inicial; a chave só muda depois do revoke.
+  assert.match(desligar, /<dialog\b/);
+  assert.match(desligar, /showModal\(\)/);
+  assert.match(desligar, /autoFocus>\s*Cancelar/);
+  assert.doesNotMatch(desligar, /disconnect-confirm/);
 });
 
 test("chave de integração: só nas linhas conectadas ou disponíveis; Pro e desconhecido sem chave", () => {

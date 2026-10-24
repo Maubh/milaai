@@ -485,7 +485,7 @@
       "scope": "Lote 0.6.2 (interno, sem nota pública), c0551ab..c05c56b (2026-10-24): menu da conta fecha no segundo toque do avatar no WebKit/Safari e no toque. Causa medida: o botão não recebe foco no toque/clique do WebKit, o blur chegava sem destino, fechava e o clique reabria. O blur sem destino só é ignorado logo após pointerdown no avatar; qualquer blur, clique ou pointercancel consome essa intenção.",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "Coordenador Codex: SHIP no código c05c56b; diff lido, paridade dos arquivos de runtime e do lock com o build-cand21 (pKZZ4Q8St1kX1JBnNqOYH), JSONs de Chromium e WebKit em 320/375/1440 e PNGs WebKit 375 aberto/fechado conferidos; a regressão de Tab do c-intermediário 30a23b7 foi resolvida.",
+      "reviewer": "Coordenador Codex: SHIP no código c05c56b; diff lido, paridade dos arquivos de runtime e do lock com o build-cand21 (pKZZ4Q8St1kX1JBnNqOYH), JSONs de Chromium e WebKit em 320/375/1440 e PNGs WebKit 375 aberto/fechado conferidos; a regressão de Tab do commit intermediário 30a23b7 (cand19) foi resolvida.",
       "evidence": [
         "Builds isolados base c0551ab (J1sT2lQLz7Pt9qtZBINO8) e c05c56b (pKZZ4Q8St1kX1JBnNqOYH), Sandbox, Chromium e WebKit em 320/375 com toque e 1440: seis toques no avatar alternam true/false no corrigido (base WebKit: sempre true); toque fora, Escape (foco no avatar), Tab e Shift+Tab fecham ou saem como na base; gesto interrompido e pointercancel seguidos de Tab fecham; zero não-GET, logout nunca acionado."
       ],

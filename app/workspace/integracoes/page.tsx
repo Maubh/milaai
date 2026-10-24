@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DisconnectButton from "@/components/DisconnectButton";
+import { ProBloqueado } from "@/components/PlanLock";
 import { ConnectSwitch } from "@/components/IntegrationSwitch";
 import IntegrationRow, { IntegrationList } from "@/components/IntegrationRow";
 import IntegrationsNotice from "@/components/IntegrationsNotice";
@@ -135,7 +136,8 @@ export default async function IntegracoesPage({
         name={i.nome}
         detail={presentation.detail}
         description={presentation.description}
-        tier={row.requiresPro ? "Pro" : null}
+        // Cadeado só quando o plano bloqueia; conectada, disponível ou não verificada mantêm o selo simples.
+        tier={row.requiresPro ? (row.state === "locked" ? <ProBloqueado /> : "Pro") : null}
         status={row.status}
         details={(i.id === "google" || i.id === "notion") ? (
           <details className="integrations-access">

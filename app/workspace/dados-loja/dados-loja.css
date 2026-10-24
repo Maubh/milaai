@@ -59,6 +59,7 @@
 .dados-selo-pro {
   display: inline-flex;
   align-items: center;
+  gap: 3px;
   min-height: 24px;
   margin-left: var(--space-workspace-sm);
   padding: 0 var(--space-workspace-sm);
@@ -87,3 +88,4 @@
   .dados-lista .dados-item { grid-template-columns: minmax(0, 1fr); gap: var(--space-workspace-xs); }
   .dados-campo input, .dados-campo textarea { max-width: none; }
 }
+.dados-selo-pro .plan-lock { flex: none; }

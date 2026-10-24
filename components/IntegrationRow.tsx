@@ -12,8 +12,8 @@ interface Props {
   description: ReactNode;
   /** Consentimento / uso dos dados, abaixo da descrição. */
   details?: ReactNode;
-  /** Nível exigido (ex.: Pro). Vazio mantém o lugar para alinhar as colunas. */
-  tier?: string | null;
+  /** Nível exigido (ex.: Pro, ou Pro com cadeado quando bloqueado no plano). Vazio mantém o lugar para alinhar as colunas. */
+  tier?: ReactNode;
   /** Estado da conexão como o vault informa. Vazio quando o nível já diz tudo (ex.: bloqueado no plano). */
   status?: { label: string; tone: IntegrationTone } | null;
   actions: ReactNode;

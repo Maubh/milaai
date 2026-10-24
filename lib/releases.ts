@@ -41,7 +41,7 @@ export const RELEASES: readonly Release[] = [
         type: "improvement",
         plan: "all",
         title: "Integrações ligam e desligam numa chave",
-        description: "Cada ferramenta disponível tem uma chave. Ligar abre a conexão da própria ferramenta, e a chave só fica ligada depois que a conexão é confirmada. Desligar pede confirmação antes de desconectar.",
+        description: "Cada ferramenta disponível tem uma chave. Ligar abre a conexão da própria ferramenta, e a chave só fica ligada depois que a conexão é confirmada. Desligar pede confirmação antes de desconectar. Ferramentas fora do seu plano mostram um cadeado no selo Pro.",
       },
       {
         type: "improvement",
@@ -53,7 +53,7 @@ export const RELEASES: readonly Release[] = [
         type: "improvement",
         plan: "all",
         title: "Dados da loja mais fácil de editar",
-        description: "O botão de editar fica no canto de cada bloco, salvar e cancelar ficam no mesmo lugar, e os campos mostram a unidade: %, R$ ou x.",
+        description: "O botão de editar fica no canto de cada bloco, salvar e cancelar ficam no mesmo lugar, e os campos mostram a unidade: %, R$ ou x. Concorrentes no Instagram mostra o mesmo cadeado quando o seu plano não inclui a análise.",
       },
     ],
   },

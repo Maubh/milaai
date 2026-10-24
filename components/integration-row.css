@@ -35,9 +35,12 @@
 .integration-item-detail { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); font-weight: 500; }
 .integration-item-description { max-width: 62ch; color: var(--color-ledger-muted); line-height: 1.6; }
 
+/* Cadeado do selo Pro bloqueado: herda a cor do selo, não encolhe. */
+.plan-lock { flex: none; }
 .integration-tier {
   display: inline-flex;
   align-items: center;
+  gap: 3px;
   min-height: 24px;
   padding: 0 var(--space-workspace-sm);
   border-radius: var(--radius-desk-pill);
@@ -135,7 +138,7 @@
 .disconnect-error { color: var(--color-ledger-error); font-size: var(--text-workspace-sm); }
 
 @container (max-width: 760px) {
-  .integration-list { grid-template-columns: [mark] minmax(0, 1fr) [tier] 2.75rem [status] 7rem; column-gap: var(--space-workspace-sm); }
+  .integration-list { grid-template-columns: [mark] minmax(0, 1fr) [tier] 3.25rem [status] 7rem; column-gap: var(--space-workspace-sm); }
   .integration-item-mark,
   .integration-item-tier,
   .integration-item-status { grid-row: 1; }

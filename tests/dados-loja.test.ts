@@ -95,7 +95,7 @@ test("dados da loja: no Essencial a seção de concorrentes fica bloqueada com o
   // das integrações bloqueadas ("Assinar plano Pro").
   const src = readFileSync(new URL("../app/workspace/dados-loja/DadosLojaView.tsx", import.meta.url), "utf8");
   assert.match(src, /conc\.acesso === "bloqueado" \? \(/);
-  assert.match(src, /dados-selo-pro">Pro</);
+  assert.match(src, /dados-selo-pro"><ProBloqueado \/></);
   assert.match(src, /href="\/workspace\/plano"[^>]*>Assinar plano Pro </);
   assert.match(mensagemDeErro("plan_pro_required"), /Plano Pro/);
 });

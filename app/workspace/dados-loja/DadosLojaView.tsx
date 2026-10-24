@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TextBone } from "@/components/WorkspaceSkeleton";
 import { acessoConcorrentes, type AcessoConcorrentes } from "@/lib/concorrentes-acesso";
+import { ProBloqueado } from "@/components/PlanLock";
 import {
   contaDoInstagram,
   formatarMarkup,
@@ -428,7 +429,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
           <section className="desk-panel dados-secao is-bloqueada" aria-labelledby="secao-concorrentes">
             {cabecalho(
               "concorrentes",
-              <>Concorrentes no Instagram <span className="dados-selo-pro">Pro</span></>,
+              <>Concorrentes no Instagram <span className="dados-selo-pro"><ProBloqueado /></span></>,
               `No Plano Pro, a mila lê até ${MAX_CONCORRENTES} perfis de concorrentes e mostra o formato que mais performa, o post do topo e as hashtags que eles usam.`,
               <Link href="/workspace/plano" className="ledger-button" aria-label="Assinar plano Pro para salvar concorrentes">Assinar plano Pro <Arrow /></Link>,
               true,

@@ -34,3 +34,15 @@ test("chave de integração: só nas linhas conectadas ou disponíveis; Pro e de
   assert.match(page, /row\.state === "locked" \? \(\s*<Link href="\/workspace\/plano"[^>]*>\s*Assinar plano Pro/);
   assert.match(page, /row\.state === "available" \? \(\s*<ConnectSwitch/);
 });
+
+test("cadeado só no Pro bloqueado pelo plano, com texto acessível e sem duplicar o selo", () => {
+  const page = read("../app/workspace/integracoes/page.tsx");
+  assert.match(page, /tier=\{row\.requiresPro \? \(row\.state === "locked" \? <ProBloqueado \/> : "Pro"\) : null\}/);
+  assert.doesNotMatch(page, /Exige Pro/);
+  const cadeado = read("../components/PlanLock.tsx");
+  assert.match(cadeado, /aria-hidden="true"/);
+  assert.match(cadeado, /Pro<span className="sr-only">, bloqueado no seu plano<\/span>/);
+  const dados = read("../app/workspace/dados-loja/DadosLojaView.tsx");
+  assert.equal(dados.match(/<ProBloqueado \/>/g)?.length, 1);
+  assert.match(dados, /conc\.acesso === "bloqueado" \?[\s\S]*?<span className="dados-selo-pro"><ProBloqueado \/><\/span>/);
+});

@@ -482,20 +482,32 @@
       }
     ],
     "review": {
-      "scope": "Lote 0.6.0, 9860232..69021ab (2026-10-24): Site da loja em Dados da loja (normalizado, link http(s), limpar, conferência honesta do retorno) e conversa com a mila em botão flutuante de WhatsApp (saiu da barra, some com campo em foco, reserva de fim de página); campo focado acima do dock no celular.",
-      "disposition": "ship",
-      "remaining": "clear",
-      "reviewer": "Fable (sessão nova, só o delta): ship em e698d77 e reteste ship em 69021ab. Coordenador Codex: gate de fonte sem achados; nota pública só do Site, por decisão editorial (o FAB realoca uma ação existente). Backend mila-eve a69f250 no ar antes deste lote.",
+      "scope": "Lote 0.6.1 (interno, sem nota pública), d91d4ee..2cc94b7 (2026-10-24): Dados da loja sem o teto local de 860px; cards no container comum (--size-ledger-content), borda direita alinhada à conta do topo. Limites de leitura dos campos mantidos.",
+      "disposition": "pending-gate",
+      "remaining": "gate Codex",
+      "reviewer": "Claude (implementação); gate Codex pendente.",
       "evidence": [
-        "Site (auth falso local, Eve novo e antigo, build bacb6a6/e698d77): sem esquema vira https e recarrega igual; inválido mostra erro; vazio limpa; Eve antigo não mostra sucesso; linha legível em 320/375.",
-        "FAB (build 7414a18/e698d77): folga positiva até o fim da página em todas as rotas, desktop 42–113px e celular 28–74px; escondido com campo em foco e de volta ao sair; abaixo do sino em tela cheia; foco visível; reduced motion.",
-        "Dock (build final xFQAL-T3ww6WtySSJAb9r): campo Site focado por clique e Tab acima do dock em 320/375; ações visíveis; navegação nova em 0."
+        "Build 2cc94b7 (XRMTQjH065abXVN6k74cW), Sandbox: borda direita dos cards = borda direita da conta = painel de Integrações em 1440 (1240), 1920 (1480), 375 (359) e 320 (304); esqueleto, página pronta e card em edição com a mesma caixa; sem overflow horizontal; inputs 420px no desktop e largura toda no celular."
       ],
-      "validation": "Claude: npm test 133 testes, 132 pass, 1 skip, 0 fail; tsc limpo; build isolado de 69021ab com exit 0.",
-      "limits": "Headless emulado; Sandbox e auth falso local fora do produto; nenhuma escrita real.",
+      "validation": "Claude: npm test 133 testes, 132 pass, 1 skip, 0 fail; tsc limpo; build isolado de 2cc94b7 com exit 0.",
+      "limits": "Headless emulado; Sandbox; nenhuma escrita real.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Lote 0.6.0, 9860232..69021ab (2026-10-24): Site da loja em Dados da loja (normalizado, link http(s), limpar, conferência honesta do retorno) e conversa com a mila em botão flutuante de WhatsApp (saiu da barra, some com campo em foco, reserva de fim de página); campo focado acima do dock no celular.",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable (sessão nova, só o delta): ship em e698d77 e reteste ship em 69021ab. Coordenador Codex: gate de fonte sem achados; nota pública só do Site, por decisão editorial (o FAB realoca uma ação existente). Backend mila-eve a69f250 no ar antes deste lote.",
+        "evidence": [
+          "Site (auth falso local, Eve novo e antigo, build bacb6a6/e698d77): sem esquema vira https e recarrega igual; inválido mostra erro; vazio limpa; Eve antigo não mostra sucesso; linha legível em 320/375.",
+          "FAB (build 7414a18/e698d77): folga positiva até o fim da página em todas as rotas, desktop 42–113px e celular 28–74px; escondido com campo em foco e de volta ao sair; abaixo do sino em tela cheia; foco visível; reduced motion.",
+          "Dock (build final xFQAL-T3ww6WtySSJAb9r): campo Site focado por clique e Tab acima do dock em 320/375; ações visíveis; navegação nova em 0."
+        ],
+        "validation": "Claude: npm test 133 testes, 132 pass, 1 skip, 0 fail; tsc limpo; build isolado de 69021ab com exit 0.",
+        "limits": "Headless emulado; Sandbox e auth falso local fora do produto; nenhuma escrita real.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Lote 0.5.2 (interno, sem nota pública), e9db183..b7c28fc (2026-10-24): feed só com versões públicas (internal, PUBLIC_RELEASES, não lido por semver), tipo acima do plano com PlanTag único, ações da Meta numa barra (Configurar secundário com moldura, empilha <340px), selo Pro junto da marca no celular, página nova abre no topo.",
         "disposition": "ship",

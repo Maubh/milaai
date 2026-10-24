@@ -242,7 +242,10 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
     };
   }, [open]);
 
-  return <div ref={account} className="desk-account" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false); }}>
+  // Fecha quando o foco vai para fora (Tab). No Safari, tocar no avatar não o
+  // foca: o blur chega sem destino, fechava aqui e o clique reabria. Sem
+  // destino, quem decide é o clique no avatar ou o toque fora (pointerdown).
+  return <div ref={account} className="desk-account" onBlur={(event) => { const next = event.relatedTarget as Node | null; if (next && !event.currentTarget.contains(next)) setOpen(false); }}>
     <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen(!open)}>
       <span className="desk-avatar" aria-hidden="true">{initials}</span>
       <span className="desk-account-chevron"><WorkspaceIcon name="chevron" /></span>

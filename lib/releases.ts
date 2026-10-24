@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.2",
+    date: "2026-10-24",
+    internal: true,
+    title: "Menu da conta fecha no segundo toque",
+    summary: "No Safari e no celular, tocar de novo no avatar fecha o menu da conta, em vez de fechar e reabrir na hora.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Avatar abre e fecha o menu da conta",
+        description: "Tocar de novo no avatar fecha o menu da conta.",
+      },
+    ],
+  },
+  {
     version: "0.6.1",
     date: "2026-10-24",
     internal: true,

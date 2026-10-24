@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { META_SOURCES as FONTES } from "@/lib/meta-catalog";
+import "./meta-catalog.css";
 
 /**
  * Resumo da última sincronização, já projetado pelo BFF
@@ -43,6 +44,11 @@ interface MetaCatalogManagerProps {
   storeName?: string | null;
 }
 
+function nomeDaFonte(id?: string | null): string | null {
+  if (!id) return null;
+  return FONTES.find((f) => f.id === id)?.nome ?? id;
+}
+
 interface CatalogoOpcao {
   id: string;
   name: string | null;
@@ -50,8 +56,9 @@ interface CatalogoOpcao {
 }
 
 /**
- * Escolha do catálogo da Meta. Com vários catálogos na conta, a Mila não
- * escolhe sozinha: a lojista escolhe uma vez e a escolha vale até ela trocar.
+ * Escolha do catálogo da Meta (comportamento de main). Com vários catálogos na
+ * conta, a mila não escolhe sozinha: a lojista escolhe uma vez e a escolha vale
+ * até ela trocar.
  */
 function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancelar?: () => void }) {
   const router = useRouter();
@@ -116,22 +123,18 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
   }
 
   if (catalogos === null) {
-    return <p className="meta-catalog-summary-date">Buscando seus catálogos na Meta…</p>;
+    return <p className="meta-catalog-hint" role="status">Buscando seus catálogos na Meta…</p>;
   }
 
   return (
     <div className="meta-catalog-field">
-      <div className="meta-catalog-field-header">
-        <label htmlFor="meta-catalog-choice" className="meta-catalog-field-title">
-          Qual catálogo a Mila deve usar?
-        </label>
-      </div>
+      <label htmlFor="meta-catalog-choice">Qual catálogo a mila deve usar?</label>
       {semPermissao ? (
-        <p className="meta-catalog-source-warning">
+        <p className="meta-catalog-hint" data-tone="warn">
           A Meta não liberou a lista de catálogos desta conta. Reconecte a Meta e autorize o acesso aos seus negócios para escolher o catálogo.
         </p>
       ) : catalogos.length === 0 && !erro ? (
-        <p className="meta-catalog-source-warning">
+        <p className="meta-catalog-hint" data-tone="warn">
           Não encontramos nenhum catálogo nesta conta da Meta. Crie um no Gerenciador de Comércio e volte aqui.
         </p>
       ) : catalogos.length > 0 ? (
@@ -153,17 +156,17 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
               </option>
             ))}
           </select>
-          <div className="meta-catalog-actions">
+          <div className="meta-catalog-alert-actions">
             <button
               type="button"
-              className="btn btn-primary"
+              className="ledger-button ledger-button-primary"
               onClick={usarCatalogo}
               disabled={gravando || !escolha || escolha === atual}
             >
               {gravando ? "Salvando…" : "Usar este catálogo"}
             </button>
             {onCancelar ? (
-              <button type="button" className="btn btn-ghost" onClick={onCancelar} disabled={gravando}>
+              <button type="button" className="ledger-button ledger-button-quiet" onClick={onCancelar} disabled={gravando}>
                 Cancelar
               </button>
             ) : null}
@@ -171,16 +174,14 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
         </>
       ) : null}
       {erro ? (
-        <p className="meta-catalog-feedback meta-catalog-feedback-error" role="alert">
-          ✕ {erro}
-        </p>
+        <p className="meta-catalog-feedback" data-tone="error" role="alert">{erro}</p>
       ) : null}
     </div>
   );
 }
 
 function formatarDataHora(ts?: number | null): string {
-  if (!ts) return "Nunca sincronizado";
+  if (!ts) return "Ainda não sincronizado";
   try {
     return new Intl.DateTimeFormat("pt-BR", {
       dateStyle: "short",
@@ -200,7 +201,7 @@ export default function MetaCatalogManager({
   const router = useRouter();
 
   // Sem fonte salva, o seletor começa vazio ("Escolha a fonte"): a sugestão
-  // aparece marcada, mas só vale depois que a lojista escolhe e salva.
+  // aparece marcada, mas só vale depois que a lojista escolhe e salva (main).
   const [fonte, setFonte] = useState<string>(meta.product_source || "");
   const sugerida = meta.product_source ? null : meta.suggested_source || null;
   const [trocandoCatalogo, setTrocandoCatalogo] = useState(false);
@@ -221,6 +222,12 @@ export default function MetaCatalogManager({
   const fonteConectada = fonteAtualObj?.providerId
     ? connectedProviders.find((p) => p.id === fonteAtualObj.providerId)?.connected
     : true;
+  const fonteSalva = !!meta.product_source;
+  const syncBloqueado = fonteAtualObj?.providerId ? !fonteConectada : false;
+  // Configuração abre sozinha quando há algo a resolver: fonte não salva ou desconectada.
+  const [configAberta, setConfigAberta] = useState<boolean>(!fonteSalva || syncBloqueado);
+  const configId = useId();
+  const motivoId = useId();
 
   const catalogId = meta.catalog_id || null;
   const defaultCatalogName =
@@ -349,70 +356,129 @@ export default function MetaCatalogManager({
   const summary = meta.last_sync_summary;
   const statusLabel =
     meta.last_sync_status === "sucesso"
-      ? "Sincronizado"
+      ? "sincronizado"
       : meta.last_sync_status === "parcial"
-      ? "Parcial (com ressalvas)"
+      ? "parcial, com ressalvas"
       : meta.last_sync_status === "erro"
-      ? "Falha"
-      : meta.last_sync_at
-      ? "Concluído"
-      : "Pendente";
+      ? "falhou"
+      : "concluído";
+  // Sem sincronização registrada, a linha diz só isso: nada de "Pendente" ao lado.
+  const linhaSync = meta.last_sync_at
+    ? `Última sincronização ${formatarDataHora(meta.last_sync_at)} · ${statusLabel}`
+    : "Ainda não sincronizado";
+  // O resumo mostra o que será enviado: a seleção atual, marcada quando difere do que está salvo.
+  const filtroSalvo = meta.sync_only_published !== false;
+  const fonteAlterada = fonteSalva && fonte !== meta.product_source;
+  const filtroAlterado = fonteSalva && apenasPublicados !== filtroSalvo;
+  const pendente = fonteAlterada || filtroAlterado;
+  const linhaFonte = fonteSalva
+    ? `Fonte: ${nomeDaFonte(fonte)}${pendente ? ` · ${fonteAlterada && filtroAlterado ? "fonte e filtro alterados, não salvos" : fonteAlterada ? "alteração não salva" : "filtro alterado, não salvo"}` : ""}`
+    : fonte
+      ? `Fonte escolhida: ${nomeDaFonte(fonte)} · ainda não salva${sugerida === fonte ? " (sugestão da mila)" : ""}`
+      : `Fonte dos produtos: ainda não escolhida${sugerida ? ` · sugestão da mila: ${nomeDaFonte(sugerida)}` : ""}`;
+  const motivoBloqueio = syncBloqueado && fonteAtualObj
+    ? `Para sincronizar, conecte ${fonteAtualObj.nome.split(" ")[0]} nesta loja ou escolha outra fonte em Configurar.`
+    : null;
+  const temDetalhes = !!summary || !!meta.catalog_id;
 
+  // Sem catálogo escolhido (ou trocando), a área mostra só a escolha do catálogo.
   if (!catalogId || trocandoCatalogo) {
     return (
-      <div className="meta-catalog-manager">
-        <div className="meta-catalog-header">
-          <div className="meta-catalog-header-info">
-            <span className="meta-catalog-label">Catálogo do Instagram & Facebook</span>
-            {catalogId ? <span className="meta-catalog-name">{catalogName}</span> : null}
-          </div>
+      <div className="meta-catalog-frame">
+      <div className="meta-catalog">
+        <div className="meta-catalog-summary-copy">
+          <p className="meta-catalog-name">{catalogId ? catalogName : "Catálogo do Instagram e Facebook"}</p>
         </div>
-        <SeletorCatalogo
-          atual={catalogId}
-          onCancelar={catalogId ? () => setTrocandoCatalogo(false) : undefined}
-        />
+        <SeletorCatalogo atual={catalogId} onCancelar={catalogId ? () => setTrocandoCatalogo(false) : undefined} />
+      </div>
       </div>
     );
   }
 
   return (
-    <div className="meta-catalog-manager">
-      <div className="meta-catalog-header">
-        <div className="meta-catalog-header-info">
-          <span className="meta-catalog-label">Catálogo do Instagram & Facebook</span>
-          {catalogName ? (
-            <span className="meta-catalog-name">{catalogName}</span>
-          ) : null}
+    <div className="meta-catalog-frame">
+    <div className="meta-catalog">
+      <div className="meta-catalog-summary">
+        <div className="meta-catalog-summary-copy">
+          <p className="meta-catalog-name">{catalogName}</p>
+          <p>{linhaFonte}</p>
+          <p suppressHydrationWarning>
+            {linhaSync}
+            {summary?.falhas && summary.falhas > 0 ? <span className="meta-catalog-fail"> · {summary.falhas} {summary.falhas === 1 ? "item falhou" : "itens falharam"}</span> : null}
+          </p>
         </div>
-        <span className="meta-catalog-id" title="Identificador do catálogo no Gerenciador de Comércio da Meta">
-          ID: <strong>{catalogId}</strong>
-        </span>
-        <button
-          type="button"
-          className="btn btn-ghost btn-sm"
-          onClick={() => setTrocandoCatalogo(true)}
-          disabled={salvando || sincronizando}
-        >
-          Trocar catálogo
-        </button>
+        <div className="meta-catalog-summary-actions">
+          <button
+            type="button"
+            className="ledger-button ledger-button-quiet"
+            aria-expanded={configAberta}
+            aria-controls={configId}
+            onClick={() => setConfigAberta(!configAberta)}
+          >
+            Configurar
+          </button>
+          <button
+            type="button"
+            className="ledger-button ledger-button-primary meta-catalog-sync"
+            onClick={() => sincronizarAgora(false)}
+            disabled={!fonte || sincronizando || salvando || syncBloqueado}
+            aria-describedby={motivoBloqueio ? motivoId : undefined}
+          >
+            {sincronizando ? <><span className="meta-sync-spinner" aria-hidden="true" /> Sincronizando…</> : "Sincronizar"}
+          </button>
+        </div>
       </div>
 
-      <div className="meta-catalog-controls">
-        <div className="meta-catalog-field">
-          <div className="meta-catalog-field-header">
-            <label htmlFor="meta-product-source-select" className="meta-catalog-field-title">
-              Fonte dos produtos
-            </label>
-            {fonteAtualObj?.providerId ? (
-              <span
-                className={`meta-catalog-source-pill ${
-                  fonteConectada ? "meta-source-pill-ok" : "meta-source-pill-warn"
-                }`}
-              >
-                {fonteConectada ? "✓ Conectada" : "⚠ Não conectada"}
-              </span>
-            ) : null}
+      {motivoBloqueio ? <p id={motivoId} className="meta-catalog-note" data-tone="warn">{motivoBloqueio}</p> : null}
+      {!fonte ? <p className="meta-catalog-note">Escolha a fonte dos produtos em Configurar para poder sincronizar.</p> : null}
+      {fonte && (!fonteSalva || pendente) && !syncBloqueado ? <p className="meta-catalog-note">Ao sincronizar, a mila salva antes {fonteSalva ? "a alteração" : "a fonte escolhida"} e envia com ela.</p> : null}
+
+      {bloqueioDuplicacao ? (
+        <div className="meta-catalog-alert" role="alert">
+          <strong>Catálogo já existente na Meta</strong>
+          <p>{bloqueioDuplicacao.mensagem}</p>
+          <div className="meta-catalog-alert-actions">
+            <button
+              type="button"
+              className="ledger-button meta-catalog-confirm"
+              onClick={() => sincronizarAgora(true)}
+              disabled={sincronizando}
+            >
+              {sincronizando ? "Sincronizando…" : "Sim, sincronizar mesmo assim"}
+            </button>
+            <button
+              type="button"
+              className="ledger-button ledger-button-quiet"
+              onClick={() => setBloqueioDuplicacao(null)}
+              disabled={sincronizando}
+            >
+              Cancelar
+            </button>
           </div>
+        </div>
+      ) : null}
+
+      {mensagemSucesso ? (
+        <p className="meta-catalog-feedback" data-tone="positive" role="status">{mensagemSucesso}</p>
+      ) : null}
+      {erro ? (
+        <p className="meta-catalog-feedback" data-tone="error" role="alert">{erro}</p>
+      ) : null}
+
+      <div id={configId} className="meta-catalog-config" hidden={!configAberta}>
+        <div className="meta-catalog-field meta-catalog-current">
+          <span>Catálogo na Meta: <strong>{catalogName}</strong></span>
+          <button
+            type="button"
+            className="ledger-button ledger-button-quiet"
+            onClick={() => setTrocandoCatalogo(true)}
+            disabled={salvando || sincronizando}
+          >
+            Trocar catálogo
+          </button>
+        </div>
+        <div className="meta-catalog-field">
+          <label htmlFor="meta-product-source-select">Fonte dos produtos</label>
           <select
             id="meta-product-source-select"
             className="meta-catalog-select"
@@ -422,6 +488,7 @@ export default function MetaCatalogManager({
               setMensagemSucesso(null);
             }}
             disabled={salvando || sincronizando}
+            aria-describedby={`${configId}-fonte`}
           >
             <option value="" disabled>
               Escolha a fonte
@@ -433,13 +500,17 @@ export default function MetaCatalogManager({
               </option>
             ))}
           </select>
-        </div>
-
-        {fonteAtualObj?.providerId && !fonteConectada ? (
-          <p className="meta-catalog-source-warning">
-            Aviso: a integração com {fonteAtualObj.nome.split(" ")[0]} não está conectada nesta loja. Conecte-a para importar seus produtos.
+          <p id={`${configId}-fonte`} className="meta-catalog-hint" data-tone={fonteAtualObj?.providerId && !fonteConectada ? "warn" : undefined}>
+            {fonteAtualObj?.providerId
+              ? fonteConectada
+                ? `${fonteAtualObj.nome.split(" ")[0]} está conectada nesta loja.`
+                : `${fonteAtualObj.nome.split(" ")[0]} não está conectada nesta loja. Conecte-a para importar seus produtos.`
+              : fonte
+                ? "Produtos cadastrados pela conversa com a mila."
+                : "Escolha de onde vêm os produtos que vão para o catálogo."}
+            {!fonteSalva && sugerida && sugerida === fonte ? " Sugestão da mila, ainda não salva." : ""}
           </p>
-        ) : null}
+        </div>
 
         <label className="meta-catalog-checkbox-label">
           <input
@@ -453,149 +524,63 @@ export default function MetaCatalogManager({
           />
           <span>Enviar apenas produtos publicados e visíveis na loja</span>
         </label>
-      </div>
 
-      {bloqueioDuplicacao ? (
-        <div className="meta-catalog-duplication-box" role="alert">
-          <div className="meta-catalog-duplication-text">
-            <strong>Catálogo já existente na Meta</strong>
-            <p>{bloqueioDuplicacao.mensagem}</p>
-          </div>
-          <div className="meta-catalog-duplication-actions">
-            <button
-              type="button"
-              className="btn btn-primary btn-sm"
-              onClick={() => sincronizarAgora(true)}
-              disabled={sincronizando}
-            >
-              {sincronizando ? "Sincronizando..." : "Sim, sincronizar mesmo assim"}
-            </button>
-            <button
-              type="button"
-              className="btn btn-ghost btn-sm"
-              onClick={() => setBloqueioDuplicacao(null)}
-              disabled={sincronizando}
-            >
-              Cancelar
-            </button>
-          </div>
+        <div>
+          <button
+            type="button"
+            className="ledger-button"
+            onClick={salvarFonte}
+            disabled={!fonte || salvando || sincronizando}
+          >
+            {salvando ? "Salvando…" : "Salvar fonte"}
+          </button>
         </div>
-      ) : null}
-
-      {mensagemSucesso ? (
-        <p className="meta-catalog-feedback meta-catalog-feedback-success" role="status">
-          ✓ {mensagemSucesso}
-        </p>
-      ) : null}
-
-      {erro ? (
-        <p className="meta-catalog-feedback meta-catalog-feedback-error" role="alert">
-          ✕ {erro}
-        </p>
-      ) : null}
-
-      <div className="meta-catalog-actions">
-        <button
-          type="button"
-          className="btn btn-primary meta-btn-sync"
-          onClick={() => sincronizarAgora(false)}
-          disabled={!fonte || sincronizando || salvando || (fonteAtualObj?.providerId ? !fonteConectada : false)}
-        >
-          {sincronizando ? (
-            <>
-              <span className="meta-sync-spinner" aria-hidden="true" />
-              <span>Sincronizando produtos e coleções…</span>
-            </>
-          ) : (
-            <>
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-                <path d="M3 3v5h5" />
-                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
-                <path d="M16 21h5v-5" />
-              </svg>
-              <span>Sincronizar agora</span>
-            </>
-          )}
-        </button>
-
-        <button
-          type="button"
-          className="btn btn-ghost meta-btn-save-source"
-          onClick={salvarFonte}
-          disabled={!fonte || salvando || sincronizando}
-        >
-          {salvando ? "Salvando…" : "Salvar fonte"}
-        </button>
       </div>
 
-      <div className="meta-catalog-summary-card">
-        <div className="meta-catalog-summary-top">
-          <span className="meta-catalog-summary-title">Última sincronização</span>
-          <span className={`meta-catalog-status-badge meta-status-${meta.last_sync_status || "pendente"}`}>
-            {statusLabel}
-          </span>
-        </div>
-        <p className="meta-catalog-summary-date" suppressHydrationWarning>
-          {formatarDataHora(meta.last_sync_at)}
-        </p>
-
-        {summary ? (
-          <div className="meta-catalog-stats-grid">
-            <div className="meta-stat-item">
-              <span className="meta-stat-num">{summary.totalAvaliados ?? 0}</span>
-              <span className="meta-stat-label">Avaliados</span>
-            </div>
-            <div className="meta-stat-item">
-              <span className="meta-stat-num">{summary.enviados ?? 0}</span>
-              <span className="meta-stat-label">Enviados</span>
-            </div>
-            <div className="meta-stat-item">
-              <span className="meta-stat-num">{summary.conjuntos?.length ?? 0}</span>
-              <span className="meta-stat-label">Coleções Instagram</span>
-            </div>
-          </div>
-        ) : null}
-
-        {summary?.falhas && summary.falhas > 0 ? (
-          <p className="meta-catalog-feedback meta-catalog-feedback-error" role="status">
-            {summary.falhas} {summary.falhas === 1 ? "item falhou" : "itens falharam"} no envio.
-            {summary.erros && summary.erros.length > 0 ? " Veja os detalhes abaixo." : ""}
-          </p>
-        ) : null}
-
-        {summary?.erros && summary.erros.length > 0 ? (
-          <details className="meta-catalog-warnings-details">
-            <summary>{summary.erros.length} erros no envio</summary>
-            <ul>
-              {summary.erros.slice(0, 10).map((e, idx) => (
-                <li key={idx}>
-                  {e.item ? <strong>{e.item}: </strong> : null}{e.erro}
-                </li>
-              ))}
-              {summary.erros.length > 10 ? (
-                <li>... e mais {summary.erros.length - 10} erros.</li>
-              ) : null}
-            </ul>
-          </details>
-        ) : null}
-
-        {summary?.avisos && summary.avisos.length > 0 ? (
-          <details className="meta-catalog-warnings-details">
-            <summary>{summary.avisos.length} avisos de fotos ou itens ignorados</summary>
-            <ul>
-              {summary.avisos.slice(0, 10).map((av, idx) => (
-                <li key={idx}>
-                  {av.item ? <strong>{av.item}: </strong> : null}{av.aviso}
-                </li>
-              ))}
-              {summary.avisos.length > 10 ? (
-                <li>... e mais {summary.avisos.length - 10} avisos.</li>
-              ) : null}
-            </ul>
-          </details>
-        ) : null}
-      </div>
+      {temDetalhes ? (
+        <details className="meta-catalog-details">
+          <summary>Detalhes da sincronização</summary>
+          {summary ? (
+            <dl className="meta-catalog-stats">
+              <div><dt>Avaliados</dt><dd>{summary.totalAvaliados ?? 0}</dd></div>
+              <div><dt>Enviados</dt><dd>{summary.enviados ?? 0}</dd></div>
+              <div><dt>Coleções Instagram</dt><dd>{summary.conjuntos?.length ?? 0}</dd></div>
+            </dl>
+          ) : <p>Os números aparecem depois da primeira sincronização.</p>}
+          {summary?.erros && summary.erros.length > 0 ? (
+            <>
+              <p className="meta-catalog-list-title">{summary.erros.length} erros no envio</p>
+              <ul>
+                {summary.erros.slice(0, 10).map((e, idx) => (
+                  <li key={idx}>
+                    {e.item ? <strong>{e.item}: </strong> : null}{e.erro}
+                  </li>
+                ))}
+                {summary.erros.length > 10 ? (
+                  <li>… e mais {summary.erros.length - 10} erros.</li>
+                ) : null}
+              </ul>
+            </>
+          ) : null}
+          {summary?.avisos && summary.avisos.length > 0 ? (
+            <>
+              <p className="meta-catalog-list-title">{summary.avisos.length} avisos de fotos ou itens ignorados</p>
+              <ul>
+                {summary.avisos.slice(0, 10).map((av, idx) => (
+                  <li key={idx}>
+                    {av.item ? <strong>{av.item}: </strong> : null}{av.aviso}
+                  </li>
+                ))}
+                {summary.avisos.length > 10 ? (
+                  <li>… e mais {summary.avisos.length - 10} avisos.</li>
+                ) : null}
+              </ul>
+            </>
+          ) : null}
+          <p className="meta-catalog-id" title="Identificador do catálogo no Gerenciador de Comércio da Meta">ID do catálogo: {catalogId}</p>
+        </details>
+      ) : null}
+    </div>
     </div>
   );
 }

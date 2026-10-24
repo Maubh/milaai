@@ -72,6 +72,12 @@
   .meta-catalog-summary-actions { width: 100%; grid-auto-columns: minmax(0, 1fr); padding-top: var(--space-workspace-md); border-top: var(--rule-ledger) solid var(--color-ledger-rule); }
   .meta-catalog-stats { grid-template-columns: minmax(0, 1fr); }
 }
+/* No celular, lado a lado não comporta "Sincronizando…" com o spinner: a barra
+   empilha, primário em cima (como no diálogo de desconectar), largura toda. */
+@container (max-width: 340px) {
+  .meta-catalog-summary-actions { grid-auto-flow: row; }
+  .meta-catalog-sync { order: -1; }
+}
 @media (prefers-reduced-motion: reduce) {
   .meta-sync-spinner { animation-duration: 2.4s; }
 }

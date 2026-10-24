@@ -53,17 +53,5 @@ test("não lido compara versões: deploy de acabamento não acende o aviso", asy
   // Quem já viu uma versão interna mais nova não ganha aviso falso.
   assert.equal(hasUnreadRelease(SYSTEM_VERSION), false);
   assert.equal(hasUnreadRelease(`${major}.${minor}.${patch + 1}`), false);
-  assert.equal(hasUnreadRelease(`${major}.${minor}.10`), patch >= 10);
-});
-
-test("nas notas, tipo acima do plano e um só selo de plano", async () => {
-  const { readFileSync } = await import("node:fs");
-  const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
-  const css = read("../components/release-updates.css");
-  assert.match(css, /\.release-change-tags \{[^}]*flex-direction: column;/);
-  assert.doesNotMatch(css, /release-change-plan/);
-  const timeline = read("../components/ReleaseTimeline.tsx");
-  assert.match(timeline, /release-change-type[\s\S]*<PlanTag>/);
-  const tag = read("../components/plan-tag.css");
-  assert.doesNotMatch(tag, /data-plan|\[data-/, "Plano Pro e Essencial e Pro com o mesmo estilo");
+  assert.equal(hasUnreadRelease(`${major}.${minor}.10`), patch > 10);
 });

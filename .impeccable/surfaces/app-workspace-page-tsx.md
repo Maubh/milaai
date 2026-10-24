@@ -180,4 +180,6 @@ Dados reais, prova do coordenador em leitura: os perfis existentes no banco do s
 
 Checks: `npm test` com 128 pass, 1 skip e 0 fail; `tsc --noEmit --incremental false` sem saída; builds isolados com exit 0.
 
+Gate: Fable fresco deu ship (rodadas 3 a 5, a última em `f46847c`, depois de dois `fix` corrigidos), e o coordenador Codex deu o gate final ship em `f46847c`. O backend real sempre envia `analise_no_plano` booleano; a regra de "Não verificado" cobre só resposta malformada ou falha. "Reautorizar acesso à Meta" aparece só com `business_permission: false`; o 403 de plano mantém só a mensagem de erro (`cand5`). PR #52.
+
 Limites: navegador headless emulado, não aparelho físico; OAuth real e backend de produção não exercitados; conexões e desconexões reais de clientes não foram feitas.

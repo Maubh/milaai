@@ -20,11 +20,31 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.5.1",
+    date: "2026-10-24",
+    title: "Confirmação de desconectar mais fácil de tocar",
+    summary: "Ao desconectar uma ferramenta, Cancelar e Desconectar agora têm a mesma altura e, no celular, mais espaço entre eles.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Cancelar e Desconectar com a mesma altura",
+        description: "Os botões Cancelar e Desconectar agora têm a mesma altura. No celular, há mais espaço entre eles.",
+      },
+    ],
+  },
+  {
     version: "0.5.0",
     date: "2026-10-24",
-    title: "Sua área com cara nova, chaves nas integrações e atualizações em tela cheia",
-    summary: "A área da sua loja ficou mais clara no computador e no celular: o que fazer agora aparece na visão geral, as integrações ligam e desligam numa chave e as novidades abrem em tela cheia.",
+    title: "Sua área com cara nova, mensagens prontas e atualizações em tela cheia",
+    summary: "A área da sua loja ganhou um visual novo, mais claro no computador e no celular: o que fazer agora aparece na visão geral e as novidades abrem em tela cheia.",
     changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Visual novo na área da sua loja",
+        description: "A área da sua loja ganhou um visual mais limpo e uma navegação reorganizada, adaptada ao computador e ao celular.",
+      },
       {
         type: "improvement",
         plan: "all",
@@ -36,12 +56,6 @@ export const RELEASES: readonly Release[] = [
         plan: "all",
         title: "Visão geral com mensagens prontas e próximos passos",
         description: "Comece uma conversa com a mila num toque: calcular o preço de uma peça, escrever a descrição de uma peça ou ler uma nota de compra. Logo abaixo, os próximos passos dizem de onde vêm, como o plano ou o catálogo da Meta, e levam direto ao lugar certo.",
-      },
-      {
-        type: "improvement",
-        plan: "all",
-        title: "Integrações ligam e desligam numa chave",
-        description: "Cada ferramenta disponível tem uma chave. Ligar abre a conexão da própria ferramenta, e a chave só fica ligada depois que a conexão é confirmada. Desligar pede confirmação antes de desconectar. Ferramentas fora do seu plano mostram um cadeado no selo Pro.",
       },
       {
         type: "improvement",

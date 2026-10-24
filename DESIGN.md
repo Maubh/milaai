@@ -247,7 +247,7 @@ Raios coordenados: controles 10px, áreas de recuo 14px, popovers 16px, painéis
 - **Shape:** retângulo suave (10px) para ações de página; pílula para conversa e navegação.
 - **Primary:** mineral com texto marfim, 44px de altura, peso 600–700.
 - **Hover / Focus:** escurece para o mineral profundo; anel de foco de 2px em mineral com 3px de afastamento (marfim dentro do painel da conversa). Pressão: translate 1px ou scale 0,97.
-- **Secondary:** superfície do painel com régua forte; hover troca a borda para mineral. **Quiet:** sem borda, para "Desconectar" e "Cancelar".
+- **Secondary:** superfície do painel com régua forte; hover troca a borda para mineral. **Quiet:** sem borda, para ações de texto de baixa ênfase. No diálogo de desconectar, Cancelar e Desconectar têm a mesma moldura e a mesma altura de 44px (Desconectar com borda e texto de erro), com 12px entre eles no desktop e 16px no celular; o anel de foco ali fica por dentro da borda, no raio do botão, para não deixar um dos dois mais alto nem ocupar o vão.
 
 ### Cards / Containers
 - **Corner Style:** 24px; 18px até 640px.

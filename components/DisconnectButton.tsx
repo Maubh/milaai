@@ -106,7 +106,7 @@ export default function DisconnectButton({
               </p>
             ) : null}
             <div className="disconnect-dialog-actions">
-              <button type="button" className="ledger-button ledger-button-quiet" onClick={fechar} disabled={trabalhando} autoFocus>
+              <button type="button" className="ledger-button" onClick={fechar} disabled={trabalhando} autoFocus>
                 Cancelar
               </button>
               <button type="button" className="ledger-button disconnect-yes" onClick={desconectar} disabled={trabalhando}>

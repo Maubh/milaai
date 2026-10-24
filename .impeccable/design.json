@@ -482,19 +482,33 @@
       }
     ],
     "review": {
-      "scope": "Lote 0.5.2 (interno, sem nota pública), e9db183..b7c28fc (2026-10-24): feed só com versões públicas (internal, PUBLIC_RELEASES, não lido por semver), tipo acima do plano com PlanTag único, ações da Meta numa barra (Configurar secundário com moldura, empilha <340px), selo Pro junto da marca no celular, página nova abre no topo.",
+      "scope": "Lote 0.6.0, 9860232..69021ab (2026-10-24): Site da loja em Dados da loja (normalizado, link http(s), limpar, conferência honesta do retorno) e conversa com a mila em botão flutuante de WhatsApp (saiu da barra, some com campo em foco, reserva de fim de página); campo focado acima do dock no celular.",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "Fable (sessão nova, só o delta): ship em b7c28fc, sem achado material. Coordenador Codex: gate da fonte b7c28fc e das provas cand12/cand13 sem achado bloqueante. Os ships anteriores ficam no histórico e não cobrem este lote.",
+      "reviewer": "Fable (sessão nova, só o delta): ship em e698d77 e reteste ship em 69021ab. Coordenador Codex: gate de fonte sem achados; nota pública só do Site, por decisão editorial (o FAB realoca uma ação existente). Backend mila-eve a69f250 no ar antes deste lote.",
       "evidence": [
-        "Feed, não lido e Meta (build de 1af100c): feed começa em 0.5.0 com tipo acima do plano em 25 itens e um só estilo de selo; não lido só abaixo de 0.5.0; Meta em 1440/414/375/320 com Configurar fechado/aberto, fonte ausente/desconectada e sync pendente com POSTs interceptados.",
-        "Build final gnCiDrmcz1BYGre8ujfbI: selo a 8px da marca em 320/375/414; menu, dock e Ver histórico em 0 no primeiro frame; não-regressão de voltar, âncora e sino contra a base."
+        "Site (auth falso local, Eve novo e antigo, build bacb6a6/e698d77): sem esquema vira https e recarrega igual; inválido mostra erro; vazio limpa; Eve antigo não mostra sucesso; linha legível em 320/375.",
+        "FAB (build 7414a18/e698d77): folga positiva até o fim da página em todas as rotas, desktop 42–113px e celular 28–74px; escondido com campo em foco e de volta ao sair; abaixo do sino em tela cheia; foco visível; reduced motion.",
+        "Dock (build final xFQAL-T3ww6WtySSJAb9r): campo Site focado por clique e Tab acima do dock em 320/375; ações visíveis; navegação nova em 0."
       ],
-      "validation": "Claude: npm test 132 testes, 131 pass, 1 skip, 0 fail; tsc limpo; build isolado de b7c28fc com exit 0.",
-      "limits": "Headless emulado; Sandbox e auth falso local. Voltar no desktop vai a 0 e a âncora da Meta não alinha a seção, como na base. Nenhuma integração, sync ou dado real.",
+      "validation": "Claude: npm test 133 testes, 132 pass, 1 skip, 0 fail; tsc limpo; build isolado de 69021ab com exit 0.",
+      "limits": "Headless emulado; Sandbox e auth falso local fora do produto; nenhuma escrita real.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Lote 0.5.2 (interno, sem nota pública), e9db183..b7c28fc (2026-10-24): feed só com versões públicas (internal, PUBLIC_RELEASES, não lido por semver), tipo acima do plano com PlanTag único, ações da Meta numa barra (Configurar secundário com moldura, empilha <340px), selo Pro junto da marca no celular, página nova abre no topo.",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable (sessão nova, só o delta): ship em b7c28fc, sem achado material. Coordenador Codex: gate da fonte b7c28fc e das provas cand12/cand13 sem achado bloqueante. Os ships anteriores ficam no histórico e não cobrem este lote.",
+        "evidence": [
+          "Feed, não lido e Meta (build de 1af100c): feed começa em 0.5.0 com tipo acima do plano em 25 itens e um só estilo de selo; não lido só abaixo de 0.5.0; Meta em 1440/414/375/320 com Configurar fechado/aberto, fonte ausente/desconectada e sync pendente com POSTs interceptados.",
+          "Build final gnCiDrmcz1BYGre8ujfbI: selo a 8px da marca em 320/375/414; menu, dock e Ver histórico em 0 no primeiro frame; não-regressão de voltar, âncora e sino contra a base."
+        ],
+        "validation": "Claude: npm test 132 testes, 131 pass, 1 skip, 0 fail; tsc limpo; build isolado de b7c28fc com exit 0.",
+        "limits": "Headless emulado; Sandbox e auth falso local. Voltar no desktop vai a 0 e a âncora da Meta não alinha a seção, como na base. Nenhuma integração, sync ou dado real.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Entrega 0.5.1, a91085e..3a721c0 (2026-10-24): botões do diálogo de desconectar com a mesma moldura e altura, anel de foco por dentro da borda, vão de 12/16px; nota técnica das chaves na 0.5.0 trocada por nota geral do visual novo, a pedido da usuária.",
         "disposition": "ship",

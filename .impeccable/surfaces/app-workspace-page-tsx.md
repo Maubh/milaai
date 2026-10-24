@@ -208,3 +208,11 @@ Lote 0.5.2 (interno, 2026-10-24):
 - Navegação interna para outro pathname abre no topo, exceto voltar/avançar e âncoras.
 
 Fable: ship em b7c28fc.
+
+Lote 0.6.0 (2026-10-24):
+- Site da loja em Sobre a loja: normalizado como no Eve, link só http(s), limpar, sem sucesso fingido.
+- A conversa com a mila virou botão flutuante de WhatsApp, fora da barra, que some com campo em foco.
+- No celular, campo focado fica acima do dock (`scroll-padding-bottom` só na área logada).
+- Nota pública só do Site.
+
+Fable: ship em e698d77 e em 69021ab.

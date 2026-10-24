@@ -483,8 +483,18 @@
     ],
     "review": {
       "scope": "Integração da proposta A com a produção (main f07b005), 2026-10-24",
-      "disposition": "pending",
-      "remaining": "veredito final do Fable fresco sobre o candidato e gate do coordenador antes do merge",
+      "disposition": "ship",
+      "remaining": "clear",
+      "reviewer": "Fable fresco (rodadas 1 e 2 fix, rodada 3 ship em 0ca07e5) e gate de código do coordenador Codex em bcc57a8, mantido no delta final",
+      "evidence": [
+        "FABLE-PROD-REVIEW.md",
+        "cand1/report.json",
+        "cand3-toggle/report.json",
+        "cand3-meta/report.json",
+        "cand4/report.json"
+      ],
+      "validation": "Claude: npm test 128 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; builds isolados exit 0 (cand4 tuJFtJCLQqeSejDnvx_jP). Coordenador: dados reais comparados em leitura, sem divergência.",
+      "limits": "Headless emulado; OAuth real e backend de produção não exercitados; sem conexão ou desconexão real de clientes. analise_no_plano ausente vira Não verificado, divergência intencional de main.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [

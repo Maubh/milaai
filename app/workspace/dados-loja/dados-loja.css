@@ -1,7 +1,6 @@
 /* Hallmark · store desk · dados da loja: seções da produção em painéis da mesa, cada uma com o próprio "Editar" · existing mila mineral */
 @import "../../../tokens.css";
 
-.dados-page .desk-stack { max-width: 860px; }
 /* Cabeçalho de card: título e ação no topo (ação no canto superior direito), descrição embaixo na largura toda. */
 .dados-secao-head {
   display: grid;

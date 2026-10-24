@@ -482,20 +482,34 @@
       }
     ],
     "review": {
-      "scope": "Lote final da integração com a produção, 4c675ef..a0e6200 (2026-10-24): desconectar em diálogo nativo, grade das Atualizações, atalhos sem \"Mila ·\" e cadeado no selo Pro bloqueado. Pedidos diretos da usuária depois do gate em f46847c.",
+      "scope": "Entrega 0.5.1, a91085e..3a721c0 (2026-10-24): botões do diálogo de desconectar com a mesma moldura e altura, anel de foco por dentro da borda, vão de 12/16px; nota técnica das chaves na 0.5.0 trocada por nota geral do visual novo, a pedido da usuária.",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "Fable (mesma sessão das rodadas 1 a 5), rodada 6 com reteste só deste delta: ship em a0e6200. Coordenador Codex: ship do diálogo, da grade e dos atalhos no build E0htZJ9XjWuW_48huzEWr, e gate final do lote = ship em a0e6200. O ship anterior em f46847c fica no histórico e não cobre este lote.",
+      "reviewer": "Fable (a906db5), rodada 7: fix (anel sobre a borda vermelha a 1,31:1 com offset -2px); rodada 7b: ship em 3a721c0 (offset -3px). Coordenador Codex: ship em cb31b40 para geometria e copy. Os ships anteriores ficam no histórico e não cobrem esta entrega.",
       "evidence": [
-        "FABLE-PROD-REVIEW.md (rodada 6)",
-        "cand7-dialog/report.json",
-        "cand8-lock/report.json"
+        "Build final R2NG1Ez6xwmFuUINvEH8S: Cancelar e Desconectar com 44px e altura visual de 44px, com foco, erro e pendente, em 1440/414/375/320.",
+        "Vão efetivo de 12px no desktop e 16px no celular; amostra de pixels: borda intacta e 2px de anel inteiros sobre o fundo nos dois botões.",
+        "Atualizações mostram 0.5.1 e a nota geral, sem a nota das chaves, sem rolagem horizontal."
       ],
-      "validation": "Claude: npm test 130 testes, 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand8 UPw5RtkBoeL4bK4pHtciD). Diálogo provado no build E0htZJ9XjWuW_48huzEWr em 1440/375, com revoke sempre interceptado. Cadeados provados no build final em 1440/375/320: Essencial pelo Sandbox, Pro e plano ausente por auth falso local fora do produto. Coordenador comparou 161 fontes/assets/config do build-cand8 com a candidata: zero divergências.",
-      "limits": "Headless emulado; OAuth real e backend de produção não exercitados; nenhuma conexão ou desconexão real.",
+      "validation": "Claude: npm test 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand10 R2NG1Ez6xwmFuUINvEH8S). Revoke sempre interceptado; pendente com 1 POST, Esc e fundo sem fechar.",
+      "limits": "Headless emulado com sessão Sandbox; nenhuma conexão, desconexão ou dado real de loja.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Lote final da integração com a produção, 4c675ef..a0e6200 (2026-10-24): desconectar em diálogo nativo, grade das Atualizações, atalhos sem \"Mila ·\" e cadeado no selo Pro bloqueado. Pedidos diretos da usuária depois do gate em f46847c.",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable (mesma sessão das rodadas 1 a 5), rodada 6 com reteste só deste delta: ship em a0e6200. Coordenador Codex: ship do diálogo, da grade e dos atalhos no build E0htZJ9XjWuW_48huzEWr, e gate final do lote = ship em a0e6200. O ship anterior em f46847c fica no histórico e não cobre este lote.",
+        "evidence": [
+          "FABLE-PROD-REVIEW.md (rodada 6)",
+          "cand7-dialog/report.json",
+          "cand8-lock/report.json"
+        ],
+        "validation": "Claude: npm test 130 testes, 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand8 UPw5RtkBoeL4bK4pHtciD). Diálogo provado no build E0htZJ9XjWuW_48huzEWr em 1440/375, com revoke sempre interceptado. Cadeados provados no build final em 1440/375/320: Essencial pelo Sandbox, Pro e plano ausente por auth falso local fora do produto. Coordenador comparou 161 fontes/assets/config do build-cand8 com a candidata: zero divergências.",
+        "limits": "Headless emulado; OAuth real e backend de produção não exercitados; nenhuma conexão ou desconexão real.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Integração da proposta A com a produção (main f07b005), 2026-10-24",
         "disposition": "ship",

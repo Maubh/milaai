@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.0",
+    date: "2026-10-24",
+    title: "Site da loja em Dados da loja",
+    summary: "Agora você pode guardar o endereço do site da sua loja junto com o nome e o Instagram.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Site da loja",
+        description: "Em Dados da loja, na parte Sobre a loja, informe o endereço do seu site, como sualoja.com.br. Ele fica salvo junto com o nome e o Instagram, e você pode trocar ou apagar quando quiser.",
+      },
+    ],
+  },
+  {
     version: "0.5.2",
     date: "2026-10-24",
     internal: true,

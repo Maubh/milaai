@@ -89,3 +89,6 @@
   .dados-campo input, .dados-campo textarea { max-width: none; }
 }
 .dados-selo-pro .plan-lock { flex: none; }
+
+/* Site da loja: link para o endereço salvo, quebrando em qualquer ponto em tela estreita. */
+.dados-site { color: var(--color-ledger-mineral); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; overflow-wrap: anywhere; }

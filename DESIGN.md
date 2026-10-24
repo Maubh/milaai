@@ -271,7 +271,7 @@ Raios coordenados: controles 10px, áreas de recuo 14px, popovers 16px, painéis
   - Fica no canto inferior direito, fixo, em todas as larguras, com o ícone do WhatsApp (balão com telefone, SVG próprio, `aria-hidden`) e o nome acessível "Conversar com a mila no WhatsApp".
   - No desktop é uma pílula mineral de 56px com "Conversar com a mila" visível. No celular e no tablet (≤1023px) vira um círculo de 56px acima do dock e da área segura.
   - Usa o mesmo link verificado do WhatsApp (ou o fallback atual), em nova aba, e não envia nada.
-  - Fica abaixo de diálogos (camada do topo) e do dock. O fim da página reserva espaço para o último conteúdo rolar acima dele.
+  - Fica abaixo de diálogos (camada do topo) e do dock. O fim da página reserva espaço para o último conteúdo rolar acima dele. Enquanto um campo da página tem foco, ele sai da frente (`visibility: hidden`) e volta ao sair do campo.
   - Saiu da barra do topo para não duplicar a navegação. A faixa de conversa da visão geral continua.
 - **Conta:** avatar em pílula translúcida com filete; menu sólido com nome, loja e "Sair da conta", foco no sair ao abrir, Esc devolve o foco.
 

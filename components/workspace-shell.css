@@ -244,6 +244,9 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 .desk-chat:active { transform: scale(0.97); }
 .desk-chat:focus-visible { outline: 2px solid var(--color-ledger-focus); outline-offset: 3px; border-radius: var(--radius-desk-pill); }
 .desk-chat svg { width: 22px; height: 22px; }
+/* Enquanto a lojista digita num campo da página, o botão sai da frente (não
+   cobre o campo em uso nem fica sobre o teclado do celular) e volta ao sair. */
+.desk-shell:has(.desk-main :is(input, textarea, select):focus) .desk-chat { visibility: hidden; }
 
 /* Conta */
 .desk-account { position: relative; }

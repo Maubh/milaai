@@ -20,6 +20,44 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.5.0",
+    date: "2026-10-24",
+    title: "Sua área com cara nova, chaves nas integrações e atualizações em tela cheia",
+    summary: "A área da sua loja ficou mais clara no computador e no celular: o que fazer agora aparece na visão geral, as integrações ligam e desligam numa chave e as novidades abrem em tela cheia.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Menu novo, no topo e no celular",
+        description: "No computador, Visão geral, Dados da loja, Integrações e Meu plano ficam numa barra no topo, e as novidades no sino ao lado. No celular, os mesmos destinos e as Atualizações ficam na barra de baixo.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Visão geral com mensagens prontas e próximos passos",
+        description: "Comece uma conversa com a mila num toque: calcular o preço de uma peça, escrever a descrição de uma peça ou ler uma nota de compra. Logo abaixo, os próximos passos dizem de onde vêm, como o plano ou o catálogo da Meta, e levam direto ao lugar certo.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Integrações ligam e desligam numa chave",
+        description: "Cada ferramenta disponível tem uma chave. Ligar abre a conexão da própria ferramenta, e a chave só fica ligada depois que a conexão é confirmada. Desligar pede confirmação antes de desconectar. Ferramentas fora do seu plano mostram um cadeado no selo Pro.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Atualizações em tela cheia no celular",
+        description: "No celular, o sino abre as novidades numa tela inteira, fácil de ler e de fechar, e você volta para o mesmo ponto da página.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Dados da loja mais fácil de editar",
+        description: "O botão de editar fica no canto de cada bloco, salvar e cancelar ficam no mesmo lugar, e os campos mostram a unidade: %, R$ ou x. Concorrentes no Instagram mostra o mesmo cadeado quando o seu plano não inclui a análise.",
+      },
+    ],
+  },
+  {
     version: "0.4.0",
     date: "2026-10-23",
     title: "Planilhas feitas pela mila, nota em PDF no balanço e fatura à mão",

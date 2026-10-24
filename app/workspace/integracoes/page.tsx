@@ -1,8 +1,12 @@
 import Link from "next/link";
 import DisconnectButton from "@/components/DisconnectButton";
+import { ProBloqueado } from "@/components/PlanLock";
+import { ConnectSwitch } from "@/components/IntegrationSwitch";
+import IntegrationRow, { IntegrationList } from "@/components/IntegrationRow";
 import IntegrationsNotice from "@/components/IntegrationsNotice";
 import MetaCatalogManager, { type LastSyncSummary } from "@/components/MetaCatalogManager";
 import { INTEGRACOES } from "@/lib/demo-data";
+import { rowStatus } from "@/lib/integration-catalog";
 import { integrationErrorText } from "@/lib/integration-errors";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
@@ -65,7 +69,7 @@ function ToolMark({ provider }: { provider: string }) {
 }
 
 function Arrow() {
-  return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>;
+  return <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>;
 }
 
 /**
@@ -83,7 +87,8 @@ export default async function IntegracoesPage({
 
   let providers: ProviderStatus[] = [];
   let consultou = false;
-  let userPlan = "pro";
+  // Sem plano na resposta do vault a página não presume Pro.
+  let userPlan: string | null = null;
   let storeName: string | null = null;
   if (token) {
     const { status, data } = await proxyOAuth("/api/oauth/providers");
@@ -102,9 +107,6 @@ export default async function IntegracoesPage({
 
   // O provedor volta com ?ok=<provider> ou ?erro=<detail> no redirect do callback.
   const sp = await searchParams;
-  if (typeof sp.plan === "string") {
-    userPlan = sp.plan.toLowerCase();
-  }
   const okParam = typeof sp.ok === "string" ? sp.ok : null;
   const erroParam = typeof sp.erro === "string" ? sp.erro : null;
 
@@ -119,19 +121,70 @@ export default async function IntegracoesPage({
   const catalog = INTEGRACOES.filter((i) => i.id !== "bling" && (i.id !== "meta" || byId.has("meta")));
   const connectedCount = catalog.filter((i) => byId.get(i.id)?.connected).length;
 
+  // Uma regra só para cada linha, onde quer que ela apareça. O plano exigido
+  // depende da categoria original da ferramenta, nunca da seção em que está.
+  const renderRow = (i: (typeof catalog)[number]) => {
+    const live = byId.get(i.id);
+    const row = rowStatus(i.id, live, userPlan);
+    const presentation = PRESENTATION[i.id];
+    return (
+      <IntegrationRow
+        key={i.id}
+        anchor={i.id === "meta" ? "integracao-meta" : undefined}
+        state={row.state}
+        mark={<ToolMark provider={i.id} />}
+        name={i.nome}
+        detail={presentation.detail}
+        description={presentation.description}
+        // Cadeado só quando o plano bloqueia; conectada, disponível ou não verificada mantêm o selo simples.
+        tier={row.requiresPro ? (row.state === "locked" ? <ProBloqueado /> : "Pro") : null}
+        status={row.status}
+        details={(i.id === "google" || i.id === "notion") ? (
+          <details className="integrations-access">
+            <summary>Como seus dados são usados</summary>
+            <p>{i.desc.replaceAll("caderno de fornecedores", "caderno").replaceAll("o caderno", "a lista de fornecedores").replaceAll("O caderno", "A lista de fornecedores").replaceAll("fica salvo", "fica salva")}</p>
+          </details>
+        ) : null}
+        actions={row.state === "connected" ? (
+          <DisconnectButton provider={i.id} providerName={i.nome} />
+        ) : row.state === "locked" ? (
+          <Link href="/workspace/plano" className="ledger-button" aria-label={`Assinar plano Pro para conectar ${i.nome}`}>
+            Assinar plano Pro <Arrow />
+          </Link>
+        ) : row.state === "soon" ? (
+          <span className="integrations-unavailable">Ainda não disponível</span>
+        ) : row.state === "available" ? (
+          <ConnectSwitch provider={i.id} providerName={i.nome} />
+        ) : (
+          // Estado não verificado: sem chave, para não parecer "desligado" confirmado.
+          <Link href={`/integrations/${i.id}`} className="ledger-button" aria-label={`Conectar ${i.nome}`}>
+            Conectar <Arrow />
+          </Link>
+        )}
+        expansion={i.id === "meta" && live?.connected ? (
+          <MetaCatalogManager
+            meta={live}
+            connectedProviders={providers}
+            storeName={storeName}
+          />
+        ) : null}
+      />
+    );
+  };
+  const order = GROUPS.flatMap((g) => g.providers);
+  const conectadas = catalog.filter((i) => byId.get(i.id)?.connected === true).sort((x, y) => order.indexOf(x.id) - order.indexOf(y.id));
+
   return (
-    <div className="work-wrap integrations-page">
-      <header className="integrations-header">
+    <div className="ledger-page integrations-page">
+      <header className="ledger-page-head">
         <div>
-          <h1 className="integrations-title">Integrações</h1>
-          <p className="integrations-intro">Conecte as ferramentas da sua loja à mila.</p>
+          <h1 className="ledger-title">Integrações</h1>
+          <p className="ledger-lede">Conecte as ferramentas da sua loja à mila.</p>
         </div>
-        {consultou ? <span className="integrations-summary">
-          <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" /></svg>
-          <span><strong>{connectedCount}</strong> de {catalog.length} conectadas</span>
-        </span> : null}
+        {consultou ? <p className="ledger-aside integrations-summary"><strong>{connectedCount}</strong> de {catalog.length} conectadas</p> : null}
       </header>
 
+      <div className="desk-stack">
       <IntegrationsNotice
         okParam={okParam}
         okConectado={okConectado}
@@ -140,86 +193,36 @@ export default async function IntegracoesPage({
         erroParam={erroParam}
       />
       {!token ? (
-        <p className="integrations-notice" role="status">Entre com o WhatsApp para ver as conexões desta loja.</p>
+        <p className="ledger-notice" role="status">Entre com o WhatsApp para ver as conexões desta loja.</p>
       ) : !consultou ? (
-        <p className="integrations-notice" role="status">Não deu para ler as conexões agora. Tente de novo daqui a pouco.</p>
+        <p className="ledger-notice" data-tone="error" role="status">Não deu para ler as conexões agora. Tente de novo daqui a pouco.</p>
       ) : null}
 
-      {GROUPS.map((group) => (
-        <section className="integrations-section" key={group.id} aria-labelledby={`integrations-${group.id}`}>
-          <div className="integrations-section-heading">
-            <h2 id={`integrations-${group.id}`}>
-              {group.title}
-              {group.id === "vendas" ? <span className="integrations-badge-pro" style={{ marginLeft: 8, verticalAlign: "middle" }}>Exclusivo Pro</span> : null}
-            </h2>
-            <p>{group.description}</p>
+      {conectadas.length ? (
+        <section className="ledger-section desk-panel" aria-labelledby="integrations-conectadas">
+          <div className="ledger-section-head">
+            <h2 id="integrations-conectadas">Conectadas</h2>
+            <p>Ferramentas que a mila já usa nesta loja.</p>
           </div>
-          <ul className={`integrations-grid integrations-grid-${group.id}`}>
-            {catalog.filter((i) => group.providers.includes(i.id)).map((i) => {
-              const live = byId.get(i.id);
-              const state = live?.connected ? "connected" : live ? live.app_configured ? "available" : "soon" : "unknown";
-              const label = { connected: "Conectado", available: "Disponível", soon: "Em breve", unknown: "Não verificado" }[state];
-              const presentation = PRESENTATION[i.id];
-              const isVendas = group.id === "vendas";
-              const bloqueadoPro = isVendas && userPlan !== "pro" && !live?.connected;
-
-              return (
-                <li key={i.id} className="integrations-card" data-state={state}>
-                  <div className="integrations-card-top">
-                    <div className="integrations-mark"><ToolMark provider={i.id} /></div>
-                    <div className="integrations-card-badges">
-                      {isVendas && !live?.connected ? (
-                        <span className="integrations-badge-pro">Plano Pro</span>
-                      ) : (
-                        <span className="integrations-status">
-                          {state === "connected" ? <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="m3 8 3 3 7-7" /></svg> : <span className="integrations-status-dot" aria-hidden="true" />}
-                          {label}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="integrations-card-copy">
-                    <h3>{i.nome}</h3>
-                    <p className="integrations-tool-detail">{presentation.detail}</p>
-                    <p className="integrations-description">{presentation.description}</p>
-                  </div>
-                  {(i.id === "google" || i.id === "notion") ? (
-                    <details className="integrations-access">
-                      <summary>Como seus dados são usados</summary>
-                      <p>{i.desc.replaceAll("caderno de fornecedores", "caderno").replaceAll("o caderno", "a lista de fornecedores").replaceAll("O caderno", "A lista de fornecedores").replaceAll("fica salvo", "fica salva")}</p>
-                    </details>
-                  ) : null}
-                  {i.id === "meta" && live?.connected ? (
-                    <MetaCatalogManager
-                      meta={live}
-                      connectedProviders={providers}
-                      storeName={storeName}
-                    />
-                  ) : null}
-                  <div className="integrations-card-footer">
-                    {bloqueadoPro ? (
-                      <Link href="/workspace/plano" className="integrations-connect integrations-connect-upgrade" aria-label={`Disponível no Plano Pro: ${i.nome}`}>
-                        <span>Disponível no Pro</span><Arrow />
-                      </Link>
-                    ) : state === "soon" ? (
-                      <span className="integrations-unavailable">Conexão ainda não disponível</span>
-                    ) : (
-                      <Link href={`/integrations/${i.id}`} className="integrations-connect" aria-label={`${live?.connected ? "Reconectar" : "Conectar"} ${i.nome}`}>
-                        {live?.connected ? "Reconectar" : "Conectar"}<Arrow />
-                      </Link>
-                    )}
-                    {live?.connected ? <DisconnectButton provider={i.id} providerName={i.nome} /> : null}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+          <IntegrationList>{conectadas.map(renderRow)}</IntegrationList>
         </section>
-      ))}
-      <footer className="integrations-footnote">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M20 11.5a8 8 0 0 1-8 8 9 9 0 0 1-3.5-.8L4 20l1.3-4.5a9 9 0 0 1-.8-3.5 8 8 0 0 1 8-8H13a8 8 0 0 1 7 7v.5Z" /><path d="M8 11h8m-8 4h5" /></svg>
-        <p>Sem escolher um destino, sua lista de fornecedores continua salva e consultável no WhatsApp.</p>
-      </footer>
+      ) : null}
+
+      {GROUPS.map((group) => {
+        const pendentes = catalog.filter((i) => group.providers.includes(i.id) && byId.get(i.id)?.connected !== true);
+        if (!pendentes.length) return null;
+        return (
+          <section className="ledger-section desk-panel" key={group.id} aria-labelledby={`integrations-${group.id}`}>
+            <div className="ledger-section-head">
+              <h2 id={`integrations-${group.id}`}>{group.title}</h2>
+              <p>{group.description}</p>
+            </div>
+            <IntegrationList>{pendentes.map(renderRow)}</IntegrationList>
+          </section>
+        );
+      })}
+      </div>
+      <p className="integrations-footnote">Sem escolher um destino, sua lista de fornecedores continua salva e consultável no WhatsApp.</p>
     </div>
   );
 }

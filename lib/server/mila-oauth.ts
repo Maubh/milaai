@@ -72,6 +72,9 @@ export async function proxyOAuth(
         },
       };
     }
+    // Mesmos dados de exemplo da produção; o sandbox não guarda nada (o POST
+    // devolve este mesmo perfil). A sessão do sandbox é Essencial, então a
+    // análise de concorrentes vem fora do plano.
     if (path.includes("/workspace/dados-loja")) {
       return {
         status: 200,
@@ -90,7 +93,7 @@ export async function proxyOAuth(
       };
     }
     if (path.includes("/workspace/concorrentes")) {
-      return { status: 200, data: { ok: true, concorrentes: ["concorrente.um", "concorrente_dois"], analise_no_plano: true } };
+      return { status: 200, data: { ok: true, concorrentes: ["concorrente.um", "concorrente_dois"], analise_no_plano: false } };
     }
     if (path.includes("/meta/catalog/source")) {
       return {

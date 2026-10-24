@@ -1,0 +1,58 @@
+/* Hallmark · store desk · route skeletons: same geometry as each page, quiet pulse, off under reduced motion */
+@import "../tokens.css";
+
+.skeleton-bone {
+  display: block;
+  height: 0.875rem;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 6px;
+  background: var(--color-ledger-skeleton);
+  animation: skeleton-pulse 1.4s var(--ease-workspace-out) infinite alternate;
+}
+.skeleton-bone[data-size="title"] { height: 2rem; width: min(22rem, 80%); border-radius: 8px; }
+.skeleton-bone[data-size="heading"] { height: 1.25rem; width: min(12rem, 60%); }
+.skeleton-bone[data-size="line"] { width: min(34rem, 100%); }
+.skeleton-bone[data-size="short"] { width: min(16rem, 70%); }
+.skeleton-bone[data-size="tiny"] { width: 5rem; }
+.skeleton-bone[data-size="button"] { height: var(--size-workspace-control); width: 100%; border-radius: var(--radius-ledger-control); }
+.skeleton-bone[data-size="logo"] { height: 28px; width: 72px; }
+.skeleton-bone[data-size="qr"] { height: 148px; width: 148px; border-radius: var(--radius-desk-inset); }
+.skeleton-bone[data-size="figure"] { height: 1.5rem; width: 9rem; }
+.skeleton-text {
+  display: inline-block;
+  vertical-align: middle;
+  width: var(--skeleton-w, 100%);
+  max-width: 100%;
+  height: 0.8em;
+  border-radius: 4px;
+  background: var(--color-ledger-skeleton);
+  animation: skeleton-pulse 1.4s var(--ease-workspace-out) infinite alternate;
+}
+/* Texto mascarado: nem filhos com cor própria (strong, versão) podem aparecer. */
+.skeleton-mask, .skeleton-mask * {
+  color: transparent !important;
+}
+.skeleton-mask {
+  background: var(--color-ledger-skeleton);
+  border-radius: 4px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: skeleton-pulse 1.4s var(--ease-workspace-out) infinite alternate;
+}
+.skeleton-stack { display: grid; gap: var(--space-workspace-sm); }
+.skeleton-stack-loose { display: grid; gap: var(--space-workspace-md); }
+
+/* Dentro do painel mineral o esqueleto usa o tom do próprio painel. */
+.overview-chat .skeleton-bone, .overview-chat .skeleton-text { background: var(--color-skeleton-on-mineral); }
+
+/* QR ainda sem link: o mesmo quadro, na mesma medida, sem código. */
+.overview-qr-code[data-pending] { background: var(--color-skeleton-on-mineral); animation: skeleton-pulse 1.4s var(--ease-workspace-out) infinite alternate; }
+
+@keyframes skeleton-pulse { from { opacity: 1; } to { opacity: 0.5; } }
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-bone, .skeleton-text, .skeleton-mask, .overview-qr-code[data-pending] { animation: none; }
+}
+.skeleton-gap { display: block; height: var(--space-workspace-sm); }
+/* No celular o cabeçalho vira coluna alinhada ao início: sem esticar, os blocos em % medem zero. */
+.workspace-skeleton .ledger-page-head > div { flex: 1 1 auto; align-self: stretch; min-width: 0; }

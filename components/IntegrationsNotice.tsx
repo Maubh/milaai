@@ -12,6 +12,10 @@ interface IntegrationsNoticeProps {
   erroMensagem?: string | null;
 }
 
+function CloseIcon() {
+  return <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6" /></svg>;
+}
+
 /**
  * Banner de notificação pós-OAuth / ações da página de integrações.
  *
@@ -56,7 +60,7 @@ export default function IntegrationsNotice({
 
   if (okConectado) {
     return (
-      <div className="integrations-notice integrations-notice-success" role="status">
+      <div className="ledger-notice integrations-notice" data-tone="positive" role="status">
         <div className="integrations-notice-content">
           <strong>{name}</strong> conectado a esta loja.
         </div>
@@ -66,7 +70,7 @@ export default function IntegrationsNotice({
           onClick={() => setDismissed(true)}
           aria-label="Fechar aviso"
         >
-          ×
+          <CloseIcon />
         </button>
       </div>
     );
@@ -74,7 +78,7 @@ export default function IntegrationsNotice({
 
   if (okPendente) {
     return (
-      <div className="integrations-notice" role="status">
+      <div className="ledger-notice integrations-notice" role="status">
         <div className="integrations-notice-content">
           O {name} voltou, mas a chave ainda não aparece nesta loja. Conecte de novo ou fale com a mila.
         </div>
@@ -84,7 +88,7 @@ export default function IntegrationsNotice({
           onClick={() => setDismissed(true)}
           aria-label="Fechar aviso"
         >
-          ×
+          <CloseIcon />
         </button>
       </div>
     );
@@ -93,7 +97,7 @@ export default function IntegrationsNotice({
   if (erroParam) {
     const texto = erroMensagem || integrationErrorText(erroParam);
     return (
-      <div className="integrations-notice integrations-notice-error" role="alert">
+      <div className="ledger-notice integrations-notice" data-tone="error" role="alert">
         <div className="integrations-notice-content">{texto}</div>
         <button
           type="button"
@@ -101,7 +105,7 @@ export default function IntegrationsNotice({
           onClick={() => setDismissed(true)}
           aria-label="Fechar aviso"
         >
-          ×
+          <CloseIcon />
         </button>
       </div>
     );

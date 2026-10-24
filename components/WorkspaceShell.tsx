@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
+import { MotionConfig, animate, motion, useMotionTemplate, useMotionValue, useReducedMotion } from "framer-motion";
 import BrandLogo from "@/components/BrandLogo";
-import ReleaseLink from "@/components/ReleaseLink";
+import { RELEASES_PATH, useReleaseStatus } from "@/components/ReleaseLink";
+import UpdatesBell from "@/components/UpdatesBell";
 import {
   clearOnboarding,
   defaultWaLink,
@@ -13,33 +15,175 @@ import {
 } from "@/lib/onboarding";
 import "./workspace-shell.css";
 
-const LINKS = [
-  { href: "/workspace", label: "Visão geral", icon: "overview" as const },
-  { href: "/workspace/dados-loja", label: "Dados da loja", icon: "store" as const },
-  { href: "/workspace/integracoes", label: "Integrações", icon: "integrations" as const },
-  { href: "/workspace/plano", label: "Meu plano", icon: "plan" as const },
+// Destinos práticos, na ordem da produção. No desktop Atualizações mora no sino
+// do topo; no dock do celular entra como quinto destino, com o mesmo ponto de
+// novidade do sino.
+type DestinationIcon = "overview" | "store" | "integrations" | "plan" | "updates";
+const LINKS: Array<{ href: string; label: string; icon: DestinationIcon }> = [
+  { href: "/workspace", label: "Visão geral", icon: "overview" },
+  { href: "/workspace/dados-loja", label: "Dados da loja", icon: "store" },
+  { href: "/workspace/integracoes", label: "Integrações", icon: "integrations" },
+  { href: "/workspace/plano", label: "Meu plano", icon: "plan" },
 ];
+const DOCK_LINKS = [...LINKS, { href: RELEASES_PATH, label: "Atualizações", icon: "updates" as const }];
+// Cinco colunas a 320px: as palavras longas quebram inteiras, com hífen, em vez de cortar.
+const DOCK_LABEL: Record<string, string> = { "Integrações": "Integra\u00adções", "Atualizações": "Atuali\u00adzações" };
 
-
-type WorkspaceIconName = "overview" | "store" | "integrations" | "plan" | "chat" | "logout" | "panel" | "menu" | "close" | "arrow" | "chevron";
+type WorkspaceIconName = DestinationIcon | "chat" | "logout" | "chevron";
 function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
   const paths: Record<WorkspaceIconName, React.ReactNode> = {
-    overview: <><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></>,
-    store: <><path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5 12v8h14v-8M10 20v-5h4v5" /></>,
-    integrations: <><path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" /></>,
+    overview: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /></>,
+    store: <path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5 12v8h14v-8M10 20v-5h4v5" />,
+    integrations: <path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" />,
     plan: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>,
+    updates: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8m-8 4h8m-8 4h4" /></>,
     chat: <><path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.5a9 9 0 1 1 16.6-5Z" /><path d="M8 11h8m-8 4h5" /></>,
-    logout: <><path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m5-13 5 5-5 5m-5-5h11" /></>,
-    panel: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M9 4v16" /></>,
-    menu: <path d="M4 6h16M4 12h16M4 18h16" />,
-    close: <path d="m6 6 12 12M6 18 18 6" />,
+    logout: <path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m5-13 5 5-5 5m-5-5h11" />,
     chevron: <path d="m8 10 4 4 4-4" />,
-    arrow: <path d="M7 17 17 7M7 7h10v10" />,
   };
   return <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
 }
 
-function WorkspaceAccount({ name, store, initials, loggingOut, onLogout, collapsed, mobile = false, visible = true }: { name: string; store: string; initials: string; loggingOut: boolean; onLogout: () => void; collapsed: boolean; mobile?: boolean; visible?: boolean }) {
+function isActive(pathname: string, href: string) {
+  return pathname === href || (href !== "/workspace" && pathname.startsWith(`${href}/`));
+}
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * Os três destinos numa cápsula. A pílula é uma cópia dos rótulos em marfim,
+ * recortada por clip-path: só aparece onde está o destino atual. Ao trocar, a
+ * borda que vai na direção do movimento sai primeiro e a de trás segue, então
+ * a pílula estica sobre o caminho e encolhe no destino.
+ *
+ * O movimento começa no clique (alvo pendente) e se acerta pela rota; voltar,
+ * avançar e Enter passam pelo mesmo caminho. A cópia é aria-hidden e não recebe
+ * ponteiro nem foco.
+ */
+function DeskNav() {
+  const pathname = usePathname();
+  const reduce = useReducedMotion();
+  const [pending, setPending] = useState<string | null>(null);
+  const track = useRef<HTMLDivElement>(null);
+  const left = useMotionValue(0);
+  const right = useMotionValue(0);
+  const shown = useMotionValue(0);
+  const clipPath = useMotionTemplate`inset(4px ${right}px 4px ${left}px round 999px)`;
+  const placed = useRef<number | null>(null);
+  const running = useRef<Array<{ stop: () => void }>>([]);
+  // Posição direta: para o que estiver animando antes, senão a animação em curso
+  // continuaria a puxar a borda depois do set.
+  const jumpTo = (l: number, r: number) => {
+    running.current.forEach((control) => control.stop());
+    running.current = [];
+    left.jump(l);
+    right.jump(r);
+  };
+
+  const routeIndex = LINKS.findIndex((link) => isActive(pathname, link.href));
+  const pendingIndex = pending ? LINKS.findIndex((link) => link.href === pending) : -1;
+  const target = pendingIndex >= 0 ? pendingIndex : routeIndex;
+
+  // A rota chegou (ou voltou pelo histórico): o alvo pendente deixa de valer.
+  useEffect(() => { setPending(null); }, [pathname]);
+  useEffect(() => {
+    const clear = () => setPending(null);
+    window.addEventListener("popstate", clear);
+    return () => window.removeEventListener("popstate", clear);
+  }, []);
+
+  useLayoutEffect(() => {
+    const box = track.current;
+    if (!box) return;
+    const edges = (index: number) => {
+      const item = box.querySelectorAll<HTMLElement>("a.desk-nav-item")[index];
+      return { l: item.offsetLeft, r: box.offsetWidth - item.offsetLeft - item.offsetWidth };
+    };
+    const from = placed.current;
+    placed.current = target >= 0 ? target : from;
+    if (target < 0) {
+      if (reduce) shown.jump(0);
+      else animate(shown, 0, { duration: 0.18 });
+      return;
+    }
+    const to = edges(target);
+    if (from === null || from === target || reduce || shown.get() === 0) {
+      jumpTo(to.l, to.r);
+      shown.jump(1);
+    } else {
+      // A borda da frente parte já; a de trás espera e alcança.
+      const forward = target > from;
+      const lead = { duration: 0.32, ease: EASE };
+      const trail = { duration: 0.38, ease: EASE, delay: 0.11 };
+      running.current.forEach((control) => control.stop());
+      const controls = [animate(left, to.l, forward ? trail : lead), animate(right, to.r, forward ? lead : trail)];
+      running.current = controls;
+      Promise.all(controls).then(() => { if (running.current === controls) running.current = []; }, () => undefined);
+      shown.jump(1);
+    }
+  }, [target, reduce, left, right, shown]);
+
+  // Fonte carregada, janela redimensionada: a pílula reacompanha sem animar.
+  useEffect(() => {
+    const box = track.current;
+    if (!box || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(() => {
+      const index = placed.current;
+      if (index === null) return;
+      const item = box.querySelectorAll<HTMLElement>("a.desk-nav-item")[index];
+      if (!item) return;
+      const l = item.offsetLeft;
+      const r = box.offsetWidth - item.offsetLeft - item.offsetWidth;
+      // Só reposiciona se a geometria mudou de fato (fonte, largura); não corta o deslize.
+      if (Math.abs(l - left.get()) < 0.5 && Math.abs(r - right.get()) < 0.5) return;
+      if (running.current.length) return;
+      jumpTo(l, r);
+    });
+    observer.observe(box);
+    return () => observer.disconnect();
+  }, [left, right]);
+
+  return <nav className="desk-nav" aria-label="Sua loja">
+    <div ref={track} className="desk-nav-track">
+      {LINKS.map((link) => {
+        const current = isActive(pathname, link.href);
+        return <Link
+          key={link.href}
+          href={link.href}
+          className="desk-nav-item"
+          aria-current={current ? "page" : undefined}
+          onClick={(event) => {
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            setPending(current ? null : link.href);
+          }}
+        >{link.label}</Link>;
+      })}
+      <motion.span className="desk-nav-pill" style={{ clipPath, opacity: shown }} aria-hidden="true">
+        {LINKS.map((link) => <span key={link.href} className="desk-nav-item">{link.label}</span>)}
+      </motion.span>
+    </div>
+  </nav>;
+}
+
+/** Dock do celular e do tablet: os quatro destinos com ícone, como na versão anterior. */
+function DeskDock() {
+  const pathname = usePathname();
+  const release = useReleaseStatus();
+  return <nav className="desk-dock" aria-label="Sua loja">
+    {DOCK_LINKS.map((link) => {
+      const active = isActive(pathname, link.href);
+      const isRelease = link.href === RELEASES_PATH;
+      return <Link key={link.href} href={link.href} className={`desk-dock-item${active ? " is-active" : ""}`} aria-current={active ? "page" : undefined} aria-label={isRelease ? release.label : undefined}>
+        {active ? <motion.span layoutId="desk-dock-pill" className="desk-dock-pill" transition={{ type: "spring", stiffness: 520, damping: 42, mass: 0.7 }} aria-hidden="true" /> : null}
+        <span className="desk-dock-icon"><WorkspaceIcon name={link.icon} /></span>
+        <span className="desk-dock-label">{DOCK_LABEL[link.label] ?? link.label}</span>
+        {isRelease ? <span className="desk-dock-dot" data-unread={release.unread} aria-hidden="true" /> : null}
+      </Link>;
+    })}
+  </nav>;
+}
+
+function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { name: string; store: string; initials: string; loggingOut: boolean; onLogout: () => void }) {
   const [open, setOpen] = useState(false);
   const account = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -47,7 +191,6 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout, collaps
   const menuId = useId();
   const pathname = usePathname();
   useEffect(() => { setOpen(false); }, [pathname]);
-  useEffect(() => { if (!visible) setOpen(false); }, [visible]);
   useEffect(() => {
     if (!open) return;
     logoutAction.current?.focus({ preventScroll: true });
@@ -68,19 +211,21 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout, collaps
       document.removeEventListener("keydown", escape, true);
     };
   }, [open]);
-  return <div ref={account} className="workspace-account" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false); }}>
-    {mobile || open ? <div id={menuId} className={`workspace-account-menu${mobile ? " workspace-account-menu-inline" : ""}`} data-open={open} inert={!open} aria-hidden={!open}>
-      <div className="workspace-account-menu-content">
-        <button ref={logoutAction} type="button" className="workspace-nav-item workspace-logout" onClick={onLogout} disabled={loggingOut}>
-          <WorkspaceIcon name="logout" /><span>{loggingOut ? "Saindo…" : "Sair da conta"}</span>
-        </button>
-      </div>
-    </div> : null}
-    <button ref={trigger} type="button" className="workspace-profile" title={collapsed ? undefined : `${name} · ${store}`} data-tooltip={collapsed ? "Opções da conta" : undefined} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen(!open)}>
-      <span className="workspace-avatar" aria-hidden="true">{initials}</span>
-      <span className="workspace-profile-copy"><strong>{name}</strong><span>{store}</span></span>
-      <span className="workspace-account-chevron"><WorkspaceIcon name="chevron" /></span>
+
+  return <div ref={account} className="desk-account" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false); }}>
+    <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen(!open)}>
+      <span className="desk-avatar" aria-hidden="true">{initials}</span>
+      <span className="desk-account-chevron"><WorkspaceIcon name="chevron" /></span>
     </button>
+    {open ? <div id={menuId} className="desk-account-menu">
+      <div className="desk-account-who">
+        <strong>{name}</strong>
+        <span>{store}</span>
+      </div>
+      <button ref={logoutAction} type="button" className="desk-logout" onClick={onLogout} disabled={loggingOut}>
+        <WorkspaceIcon name="logout" /><span>{loggingOut ? "Saindo…" : "Sair da conta"}</span>
+      </button>
+    </div> : null}
   </div>;
 }
 
@@ -92,15 +237,10 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout, collaps
  * telefone é exibição, não prova de login.
  */
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
   const router = useRouter();
-  const drawerId = useId();
-  const mobileDrawer = useRef<HTMLDialogElement>(null);
-  const [collapsed, setCollapsed] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [telefone, setTelefone] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [hello, setHello] = useState<{ name: string | null; store: string | null }>({
     name: null,
     store: null,
@@ -125,39 +265,6 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
       .catch(() => undefined);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    const dialog = mobileDrawer.current;
-    if (!dialog) return;
-    if (!menuOpen) {
-      if (dialog.open) dialog.close();
-      return;
-    }
-    if (!dialog.open) {
-      dialog.showModal();
-      const activeLink = dialog.querySelector<HTMLAnchorElement>(".workspace-nav a[aria-current='page']") ?? dialog.querySelector<HTMLAnchorElement>(".workspace-nav a");
-      activeLink?.focus({ preventScroll: true });
-    }
-    const previousOverflow = document.body.style.overflowY;
-    const previousRootOverflow = document.documentElement.style.overflowY;
-    document.body.style.overflowY = "clip";
-    document.documentElement.style.overflowY = "clip";
-    return () => {
-      document.body.style.overflowY = previousOverflow;
-      document.documentElement.style.overflowY = previousRootOverflow;
-    };
-  }, [menuOpen]);
-
-  useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 901px)");
-    const closeMobileMenu = () => { if (desktop.matches) setMenuOpen(false); };
-    desktop.addEventListener("change", closeMobileMenu);
-    return () => desktop.removeEventListener("change", closeMobileMenu);
-  }, []);
-
   async function sair() {
     if (loggingOut) return;
     setLoggingOut(true);
@@ -171,77 +278,35 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
     }
   }
 
-  const activePage = pathname === "/workspace/novidades" ? "Atualizações" : LINKS.find((link) => pathname === link.href || (link.href !== "/workspace" && pathname.startsWith(`${link.href}/`)))?.label ?? "Sua loja";
   const accountName = hello.name || (telefone ? `WhatsApp ${telefone}` : "Sua conta");
   const storeName = hello.store || "Sua loja";
   const initials = accountName.replace(/\([^)]*\)/g, "").trim().split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
 
-  function containMobileFocus(event: React.KeyboardEvent<HTMLDialogElement>) {
-    if (event.key !== "Tab") return;
-    const controls = Array.from(event.currentTarget.querySelectorAll<HTMLElement>("a[href], button:not(:disabled)"))
-      .filter((control) => !control.closest("[inert]") && control.getClientRects().length > 0);
-    const first = controls[0];
-    const last = controls[controls.length - 1];
-    const destination = event.shiftKey && document.activeElement === first ? last
-      : !event.shiftKey && document.activeElement === last ? first : null;
-    if (!destination) return;
-    event.preventDefault();
-    destination.focus({ preventScroll: true });
-  }
-
-  function sidebarContent(includeBrand = true) {
-    return <>
-      {includeBrand ? <Link href="/workspace" className="workspace-brand" data-tooltip={collapsed ? "Visão geral" : undefined} aria-label="mila. — visão geral" onClick={() => setMenuOpen(false)}>
-        <img className="workspace-symbol" src="/brand/vectors/symbol-mineral.svg" alt="" width="32" height="22" />
-        <BrandLogo className="workspace-wordmark" height={28} alt="" />
-      </Link> : null}
-      <nav className="workspace-nav" aria-label="Sua loja">
-        {LINKS.map((link) => {
-          const active = pathname === link.href || (link.href !== "/workspace" && pathname.startsWith(`${link.href}/`));
-          return <Link key={link.href} href={link.href} className={`workspace-nav-item${active ? " is-active" : ""}`} aria-current={active ? "page" : undefined} aria-label={link.label} data-tooltip={collapsed ? link.label : undefined} onClick={() => setMenuOpen(false)}>
-            <WorkspaceIcon name={link.icon} />
-            <span className="workspace-nav-label">{link.label}</span>
-            {active ? <span className="workspace-active-dot" aria-hidden="true" /> : null}
-          </Link>;
-        })}
-      </nav>
-      <div className="workspace-side-bottom">
-        {waLink ? <a href={waLink} className="workspace-nav-item workspace-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="Abrir WhatsApp" data-tooltip={collapsed ? "Abrir WhatsApp" : undefined}>
-          <WorkspaceIcon name="chat" />
-          <span className="workspace-nav-label">Abrir WhatsApp</span>
-          <span className="workspace-external"><WorkspaceIcon name="arrow" /></span>
-        </a> : null}
-        <WorkspaceAccount name={accountName} store={storeName} initials={initials} loggingOut={loggingOut} onLogout={sair} collapsed={includeBrand && collapsed} mobile={!includeBrand} visible={includeBrand || menuOpen} />
-      </div>
-    </>;
-  }
-
   return (
-    <div className={`work-shell workspace-shell${collapsed ? " is-sidebar-collapsed" : ""}`}>
-      <aside className="workspace-sidebar" aria-label="Navegação do workspace">
-        {sidebarContent()}
-      </aside>
-      <div className="workspace-content" inert={menuOpen}>
-        <header className="workspace-toolbar">
-          <button type="button" className="workspace-icon-button workspace-desktop-toggle" onClick={() => setCollapsed((previous) => !previous)} aria-label={collapsed ? "Expandir menu lateral" : "Recolher menu lateral"} aria-expanded={!collapsed}>
-            <WorkspaceIcon name="panel" />
-          </button>
-          <button type="button" className="workspace-icon-button workspace-mobile-toggle" onClick={() => setMenuOpen(true)} aria-label="Abrir menu" aria-expanded={menuOpen} aria-controls={drawerId}>
-            <WorkspaceIcon name="menu" />
-          </button>
-          <Link href="/workspace" className="workspace-mobile-brand" aria-label="mila. — visão geral"><BrandLogo className="workspace-wordmark" height={24} alt="" /></Link>
-          <div className="workspace-breadcrumb"><span>Sua loja</span><span aria-hidden="true">/</span><strong>{activePage}</strong></div>
-          <ReleaseLink onNavigate={() => setMenuOpen(false)} />
+    <MotionConfig reducedMotion="user">
+      <div className="desk-shell">
+        <header className="desk-bar">
+          <div className="desk-brand">
+            <Link href="/workspace" className="desk-brand-link" aria-label="mila. — visão geral">
+              <BrandLogo className="desk-wordmark" height={24} alt="" />
+            </Link>
+            <span className="desk-store" title={storeName}>{storeName}</span>
+          </div>
+          <DeskNav />
+          <div className="desk-bar-actions">
+            {/* Texto longo no desktop largo, curto no resto: o CSS mostra um dos dois. */}
+            {waLink ? <a href={waLink} className="desk-chat" target="_blank" rel="noopener noreferrer">
+              <WorkspaceIcon name="chat" />
+              <span className="desk-chat-long">Conversar com a mila</span>
+              <span className="desk-chat-short">WhatsApp</span>
+            </a> : null}
+            <UpdatesBell />
+            <WorkspaceAccount name={accountName} store={storeName} initials={initials} loggingOut={loggingOut} onLogout={sair} />
+          </div>
         </header>
-        <div className="work-main workspace-main">{children}</div>
+        <div className="desk-main">{children}</div>
+        <DeskDock />
       </div>
-      <dialog ref={mobileDrawer} id={drawerId} className="workspace-mobile-drawer" aria-label="Menu da sua loja" onKeyDown={containMobileFocus} onCancel={() => setMenuOpen(false)} onClose={() => setMenuOpen(false)}>
-        <div className="workspace-drawer-header">
-          <button type="button" className="workspace-icon-button workspace-mobile-close" onClick={() => setMenuOpen(false)} aria-label="Fechar menu"><WorkspaceIcon name="close" /></button>
-          <Link href="/workspace" className="workspace-mobile-brand" aria-label="mila. — visão geral" onClick={() => setMenuOpen(false)}><BrandLogo className="workspace-wordmark" height={24} alt="" /></Link>
-        </div>
-        {sidebarContent(false)}
-      </dialog>
-    </div>
+    </MotionConfig>
   );
 }

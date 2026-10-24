@@ -95,3 +95,77 @@
   --text-platform-title: clamp(1.75rem, 2.6vw, 2.125rem);
   --text-platform-price: 2.25rem;
 }
+
+/* Hallmark · workspace ledger ("livro da loja") · existing mila mineral theme
+ * Rows on ivory paper, hairline rules, mineral only for the conversation band,
+ * the primary action and the current tab. */
+:root {
+  --color-ledger-paper: var(--color-workspace-paper);
+  --color-ledger-surface: var(--color-workspace-surface);
+  --color-ledger-sand: oklch(93.5% 0.018 75);
+  --color-ledger-rule: var(--color-workspace-rule);
+  --color-ledger-rule-strong: oklch(78% 0.012 165);
+  --color-ledger-ink: var(--color-workspace-ink);
+  --color-ledger-muted: var(--color-workspace-muted);
+  --color-ledger-mineral: oklch(33.5% 0.045 184);
+  --color-ledger-mineral-hover: oklch(29% 0.042 184);
+  --color-ledger-mineral-ink: oklch(96.6% 0.008 85);
+  --color-ledger-mineral-muted: oklch(86% 0.022 170);
+  --color-ledger-active: var(--color-workspace-active);
+  --color-ledger-positive: oklch(42% 0.09 155);
+  --color-ledger-error: var(--color-integration-error);
+  --color-ledger-error-paper: var(--color-integration-error-paper);
+  --color-ledger-skeleton: oklch(91% 0.008 85);
+  --color-ledger-focus: var(--color-integration-focus);
+  --color-ledger-focus-on-mineral: oklch(96.6% 0.008 85);
+  --size-ledger-content: 1120px;
+  --size-ledger-masthead: 64px;
+  --size-ledger-tabs: 48px;
+  --size-ledger-label: 11rem;
+  --radius-ledger-band: 16px;
+  --radius-ledger-control: 10px;
+  --rule-ledger: 1px;
+  --rule-ledger-tab: 2px;
+  --text-ledger-display: 2rem;
+  --text-ledger-band: 1.5rem;
+}
+
+/* Hallmark · workspace desk ("mesa da loja") · revision 3 (Cadra-observed material)
+ * Ivory canvas with a soft mineral/sand wash; translucent ivory surfaces with a
+ * 1px light hairline, a top inner highlight and a long, faint drop shadow;
+ * mineral pill for the current destination, revealed by a clipped layer. */
+:root {
+  --color-desk-canvas: oklch(95.6% 0.009 85);
+  --color-desk-panel: oklch(99.2% 0.003 85);
+  --color-desk-glass: oklch(99.6% 0.003 85 / 0.62);
+  --color-desk-glass-hover: oklch(99.6% 0.003 85 / 0.82);
+  --color-desk-hairline: oklch(100% 0 0 / 0.82);
+  --color-desk-tint: oklch(27% 0.025 165 / 0.06);
+  --color-desk-wash-a: oklch(86% 0.04 184 / 0.45);
+  --color-desk-wash-b: oklch(90% 0.035 75 / 0.55);
+  --color-desk-inset: oklch(96.8% 0.007 85);
+  --color-desk-track: oklch(92.6% 0.01 85);
+  --color-desk-pill: var(--color-ledger-mineral);
+  --color-desk-pill-ink: var(--color-ledger-mineral-ink);
+  --shadow-desk-panel: inset 0 1px 0 oklch(100% 0 0 / 0.7), 0 24px 48px -30px oklch(27% 0.025 165 / 0.24);
+  --shadow-desk-raised: 0 24px 48px -30px oklch(27% 0.025 165 / 0.32);
+  --shadow-desk-pop: 0 24px 60px -18px oklch(27% 0.025 165 / 0.3), 0 2px 6px oklch(27% 0.025 165 / 0.07);
+  --shadow-desk-bar: 0 1px 0 oklch(27% 0.025 165 / 0.06);
+  --shadow-desk-dock: 0 -1px 0 oklch(27% 0.025 165 / 0.08), 0 -10px 28px -20px oklch(27% 0.025 165 / 0.3);
+  --radius-desk-panel: 24px;
+  --radius-desk-pop: 16px;
+  --radius-desk-inset: 14px;
+  --radius-desk-pill: 999px;
+  --size-desk-bar: 72px;
+  --size-desk-dock: 64px;
+  --size-desk-avatar: 40px;
+  --size-desk-round: 44px;
+  --dur-desk-pill: 320ms;
+  --dur-desk-lift: 450ms;
+  --lift-desk-tile: -4px;
+}
+
+/* Route skeletons */
+:root {
+  --color-skeleton-on-mineral: oklch(96.6% 0.008 85 / 0.16);
+}

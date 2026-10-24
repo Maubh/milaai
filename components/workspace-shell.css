@@ -299,7 +299,8 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 .desk-logout:active { background: var(--color-desk-track); }
 .desk-logout:disabled { color: var(--color-ledger-muted); cursor: progress; }
 
-.desk-main { padding-block: var(--space-workspace-2xl) calc(var(--space-workspace-3xl) * 2); min-width: 0; }
+/* O fim da página rola acima do botão flutuante de conversa (56px + margem). */
+.desk-main { padding-block: var(--space-workspace-2xl) calc(56px + var(--space-workspace-xl) * 2 + var(--space-workspace-3xl)); min-width: 0; }
 
 /* Dock (celular e tablet) */
 .desk-dock { display: none; }

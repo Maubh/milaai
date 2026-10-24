@@ -64,8 +64,6 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
   const router = useRouter();
   const [catalogos, setCatalogos] = useState<CatalogoOpcao[] | null>(null);
   const [semPermissao, setSemPermissao] = useState(false);
-  // Meta recusou o acesso (403): o caminho é refazer a autorização, sem desconectar.
-  const [recusado, setRecusado] = useState(false);
   const [escolha, setEscolha] = useState<string>(atual ?? "");
   const [gravando, setGravando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
@@ -83,7 +81,6 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
         if (!ativo) return;
         if (!res.ok || !data.ok) {
           setErro(integrationErrorText(data.detail));
-          setRecusado(res.status === 403);
           setCatalogos([]);
           return;
         }
@@ -179,8 +176,9 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
       {erro ? (
         <p className="meta-catalog-feedback" data-tone="error" role="alert">{erro}</p>
       ) : null}
-      {/* Só quando a Meta nega o acesso: reautorizar mantém a conexão e pede de novo a permissão. */}
-      {semPermissao || recusado ? (
+      {/* Só quando a Meta nega o acesso aos negócios (business_permission false): reautorizar
+          mantém a conexão e pede de novo a permissão. Outro 403 (ex.: plano) não é caso de reautorizar. */}
+      {semPermissao ? (
         <a href="/integrations/meta" className="ledger-button meta-catalog-reauth">Reautorizar acesso à Meta</a>
       ) : null}
     </div>

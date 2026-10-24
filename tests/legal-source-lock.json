@@ -121,7 +121,7 @@
   "site/components/IntegrationsMarquee.tsx": "ae372192ce8d3afb72cd634fb8fc78211bdcdcaa4064caf42eb88d5fbbc38947",
   "site/components/IntegrationsNotice.tsx": "0668f58d40adfaa70574580e633e9e4d2565a5805820f2a4a7fe9861907456fb",
   "site/components/LocalQr.tsx": "ec65371823346019d7edcc10c9eb66267f5ad62cf3504a14a7822691a28a0b21",
-  "site/components/MetaCatalogManager.tsx": "b758c966040186d95a840d57d346e6fa189c83ca8a8322cf2e0168ee50e491ad",
+  "site/components/MetaCatalogManager.tsx": "87a1cf375021119cadd86a7d62e107e38092b28180d3160bd1bd17b9009023ff",
   "site/components/NotionConnection.tsx": "f3635272116adcbc9c3bd84d071ef9012ed93b18755f3c0de28fa810355b4562",
   "site/components/PricingSection.tsx": "829f82360fc15d1eee01c5da774aa8362d3c0fe8e2c562f1aaa4a3a0195b6f7b",
   "site/components/ReleaseLink.tsx": "437381e93d4202d6198f9246e96f9c01c08f0a3c77fea3b53e10bf5feea8ffe7",

@@ -24,7 +24,8 @@ test("chave de integração: só nas linhas conectadas ou disponíveis; Pro e de
   assert.doesNotMatch(page, /Reconectar/);
   // Reautorizar só no contexto em que a Meta negou o acesso.
   const meta = read("../components/MetaCatalogManager.tsx");
-  assert.match(meta, /\{semPermissao \|\| recusado \? \(\s*<a href="\/integrations\/meta"[^>]*>Reautorizar acesso à Meta<\/a>/);
+  assert.match(meta, /\{semPermissao \? \(\s*<a href="\/integrations\/meta"[^>]*>Reautorizar acesso à Meta<\/a>/);
+  assert.doesNotMatch(meta, /status === 403/);
   assert.match(page, /row\.state === "locked" \? \(\s*<Link href="\/workspace\/plano"[^>]*>\s*Assinar plano Pro/);
   assert.match(page, /row\.state === "available" \? \(\s*<ConnectSwitch/);
 });

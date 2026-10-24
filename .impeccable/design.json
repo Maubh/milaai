@@ -482,16 +482,18 @@
       }
     ],
     "review": {
-      "scope": "Preferência de navegação mobile, proposta A, 2026-10-23",
+      "scope": "Mensagens prontas e próximos passos, proposta A, 2026-10-23",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "review_mobile_dock; fechamento final confirmado pelo coordenador",
+      "reviewer": "Fable fresco (veredito próprio deste delta: rodada 1 fix de docs e prova da copy, rodada 2 ship) e gate final do coordenador Codex",
       "evidence": [
-        "DOCK-PACKAGE.md",
-        "cadra-live/dock/dock.json e PNGs (build-a10)"
+        "FABLE-STEPS-REVIEW.md",
+        "steps/proof/report.json e PNGs (build-a12, comportamento das regras)",
+        "steps/contain/contain.json e PNGs (build-a13, contenção do esqueleto)",
+        "steps/copy/copy.json e PNGs (build-a15, copy comum aos planos)"
       ],
-      "validation": "Reviewer encerrou com ship, remaining clear, sem material_fix no escopo: layouts de 320/375/414/768px e desktop de 1440px; quatro links, ativo, foco, fim das quatro rotas, estado não lido e movimento reduzido. Claude reportou 94 pass, 1 skip e 0 fail, TypeScript e build-a10. Coordenador comparou 103 arquivos runtime com build-a10, zero divergências e BUILD_ID presente; conferiu os hashes dos dois arquivos Shell no lock e git diff --check limpo. Código commitado por Claude em 44e74e0, confirmado pelo coordenador. Documenter leu fontes, pacote e JSON de evidência; não executou checks de aplicação.",
-      "limits": "Headless com inset de área segura igual a zero; a área segura física não foi comprovada. Dados do sandbox não comprovam OAuth real nem backend de produção. Movimento reduzido salta entre destinos sem posições intermediárias. Refinamento code-led, sem seed, novo estudo ou assets. B e main fora do escopo, sem merge ou push.",
+      "validation": "Claude: npm test 109 pass, 1 skip, 0 fail; build-a15 exit 0. Coordenador Codex: tsc --noEmit --incremental false no build-a15 com exit 0 e nenhuma saída, sem filtro; 106 fontes/config equivalentes ao build-a15; 10 hashes do lock válidos; arquivos congelados intactos. Código commitado por Claude em 21baa54.",
+      "limits": "Estados alternativos vêm de interceptação rotulada no browser; o sandbox real cobre só o passo de sincronização da Meta. Painel de passos 224px no esqueleto contra 153px pronto. Âncora da Meta a 375px chega 38px acima da tela. Tipos antigos em .next/types do servidor de dev são limite local. OAuth real e backend de produção não comprovados. B e main fora do escopo, sem merge ou push.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
@@ -527,6 +529,19 @@
         "validation": "Claude: 94 pass, 1 skip, 0 fail; TypeScript e build-a6 exit 0; logs confirmados pelo coordenador. Fontes e capturas das quatro rotas em 1440/375px, reload/menu, API cliente/RSC, falha/retry e reduced-motion revisados. Atualizações: 41 máscaras para zero, caixas iguais, cabeçalho com largura positiva, sem overflow. Lock CSS atualizado após revisão, sem frozen drift, segundo o coordenador.",
         "limits": "Checks de aplicação não executados pelo documenter; fixtures/APIs interceptadas e capturas não comprovam OAuth real nem backend de produção; skip de paridade com backend mantido.",
         "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
+      {
+        "scope": "Preferência de navegação mobile, proposta A, 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "review_mobile_dock; fechamento final confirmado pelo coordenador",
+        "evidence": [
+          "DOCK-PACKAGE.md",
+          "cadra-live/dock/dock.json e PNGs (build-a10)"
+        ],
+        "validation": "Reviewer encerrou com ship, remaining clear, sem material_fix no escopo: layouts de 320/375/414/768px e desktop de 1440px; quatro links, ativo, foco, fim das quatro rotas, estado não lido e movimento reduzido. Claude reportou 94 pass, 1 skip e 0 fail, TypeScript e build-a10. Coordenador comparou 103 arquivos runtime com build-a10, zero divergências e BUILD_ID presente; conferiu os hashes dos dois arquivos Shell no lock e git diff --check limpo. Código commitado por Claude em 44e74e0, confirmado pelo coordenador. Documenter leu fontes, pacote e JSON de evidência; não executou checks de aplicação.",
+        "limits": "Headless com inset de área segura igual a zero; a área segura física não foi comprovada. Dados do sandbox não comprovam OAuth real nem backend de produção. Movimento reduzido salta entre destinos sem posições intermediárias. Refinamento code-led, sem seed, novo estudo ou assets. B e main fora do escopo, sem merge ou push.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
       }
     ]
   },
@@ -559,7 +574,7 @@
       "name": "Painel da mesa",
       "kind": "card",
       "refersTo": "desk-panel",
-      "description": "Painel de conteúdo imóvel com linhas pautadas; a amostra não representa contagem real de conta.",
+      "description": "Painel de conteúdo imóvel com linhas pautadas; a amostra não representa contagem real de conta. Na visão geral, Próximos passos usa este painel: cada linha mostra a origem (Conta · Plano, Meta · Catálogo do Instagram e Facebook, Integrações da loja), a frase e um link para o destino real.",
       "html": "<section class=\"ds-panel\"><h2>Meu plano</h2><div class=\"ds-row\"><span>Plano</span><strong>Plano não informado</strong></div><div class=\"ds-row\"><span>Situação</span><strong>Não verificada</strong></div></section>",
       "css": ".ds-panel { font-family: var(--font-workspace, Manrope, sans-serif); padding:24px 32px; border:1px solid var(--color-desk-hairline); border-radius:24px; background:var(--color-desk-glass); box-shadow:var(--shadow-desk-panel); color:var(--color-ledger-ink); } .ds-panel h2 { margin:0; padding-bottom:12px; border-bottom:1px solid var(--color-ledger-rule); font-size:1.25rem; } .ds-row { display:grid; gap:2px; padding:16px 0; border-bottom:1px solid var(--color-ledger-rule); } .ds-row:last-child { border-bottom:0; } .ds-row span { color:var(--color-ledger-muted); font-size:0.875rem; font-weight:600; } .ds-row small { color:var(--color-ledger-muted); font-size:.875rem; line-height:1.5; } @media(max-width:640px) { .ds-panel { padding:16px; border-radius:18px; } }"
     },
@@ -567,8 +582,8 @@
       "name": "Painel da conversa",
       "kind": "custom",
       "refersTo": "conversation-panel",
-      "description": "Único painel mineral: título, frase e botão para o WhatsApp.",
-      "html": "<section class=\"ds-chat\"><h2>Conversar com a mila</h2><p>Preço, legenda ou ajuda com uma peça. A mila responde no WhatsApp.</p><a class=\"ds-chat-action\" href=\"#\">Abrir WhatsApp</a></section>",
+      "description": "Único painel mineral: título, frase, botão para o WhatsApp, três mensagens prontas e QR. Cada mensagem mostra o assunto (Mila · Precificação, Mila · Produtos, Mila · Compras), só com tarefas dos dois planos, e usa o mesmo link verificado, mudando só o text. Sem link, as mensagens ficam indisponíveis e não navegam.",
+      "html": "<section class=\"ds-chat\"><h2>Conversar com a mila</h2><p>Preço, descrição ou ajuda com uma peça. A mila responde no WhatsApp.</p><a class=\"ds-chat-action\" href=\"#\">Abrir WhatsApp</a></section>",
       "css": ".ds-chat { font-family: var(--font-workspace, Manrope, sans-serif); display:grid; justify-items:start; gap:12px; padding:32px 40px; border-radius:24px; box-shadow:var(--shadow-desk-raised); background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); } .ds-chat h2 { margin:0; font-size:1.5rem; letter-spacing:-0.025em; } .ds-chat p { margin:0; color:var(--color-ledger-mineral-muted); } .ds-chat-action { display:inline-flex; align-items:center; min-height:48px; padding:0 24px; border-radius:999px; background:var(--color-ledger-mineral-ink); color:var(--color-ledger-mineral); font-weight:700; text-decoration:none; } .ds-chat-action:hover { background:var(--color-ledger-surface); } .ds-chat-action:focus-visible { outline:2px solid var(--color-ledger-focus-on-mineral); outline-offset:3px; } .ds-chat-action:active { transform:scale(.97); } @media(prefers-reduced-motion:reduce) { .ds-chat-action:active { transform:none; } } @media(max-width:640px) { .ds-chat { padding:32px 24px; border-radius:14px; } }"
     },
     {

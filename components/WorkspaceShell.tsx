@@ -15,20 +15,25 @@ import {
 } from "@/lib/onboarding";
 import "./workspace-shell.css";
 
-// Destinos práticos. No desktop Atualizações mora no sino do topo; no dock do
-// celular entra como quarto destino, com o mesmo ponto de novidade do sino.
-type DestinationIcon = "overview" | "integrations" | "plan" | "updates";
+// Destinos práticos, na ordem da produção. No desktop Atualizações mora no sino
+// do topo; no dock do celular entra como quinto destino, com o mesmo ponto de
+// novidade do sino.
+type DestinationIcon = "overview" | "store" | "integrations" | "plan" | "updates";
 const LINKS: Array<{ href: string; label: string; icon: DestinationIcon }> = [
   { href: "/workspace", label: "Visão geral", icon: "overview" },
+  { href: "/workspace/dados-loja", label: "Dados da loja", icon: "store" },
   { href: "/workspace/integracoes", label: "Integrações", icon: "integrations" },
   { href: "/workspace/plano", label: "Meu plano", icon: "plan" },
 ];
 const DOCK_LINKS = [...LINKS, { href: RELEASES_PATH, label: "Atualizações", icon: "updates" as const }];
+// Cinco colunas a 320px: as palavras longas quebram inteiras, com hífen, em vez de cortar.
+const DOCK_LABEL: Record<string, string> = { "Integrações": "Integra\u00adções", "Atualizações": "Atuali\u00adzações" };
 
 type WorkspaceIconName = DestinationIcon | "chat" | "logout" | "chevron";
 function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
   const paths: Record<WorkspaceIconName, React.ReactNode> = {
     overview: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /></>,
+    store: <path d="M4 9.5 5.5 4h13L20 9.5M4 9.5h16M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M5 12v8h14v-8M10 20v-5h4v5" />,
     integrations: <path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" />,
     plan: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>,
     updates: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8m-8 4h8m-8 4h4" /></>,
@@ -171,7 +176,7 @@ function DeskDock() {
       return <Link key={link.href} href={link.href} className={`desk-dock-item${active ? " is-active" : ""}`} aria-current={active ? "page" : undefined} aria-label={isRelease ? release.label : undefined}>
         {active ? <motion.span layoutId="desk-dock-pill" className="desk-dock-pill" transition={{ type: "spring", stiffness: 520, damping: 42, mass: 0.7 }} aria-hidden="true" /> : null}
         <span className="desk-dock-icon"><WorkspaceIcon name={link.icon} /></span>
-        <span className="desk-dock-label">{link.label}</span>
+        <span className="desk-dock-label">{DOCK_LABEL[link.label] ?? link.label}</span>
         {isRelease ? <span className="desk-dock-dot" data-unread={release.unread} aria-hidden="true" /> : null}
       </Link>;
     })}

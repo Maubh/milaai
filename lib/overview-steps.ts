@@ -121,7 +121,8 @@ export function failureText(failed: StepsReading["failed"]): string | null {
  * Mensagens prontas: assunto geral da mila, sem atribuir a uma integração, e só
  * tarefas que os dois planos incluem (Essencial e Pro, `components/PricingSection.tsx`):
  * precificação, descrição de peça para loja virtual e leitura de nota de compra.
- * Conteúdo de Instagram é do Pro e fica de fora.
+ * Os recursos de Instagram mudam entre os planos (legenda por peça nos dois,
+ * carrosséis e Reels só no Pro); os atalhos ficam fora desse assunto.
  */
 export const STARTERS = [
   { id: "preco", context: "Mila · Precificação", label: "Calcular o preço de uma peça", text: "Oi, mila. Quero calcular o preço de uma peça." },

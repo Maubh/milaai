@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IntegrationSwitch } from "@/components/IntegrationSwitch";
 import { integrationErrorText } from "@/lib/integration-errors";
 
 /**
  * Desconectar uma integração: chama o revoke real (BFF → serviço de auth),
  * que apaga a credencial do vault da loja. Sem isso a rota de revoke existia
  * mas nenhuma tela chegava nela.
+ *
+ * O gatilho é a chave ligada (a conexão confirmada pelo vault). Tocar nela só
+ * abre a confirmação; a chave continua ligada até o revoke dar certo e a
+ * página reler o vault.
  */
 export default function DisconnectButton({
   provider,
@@ -20,6 +25,7 @@ export default function DisconnectButton({
   const [confirmando, setConfirmando] = useState(false);
   const [trabalhando, setTrabalhando] = useState(false);
   const [erro, setErro] = useState("");
+  const confirmId = useId();
 
   async function desconectar() {
     setTrabalhando(true);
@@ -41,23 +47,27 @@ export default function DisconnectButton({
     }
   }
 
-  if (!confirmando) {
-    return (
-      <button
-        type="button"
-        className="ledger-button"
-        onClick={() => {
-          setErro("");
-          setConfirmando(true);
-        }}
-      >
-        Desconectar
-      </button>
-    );
-  }
+  const chave = (
+    <IntegrationSwitch
+      checked
+      label={`Desconectar ${providerName}`}
+      busy={trabalhando}
+      disabled={trabalhando}
+      expanded={confirmando}
+      controls={confirmando ? confirmId : undefined}
+      onClick={() => {
+        setErro("");
+        setConfirmando(!confirmando);
+      }}
+    />
+  );
+
+  if (!confirmando) return <span className="integration-switch-wrap">{chave}</span>;
 
   return (
-    <span className="disconnect-confirm" role="group" aria-label={`Confirmar desconexão de ${providerName}`}>
+    <span className="integration-switch-wrap">
+    {chave}
+    <span id={confirmId} className="disconnect-confirm" role="group" aria-label={`Confirmar desconexão de ${providerName}`}>
       <span className="disconnect-question">Desconectar {providerName} desta loja?</span>
       <button type="button" className="ledger-button disconnect-yes" onClick={desconectar} disabled={trabalhando}>
         {trabalhando ? "Desconectando…" : "Sim, desconectar"}
@@ -75,6 +85,7 @@ export default function DisconnectButton({
           {erro}
         </span>
       ) : null}
+    </span>
     </span>
   );
 }

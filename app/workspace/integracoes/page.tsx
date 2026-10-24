@@ -1,5 +1,6 @@
 import Link from "next/link";
 import DisconnectButton from "@/components/DisconnectButton";
+import { ConnectSwitch } from "@/components/IntegrationSwitch";
 import IntegrationRow, { IntegrationList } from "@/components/IntegrationRow";
 import IntegrationsNotice from "@/components/IntegrationsNotice";
 import MetaCatalogManager, { type LastSyncSummary } from "@/components/MetaCatalogManager";
@@ -150,8 +151,11 @@ export default async function IntegracoesPage({
           </Link>
         ) : row.state === "soon" ? (
           <span className="integrations-unavailable">Ainda não disponível</span>
+        ) : row.state === "available" ? (
+          <ConnectSwitch provider={i.id} providerName={i.nome} />
         ) : (
-          <Link href={`/integrations/${i.id}`} className="ledger-button ledger-button-primary" aria-label={`Conectar ${i.nome}`}>
+          // Estado não verificado: sem chave, para não parecer "desligado" confirmado.
+          <Link href={`/integrations/${i.id}`} className="ledger-button" aria-label={`Conectar ${i.nome}`}>
             Conectar <Arrow />
           </Link>
         )}

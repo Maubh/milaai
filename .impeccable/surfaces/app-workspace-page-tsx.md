@@ -199,3 +199,12 @@ Provas no scratchpad:
 Fable, rodada 6 só deste delta: ship em a0e6200. Coordenador: gate do lote = ship em a0e6200. O ship em f46847c continua registrado e não cobre este lote.
 
 Entrega 0.5.1 (2026-10-24): no diálogo de desconectar, Cancelar ganha a mesma moldura do Desconectar. Antes ele herdava o anel geral do shell, 3px por fora, e parecia ter 54px contra 44px. O anel de foco ali fica inteiro por dentro da borda (offset -3px), sobre o fundo claro, com 11,2:1 também no Desconectar de borda vermelha. Vão de 12px no desktop e 16px no celular. Nas Atualizações, a nota técnica das chaves da 0.5.0 virou uma nota geral do visual novo, por pedido da usuária. Fable: fix na rodada 7 e ship na 7b, em 3a721c0.
+
+Lote 0.5.2 (interno, 2026-10-24):
+- As Atualizações mostram só versões públicas: `internal: true` fica no histórico técnico, e o não lido compara versões por ordem.
+- Nas notas, o tipo fica acima do plano, com `PlanTag` único.
+- No catálogo da Meta, Configurar vira botão secundário com moldura, na barra de Sincronizar, que empilha abaixo de 340px.
+- No celular, o selo Pro fica a 8px da marca.
+- Navegação interna para outro pathname abre no topo, exceto voltar/avançar e âncoras.
+
+Fable: ship em b7c28fc.

@@ -1,4 +1,4 @@
-import { RELEASES, SYSTEM_VERSION } from "@/lib/releases";
+import { PUBLIC_RELEASES, SYSTEM_VERSION } from "@/lib/releases";
 import ReleaseTimeline from "@/components/ReleaseTimeline";
 import { TextMask } from "@/components/WorkspaceSkeleton";
 import "@/components/release-updates.css";
@@ -19,7 +19,7 @@ export default function UpdatesView({ loading = false }: { loading?: boolean }) 
       <p className="ledger-aside">{t(<>Versão atual <strong>v{SYSTEM_VERSION}</strong></>)}</p>
     </header>
     <section className="desk-panel releases-ledger" aria-label="Histórico">
-      <ReleaseTimeline releases={RELEASES} loading={loading} />
+      <ReleaseTimeline releases={PUBLIC_RELEASES} loading={loading} />
     </section>
   </div>;
 }

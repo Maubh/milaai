@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PlanTag } from "@/components/PlanTag";
 import { TextMask } from "@/components/WorkspaceSkeleton";
 import { RELEASE_CHANGE_LABELS, RELEASE_PLAN_LABELS, type Release } from "@/lib/releases";
 
@@ -31,7 +32,7 @@ export default function ReleaseTimeline({ releases, compact = false, loading = f
                 <li key={change.title}>
                   <span className="release-change-tags">
                     <span className="release-change-type" data-type={change.type}>{t(RELEASE_CHANGE_LABELS[change.type])}</span>
-                    <span className="release-change-plan" data-plan={change.plan}>{t(RELEASE_PLAN_LABELS[change.plan])}</span>
+                    <PlanTag>{t(RELEASE_PLAN_LABELS[change.plan])}</PlanTag>
                   </span>
                   <h3>{t(change.title)}</h3>
                   {!compact ? <p>{t(change.description)}</p> : null}

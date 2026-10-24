@@ -15,8 +15,10 @@
 .meta-catalog-summary-copy { display: grid; gap: 2px; min-width: 0; color: var(--color-ledger-muted); line-height: 1.5; overflow-wrap: anywhere; }
 .meta-catalog-name { color: var(--color-ledger-ink); font-size: var(--text-workspace-body); font-weight: 700; }
 .meta-catalog-fail { color: var(--color-ledger-error); font-weight: 600; }
-.meta-catalog-summary-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-workspace-sm); }
-.meta-catalog-sync { min-width: 9rem; }
+/* Ações do resumo: Configurar (secundário, com moldura) e Sincronizar (primário)
+   numa só barra, mesma altura, ligada ao resumo. */
+.meta-catalog-summary-actions { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(9rem, max-content); align-items: stretch; gap: var(--space-workspace-sm); }
+.meta-catalog-configure[aria-expanded="true"] { border-color: var(--color-ledger-mineral); background: var(--color-ledger-active); }
 
 .meta-catalog-note { color: var(--color-ledger-muted); line-height: 1.5; }
 .meta-catalog-note[data-tone="warn"] { color: var(--color-ledger-error); font-weight: 600; }
@@ -67,9 +69,14 @@
 
 @container (max-width: 520px) {
   .meta-catalog { padding: var(--space-workspace-md); }
-  .meta-catalog-summary-actions { width: 100%; }
-  .meta-catalog-summary-actions > .ledger-button { flex: 1 1 8rem; }
+  .meta-catalog-summary-actions { width: 100%; grid-auto-columns: minmax(0, 1fr); padding-top: var(--space-workspace-md); border-top: var(--rule-ledger) solid var(--color-ledger-rule); }
   .meta-catalog-stats { grid-template-columns: minmax(0, 1fr); }
+}
+/* No celular, lado a lado não comporta "Sincronizando…" com o spinner: a barra
+   empilha, primário em cima (como no diálogo de desconectar), largura toda. */
+@container (max-width: 340px) {
+  .meta-catalog-summary-actions { grid-auto-flow: row; }
+  .meta-catalog-sync { order: -1; }
 }
 @media (prefers-reduced-motion: reduce) {
   .meta-sync-spinner { animation-duration: 2.4s; }

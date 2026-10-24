@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { SYSTEM_VERSION } from "@/lib/releases";
+import { SYSTEM_VERSION, hasUnreadRelease } from "@/lib/releases";
 import "./release-updates.css";
 
 const LAST_SEEN_KEY = "mila:last-seen-release:v1";
@@ -11,7 +11,8 @@ export const RELEASES_PATH = "/workspace/novidades";
 
 /**
  * Estado do destino Atualizações: versão atual e se há novidade não lida.
- * Visitar a página ou abrir o sino marca a versão como vista.
+ * Visitar a página ou abrir o sino marca a versão como vista. Só uma versão
+ * pública nova acende o aviso; acabamento (`internal`) não.
  */
 export function useReleaseStatus() {
   const pathname = usePathname();
@@ -24,7 +25,7 @@ export function useReleaseStatus() {
         localStorage.setItem(LAST_SEEN_KEY, SYSTEM_VERSION);
         setUnread(false);
       } else {
-        setUnread(localStorage.getItem(LAST_SEEN_KEY) !== SYSTEM_VERSION);
+        setUnread(hasUnreadRelease(localStorage.getItem(LAST_SEEN_KEY)));
       }
     } catch {
       // As notas continuam acessíveis quando o storage do navegador está bloqueado.

@@ -15,13 +15,35 @@ export type Release = {
   title: string;
   summary: string;
   changes: readonly ReleaseChange[];
+  /**
+   * Só acabamento (tamanho, alinhamento, espaçamento): a versão fica no
+   * histórico técnico, mas não vira novidade para a lojista. Fica fora da
+   * página, do sino, da visão geral e do aviso de não lido.
+   */
+  internal?: true;
 };
 
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.5.2",
+    date: "2026-10-24",
+    internal: true,
+    title: "Atualizações só com o que muda o uso e selos de plano iguais",
+    summary: "Ajustes de acabamento ficam fora das Atualizações. Nas notas, o tipo fica acima do plano; o Configurar da Meta vira botão ao lado de Sincronizar; no celular, o selo Pro fica junto da marca; página nova abre no topo.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Tipo acima do plano nas notas",
+        description: "Novo, Melhoria ou Correção fica sempre acima de Plano Pro ou de Essencial e Pro, com selos de plano no mesmo formato.",
+      },
+    ],
+  },
+  {
     version: "0.5.1",
     date: "2026-10-24",
+    internal: true,
     title: "Confirmação de desconectar mais fácil de tocar",
     summary: "Ao desconectar uma ferramenta, Cancelar e Desconectar agora têm a mesma altura e, no celular, mais espaço entre eles.",
     changes: [
@@ -232,6 +254,27 @@ export const RELEASES: readonly Release[] = [
     ],
   },
 ];
+
+/** O que a lojista vê: página de Atualizações, sino, visão geral e aviso de não lido. */
+export const PUBLIC_RELEASES: readonly Release[] = RELEASES.filter((release) => !release.internal);
+export const LATEST_PUBLIC: Release | undefined = PUBLIC_RELEASES[0];
+
+function compareVersions(a: string, b: string) {
+  const pa = a.split(".").map(Number), pb = b.split(".").map(Number);
+  for (let i = 0; i < 3; i++) if ((pa[i] || 0) !== (pb[i] || 0)) return (pa[i] || 0) - (pb[i] || 0);
+  return 0;
+}
+
+/**
+ * Há novidade não lida quando a última versão vista é anterior à última
+ * pública. Comparar por ordem (e não por diferença) evita aviso falso depois
+ * de um deploy só de acabamento, inclusive para quem já viu uma versão interna.
+ */
+export function hasUnreadRelease(lastSeen: string | null) {
+  if (!LATEST_PUBLIC) return false;
+  if (!lastSeen || !/^\d+\.\d+\.\d+$/.test(lastSeen)) return true;
+  return compareVersions(lastSeen, LATEST_PUBLIC.version) < 0;
+}
 
 export const RELEASE_PLAN_LABELS: Record<ReleaseChange["plan"], string> = {
   all: "Essencial e Pro",

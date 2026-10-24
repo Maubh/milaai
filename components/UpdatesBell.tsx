@@ -5,9 +5,9 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from "framer-motion";
 import { RELEASES_PATH, useReleaseStatus } from "@/components/ReleaseLink";
-import { RELEASES } from "@/lib/releases";
+import { PUBLIC_RELEASES } from "@/lib/releases";
 
-const RECENT = RELEASES.slice(0, 3);
+const RECENT = PUBLIC_RELEASES.slice(0, 3);
 const releaseDate = new Intl.DateTimeFormat("pt-BR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 
 /** Mesmo limite do shell: até 1023px a navegação é o dock e as atualizações viram tela. */

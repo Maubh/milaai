@@ -23,3 +23,35 @@ test("release history has unique versions, valid dates and customer-facing chang
     }
   }
 });
+
+test("só versões públicas chegam à lojista; acabamento fica no histórico técnico", async () => {
+  const { PUBLIC_RELEASES, LATEST_PUBLIC } = await import("../lib/releases.ts");
+  assert.ok(PUBLIC_RELEASES.length > 0 && LATEST_PUBLIC);
+  assert.equal(LATEST_PUBLIC, PUBLIC_RELEASES[0]);
+  assert.ok(PUBLIC_RELEASES.every((release) => !release.internal));
+  assert.deepEqual(PUBLIC_RELEASES, RELEASES.filter((release) => !release.internal));
+  // 0.5.1 (botões do diálogo) e 0.5.2 (tags e layout) são acabamento.
+  assert.ok(RELEASES.find((release) => release.version === "0.5.1")?.internal);
+  assert.ok(RELEASES.find((release) => release.version === "0.5.2")?.internal);
+  // Página, sino e visão geral leem só a lista pública; nenhum consumidor usa RELEASES direto.
+  const { readFileSync } = await import("node:fs");
+  const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
+  for (const path of ["../app/workspace/novidades/UpdatesView.tsx", "../components/UpdatesBell.tsx", "../app/workspace/(visao-geral)/OverviewView.tsx", "../components/ReleaseLink.tsx", "../components/ReleaseTimeline.tsx"]) {
+    assert.doesNotMatch(read(path), /\bRELEASES\b/, `${path} deve ler PUBLIC_RELEASES/LATEST_PUBLIC`);
+  }
+  assert.match(read("../components/ReleaseLink.tsx"), /hasUnreadRelease\(localStorage\.getItem/);
+});
+
+test("não lido compara versões: deploy de acabamento não acende o aviso", async () => {
+  const { hasUnreadRelease, LATEST_PUBLIC } = await import("../lib/releases.ts");
+  const latest = LATEST_PUBLIC!.version;
+  const [major, minor, patch] = latest.split(".").map(Number);
+  assert.equal(hasUnreadRelease(null), true);
+  assert.equal(hasUnreadRelease("lixo"), true);
+  assert.equal(hasUnreadRelease(`${major}.${minor - 1 < 0 ? 0 : minor - 1}.9`), minor > 0);
+  assert.equal(hasUnreadRelease(latest), false);
+  // Quem já viu uma versão interna mais nova não ganha aviso falso.
+  assert.equal(hasUnreadRelease(SYSTEM_VERSION), false);
+  assert.equal(hasUnreadRelease(`${major}.${minor}.${patch + 1}`), false);
+  assert.equal(hasUnreadRelease(`${major}.${minor}.10`), patch > 10);
+});

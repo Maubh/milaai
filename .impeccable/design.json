@@ -482,20 +482,33 @@
       }
     ],
     "review": {
-      "scope": "Entrega 0.5.1, a91085e..3a721c0 (2026-10-24): botões do diálogo de desconectar com a mesma moldura e altura, anel de foco por dentro da borda, vão de 12/16px; nota técnica das chaves na 0.5.0 trocada por nota geral do visual novo, a pedido da usuária.",
+      "scope": "Lote 0.5.2 (interno, sem nota pública), e9db183..b7c28fc (2026-10-24): feed só com versões públicas (internal, PUBLIC_RELEASES, não lido por semver), tipo acima do plano com PlanTag único, ações da Meta numa barra (Configurar secundário com moldura, empilha <340px), selo Pro junto da marca no celular, página nova abre no topo.",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "Fable (a906db5), rodada 7: fix (anel sobre a borda vermelha a 1,31:1 com offset -2px); rodada 7b: ship em 3a721c0 (offset -3px). Coordenador Codex: ship em cb31b40 para geometria e copy. Os ships anteriores ficam no histórico e não cobrem esta entrega.",
+      "reviewer": "Fable (sessão nova, só o delta): ship em b7c28fc, sem achado material. Coordenador Codex: gate da fonte b7c28fc e das provas cand12/cand13 sem achado bloqueante. Os ships anteriores ficam no histórico e não cobrem este lote.",
       "evidence": [
-        "Build final R2NG1Ez6xwmFuUINvEH8S: Cancelar e Desconectar com 44px e altura visual de 44px, com foco, erro e pendente, em 1440/414/375/320.",
-        "Vão efetivo de 12px no desktop e 16px no celular; amostra de pixels: borda intacta e 2px de anel inteiros sobre o fundo nos dois botões.",
-        "Atualizações mostram 0.5.1 e a nota geral, sem a nota das chaves, sem rolagem horizontal."
+        "Feed, não lido e Meta (build de 1af100c): feed começa em 0.5.0 com tipo acima do plano em 25 itens e um só estilo de selo; não lido só abaixo de 0.5.0; Meta em 1440/414/375/320 com Configurar fechado/aberto, fonte ausente/desconectada e sync pendente com POSTs interceptados.",
+        "Build final gnCiDrmcz1BYGre8ujfbI: selo a 8px da marca em 320/375/414; menu, dock e Ver histórico em 0 no primeiro frame; não-regressão de voltar, âncora e sino contra a base."
       ],
-      "validation": "Claude: npm test 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand10 R2NG1Ez6xwmFuUINvEH8S). Revoke sempre interceptado; pendente com 1 POST, Esc e fundo sem fechar.",
-      "limits": "Headless emulado com sessão Sandbox; nenhuma conexão, desconexão ou dado real de loja.",
+      "validation": "Claude: npm test 132 testes, 131 pass, 1 skip, 0 fail; tsc limpo; build isolado de b7c28fc com exit 0.",
+      "limits": "Headless emulado; Sandbox e auth falso local. Voltar no desktop vai a 0 e a âncora da Meta não alinha a seção, como na base. Nenhuma integração, sync ou dado real.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Entrega 0.5.1, a91085e..3a721c0 (2026-10-24): botões do diálogo de desconectar com a mesma moldura e altura, anel de foco por dentro da borda, vão de 12/16px; nota técnica das chaves na 0.5.0 trocada por nota geral do visual novo, a pedido da usuária.",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable (a906db5), rodada 7: fix (anel sobre a borda vermelha a 1,31:1 com offset -2px); rodada 7b: ship em 3a721c0 (offset -3px). Coordenador Codex: ship em cb31b40 para geometria e copy. Os ships anteriores ficam no histórico e não cobrem esta entrega.",
+        "evidence": [
+          "Build final R2NG1Ez6xwmFuUINvEH8S: Cancelar e Desconectar com 44px e altura visual de 44px, com foco, erro e pendente, em 1440/414/375/320.",
+          "Vão efetivo de 12px no desktop e 16px no celular; amostra de pixels: borda intacta e 2px de anel inteiros sobre o fundo nos dois botões.",
+          "Atualizações mostram 0.5.1 e a nota geral, sem a nota das chaves, sem rolagem horizontal."
+        ],
+        "validation": "Claude: npm test 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand10 R2NG1Ez6xwmFuUINvEH8S). Revoke sempre interceptado; pendente com 1 POST, Esc e fundo sem fechar.",
+        "limits": "Headless emulado com sessão Sandbox; nenhuma conexão, desconexão ou dado real de loja.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Lote final da integração com a produção, 4c675ef..a0e6200 (2026-10-24): desconectar em diálogo nativo, grade das Atualizações, atalhos sem \"Mila ·\" e cadeado no selo Pro bloqueado. Pedidos diretos da usuária depois do gate em f46847c.",
         "disposition": "ship",

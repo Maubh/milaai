@@ -358,6 +358,9 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
   /* No celular o botão de conversa vira um círculo acima do dock. */
   .desk-chat { bottom: calc(var(--size-desk-dock) + var(--space-workspace-md) + env(safe-area-inset-bottom)); right: max(var(--space-workspace-lg), env(safe-area-inset-right)); width: 56px; padding: 0; }
   .desk-chat-label { display: none; }
+  /* Campo focado por toque ou Tab não fica atrás do dock fixo. Só na área logada:
+     as âncoras do site público não mudam. */
+  html:has(.desk-shell) { scroll-padding-bottom: calc(var(--size-desk-dock) + var(--space-workspace-md) + env(safe-area-inset-bottom)); }
   /* O fim da página fica acima do dock e do botão de conversa, inclusive com a barra de gestos do aparelho. */
   .desk-main { padding-block: var(--space-workspace-xl) calc(var(--size-desk-dock) + 56px + var(--space-workspace-3xl) + env(safe-area-inset-bottom)); }
   .desk-dock {

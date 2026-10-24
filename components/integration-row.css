@@ -121,8 +121,9 @@
 /* Cancelar recebe o foco ao abrir. O anel geral do shell fica 3px fora do
    botão, com raio de 8px: Cancelar parecia mais alto que Desconectar e quase
    encostava nele. Aqui o anel continua visível, na mesma cor, mas por dentro
-   da borda e no raio do botão, sem ocupar o vão entre os dois. */
-.disconnect-dialog-actions .ledger-button:focus-visible { outline-offset: -2px; border-radius: var(--radius-ledger-control); }
+   da borda (inteiro sobre o fundo, para contrastar até com a borda vermelha de
+   Desconectar) e no raio do botão, sem ocupar o vão entre os dois. */
+.disconnect-dialog-actions .ledger-button:focus-visible { outline-offset: -3px; border-radius: var(--radius-ledger-control); }
 @media (max-width: 640px) {
   .disconnect-dialog {
     width: 100%;

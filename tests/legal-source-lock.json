@@ -133,7 +133,7 @@
   "site/components/UpdatesBell.tsx": "1c769f920ebb2c18bcbab3105a73491925c560cea8f317321f324172e504dd63",
   "site/components/WorkspaceShell.tsx": "d3a3c48476f49c281ed8325882144292625c823919b1d246e5e39b2cc0caadb1",
   "site/components/WorkspaceSkeleton.tsx": "c33a2c585800823d6b85bcfebf05db8b2aee0d3dcb75a43bc3087c672150dd1e",
-  "site/components/integration-row.css": "2dc998cc997873bd3d1cb064a77dd6b0577e33c20bc6109f1d1c4d1bc68caa95",
+  "site/components/integration-row.css": "642c20eaaf8667943933556f17210802187f859c5c8c06304051c371a8e1149b",
   "site/components/integrations-beam.css": "f01d4fe8e52508583bca536268dfe145f916c16ff225605d6b57ef2cc9a61077",
   "site/components/meta-catalog.css": "a80fb74cfac1cf7ef7535d09e3f41b1069806a7440a19c8e79ea2ecb98c68704",
   "site/components/notion-connection.css": "f7a4f3a064b1fad0fbfe295b52e3a4bd5db867e78d4e70150c038970488b66fe",

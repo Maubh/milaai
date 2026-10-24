@@ -218,6 +218,7 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
   const account = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const logoutAction = useRef<HTMLButtonElement>(null);
+  const pressingTrigger = useRef(false);
   const menuId = useId();
   const pathname = usePathname();
   useEffect(() => { setOpen(false); }, [pathname]);
@@ -242,8 +243,19 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
     };
   }, [open]);
 
-  return <div ref={account} className="desk-account" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false); }}>
-    <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onClick={() => setOpen(!open)}>
+  // Fecha quando o foco sai da conta, inclusive por Tab sem destino. No Safari,
+  // tocar no avatar não o foca: o blur chega sem destino logo depois do
+  // pointerdown no avatar e fechava antes do clique, que reabria. Esse blur
+  // fica para o clique no avatar decidir. Qualquer blur ou gesto cancelado
+  // consome a intenção, para um Tab seguinte não ser ignorado.
+  return <div ref={account} className="desk-account" onBlur={(event) => {
+    const next = event.relatedTarget as Node | null;
+    const pressed = pressingTrigger.current;
+    pressingTrigger.current = false;
+    if (!next && pressed) return;
+    if (!event.currentTarget.contains(next)) setOpen(false);
+  }}>
+    <button ref={trigger} type="button" className="desk-avatar-button" title={`${name} · ${store}`} aria-label={`Opções da conta de ${name}`} aria-expanded={open} aria-controls={menuId} onPointerDown={() => { pressingTrigger.current = true; }} onPointerCancel={() => { pressingTrigger.current = false; }} onClick={() => { pressingTrigger.current = false; setOpen(!open); }}>
       <span className="desk-avatar" aria-hidden="true">{initials}</span>
       <span className="desk-account-chevron"><WorkspaceIcon name="chevron" /></span>
     </button>

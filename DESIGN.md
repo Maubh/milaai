@@ -274,7 +274,7 @@ Raios coordenados: controles 10px, áreas de recuo 14px, popovers 16px, painéis
   - Usa o mesmo link verificado do WhatsApp (ou o fallback atual), em nova aba, e não envia nada.
   - Fica abaixo de diálogos (camada do topo) e do dock. O fim da página reserva espaço para o último conteúdo rolar acima dele. Enquanto um campo da página tem foco, ele sai da frente (`visibility: hidden`) e volta ao sair do campo.
   - Saiu da barra do topo para não duplicar a navegação. A faixa de conversa da visão geral continua.
-- **Conta:** avatar em pílula translúcida com filete; menu sólido com nome, loja e "Sair da conta", foco no sair ao abrir, Esc devolve o foco. O avatar alterna abrir e fechar, também no Safari e no toque (onde o botão não recebe foco e o blur chega sem destino); toque fora fecha e Tab para fora fecha.
+- **Conta:** avatar em pílula translúcida com filete; menu sólido com nome, loja e "Sair da conta", foco no sair ao abrir, Esc devolve o foco. O avatar alterna abrir e fechar, também no Safari e no toque, onde o botão não recebe foco e o blur chega sem destino logo após o pointerdown no avatar: esse blur fica para o clique decidir. Toque fora fecha, e Tab para fora fecha, mesmo quando o foco vai para o documento.
 
 ### Sino de atualizações (signature)
 Botão circular de 44px com ponto de versão não lida e nome acessível contendo versão e estado. Abre um popover não modal (`role="dialog"`), com título, versão atual e as três últimas entradas reais de `RELEASES` (versão, data, título e link para a âncora no histórico), seguido de "Ver todas as atualizações". Abertura ou visita à página marca a versão como vista; o ponto usa storage local, sem inventar notificações ou pedir push.

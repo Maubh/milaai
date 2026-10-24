@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.1",
+    date: "2026-10-24",
+    internal: true,
+    title: "Dados da loja na mesma largura das outras telas",
+    summary: "Os cards de Dados da loja deixam o teto próprio de 860px e ocupam o mesmo container das outras telas, com a borda direita alinhada à da conta no topo.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Cards de Dados da loja na largura da área",
+        description: "Os cards ocupam a mesma largura das outras telas, sem sobra à direita no computador.",
+      },
+    ],
+  },
+  {
     version: "0.6.0",
     date: "2026-10-24",
     title: "Site da loja em Dados da loja",

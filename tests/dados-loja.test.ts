@@ -10,8 +10,10 @@ import {
   lojaSemDados,
   mensagemDeCarga,
   mensagemDeErro,
+  normalizarSiteDaLoja,
   projetarConcorrentes,
   projetarDadosLoja,
+  siteParaTela,
 } from "../lib/dados-loja.ts";
 
 test("dados da loja: projeta só os campos conhecidos, com o tipo certo", () => {
@@ -27,6 +29,7 @@ test("dados da loja: projeta só os campos conhecidos, com o tipo certo", () => 
   assert.deepEqual(d, {
     nome_loja: "Irali semijoias",
     instagram: null,
+    site_loja: null,
     custo_embalagem: 13,
     taxa_cartao_percent: 17,
     markup_padrao: null,
@@ -98,4 +101,18 @@ test("dados da loja: no Essencial a seção de concorrentes fica bloqueada com o
   assert.match(src, /dados-selo-pro"><ProBloqueado \/></);
   assert.match(src, /href="\/workspace\/plano"[^>]*>Assinar plano Pro </);
   assert.match(mensagemDeErro("plan_pro_required"), /Plano Pro/);
+});
+
+test("dados da loja: site aceita domínio sem esquema e só vira link se for http(s)", () => {
+  assert.equal(normalizarSiteDaLoja("sualoja.com.br"), "https://sualoja.com.br");
+  assert.equal(normalizarSiteDaLoja(" WWW.SuaLoja.com.br/ "), "https://www.sualoja.com.br");
+  assert.equal(normalizarSiteDaLoja("http://sualoja.com.br/colecao"), "http://sualoja.com.br/colecao");
+  for (const ruim of ["sualoja", "sua loja.com.br", "javascript:alert(1)", "ftp://sualoja.com.br", "https://localhost", "https://a:b@sualoja.com.br"]) {
+    assert.equal(normalizarSiteDaLoja(ruim), null, ruim);
+  }
+  assert.equal(projetarDadosLoja({ site_loja: "https://sualoja.com.br" }).site_loja, "https://sualoja.com.br");
+  assert.equal(projetarDadosLoja({ site_loja: "javascript:alert(1)" }).site_loja, null, "o que não é site nunca vira link");
+  assert.equal(projetarDadosLoja({}).site_loja, null, "serviço sem o campo: não informado");
+  assert.equal(siteParaTela("https://www.sualoja.com.br/colecao"), "www.sualoja.com.br/colecao");
+  assert.match(mensagemDeErro("invalid_field", "site_loja"), /site da loja.*sualoja\.com\.br/);
 });

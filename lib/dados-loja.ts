@@ -1,7 +1,7 @@
 /**
  * Dados da loja (`/workspace/dados-loja`): o mesmo perfil que a mila usa e
  * edita pelo WhatsApp (taxa de cartão, markup, embalagem, banho, nome,
- * Instagram, observações) e os concorrentes no Instagram.
+ * Instagram, site, observações) e os concorrentes no Instagram.
  *
  * Módulo puro (sem `next/*`): a projeção do que vem do serviço, a leitura dos
  * campos digitados e as mensagens de erro são testadas fora do Next.
@@ -10,6 +10,7 @@
 export interface DadosLoja {
   nome_loja: string | null;
   instagram: string | null;
+  site_loja: string | null;
   custo_embalagem: number | null;
   taxa_cartao_percent: number | null;
   markup_padrao: number | null;
@@ -17,7 +18,7 @@ export interface DadosLoja {
   observacoes: string | null;
 }
 
-export const CAMPOS_TEXTO = ["nome_loja", "instagram", "tipo_banho", "observacoes"] as const;
+export const CAMPOS_TEXTO = ["nome_loja", "instagram", "site_loja", "tipo_banho", "observacoes"] as const;
 export const CAMPOS_NUMERO = ["custo_embalagem", "taxa_cartao_percent", "markup_padrao"] as const;
 export type CampoDadosLoja = (typeof CAMPOS_TEXTO)[number] | (typeof CAMPOS_NUMERO)[number];
 
@@ -38,12 +39,42 @@ export function projetarDadosLoja(bruto: unknown): DadosLoja {
   return {
     nome_loja: texto(d.nome_loja),
     instagram: texto(d.instagram),
+    // Só vira link um endereço http(s): o resto é tratado como não informado.
+    site_loja: normalizarSiteDaLoja(texto(d.site_loja) ?? ""),
     custo_embalagem: numero(d.custo_embalagem),
     taxa_cartao_percent: numero(d.taxa_cartao_percent),
     markup_padrao: numero(d.markup_padrao),
     tipo_banho: texto(d.tipo_banho),
     observacoes: texto(d.observacoes),
   };
+}
+
+export const SITE_LOJA_MAX = 200;
+
+/**
+ * Site como o serviço grava (mesma regra do Eve): "sualoja.com.br" vira
+ * "https://sualoja.com.br"; só http/https, sem credenciais, porta, IP ou
+ * localhost. Null se não for um site. Não acessa a URL.
+ */
+export function normalizarSiteDaLoja(entrada: string): string | null {
+  const t = entrada.trim();
+  if (!t || t.length > SITE_LOJA_MAX || /\s/.test(t)) return null;
+  let url: URL;
+  try {
+    url = new URL(/^[a-z][a-z0-9+.-]*:/i.test(t) ? t : `https://${t}`);
+  } catch {
+    return null;
+  }
+  if (url.protocol !== "https:" && url.protocol !== "http:") return null;
+  if (url.username || url.password || url.port) return null;
+  if (!/^([a-z0-9-]+\.)+[a-z]{2,}$/.test(url.hostname)) return null;
+  const site = url.pathname === "/" && !url.search && !url.hash ? url.origin : url.href;
+  return site.length <= SITE_LOJA_MAX ? site : null;
+}
+
+/** "https://www.sualoja.com.br" → "www.sualoja.com.br", para mostrar. */
+export function siteParaTela(site: string): string {
+  return site.replace(/^https?:\/\//i, "");
 }
 
 /** "@Loja.X", "instagram.com/loja.x/" → "loja.x". Null se não for um @ válido. */
@@ -95,6 +126,7 @@ export function formatarMarkup(v: number | null): string | null {
 const NOMES_CAMPOS: Record<CampoDadosLoja, string> = {
   nome_loja: "Nome da loja",
   instagram: "Instagram da loja",
+  site_loja: "Site da loja",
   custo_embalagem: "Custo de embalagem",
   taxa_cartao_percent: "Taxa usada no preço",
   markup_padrao: "Markup padrão",
@@ -110,6 +142,7 @@ const LIMITES: Partial<Record<CampoDadosLoja, string>> = {
   tipo_banho: "com até 120 caracteres",
   observacoes: "com até 1.000 caracteres",
   instagram: "um @ válido do Instagram",
+  site_loja: "um endereço de site, como sualoja.com.br",
 };
 
 /** Mensagem quando a página não consegue carregar os dados (não é erro de salvar). */

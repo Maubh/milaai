@@ -29,7 +29,7 @@ const DOCK_LINKS = [...LINKS, { href: RELEASES_PATH, label: "Atualizações", ic
 // Cinco colunas a 320px: as palavras longas quebram inteiras, com hífen, em vez de cortar.
 const DOCK_LABEL: Record<string, string> = { "Integrações": "Integra\u00adções", "Atualizações": "Atuali\u00adzações" };
 
-type WorkspaceIconName = DestinationIcon | "chat" | "logout" | "chevron";
+type WorkspaceIconName = DestinationIcon | "logout" | "chevron";
 function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
   const paths: Record<WorkspaceIconName, React.ReactNode> = {
     overview: <><rect x="3.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="3.5" width="7" height="7" rx="1.6" /><rect x="3.5" y="13.5" width="7" height="7" rx="1.6" /><rect x="13.5" y="13.5" width="7" height="7" rx="1.6" /></>,
@@ -37,11 +37,18 @@ function WorkspaceIcon({ name }: { name: WorkspaceIconName }) {
     integrations: <path d="M8 3v5m8-5v5M6 8h12v3a6 6 0 0 1-12 0V8Zm6 9v4" />,
     plan: <><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M3 10h18M7 15h3" /></>,
     updates: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8m-8 4h8m-8 4h4" /></>,
-    chat: <><path d="M21 11.5a9 9 0 0 1-9 9 10 10 0 0 1-4-.9L3 21l1.4-4.5a9 9 0 1 1 16.6-5Z" /><path d="M8 11h8m-8 4h5" /></>,
     logout: <path d="M9 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4m5-13 5 5-5 5m-5-5h11" />,
     chevron: <path d="m8 10 4 4 4-4" />,
   };
   return <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]}</svg>;
+}
+
+/** WhatsApp: balão com telefone, no traço dos ícones do shell. Decorativo; o link tem o nome. */
+function WhatsAppIcon() {
+  return <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M3.6 20.4 4.9 16.6A8.6 8.6 0 1 1 8 19.4Z" />
+    <path d="M9.1 8.2c.3-.5.6-.6 1-.6h.4l1 2.2-.7 1c.5 1.1 1.4 2 2.5 2.5l1-.7 2.2 1v.4c0 .4-.1.7-.6 1-.8.5-2 .5-3.2-.1a8.2 8.2 0 0 1-3.6-3.6c-.6-1.2-.6-2.4-.1-3.1Z" fill="currentColor" stroke="none" />
+  </svg>;
 }
 
 function isActive(pathname: string, href: string) {
@@ -318,18 +325,18 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
           </div>
           <DeskNav />
           <div className="desk-bar-actions">
-            {/* Texto longo no desktop largo, curto no resto: o CSS mostra um dos dois. */}
-            {waLink ? <a href={waLink} className="desk-chat" target="_blank" rel="noopener noreferrer">
-              <WorkspaceIcon name="chat" />
-              <span className="desk-chat-long">Conversar com a mila</span>
-              <span className="desk-chat-short">WhatsApp</span>
-            </a> : null}
             <UpdatesBell />
             <WorkspaceAccount name={accountName} store={storeName} initials={initials} loggingOut={loggingOut} onLogout={sair} />
           </div>
         </header>
         <div className="desk-main">{children}</div>
         <DeskDock />
+        {/* Conversa com a mila: botão flutuante no canto inferior direito, fora da
+            navegação (acima do dock no celular). Só abre o WhatsApp; nada é enviado. */}
+        {waLink ? <a href={waLink} className="desk-chat" target="_blank" rel="noopener noreferrer" aria-label="Conversar com a mila no WhatsApp">
+          <WhatsAppIcon />
+          <span className="desk-chat-label" aria-hidden="true">Conversar com a mila</span>
+        </a> : null}
       </div>
     </MotionConfig>
   );

@@ -214,17 +214,25 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 .desk-full-summary { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.5; overflow-wrap: anywhere; }
 .desk-full .desk-pop-all { max-width: 40rem; min-height: 44px; }
 
-/* Ação da conversa */
+/* Conversa com a mila: botão flutuante no canto inferior direito. Fica abaixo
+   de diálogos (camada do topo) e do dock; a página reserva espaço no fim para
+   o último conteúdo rolar acima dele. */
 .desk-chat {
+  position: fixed;
+  right: max(var(--space-workspace-xl), env(safe-area-inset-right));
+  bottom: max(var(--space-workspace-xl), env(safe-area-inset-bottom));
+  z-index: calc(var(--z-workspace-sidebar) - 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--space-workspace-sm);
-  min-height: var(--size-workspace-control);
-  padding: 0 var(--space-workspace-lg);
+  min-width: 56px;
+  min-height: 56px;
+  padding: 0 var(--space-workspace-xl);
   border-radius: var(--radius-desk-pill);
   background: var(--color-ledger-mineral);
   color: var(--color-ledger-mineral-ink);
+  box-shadow: var(--shadow-desk-pop);
   font-size: var(--text-workspace-sm);
   font-weight: 600;
   line-height: 1;
@@ -234,7 +242,11 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 }
 .desk-chat:hover { background: var(--color-ledger-mineral-hover); }
 .desk-chat:active { transform: scale(0.97); }
-.desk-chat-short { display: none; }
+.desk-chat:focus-visible { outline: 2px solid var(--color-ledger-focus); outline-offset: 3px; border-radius: var(--radius-desk-pill); }
+.desk-chat svg { width: 22px; height: 22px; }
+/* Enquanto a lojista digita num campo da página, o botão sai da frente (não
+   cobre o campo em uso nem fica sobre o teclado do celular) e volta ao sair. */
+.desk-shell:has(.desk-main :is(input, textarea, select):focus) .desk-chat { visibility: hidden; }
 
 /* Conta */
 .desk-account { position: relative; }
@@ -290,7 +302,8 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 .desk-logout:active { background: var(--color-desk-track); }
 .desk-logout:disabled { color: var(--color-ledger-muted); cursor: progress; }
 
-.desk-main { padding-block: var(--space-workspace-2xl) calc(var(--space-workspace-3xl) * 2); min-width: 0; }
+/* O fim da página rola acima do botão flutuante de conversa (56px + margem). */
+.desk-main { padding-block: var(--space-workspace-2xl) calc(56px + var(--space-workspace-xl) * 2 + var(--space-workspace-3xl)); min-width: 0; }
 
 /* Dock (celular e tablet) */
 .desk-dock { display: none; }
@@ -326,10 +339,6 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 .desk-dock-dot[data-unread="false"] { visibility: hidden; }
 .desk-dock-item.is-active .desk-dock-dot { background: var(--color-desk-pill-ink); box-shadow: none; }
 
-@media (max-width: 1180px) {
-  .desk-chat-long { display: none; }
-  .desk-chat-short { display: inline; }
-}
 
 /* Celular e tablet: a cápsula desce para uma faixa sob a marca e rola por dentro. */
 @media (max-width: 1023px) {
@@ -346,9 +355,14 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
     max-width: 26rem;
     margin-left: auto;
   }
-  .desk-chat { padding-inline: var(--space-workspace-md); }
-  /* O fim da página fica acima do dock, inclusive com a barra de gestos do aparelho. */
-  .desk-main { padding-block: var(--space-workspace-xl) calc(var(--size-desk-dock) + var(--space-workspace-3xl) + env(safe-area-inset-bottom)); }
+  /* No celular o botão de conversa vira um círculo acima do dock. */
+  .desk-chat { bottom: calc(var(--size-desk-dock) + var(--space-workspace-md) + env(safe-area-inset-bottom)); right: max(var(--space-workspace-lg), env(safe-area-inset-right)); width: 56px; padding: 0; }
+  .desk-chat-label { display: none; }
+  /* Campo focado por toque ou Tab não fica atrás do dock fixo. Só na área logada:
+     as âncoras do site público não mudam. */
+  html:has(.desk-shell) { scroll-padding-bottom: calc(var(--size-desk-dock) + var(--space-workspace-md) + env(safe-area-inset-bottom)); }
+  /* O fim da página fica acima do dock e do botão de conversa, inclusive com a barra de gestos do aparelho. */
+  .desk-main { padding-block: var(--space-workspace-xl) calc(var(--size-desk-dock) + 56px + var(--space-workspace-3xl) + env(safe-area-inset-bottom)); }
   .desk-dock {
     position: fixed;
     inset: auto 0 0 0;
@@ -364,12 +378,6 @@ a.desk-nav-item[aria-current="page"]:focus-visible { color: var(--color-desk-pil
 @media (max-width: 380px) {
   .desk-store { display: none; }
   .desk-bar-actions { gap: var(--space-workspace-xs); }
-  .desk-chat { padding-inline: var(--space-workspace-sm); }
-}
-/* Tela estreita: o WhatsApp vira botão redondo; o nome continua para leitor de tela. */
-@media (max-width: 360px) {
-  .desk-chat { width: var(--size-desk-round); min-height: var(--size-desk-round); padding: 0; }
-  .desk-chat-short { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 
 /* ——— Primitivas da mesa e do livro, usadas por todas as páginas da área logada ——— */

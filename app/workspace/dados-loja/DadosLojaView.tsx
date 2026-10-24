@@ -15,6 +15,8 @@ import {
   mensagemDeCarga,
   MAX_CONCORRENTES,
   mensagemDeErro,
+  normalizarSiteDaLoja,
+  siteParaTela,
   projetarConcorrentes,
   projetarDadosLoja,
   type CampoDadosLoja,
@@ -22,7 +24,7 @@ import {
 } from "@/lib/dados-loja";
 import "./dados-loja.css";
 
-type Tipo = "reais" | "percentual" | "markup" | "texto" | "textoLongo" | "instagram";
+type Tipo = "reais" | "percentual" | "markup" | "texto" | "textoLongo" | "instagram" | "site";
 
 interface Campo {
   chave: CampoDadosLoja;
@@ -70,6 +72,7 @@ const SECOES: Secao[] = [
     campos: [
       { chave: "nome_loja", rotulo: "Nome da loja", tipo: "texto" },
       { chave: "instagram", rotulo: "Instagram da loja", tipo: "instagram", ajuda: "O @ da sua loja." },
+      { chave: "site_loja", rotulo: "Site da loja", tipo: "site", ajuda: "O endereço da sua loja na internet, como sualoja.com.br." },
       { chave: "observacoes", rotulo: "Observações", tipo: "textoLongo", ajuda: "Garantia, frete, pronta entrega e outras particularidades." },
     ],
   },
@@ -80,6 +83,7 @@ function valorParaTela(campo: Campo, dados: DadosLoja): string | null {
   if (campo.tipo === "reais") return formatarReais(v as number | null);
   if (campo.tipo === "percentual") return formatarPercentual(v as number | null);
   if (campo.tipo === "markup") return formatarMarkup(v as number | null);
+  if (campo.tipo === "site") return v ? siteParaTela(v as string) : null;
   return (v as string | null) ?? null;
 }
 
@@ -101,6 +105,8 @@ function CloseIcon() {
 function Arrow() {
   return <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" /></svg>;
 }
+
+const SITE_NAO_SALVO = "O site ainda não foi salvo. Tente de novo em alguns minutos.";
 
 type LeituraDados = { status: "loading" } | { status: "error"; texto: string; detalhe: string | null } | { status: "ready"; dados: DadosLoja };
 type LeituraConcorrentes = { status: "loading" } | { status: "ready"; lista: string[]; acesso: AcessoConcorrentes };
@@ -199,6 +205,20 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
           return;
         }
         corpo[c.chave] = n;
+      } else if (c.tipo === "site") {
+        // Vazio limpa. O resto é normalizado aqui, pela mesma regra do serviço,
+        // para que "sualoja.com.br" seja aceito sem esquema.
+        if (!bruto) {
+          corpo[c.chave] = "";
+        } else {
+          const site = normalizarSiteDaLoja(bruto);
+          if (!site) {
+            setAviso({ secao: secao.id, ok: false, texto: mensagemDeErro("invalid_field", "site_loja") });
+            return;
+          }
+          if (site === dados.site_loja) continue;
+          corpo[c.chave] = site;
+        }
       } else if (c.tipo === "instagram") {
         if (!bruto) continue;
         const conta = contaDoInstagram(bruto);
@@ -224,10 +244,18 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
       });
       const data = await res.json();
       if (!res.ok || !data.ok) {
-        setAviso({ secao: secao.id, ok: false, texto: mensagemDeErro(data.detail, data.campo) });
+        const siteNaoAceito = data.detail === "nothing_to_update" && "site_loja" in corpo;
+        setAviso({ secao: secao.id, ok: false, texto: siteNaoAceito ? SITE_NAO_SALVO : mensagemDeErro(data.detail, data.campo) });
         return;
       }
-      setLeitura({ status: "ready", dados: projetarDadosLoja(data.dados) });
+      const salvos = projetarDadosLoja(data.dados);
+      setLeitura({ status: "ready", dados: salvos });
+      // Só diz que salvou o site se o serviço devolveu o site gravado (um
+      // serviço sem o campo responderia ok e o descartaria).
+      if ("site_loja" in corpo && salvos.site_loja !== (corpo.site_loja || null)) {
+        setAviso({ secao: secao.id, ok: false, texto: Object.keys(corpo).length > 1 ? `Os outros dados foram salvos. ${SITE_NAO_SALVO}` : SITE_NAO_SALVO });
+        return;
+      }
       setEditando(null);
       setAviso({ secao: secao.id, ok: true, texto: "Salvo. A mila já usa os dados novos." });
     } catch {
@@ -373,9 +401,13 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
                     ) : (
                       <input
                         type="text"
-                        inputMode={["reais", "percentual", "markup"].includes(c.tipo) ? "decimal" : "text"}
+                        inputMode={["reais", "percentual", "markup"].includes(c.tipo) ? "decimal" : c.tipo === "site" ? "url" : "text"}
+                        autoComplete={c.tipo === "site" ? "url" : undefined}
+                        autoCapitalize={c.tipo === "site" ? "none" : undefined}
+                        spellCheck={c.tipo === "site" ? false : undefined}
+                        placeholder={c.tipo === "site" ? "sualoja.com.br" : undefined}
                         value={rascunho[c.chave] ?? ""}
-                        maxLength={c.tipo === "texto" ? 120 : 40}
+                        maxLength={c.tipo === "texto" ? 120 : c.tipo === "site" ? 200 : 40}
                         onChange={(e) => setRascunho({ ...rascunho, [c.chave]: e.target.value })}
                       />
                     )}
@@ -392,7 +424,11 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
                     return (
                       <div key={c.chave} className="ledger-row dados-item">
                         <dt className="ledger-row-label">{c.rotulo}</dt>
-                        <dd className={`ledger-row-value${dados && !v ? " is-vazio" : ""}`}>{!dados ? <TextBone w="12ch" /> : v ?? "Não informado"}</dd>
+                        <dd className={`ledger-row-value${dados && !v ? " is-vazio" : ""}`}>
+                          {!dados ? <TextBone w="12ch" /> : c.tipo === "site" && v && dados.site_loja ? (
+                            <a href={dados.site_loja} target="_blank" rel="noopener noreferrer" className="dados-site">{v}</a>
+                          ) : v ?? "Não informado"}
+                        </dd>
                       </div>
                     );
                   })}

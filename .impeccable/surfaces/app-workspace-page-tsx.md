@@ -185,3 +185,15 @@ Gate: Fable fresco deu ship (rodadas 3 a 5, a última em `f46847c`, depois de do
 Limites: navegador headless emulado, não aparelho físico; OAuth real e backend de produção não exercitados; conexões e desconexões reais de clientes não foram feitas.
 
 Depois do gate (2026-10-24), dois ajustes pedidos pela usuária no mesmo PR: a confirmação de desligar virou diálogo nativo, e as linhas das Atualizações voltaram a ter tipo e plano à esquerda e título e texto à direita (o agrupamento `release-change-tags` de main não ocupava as duas linhas da grade e empurrava o texto para a coluna estreita). Prova em dev contra o Sandbox, com o revoke sempre interceptado (nenhuma desconexão real): foco inicial em Cancelar, Esc e toque fora fecham, foco volta à chave, falha mostra o erro no diálogo e a chave continua ligada; 1440 e 375.
+
+Lote final 4c675ef..a0e6200, com pedidos diretos da usuária depois do gate em f46847c:
+- diálogo de desconectar;
+- grade das Atualizações;
+- atalhos sem "Mila ·": o assunto fica Precificação, Produtos e Compras, e textos e links verificados não mudam;
+- cadeado no selo Pro só quando o plano bloqueia: `row.state === "locked"` nas integrações e `conc.acesso === "bloqueado"` em Dados da loja. O texto acessível é "Pro, bloqueado no seu plano" e o CTA continua ativo.
+
+Provas no scratchpad:
+- `cand7-dialog`: build E0htZJ9XjWuW_48huzEWr, 1440/375, revoke sempre interceptado, incluindo o estado pendente.
+- `cand8-lock`: build final UPw5RtkBoeL4bK4pHtciD, 1440/375/320, com Essencial, Pro e plano ausente.
+
+Fable, rodada 6 só deste delta: ship em a0e6200. Coordenador: gate do lote = ship em a0e6200. O ship em f46847c continua registrado e não cobre este lote.

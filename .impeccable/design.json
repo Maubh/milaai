@@ -482,23 +482,37 @@
       }
     ],
     "review": {
-      "scope": "Integração da proposta A com a produção (main f07b005), 2026-10-24",
+      "scope": "Lote final da integração com a produção, 4c675ef..a0e6200 (2026-10-24): desconectar em diálogo nativo, grade das Atualizações, atalhos sem \"Mila ·\" e cadeado no selo Pro bloqueado. Pedidos diretos da usuária depois do gate em f46847c.",
       "disposition": "ship",
       "remaining": "clear",
-      "reviewer": "Fable fresco (rodadas 1 e 2 fix, rodadas 3 a 5 ship; última em f46847c) e gate final do coordenador Codex: ship em f46847c",
+      "reviewer": "Fable (mesma sessão das rodadas 1 a 5), rodada 6 com reteste só deste delta: ship em a0e6200. Coordenador Codex: ship do diálogo, da grade e dos atalhos no build E0htZJ9XjWuW_48huzEWr, e gate final do lote = ship em a0e6200. O ship anterior em f46847c fica no histórico e não cobre este lote.",
       "evidence": [
-        "FABLE-PROD-REVIEW.md",
-        "cand1/report.json",
-        "cand3-toggle/report.json",
-        "cand3-meta/report.json",
-        "cand4/report.json",
-        "cand5/ (403 de plano sem Reautorizar; business_permission false com Reautorizar)"
+        "FABLE-PROD-REVIEW.md (rodada 6)",
+        "cand7-dialog/report.json",
+        "cand8-lock/report.json"
       ],
-      "validation": "Claude: npm test 128 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; builds isolados exit 0 (cand5 kA45qxa3qISr7PRl_vi3c). Coordenador: gate ship em f46847c; dados reais comparados em leitura sem divergência; contrato do backend confirma analise_no_plano sempre booleano.",
-      "limits": "Headless emulado; OAuth real e backend de produção não exercitados; sem conexão ou desconexão real de clientes. analise_no_plano ausente vira Não verificado, divergência intencional de main.",
+      "validation": "Claude: npm test 130 testes, 129 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; build isolado exit 0 (build-cand8 UPw5RtkBoeL4bK4pHtciD). Diálogo provado no build E0htZJ9XjWuW_48huzEWr em 1440/375, com revoke sempre interceptado. Cadeados provados no build final em 1440/375/320: Essencial pelo Sandbox, Pro e plano ausente por auth falso local fora do produto. Coordenador comparou 161 fontes/assets/config do build-cand8 com a candidata: zero divergências.",
+      "limits": "Headless emulado; OAuth real e backend de produção não exercitados; nenhuma conexão ou desconexão real.",
       "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
     },
     "reviewHistory": [
+      {
+        "scope": "Integração da proposta A com a produção (main f07b005), 2026-10-24",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "Fable fresco (rodadas 1 e 2 fix, rodadas 3 a 5 ship; última em f46847c) e gate final do coordenador Codex: ship em f46847c",
+        "evidence": [
+          "FABLE-PROD-REVIEW.md",
+          "cand1/report.json",
+          "cand3-toggle/report.json",
+          "cand3-meta/report.json",
+          "cand4/report.json",
+          "cand5/ (403 de plano sem Reautorizar; business_permission false com Reautorizar)"
+        ],
+        "validation": "Claude: npm test 128 pass, 1 skip, 0 fail; tsc --noEmit --incremental false sem saída; builds isolados exit 0 (cand5 kA45qxa3qISr7PRl_vi3c). Coordenador: gate ship em f46847c; dados reais comparados em leitura sem divergência; contrato do backend confirma analise_no_plano sempre booleano.",
+        "limits": "Headless emulado; OAuth real e backend de produção não exercitados; sem conexão ou desconexão real de clientes. analise_no_plano ausente vira Não verificado, divergência intencional de main.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
       {
         "scope": "Acabamento material Cadra — proposta A — 2026-10-23",
         "disposition": "ship",
@@ -599,7 +613,7 @@
       "name": "Painel da conversa",
       "kind": "custom",
       "refersTo": "conversation-panel",
-      "description": "Único painel mineral: título, frase, botão para o WhatsApp, três mensagens prontas e QR. Cada mensagem mostra o assunto (Precificação, Produtos, Compras), sem o prefixo "Mila ·", só com tarefas dos dois planos, e usa o mesmo link verificado, mudando só o text. Sem link, as mensagens ficam indisponíveis e não navegam.",
+      "description": "Único painel mineral: título, frase, botão para o WhatsApp, três mensagens prontas e QR. Cada mensagem mostra o assunto (Precificação, Produtos, Compras), sem o prefixo \"Mila ·\", só com tarefas dos dois planos, e usa o mesmo link verificado, mudando só o text. Sem link, as mensagens ficam indisponíveis e não navegam.",
       "html": "<section class=\"ds-chat\"><h2>Conversar com a mila</h2><p>Preço, descrição ou ajuda com uma peça. A mila responde no WhatsApp.</p><a class=\"ds-chat-action\" href=\"#\">Abrir WhatsApp</a></section>",
       "css": ".ds-chat { font-family: var(--font-workspace, Manrope, sans-serif); display:grid; justify-items:start; gap:12px; padding:32px 40px; border-radius:24px; box-shadow:var(--shadow-desk-raised); background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); } .ds-chat h2 { margin:0; font-size:1.5rem; letter-spacing:-0.025em; } .ds-chat p { margin:0; color:var(--color-ledger-mineral-muted); } .ds-chat-action { display:inline-flex; align-items:center; min-height:48px; padding:0 24px; border-radius:999px; background:var(--color-ledger-mineral-ink); color:var(--color-ledger-mineral); font-weight:700; text-decoration:none; } .ds-chat-action:hover { background:var(--color-ledger-surface); } .ds-chat-action:focus-visible { outline:2px solid var(--color-ledger-focus-on-mineral); outline-offset:3px; } .ds-chat-action:active { transform:scale(.97); } @media(prefers-reduced-motion:reduce) { .ds-chat-action:active { transform:none; } } @media(max-width:640px) { .ds-chat { padding:32px 24px; border-radius:14px; } }"
     },

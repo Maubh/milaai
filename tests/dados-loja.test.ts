@@ -90,9 +90,12 @@ test("dados da loja: erro de carga não fala em salvar; loja sem nenhum dado é 
 });
 
 test("dados da loja: no Essencial a seção de concorrentes fica bloqueada com o selo Pro", () => {
-  const src = readFileSync(new URL("../app/workspace/dados-loja/page.tsx", import.meta.url), "utf8");
-  assert.match(src, /!analiseNoPlano \? \(/);
+  // Proposta A: a tela mora em DadosLojaView (compartilhada com o esqueleto da rota),
+  // o bloqueio só vale com `analise_no_plano === false` explícito e o CTA é o mesmo
+  // das integrações bloqueadas ("Assinar plano Pro").
+  const src = readFileSync(new URL("../app/workspace/dados-loja/DadosLojaView.tsx", import.meta.url), "utf8");
+  assert.match(src, /conc\.acesso === "bloqueado" \? \(/);
   assert.match(src, /dados-selo-pro">Pro</);
-  assert.match(src, /href="\/workspace\/plano"[^>]*>Conhecer o Pro</);
+  assert.match(src, /href="\/workspace\/plano"[^>]*>Assinar plano Pro </);
   assert.match(mensagemDeErro("plan_pro_required"), /Plano Pro/);
 });

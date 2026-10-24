@@ -1,0 +1,67 @@
+/* Hallmark · store desk · integration catalogue row: shared columns via subgrid (mark · tool · tier · status · actions) */
+@import "../tokens.css";
+
+.integration-list {
+  display: grid;
+  grid-template-columns: [mark] 6.5rem [copy] minmax(0, 1fr) [tier] 3.5rem [status] 8.5rem [actions] 11.5rem;
+  column-gap: var(--space-workspace-xl);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.integration-list-frame { container-type: inline-size; min-width: 0; }
+.integration-item {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: subgrid;
+  align-items: start;
+  row-gap: var(--space-workspace-md);
+  padding-block: var(--space-workspace-xl);
+  border-bottom: var(--rule-ledger) solid var(--color-ledger-rule);
+}
+.integration-item:last-child { border-bottom: 0; padding-bottom: var(--space-workspace-sm); }
+.integration-item-mark { grid-column: mark; display: flex; align-items: center; min-width: 0; min-height: var(--size-workspace-control); color: var(--color-ledger-ink); }
+.integration-item-mark img { max-width: 100%; height: auto; }
+.integration-item-copy { grid-column: copy; min-width: 0; }
+.integration-item-tier,
+.integration-item-status { display: flex; align-items: center; min-height: var(--size-workspace-control); }
+.integration-item-tier { grid-column: tier; }
+.integration-item-status { grid-column: status; }
+.integration-item-actions { grid-column: actions; display: grid; min-width: 0; }
+.integration-item-actions > .ledger-button { width: 100%; }
+.integration-item-expansion { grid-column: copy / -1; min-width: 0; }
+
+.integration-item-copy h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--space-workspace-sm); min-height: var(--size-workspace-control); align-content: center; font-size: var(--text-workspace-body); font-weight: 700; line-height: 1.45; overflow-wrap: anywhere; }
+.integration-item-detail { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); font-weight: 500; }
+.integration-item-description { max-width: 62ch; color: var(--color-ledger-muted); line-height: 1.6; }
+
+.integration-tier {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 var(--space-workspace-sm);
+  border-radius: var(--radius-desk-pill);
+  background: var(--color-ledger-sand);
+  color: var(--color-ledger-mineral);
+  font-size: var(--text-workspace-xs);
+  font-weight: 700;
+}
+
+/* Confirmação de desconectar: cabe no próprio slot de ações. */
+.disconnect-confirm { display: grid; gap: var(--space-workspace-xs); }
+.disconnect-question { color: var(--color-ledger-ink); font-size: var(--text-workspace-sm); font-weight: 600; line-height: 1.4; }
+.disconnect-confirm .ledger-button { width: 100%; }
+.disconnect-yes { border-color: var(--color-ledger-error); color: var(--color-ledger-error); }
+.disconnect-yes:hover { background: var(--color-ledger-error-paper); border-color: var(--color-ledger-error); }
+.disconnect-error { color: var(--color-ledger-error); font-size: var(--text-workspace-sm); }
+
+@container (max-width: 760px) {
+  .integration-list { grid-template-columns: [mark] minmax(0, 1fr) [tier] 2.75rem [status] 7rem; column-gap: var(--space-workspace-sm); }
+  .integration-item-mark,
+  .integration-item-tier,
+  .integration-item-status { grid-row: 1; }
+  .integration-item-copy,
+  .integration-item-actions,
+  .integration-item-expansion { grid-column: 1 / -1; }
+  .integration-item-actions { grid-template-columns: minmax(0, 1fr); }
+}

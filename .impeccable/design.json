@@ -1,67 +1,679 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-24T21:30:00Z",
-  "title": "Design System: mila.",
+  "generatedAt": "2026-10-23T21:20:45.263683+00:00",
+  "title": "Design System: mila. área logada",
   "extensions": {
     "colorMeta": {
-      "plum": { "role": "primary", "displayName": "Ameixa profundo" },
-      "wine": { "role": "secondary", "displayName": "Vinho" },
-      "paper": { "role": "neutral", "displayName": "Papel mineral" },
-      "warm-white": { "role": "neutral", "displayName": "Branco quente" },
-      "ink": { "role": "neutral", "displayName": "Tinta" },
-      "gold": { "role": "tertiary", "displayName": "Ouro envelhecido" },
-      "blush": { "role": "tertiary", "displayName": "Rosa pálido" }
+      "mineral": {
+        "role": "primary",
+        "displayName": "Verde mineral",
+        "canonical": "oklch(33.5% 0.045 184)",
+        "tonalRamp": [
+          "oklch(15% 0.045 184)",
+          "oklch(25% 0.045 184)",
+          "oklch(35% 0.045 184)",
+          "oklch(48% 0.045 184)",
+          "oklch(62% 0.045 184)",
+          "oklch(76% 0.045 184)",
+          "oklch(88% 0.045 184)",
+          "oklch(95% 0.045 184)"
+        ]
+      },
+      "mineral-deep": {
+        "role": "primary",
+        "displayName": "Mineral profundo",
+        "canonical": "oklch(29% 0.042 184)",
+        "tonalRamp": [
+          "oklch(15% 0.042 184)",
+          "oklch(25% 0.042 184)",
+          "oklch(35% 0.042 184)",
+          "oklch(48% 0.042 184)",
+          "oklch(62% 0.042 184)",
+          "oklch(76% 0.042 184)",
+          "oklch(88% 0.042 184)",
+          "oklch(95% 0.042 184)"
+        ]
+      },
+      "mineral-ink": {
+        "role": "primary",
+        "displayName": "Marfim sobre mineral",
+        "canonical": "oklch(96.6% 0.008 85)",
+        "tonalRamp": [
+          "oklch(15% 0.008 85)",
+          "oklch(25% 0.008 85)",
+          "oklch(35% 0.008 85)",
+          "oklch(48% 0.008 85)",
+          "oklch(62% 0.008 85)",
+          "oklch(76% 0.008 85)",
+          "oklch(88% 0.008 85)",
+          "oklch(95% 0.008 85)"
+        ]
+      },
+      "mineral-muted": {
+        "role": "primary",
+        "displayName": "Mineral esmaecido",
+        "canonical": "oklch(86% 0.022 170)",
+        "tonalRamp": [
+          "oklch(15% 0.022 170)",
+          "oklch(25% 0.022 170)",
+          "oklch(35% 0.022 170)",
+          "oklch(48% 0.022 170)",
+          "oklch(62% 0.022 170)",
+          "oklch(76% 0.022 170)",
+          "oklch(88% 0.022 170)",
+          "oklch(95% 0.022 170)"
+        ]
+      },
+      "desk-canvas": {
+        "role": "neutral",
+        "displayName": "Canvas da mesa",
+        "canonical": "oklch(95.6% 0.009 85)",
+        "tonalRamp": [
+          "oklch(15% 0.009 85)",
+          "oklch(25% 0.009 85)",
+          "oklch(35% 0.009 85)",
+          "oklch(48% 0.009 85)",
+          "oklch(62% 0.009 85)",
+          "oklch(76% 0.009 85)",
+          "oklch(88% 0.009 85)",
+          "oklch(95% 0.009 85)"
+        ]
+      },
+      "desk-panel": {
+        "role": "neutral",
+        "displayName": "Painel sólido de popover",
+        "canonical": "oklch(99.2% 0.003 85)",
+        "tonalRamp": [
+          "oklch(15% 0.006 85)",
+          "oklch(25% 0.006 85)",
+          "oklch(35% 0.006 85)",
+          "oklch(48% 0.006 85)",
+          "oklch(62% 0.006 85)",
+          "oklch(76% 0.006 85)",
+          "oklch(88% 0.006 85)",
+          "oklch(95% 0.006 85)"
+        ]
+      },
+      "desk-inset": {
+        "role": "neutral",
+        "displayName": "Recuo",
+        "canonical": "oklch(96.8% 0.007 85)",
+        "tonalRamp": [
+          "oklch(15% 0.007 85)",
+          "oklch(25% 0.007 85)",
+          "oklch(35% 0.007 85)",
+          "oklch(48% 0.007 85)",
+          "oklch(62% 0.007 85)",
+          "oklch(76% 0.007 85)",
+          "oklch(88% 0.007 85)",
+          "oklch(95% 0.007 85)"
+        ]
+      },
+      "sand": {
+        "role": "tertiary",
+        "displayName": "Areia",
+        "canonical": "oklch(93.5% 0.018 75)",
+        "tonalRamp": [
+          "oklch(15% 0.018 75)",
+          "oklch(25% 0.018 75)",
+          "oklch(35% 0.018 75)",
+          "oklch(48% 0.018 75)",
+          "oklch(62% 0.018 75)",
+          "oklch(76% 0.018 75)",
+          "oklch(88% 0.018 75)",
+          "oklch(95% 0.018 75)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Tinta",
+        "canonical": "oklch(27% 0.025 165)",
+        "tonalRamp": [
+          "oklch(15% 0.025 165)",
+          "oklch(25% 0.025 165)",
+          "oklch(35% 0.025 165)",
+          "oklch(48% 0.025 165)",
+          "oklch(62% 0.025 165)",
+          "oklch(76% 0.025 165)",
+          "oklch(88% 0.025 165)",
+          "oklch(95% 0.025 165)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Tinta suave",
+        "canonical": "oklch(46% 0.016 165)",
+        "tonalRamp": [
+          "oklch(15% 0.016 165)",
+          "oklch(25% 0.016 165)",
+          "oklch(35% 0.016 165)",
+          "oklch(48% 0.016 165)",
+          "oklch(62% 0.016 165)",
+          "oklch(76% 0.016 165)",
+          "oklch(88% 0.016 165)",
+          "oklch(95% 0.016 165)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Régua",
+        "canonical": "oklch(87% 0.009 160)",
+        "tonalRamp": [
+          "oklch(15% 0.009 160)",
+          "oklch(25% 0.009 160)",
+          "oklch(35% 0.009 160)",
+          "oklch(48% 0.009 160)",
+          "oklch(62% 0.009 160)",
+          "oklch(76% 0.009 160)",
+          "oklch(88% 0.009 160)",
+          "oklch(95% 0.009 160)"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Régua forte",
+        "canonical": "oklch(78% 0.012 165)",
+        "tonalRamp": [
+          "oklch(15% 0.012 165)",
+          "oklch(25% 0.012 165)",
+          "oklch(35% 0.012 165)",
+          "oklch(48% 0.012 165)",
+          "oklch(62% 0.012 165)",
+          "oklch(76% 0.012 165)",
+          "oklch(88% 0.012 165)",
+          "oklch(95% 0.012 165)"
+        ]
+      },
+      "positive": {
+        "role": "semantic",
+        "displayName": "Conectado",
+        "canonical": "oklch(42% 0.09 155)",
+        "tonalRamp": [
+          "oklch(15% 0.09 155)",
+          "oklch(25% 0.09 155)",
+          "oklch(35% 0.09 155)",
+          "oklch(48% 0.09 155)",
+          "oklch(62% 0.09 155)",
+          "oklch(76% 0.09 155)",
+          "oklch(88% 0.09 155)",
+          "oklch(95% 0.09 155)"
+        ]
+      },
+      "error": {
+        "role": "semantic",
+        "displayName": "Erro",
+        "canonical": "oklch(43% 0.15 28)",
+        "tonalRamp": [
+          "oklch(15% 0.15 28)",
+          "oklch(25% 0.15 28)",
+          "oklch(35% 0.15 28)",
+          "oklch(48% 0.15 28)",
+          "oklch(62% 0.15 28)",
+          "oklch(76% 0.15 28)",
+          "oklch(88% 0.15 28)",
+          "oklch(95% 0.15 28)"
+        ]
+      },
+      "error-paper": {
+        "role": "semantic",
+        "displayName": "Fundo de erro",
+        "canonical": "oklch(96% 0.016 28)",
+        "tonalRamp": [
+          "oklch(15% 0.016 28)",
+          "oklch(25% 0.016 28)",
+          "oklch(35% 0.016 28)",
+          "oklch(48% 0.016 28)",
+          "oklch(62% 0.016 28)",
+          "oklch(76% 0.016 28)",
+          "oklch(88% 0.016 28)",
+          "oklch(95% 0.016 28)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Papel herdado",
+        "canonical": "oklch(97% 0.008 85)",
+        "tonalRamp": [
+          "oklch(15% 0.008 85)",
+          "oklch(25% 0.008 85)",
+          "oklch(35% 0.008 85)",
+          "oklch(48% 0.008 85)",
+          "oklch(62% 0.008 85)",
+          "oklch(76% 0.008 85)",
+          "oklch(88% 0.008 85)",
+          "oklch(95% 0.008 85)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Superfície herdada",
+        "canonical": "oklch(99% 0.002 85)",
+        "tonalRamp": [
+          "oklch(15% 0.002 85)",
+          "oklch(25% 0.002 85)",
+          "oklch(35% 0.002 85)",
+          "oklch(48% 0.002 85)",
+          "oklch(62% 0.002 85)",
+          "oklch(76% 0.002 85)",
+          "oklch(88% 0.002 85)",
+          "oklch(95% 0.002 85)"
+        ]
+      },
+      "desk-glass": {
+        "role": "neutral",
+        "displayName": "Vidro marfim",
+        "canonical": "oklch(99.6% 0.003 85 / 0.62)",
+        "tonalRamp": [
+          "oklch(15% 0.003 85)",
+          "oklch(25% 0.003 85)",
+          "oklch(35% 0.003 85)",
+          "oklch(48% 0.003 85)",
+          "oklch(62% 0.003 85)",
+          "oklch(76% 0.003 85)",
+          "oklch(88% 0.003 85)",
+          "oklch(95% 0.003 85)"
+        ]
+      },
+      "desk-glass-hover": {
+        "role": "neutral",
+        "displayName": "Vidro marfim em hover",
+        "canonical": "oklch(99.6% 0.003 85 / 0.82)",
+        "tonalRamp": [
+          "oklch(15% 0.003 85)",
+          "oklch(25% 0.003 85)",
+          "oklch(35% 0.003 85)",
+          "oklch(48% 0.003 85)",
+          "oklch(62% 0.003 85)",
+          "oklch(76% 0.003 85)",
+          "oklch(88% 0.003 85)",
+          "oklch(95% 0.003 85)"
+        ]
+      },
+      "desk-hairline": {
+        "role": "neutral",
+        "displayName": "Filete claro",
+        "canonical": "oklch(100% 0 0 / 0.82)",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(48% 0 0)",
+          "oklch(62% 0 0)",
+          "oklch(76% 0 0)",
+          "oklch(88% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "desk-tint": {
+        "role": "neutral",
+        "displayName": "Tinta de hover",
+        "canonical": "oklch(27% 0.025 165 / 0.06)",
+        "tonalRamp": [
+          "oklch(15% 0.025 165)",
+          "oklch(25% 0.025 165)",
+          "oklch(35% 0.025 165)",
+          "oklch(48% 0.025 165)",
+          "oklch(62% 0.025 165)",
+          "oklch(76% 0.025 165)",
+          "oklch(88% 0.025 165)",
+          "oklch(95% 0.025 165)"
+        ]
+      },
+      "desk-wash-mineral": {
+        "role": "neutral",
+        "displayName": "Pano mineral",
+        "canonical": "oklch(86% 0.04 184 / 0.45)",
+        "tonalRamp": [
+          "oklch(15% 0.04 184)",
+          "oklch(25% 0.04 184)",
+          "oklch(35% 0.04 184)",
+          "oklch(48% 0.04 184)",
+          "oklch(62% 0.04 184)",
+          "oklch(76% 0.04 184)",
+          "oklch(88% 0.04 184)",
+          "oklch(95% 0.04 184)"
+        ]
+      },
+      "desk-wash-sand": {
+        "role": "neutral",
+        "displayName": "Pano areia",
+        "canonical": "oklch(90% 0.035 75 / 0.55)",
+        "tonalRamp": [
+          "oklch(15% 0.035 75)",
+          "oklch(25% 0.035 75)",
+          "oklch(35% 0.035 75)",
+          "oklch(48% 0.035 75)",
+          "oklch(62% 0.035 75)",
+          "oklch(76% 0.035 75)",
+          "oklch(88% 0.035 75)",
+          "oklch(95% 0.035 75)"
+        ]
+      }
     },
     "typographyMeta": {
-      "display": { "displayName": "Editorial", "purpose": "Títulos curtos e preços de destaque" },
-      "body": { "displayName": "Interface", "purpose": "Formulários, navegação e explicações" }
+      "display": {
+        "displayName": "Título da página",
+        "purpose": "Uma vez por página."
+      },
+      "headline": {
+        "displayName": "Título da conversa",
+        "purpose": "Painel mineral."
+      },
+      "title": {
+        "displayName": "Cabeçalho de painel",
+        "purpose": "Seções e valores dos cartões de destino."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Descrições até 62ch."
+      },
+      "label": {
+        "displayName": "Rótulo",
+        "purpose": "Navegação, botões, rótulos de linha."
+      },
+      "caption": {
+        "displayName": "Nota",
+        "purpose": "Datas, versão, observações."
+      }
     },
     "shadows": [
-      { "name": "card-ambient", "value": "0 1px 0 rgba(36,25,31,.05), 0 18px 44px -28px rgba(36,25,31,.35)", "purpose": "Separar cards do papel sem halo" }
+      {
+        "name": "panel",
+        "value": "inset 0 1px 0 oklch(100% 0 0 / 0.7), 0 24px 48px -30px oklch(27% 0.025 165 / 0.24)",
+        "purpose": "Painéis claros e cartões; filete claro de 1px também presente."
+      },
+      {
+        "name": "conversation",
+        "value": "0 24px 48px -30px oklch(27% 0.025 165 / 0.32)",
+        "purpose": "Painel mineral da conversa."
+      },
+      {
+        "name": "popover",
+        "value": "0 24px 60px -18px oklch(27% 0.025 165 / 0.3), 0 2px 6px oklch(27% 0.025 165 / 0.07)",
+        "purpose": "Popover de atualizações e menu da conta."
+      },
+      {
+        "name": "nav-hairline",
+        "value": "inset 0 0 0 1px var(--color-desk-hairline)",
+        "purpose": "Filete interno da cápsula translúcida."
+      }
     ],
     "motion": [
-      { "name": "control-state", "value": "180ms ease", "purpose": "Estados de botão e navegação" }
+      {
+        "name": "nav-pill",
+        "value": "clip-path; lead 320ms, trail 380ms delay 110ms; cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Camada aria-hidden recortada: começa no clique simples, reconcilia com rota e histórico. Hover só tinta. Movimento reduzido salta diretamente e cancela animações anteriores; nenhuma transição de página."
+      },
+      {
+        "name": "tile-lift",
+        "value": "translateY(-4px); 450ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Hover e foco somente no Link nativo que ocupa o cartão; superfície clareia sem mudar sombra. Painéis comuns imóveis. Movimento reduzido remove a subida."
+      },
+      {
+        "name": "updates-popover",
+        "value": "opacity 0→1, scale 0.96→1, y -4→0; spring stiffness 520, damping 30, mass 0.7",
+        "purpose": "Popover não modal. Movimento reduzido usa só opacity por 120ms, sem scale ou y."
+      },
+      {
+        "name": "bell-icon",
+        "value": "scale [0.8, 1.07, 1]; 550ms; times [0, 0.4, 1]; cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Abertura do sino; desligado em movimento reduzido."
+      },
+      {
+        "name": "control-state",
+        "value": "180ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Cor e borda de controles; desligado em movimento reduzido."
+      },
+      {
+        "name": "press",
+        "value": "translateY(1px) ou scale(0.97)",
+        "purpose": "Feedback de botões; removido em movimento reduzido."
+      },
+      {
+        "name": "route-skeleton-pulse",
+        "value": "1.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 1 → 0.5, infinite alternate",
+        "purpose": "Formas, TextBone, TextMask e QR pendente nas rotas e no carregamento cliente; animation: none em prefers-reduced-motion. O fallback RSC usa conteúdo aria-hidden e inert; o cliente mantém um único status de leitura."
+      }
     ],
     "breakpoints": [
-      { "name": "compact", "value": "640px" },
-      { "name": "workspace-stack", "value": "900px" }
+      {
+        "name": "mobile-dock",
+        "value": "1023px"
+      },
+      {
+        "name": "chat-short",
+        "value": "1180px"
+      },
+      {
+        "name": "overview-tiles-stack",
+        "value": "860px"
+      },
+      {
+        "name": "integration-row-stack",
+        "value": "760px (container)"
+      },
+      {
+        "name": "compact",
+        "value": "640px"
+      },
+      {
+        "name": "store-name-hidden",
+        "value": "380px"
+      },
+      {
+        "name": "conversation-qr-compact",
+        "value": "1100px"
+      },
+      {
+        "name": "conversation-qr-hidden",
+        "value": "720px"
+      },
+      {
+        "name": "meta-compact",
+        "value": "520px (container)"
+      },
+      {
+        "name": "conversation-action-full",
+        "value": "360px"
+      },
+      {
+        "name": "top-chat-icon-only",
+        "value": "360px"
+      }
+    ],
+    "review": {
+      "scope": "Mensagens prontas e próximos passos, proposta A, 2026-10-23",
+      "disposition": "ship",
+      "remaining": "clear",
+      "reviewer": "Fable fresco (veredito próprio deste delta: rodada 1 fix de docs e prova da copy, rodada 2 ship) e gate final do coordenador Codex",
+      "evidence": [
+        "FABLE-STEPS-REVIEW.md",
+        "steps/proof/report.json e PNGs (build-a12, comportamento das regras)",
+        "steps/contain/contain.json e PNGs (build-a13, contenção do esqueleto)",
+        "steps/copy/copy.json e PNGs (build-a15, copy comum aos planos)"
+      ],
+      "validation": "Claude: npm test 109 pass, 1 skip, 0 fail; build-a15 exit 0. Coordenador Codex: tsc --noEmit --incremental false no build-a15 com exit 0 e nenhuma saída, sem filtro; 106 fontes/config equivalentes ao build-a15; 10 hashes do lock válidos; arquivos congelados intactos. Código commitado por Claude em 21baa54.",
+      "limits": "Estados alternativos vêm de interceptação rotulada no browser; o sandbox real cobre só o passo de sincronização da Meta. Painel de passos 224px no esqueleto contra 153px pronto. Âncora da Meta a 375px chega 38px acima da tela. Tipos antigos em .next/types do servidor de dev são limite local. OAuth real e backend de produção não comprovados. B e main fora do escopo, sem merge ou push.",
+      "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+    },
+    "reviewHistory": [
+      {
+        "scope": "Acabamento material Cadra — proposta A — 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "review_cadra_material; fechamento final confirmado pelo coordenador",
+        "evidence": [
+          "CADRA-LIVE-PLAN.md",
+          "CADRA-A-PACKAGE.md",
+          "cadra-live/final/final.json (build-a7; material/motion/sino)",
+          "cadra-live/close/close.json (build-a8; topo320 e smoke de rotas)",
+          "cadra-live/skel-tiles/skel-tiles.json (build-a9; slot final de skeleton)"
+        ],
+        "validation": "Claude reportou npm test 94 pass, 1 skip, 0 fail; TypeScript limpo e build-a9. Coordenador comparou 103 arquivos runtime contra build-a9, zero divergências e BUILD_ID presente; git diff --check limpo na conferência do coordenador. Slot overview-tile-detail: align-self:stretch; zeroBones 0; detalhe do Plano 270x42 em 1440 e 309x42 em 375 nos estados loading/ready. Três caixas iguais: 1440 todas336x198;375 alturas161/182/153. Reviewer confirmou o slot final de skeleton e encerrou com ship, remaining clear; SHIP anteriores de material/menu/sino/topo320 mantidos. Documenter leu fontes e JSONs e validou documentação, sem executar checks de aplicação. Código commitado por Claude em a7afea3, confirmado pelo coordenador; documentação em commit separado.",
+        "limits": "Checks visuais usam sandbox e APIs interceptadas para espera; não comprovam OAuth real nem backend de produção, cuja matriz não foi refeita. Skip de paridade backend mantido. qa1 e divergências antigas do skeleton em close.json são históricas; skel-tiles.json é a prova final do slot. Seed imagem N/A; code-led; Cadra critique-reference, sem bundles/assets copiados.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
+      {
+        "scope": "Correção de esqueletos — 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "review_skeleton_fix; fechamento confirmado pelo coordenador",
+        "evidence": [
+          "proof-a-1440",
+          "proof-a-375",
+          "proof-a-fail",
+          "nov-a-1440",
+          "nov-a-375",
+          "rm.mjs"
+        ],
+        "validation": "Claude: 94 pass, 1 skip, 0 fail; TypeScript e build-a6 exit 0; logs confirmados pelo coordenador. Fontes e capturas das quatro rotas em 1440/375px, reload/menu, API cliente/RSC, falha/retry e reduced-motion revisados. Atualizações: 41 máscaras para zero, caixas iguais, cabeçalho com largura positiva, sem overflow. Lock CSS atualizado após revisão, sem frozen drift, segundo o coordenador.",
+        "limits": "Checks de aplicação não executados pelo documenter; fixtures/APIs interceptadas e capturas não comprovam OAuth real nem backend de produção; skip de paridade com backend mantido.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      },
+      {
+        "scope": "Preferência de navegação mobile, proposta A, 2026-10-23",
+        "disposition": "ship",
+        "remaining": "clear",
+        "reviewer": "review_mobile_dock; fechamento final confirmado pelo coordenador",
+        "evidence": [
+          "DOCK-PACKAGE.md",
+          "cadra-live/dock/dock.json e PNGs (build-a10)"
+        ],
+        "validation": "Reviewer encerrou com ship, remaining clear, sem material_fix no escopo: layouts de 320/375/414/768px e desktop de 1440px; quatro links, ativo, foco, fim das quatro rotas, estado não lido e movimento reduzido. Claude reportou 94 pass, 1 skip e 0 fail, TypeScript e build-a10. Coordenador comparou 103 arquivos runtime com build-a10, zero divergências e BUILD_ID presente; conferiu os hashes dos dois arquivos Shell no lock e git diff --check limpo. Código commitado por Claude em 44e74e0, confirmado pelo coordenador. Documenter leu fontes, pacote e JSON de evidência; não executou checks de aplicação.",
+        "limits": "Headless com inset de área segura igual a zero; a área segura física não foi comprovada. Dados do sandbox não comprovam OAuth real nem backend de produção. Movimento reduzido salta entre destinos sem posições intermediárias. Refinamento code-led, sem seed, novo estudo ou assets. B e main fora do escopo, sem merge ou push.",
+        "record": ".impeccable/surfaces/app-workspace-page-tsx.md"
+      }
     ]
   },
   "components": [
     {
-      "name": "Botão primário",
+      "name": "Botão principal",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Ação principal sobre papel claro.",
-      "html": "<button class=\"ds-btn-primary\">Explorar demonstração</button>",
-      "css": ".ds-btn-primary{background:#24191f;color:#fcfaf6;border:1px solid transparent;border-radius:999px;padding:.8rem 1.6rem;font:600 1rem Avenir Next,Arial,sans-serif;min-height:48px;cursor:pointer}.ds-btn-primary:hover{background:#4d1f2d}.ds-btn-primary:focus-visible{outline:2px solid #b99a62;outline-offset:3px}"
+      "description": "Ação principal de página: conectar, contratar, tentar de novo.",
+      "html": "<button class=\"ds-btn-primary\">Conectar</button>",
+      "css": ".ds-btn-primary { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--color-ledger-mineral); border-radius:10px; background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); font-size:0.875rem; font-weight:600; cursor:pointer; transition: background-color 180ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background:var(--color-ledger-mineral-hover); } .ds-btn-primary:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-btn-primary:active { transform: translateY(1px); } @media(prefers-reduced-motion:reduce) { .ds-btn-primary:active { transform:none; } }"
+    },
+    {
+      "name": "Botão secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Configurar e salvar; no bloqueio Pro, Assinar plano Pro → /workspace/plano. Conexão verificada oferece Desconectar.",
+      "html": "<button class=\"ds-btn-secondary\">Configurar</button>",
+      "css": ".ds-btn-secondary { font-family: var(--font-workspace, Manrope, sans-serif); display:inline-flex; align-items:center; min-height:44px; padding:0 16px; border:1px solid var(--color-ledger-rule-strong); border-radius:10px; background:var(--color-ledger-surface); color:var(--color-ledger-ink); font-size:0.875rem; font-weight:600; cursor:pointer; } .ds-btn-secondary:hover { border-color:var(--color-ledger-mineral); background:var(--color-ledger-paper); } .ds-btn-secondary:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-btn-secondary:active { transform:translateY(1px); } @media(prefers-reduced-motion:reduce) { .ds-btn-secondary:active { transform:none; } }"
+    },
+    {
+      "name": "Cápsula de navegação",
+      "kind": "nav",
+      "refersTo": "nav-track",
+      "description": "Três destinos no desktop em cápsula translúcida; amostra estática do estado ativo. Na aplicação, clip-path lead/trail acompanha clique, teclado e histórico; movimento reduzido salta direto. Até 1023px, dock fixo com quatro destinos, ícones, rótulos e estado de versão não lida em Atualizações; área segura e espaço inferior reservados.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Sua loja\"><a class=\"ds-nav-item\" aria-current=\"page\" href=\"/workspace\">Visão geral</a><a class=\"ds-nav-item\" href=\"/workspace/integracoes\">Integrações</a><a class=\"ds-nav-item\" href=\"/workspace/plano\">Meu plano</a></nav>",
+      "css": ".ds-nav { position:relative; font-family:var(--font-workspace,Manrope,sans-serif); display:inline-flex; gap:2px; padding:4px; border-radius:999px; background:var(--color-desk-glass); box-shadow:inset 0 0 0 1px var(--color-desk-hairline); } .ds-nav-item { display:inline-flex; align-items:center; min-height:40px; padding:0 16px; border-radius:999px; color:var(--color-ledger-ink); font-size:.875rem; font-weight:600; text-decoration:none; white-space:nowrap; } a.ds-nav-item:hover { background:var(--color-desk-tint); } a.ds-nav-item:focus-visible { position:relative; z-index:1; outline:2px solid var(--color-ledger-focus); outline-offset:-2px; } a.ds-nav-item[aria-current]:focus-visible { color:var(--color-ledger-mineral-ink); outline-color:var(--color-ledger-focus-on-mineral); } .ds-nav-item[aria-current] { background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); }"
+    },
+    {
+      "name": "Painel da mesa",
+      "kind": "card",
+      "refersTo": "desk-panel",
+      "description": "Painel de conteúdo imóvel com linhas pautadas; a amostra não representa contagem real de conta. Na visão geral, Próximos passos usa este painel: cada linha mostra a origem (Conta · Plano, Meta · Catálogo do Instagram e Facebook, Integrações da loja), a frase e um link para o destino real.",
+      "html": "<section class=\"ds-panel\"><h2>Meu plano</h2><div class=\"ds-row\"><span>Plano</span><strong>Plano não informado</strong></div><div class=\"ds-row\"><span>Situação</span><strong>Não verificada</strong></div></section>",
+      "css": ".ds-panel { font-family: var(--font-workspace, Manrope, sans-serif); padding:24px 32px; border:1px solid var(--color-desk-hairline); border-radius:24px; background:var(--color-desk-glass); box-shadow:var(--shadow-desk-panel); color:var(--color-ledger-ink); } .ds-panel h2 { margin:0; padding-bottom:12px; border-bottom:1px solid var(--color-ledger-rule); font-size:1.25rem; } .ds-row { display:grid; gap:2px; padding:16px 0; border-bottom:1px solid var(--color-ledger-rule); } .ds-row:last-child { border-bottom:0; } .ds-row span { color:var(--color-ledger-muted); font-size:0.875rem; font-weight:600; } .ds-row small { color:var(--color-ledger-muted); font-size:.875rem; line-height:1.5; } @media(max-width:640px) { .ds-panel { padding:16px; border-radius:18px; } }"
+    },
+    {
+      "name": "Painel da conversa",
+      "kind": "custom",
+      "refersTo": "conversation-panel",
+      "description": "Único painel mineral: título, frase, botão para o WhatsApp, três mensagens prontas e QR. Cada mensagem mostra o assunto (Mila · Precificação, Mila · Produtos, Mila · Compras), só com tarefas dos dois planos, e usa o mesmo link verificado, mudando só o text. Sem link, as mensagens ficam indisponíveis e não navegam.",
+      "html": "<section class=\"ds-chat\"><h2>Conversar com a mila</h2><p>Preço, descrição ou ajuda com uma peça. A mila responde no WhatsApp.</p><a class=\"ds-chat-action\" href=\"#\">Abrir WhatsApp</a></section>",
+      "css": ".ds-chat { font-family: var(--font-workspace, Manrope, sans-serif); display:grid; justify-items:start; gap:12px; padding:32px 40px; border-radius:24px; box-shadow:var(--shadow-desk-raised); background:var(--color-ledger-mineral); color:var(--color-ledger-mineral-ink); } .ds-chat h2 { margin:0; font-size:1.5rem; letter-spacing:-0.025em; } .ds-chat p { margin:0; color:var(--color-ledger-mineral-muted); } .ds-chat-action { display:inline-flex; align-items:center; min-height:48px; padding:0 24px; border-radius:999px; background:var(--color-ledger-mineral-ink); color:var(--color-ledger-mineral); font-weight:700; text-decoration:none; } .ds-chat-action:hover { background:var(--color-ledger-surface); } .ds-chat-action:focus-visible { outline:2px solid var(--color-ledger-focus-on-mineral); outline-offset:3px; } .ds-chat-action:active { transform:scale(.97); } @media(prefers-reduced-motion:reduce) { .ds-chat-action:active { transform:none; } } @media(max-width:640px) { .ds-chat { padding:32px 24px; border-radius:14px; } }"
     },
     {
       "name": "Campo",
       "kind": "input",
-      "description": "Entrada operacional com rótulo sempre presente.",
-      "html": "<label class=\"ds-field\">Custo da peça <input value=\"48\"></label>",
-      "css": ".ds-field{display:grid;gap:.35rem;color:#272326;font:600 .85rem Avenir Next,Arial,sans-serif}.ds-field input{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:10px;padding:.7rem .85rem;font:400 1rem Avenir Next,Arial,sans-serif}.ds-field input:focus-visible{outline:2px solid #b99a62;outline-offset:1px}"
+      "refersTo": "input",
+      "description": "Token, código de cliente.",
+      "html": "<input class=\"ds-input\" placeholder=\"Cole seu token do Notion\" />",
+      "css": ".ds-input { font-family: var(--font-workspace, Manrope, sans-serif); min-height:48px; padding:0 12px; border:1px solid var(--color-ledger-rule-strong); border-radius:10px; background:var(--color-ledger-surface); color:var(--color-ledger-ink); caret-color:var(--color-ledger-mineral); font-size:0.9375rem; } .ds-input::placeholder { color:var(--color-ledger-muted); } .ds-input:focus { border-color:var(--color-ledger-mineral); outline:2px solid var(--color-ledger-focus); outline-offset:2px; }"
     },
     {
-      "name": "Card de resultado",
+      "name": "Selo de nível",
+      "kind": "chip",
+      "refersTo": "integration-tier",
+      "description": "Nível Pro exigido, independente do estado da conexão; uma ocorrência por linha.",
+      "html": "<span class=\"ds-tier\">Pro</span>",
+      "css": ".ds-tier { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:999px; background:var(--color-ledger-sand); color:var(--color-ledger-mineral); font-family:var(--font-workspace,Manrope,sans-serif); font-size:.8125rem; font-weight:700; }"
+    },
+    {
+      "name": "Linha de integração",
+      "kind": "custom",
+      "description": "Cinco colunas alinhadas por subgrid; amostra conectada. Conectadas no topo, demais por finalidade abaixo, sem repetir linhas. Marca textual apenas para esta prévia, sem substituir o logo real na interface.",
+      "html": "<div class=\"ds-list-frame\"><ul class=\"ds-list\"><li class=\"ds-item\"><div class=\"ds-mark\">Olist</div><div class=\"ds-copy\"><h3>Olist <span>ERP e loja</span></h3><p>As peças da loja, do estoque à vitrine.</p></div><div class=\"ds-level\"><span class=\"ds-tier\">Pro</span></div><div class=\"ds-status\">Conectado</div><div class=\"ds-actions\"><button>Desconectar</button></div></li></ul></div>",
+      "css": ".ds-list-frame { container-type:inline-size; font-family:var(--font-workspace,Manrope,sans-serif); color:var(--color-ledger-ink); } .ds-list { display:grid; grid-template-columns:[mark] 6.5rem [copy] minmax(0,1fr) [tier] 3.5rem [status] 8.5rem [actions] 11.5rem; column-gap:24px; margin:0; padding:0; list-style:none; } .ds-item { display:grid; grid-column:1/-1; grid-template-columns:subgrid; align-items:start; row-gap:12px; padding:24px 0 8px; } .ds-mark { grid-column:mark; display:flex; align-items:center; min-height:44px; } .ds-copy { grid-column:copy; min-width:0; } .ds-copy h3 { margin:0; min-height:44px; font-size:.9375rem; line-height:1.45; display:flex; flex-wrap:wrap; align-items:center; gap:8px; } .ds-copy h3 span { color:var(--color-ledger-muted); font-size:.875rem; font-weight:500; } .ds-copy p { margin:0; color:var(--color-ledger-muted); font-size:.9375rem; line-height:1.6; } .ds-level { grid-column:tier; min-height:44px; display:flex; align-items:center; } .ds-tier { display:inline-flex; align-items:center; min-height:24px; padding:0 8px; border-radius:999px; background:var(--color-ledger-sand); color:var(--color-ledger-mineral); font-size:.8125rem; font-weight:700; } .ds-status { grid-column:status; display:flex; align-items:center; gap:8px; min-height:44px; color:var(--color-ledger-positive); font-size:.875rem; font-weight:600; } .ds-status::before { content:\"\"; width:7px; height:7px; border-radius:50%; background:currentColor; border:1.5px solid currentColor; } .ds-actions { grid-column:actions; display:grid; } .ds-actions button { min-height:44px; padding:0 8px; border:1px solid transparent; border-radius:10px; background:transparent; color:var(--color-ledger-muted); font:inherit; font-size:.875rem; font-weight:600; cursor:pointer; } .ds-actions button:hover { color:var(--color-ledger-ink); background:var(--color-ledger-active); } .ds-actions button:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-actions button:active { transform:translateY(1px); } @container(max-width:760px) { .ds-list { grid-template-columns:[mark] minmax(0,1fr) [tier] 2.75rem [status] 7rem; column-gap:8px; } .ds-mark,.ds-level,.ds-status { grid-row:1; } .ds-copy,.ds-actions { grid-column:1/-1; } } @media(prefers-reduced-motion:reduce) { .ds-actions button:active { transform:none; } }"
+    },
+    {
+      "name": "Cartão de destino",
       "kind": "card",
-      "refersTo": "card",
-      "description": "Uma tarefa ou resultado por superfície.",
-      "html": "<div class=\"ds-card\">Preço sugerido <strong>R$ 142,70</strong></div>",
-      "css": ".ds-card{background:#fcfaf6;color:#272326;border:1px solid rgba(39,35,38,.16);border-radius:14px;padding:1.4rem;box-shadow:0 1px 0 rgba(36,25,31,.05),0 18px 44px -28px rgba(36,25,31,.35);font:400 1rem Avenir Next,Arial,sans-serif}.ds-card strong{display:block;color:#24191f;font:500 2rem Bodoni Moda,Georgia,serif}"
+      "refersTo": "desk-tile",
+      "description": "Link nativo inteiro; mesma moldura do painel, com subida de 4px e clareamento em hover/foco. Exemplo de destino sem dado inventado.",
+      "html": "<a class=\"ds-tile\" href=\"/workspace/integracoes\"><h2>Integrações</h2><p>Conecte as ferramentas da sua loja.</p><span>Ver integrações <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12h14m-6-6 6 6-6 6\" /></svg></span></a>",
+      "css": ".ds-tile { display:flex; flex-direction:column; align-items:flex-start; gap:4px; padding:24px 32px; border:1px solid var(--color-desk-hairline); border-radius:24px; background:var(--color-desk-glass); box-shadow:var(--shadow-desk-panel); color:var(--color-ledger-ink); font-family:var(--font-workspace,Manrope,sans-serif); text-decoration:none; transition:transform 450ms cubic-bezier(.16,1,.3,1),background-color 450ms cubic-bezier(.16,1,.3,1); } .ds-tile h2 { margin:0; color:var(--color-ledger-muted); font-size:.875rem; font-weight:600; } .ds-tile p { color:var(--color-ledger-muted); font-size:.875rem; line-height:1.5; } .ds-tile span { display:inline-flex; align-items:center; gap:4px; min-height:44px; margin-top:auto; padding-top:8px; color:var(--color-ledger-mineral); font-size:.875rem; font-weight:600; text-decoration:underline; text-underline-offset:5px; } .ds-tile:hover,.ds-tile:focus-visible { transform:translateY(-4px); background:var(--color-desk-glass-hover); } .ds-tile:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } @media(max-width:640px) { .ds-tile { padding:16px; border-radius:18px; } } @media(prefers-reduced-motion:reduce) { .ds-tile { transition:none; } .ds-tile:hover,.ds-tile:focus-visible { transform:none; } }"
+    },
+    {
+      "name": "Sino de atualizações",
+      "kind": "custom",
+      "refersTo": "updates-bell",
+      "description": "Botão circular; prévia do gatilho fechado. Na aplicação abre popover não modal das três versões reais de RELEASES, marca visto e fecha por Esc, fora, foco ou navegação.",
+      "html": "<button class=\"ds-bell\" type=\"button\" aria-label=\"Atualizações, novidade não lida\" aria-haspopup=\"dialog\" aria-expanded=\"false\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z\"/><path d=\"M10 20.5a2 2 0 0 0 4 0\"/></svg><span aria-hidden=\"true\"></span></button>",
+      "css": ".ds-bell { position:relative; display:grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid var(--color-desk-hairline); border-radius:50%; background:var(--color-desk-glass); color:var(--color-ledger-ink); cursor:pointer; transition:background-color 180ms cubic-bezier(.16,1,.3,1); } .ds-bell:hover { background:var(--color-desk-glass-hover); } .ds-bell:focus-visible { outline:2px solid var(--color-ledger-focus); outline-offset:3px; } .ds-bell span { position:absolute; top:9px; right:10px; width:8px; height:8px; border-radius:50%; background:var(--color-ledger-mineral); box-shadow:0 0 0 2px var(--color-desk-panel); } @media(prefers-reduced-motion:reduce) { .ds-bell { transition:none; } }"
     }
   ],
   "narrative": {
-    "northStar": "A bancada de avaliação",
-    "overview": "A peça e seus números pertencem ao mesmo espaço. A landing usa fotografia de joia, papel mineral e tipografia editorial; o workspace conserva as cores e reduz a ornamentação para facilitar decisões frequentes.",
-    "keyCharacteristics": ["Fotografia tátil de produto", "Valores alinhados como instrumento de trabalho", "Ouro apenas como detalhe de precisão"],
-    "rules": [
-      { "name": "The Metal Rule", "body": "Use ouro em marca, foco e pequenas medições; ações principais usam ameixa sólido.", "section": "colors" },
-      { "name": "The Two Registers Rule", "body": "A voz editorial apresenta a proposta; a voz de interface explica custos e ações sem floreio.", "section": "typography" },
-      { "name": "The Price In View Rule", "body": "A primeira tela da landing mostra uma peça e um resumo de preço; a primeira tela do workspace mostra uma ação de trabalho.", "section": "layout" }
+    "northStar": "A mesa da loja",
+    "overview": "Este documento registra a proposta A da área logada, na branch `feat/workspace-opus-proposal`. A proposta B é independente e está em outro worktree; não está documentada aqui. O estado de revisão e as evidências reportadas para a proposta A ficam no surface brief.\n\nA área logada é uma mesa de trabalho sobre um canvas marfim com manchas minerais e areia suaves. Os painéis claros deixam o pano tonal aparecer através da superfície; filete claro, brilho interno e sombra longa suave dão espessura. A conversa com a mila é o único painel mineral. As listas de trabalho continuam em linhas pautadas dentro dos painéis. É uma interface Operate: sóbria e próxima, com Manrope e a marca nos detalhes.\n\nA Cadra observada ao vivo orienta o acabamento: material translúcido, filete com sombra, elevação de cartões clicáveis e pílula recortada que estica ao trocar destino. No celular, quatro destinos ficam no dock inferior; o sino do topo também abre as atualizações. Cadra é uma critique-reference. A implementação preserva a marca da mila e usa código próprio, sem copiar bundles, assets, dados, paleta ou fonte. O caminho é code-led; seed de imagem não se aplica.",
+    "keyCharacteristics": [
+      "Canvas marfim com pano tonal fixo; painéis translúcidos com filete claro de 1px, brilho interno e sombra longa suave.",
+      "Preenchimento mineral concentrado no destino ativo, na ação principal e no painel da conversa; texto mineral também sinaliza marca, links e pequenos destaques.",
+      "Linhas pautadas para listas; cartões inteiros como links quando cada unidade leva a uma página, com elevação de 4px em hover e foco.",
+      "Manrope em escala fixa de rem; números tabulares em contagens, datas e preços.",
+      "Estado da conta vem da sessão ou do vault; versões vêm de `RELEASES`. Vazio, carregando e falha têm linguagem própria."
     ],
-    "dos": ["Use dados de exemplo com identificação visível de demonstração.", "Preserve contraste, foco visível e leitura no celular."],
-    "donts": ["Não apresente integrações planejadas como ativas.", "Não substitua a fotografia por gradientes genéricos ou uma grade de cards de ícones."]
+    "rules": [
+      {
+        "name": "The Mineral Fill Rule",
+        "body": "O preenchimento mineral se concentra no destino ativo, na ação principal e no painel da conversa. Marca, links e pequenos destaques podem usar texto mineral sem criar outro painel de destaque.",
+        "section": "colors"
+      },
+      {
+        "name": "The State Speaks Rule",
+        "body": "Positivo e erro sempre vêm com texto; a cor nunca é o único sinal. O selo Pro informa o nível exigido, separado do estado da conexão.",
+        "section": "colors"
+      },
+      {
+        "name": "The Sentence Case Rule",
+        "body": "Rótulos, etiquetas e estados em frase (\"Catálogo do Instagram & Facebook\", \"Pendente\"). Caixa alta com tracking não volta.",
+        "section": "typography"
+      },
+      {
+        "name": "The Material Edge Rule",
+        "body": "Superfícies claras combinam transparência, filete claro e sombra ambiente; a borda não vira contorno escuro.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Link Lift Rule",
+        "body": "Só cartões inteiros como links sobem 4px em hover e foco, durante 450ms com `cubic-bezier(0.16, 1, 0.3, 1)`; painéis de conteúdo permanecem imóveis. Movimento reduzido remove a subida.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do usar linhas pautadas para listas de trabalho e cartões inteiros como links para destinos; manter a hierarquia entre conversa, dados da conta e versões.",
+      "Do mostrar só estado lido da sessão ou do vault; quando a leitura falha, dizer \"Não deu para ler…\" com \"Tentar de novo\".",
+      "Do preservar os controles em 320px: encurtar rótulos ou usar ícone com nome acessível, como o WhatsApp do topo até 360px.",
+      "Do respeitar `prefers-reduced-motion`: pílulas mudam de destino sem deslocamento; cartões não sobem; botões e sino não escalam; esqueletos não pulsam."
+    ],
+    "donts": [
+      "Don't inventar métricas, gráficos, notificações ou números que a sessão e o histórico real não informam; a faixa de três cartões representa destinos, sem dados promocionais.",
+      "Don't pôr caixa dentro de caixa: dentro de um painel use recuo tonal ou régua, nunca outro painel com sombra.",
+      "Don't usar borda lateral colorida acima de 1px, rótulo em caixa alta com tracking ou kicker acima de título.",
+      "Don't usar vinho, roxo ou dourado como cor de marca."
+    ]
   }
 }

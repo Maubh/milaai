@@ -1,43 +1,35 @@
+/* Hallmark · store desk · release journal rows · existing mila mineral */
 @import "../tokens.css";
 
-.release-updates-dialog { position: fixed; inset: 0 0 0 auto; margin: 0; padding: 0; width: min(560px, 100%); height: 100dvh; max-height: 100dvh; max-width: 100%; border: 0; border-left: 1px solid var(--color-workspace-rule); background: var(--color-workspace-surface); color: var(--color-workspace-ink); font-family: var(--font-workspace); overflow: auto; overscroll-behavior: contain; }
-.release-updates-dialog[open] { display: flex; flex-direction: column; animation: release-updates-enter var(--dur-workspace-menu-enter) var(--ease-workspace-out); }
-.release-updates-dialog::backdrop { background: var(--color-workspace-backdrop); }
-.release-updates-header { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--space-workspace-lg); padding: var(--space-workspace-2xl); border-bottom: 1px solid var(--color-workspace-rule); }
-.release-updates-header h1 { font-size: var(--text-workspace-heading); line-height: 1.3; letter-spacing: -.02em; }
-.release-updates-header p { margin-top: var(--space-workspace-sm); color: var(--color-workspace-muted); font-size: var(--text-workspace-sm); }
-.release-updates-close { display: grid; place-items: center; flex: 0 0 var(--size-workspace-control); width: var(--size-workspace-control); height: var(--size-workspace-control); padding: 0; border: 0; border-radius: var(--radius-workspace); color: var(--color-workspace-muted); background: transparent; cursor: pointer; }
-.release-updates-close:hover { background: var(--color-workspace-active); }
-.release-updates-content { flex: 1; padding: var(--space-workspace-2xl); }
-.release-updates-footer { position: sticky; bottom: 0; padding: var(--space-workspace-lg) var(--space-workspace-2xl) max(var(--space-workspace-lg), env(safe-area-inset-bottom)); background: var(--color-workspace-surface); border-top: 1px solid var(--color-workspace-rule); }
-.release-updates-footer a { display: flex; align-items: center; justify-content: space-between; gap: var(--space-workspace-lg); min-height: var(--size-workspace-control); color: var(--color-workspace-accent); font-size: var(--text-platform-control); font-weight: 600; text-underline-offset: 5px; }
-.releases-timeline { list-style: none; margin: var(--space-workspace-2xl) 0 0; padding: 0; }
-.releases-timeline-entry { display: grid; grid-template-columns: 156px minmax(0, 1fr); gap: var(--space-workspace-2xl); padding-bottom: var(--space-workspace-3xl); }
-.releases-timeline-meta { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-workspace-md); }
-.releases-timeline-meta time { color: var(--color-workspace-muted); font-size: var(--text-workspace-xs); font-variant-numeric: tabular-nums; line-height: 1.6; }
-.releases-timeline .release-version { display: inline-flex; padding: var(--space-workspace-xs) var(--space-workspace-sm); background: var(--color-workspace-active); color: var(--color-workspace-accent); border-radius: var(--radius-workspace); font-size: var(--text-workspace-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
-.releases-timeline-article { position: relative; padding: 0 0 var(--space-workspace-lg) var(--space-workspace-2xl); border-left: 1px solid var(--color-workspace-rule); min-width: 0; }
-.releases-timeline-article::before { content: ""; position: absolute; left: -4px; top: .4rem; width: 7px; height: 7px; border-radius: 50%; background: var(--color-workspace-accent); }
-.releases-timeline h2 { font-size: var(--text-workspace-heading); line-height: 1.45; letter-spacing: -.02em; font-weight: 700; text-wrap: balance; }
-.releases-timeline .release-summary { margin-top: var(--space-workspace-sm); font-size: var(--text-workspace-body); line-height: 1.7; color: var(--color-workspace-muted); max-width: 65ch; }
-.releases-timeline .release-changes { display: grid; gap: var(--space-workspace-xl); list-style: none; margin: var(--space-workspace-xl) 0 0; padding: 0; }
-.releases-timeline .release-change-type { display: inline-block; padding: var(--space-workspace-xs) var(--space-workspace-sm); border-radius: var(--radius-workspace); background: var(--color-workspace-active); color: var(--color-workspace-accent); font-size: var(--text-workspace-xs); font-weight: 500; margin-bottom: var(--space-workspace-sm); }
-.releases-timeline h3 { font-size: var(--text-workspace-body); font-weight: 600; line-height: 1.5; }
-.releases-timeline .release-changes p { margin-top: var(--space-workspace-xs); color: var(--color-workspace-muted); font-size: var(--text-platform-body); line-height: 1.7; max-width: 65ch; }
-.releases-timeline-compact { margin-top: 0; }
-.releases-timeline-compact .releases-timeline-entry { grid-template-columns: minmax(0, 1fr); gap: var(--space-workspace-lg); }
-.releases-timeline-compact .releases-timeline-meta { flex-direction: row; align-items: center; justify-content: space-between; }
-.releases-timeline-compact .releases-timeline-article { padding-left: var(--space-workspace-xl); }
-.releases-timeline-compact h2 { font-size: var(--text-workspace-body); }
-.releases-timeline-compact h3, .releases-timeline-compact .release-summary { font-size: var(--text-workspace-sm); }
-.releases-empty { color: var(--color-workspace-muted); padding-block: var(--space-workspace-2xl); }
-@keyframes release-updates-enter { from { transform: translateX(32px); opacity: .5; } to { transform: translateX(0); opacity: 1; } }
+
+.releases-timeline { margin: 0; padding: 0; list-style: none; }
+.releases-timeline-entry {
+  display: grid;
+  grid-template-columns: var(--size-ledger-label) minmax(0, 1fr);
+  gap: var(--space-workspace-md) var(--space-workspace-xl);
+  padding-block: var(--space-workspace-2xl);
+  border-bottom: var(--rule-ledger) solid var(--color-ledger-rule);
+}
+.releases-timeline-meta { display: grid; align-content: start; gap: var(--space-workspace-xs); }
+.releases-timeline-meta time { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); font-variant-numeric: tabular-nums; line-height: 1.5; }
+.releases-timeline .release-version { color: var(--color-ledger-mineral); font-size: var(--text-workspace-sm); font-weight: 700; font-variant-numeric: tabular-nums; }
+.releases-timeline-article { min-width: 0; }
+.releases-timeline h2 { font-size: var(--text-workspace-heading); font-weight: 700; line-height: 1.35; letter-spacing: -0.02em; text-wrap: balance; overflow-wrap: anywhere; }
+.releases-timeline .release-summary { margin-top: var(--space-workspace-sm); max-width: 65ch; color: var(--color-ledger-muted); line-height: 1.65; }
+.releases-timeline .release-changes { display: grid; margin: var(--space-workspace-xl) 0 0; padding: 0; list-style: none; border-top: var(--rule-ledger) solid var(--color-ledger-rule); }
+.releases-timeline .release-changes li { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: var(--space-workspace-xs) var(--space-workspace-lg); padding-block: var(--space-workspace-md); border-bottom: var(--rule-ledger) solid var(--color-ledger-rule); }
+.releases-timeline .release-changes li:last-child { border-bottom: 0; }
+.releases-timeline .release-change-type { grid-row: span 2; color: var(--color-ledger-muted); font-size: var(--text-workspace-xs); font-weight: 600; line-height: 1.7; }
+.releases-timeline .release-change-type[data-type="new"] { color: var(--color-ledger-mineral); }
+.releases-timeline h3 { font-size: var(--text-workspace-body); font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.releases-timeline .release-changes p { max-width: 65ch; color: var(--color-ledger-muted); line-height: 1.65; }
+.releases-empty { padding-block: var(--space-workspace-2xl); color: var(--color-ledger-muted); }
+
 @media (max-width: 640px) {
-  .release-updates-header, .release-updates-content { padding: var(--space-workspace-xl); }
-  .release-updates-footer { padding-inline: var(--space-workspace-xl); }
-  .releases-timeline-entry { grid-template-columns: minmax(0, 1fr); gap: var(--space-workspace-lg); }
-  .releases-timeline-meta { flex-direction: row; align-items: center; justify-content: space-between; }
-  .releases-timeline-article { padding-left: var(--space-workspace-xl); }
+  .releases-timeline-entry { grid-template-columns: minmax(0, 1fr); padding-block: var(--space-workspace-xl); }
+  .releases-timeline-meta { display: flex; align-items: baseline; gap: var(--space-workspace-md); }
+  .releases-timeline .release-changes li { grid-template-columns: minmax(0, 1fr); }
+  .releases-timeline .release-change-type { grid-row: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .release-updates-dialog[open] { animation: none; } }
 /* Tipo da mudança e plano em que ela vale, lado a lado. */

@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.16",
+    date: "2026-10-27",
+    title: "Notion conectado com um toque",
+    summary: "Conectar o Notion pelo celular, com um toque.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Conectar o Notion pelo celular, com um toque",
+        description: "Na área de integrações, abra o Notion e toque em Conectar com Notion. Entre na sua conta e marque onde a mila pode guardar o que criar. Não precisa mais criar conexão nem copiar token no computador. Quem já tinha conectado continua conectado.",
+      },
+    ],
+  },
+  {
     version: "0.6.15",
     date: "2026-10-27",
     title: "A mila continua de onde vocês pararam",

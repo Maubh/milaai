@@ -31,7 +31,7 @@ export async function POST(
     return NextResponse.json({ ok: false, detail: "unknown_provider" }, { status: 404 });
   }
   if (isGuidedProvider(slug)) {
-    // Jueri/Notion não têm OAuth: a lojista cola a chave em /key.
+    // Jueri não tem OAuth: a lojista cola a chave em /key.
     return NextResponse.json({ ok: false, detail: "guided_key_provider" }, { status: 400 });
   }
   const { status, data } = await proxyOAuth(`/api/oauth/${slug}/start`, { method: "GET" });

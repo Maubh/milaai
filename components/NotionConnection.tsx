@@ -1,32 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState, type FormEvent } from "react";
-import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
+import type { FormEvent } from "react";
 import IntegrationConnectionLayout from "./IntegrationConnectionLayout";
 
 interface Props {
-  token: string;
-  onTokenChange: (value: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   connecting: boolean;
-  connected: boolean;
   error: string;
 }
 
-export default function NotionConnection({ token, onTokenChange, onSubmit, connecting, connected, error }: Props) {
-  const [visible, setVisible] = useState(false);
-  const [waLink, setWaLink] = useState<string | null>(null);
-
-  useEffect(() => { setWaLink(getVerifiedWaLink() ?? defaultWaLink()); }, []);
-
+/**
+ * Conectar o Notion pelo botão (OAuth), como o Google: a lojista autoriza na
+ * tela do Notion, no mesmo navegador, e volta para as integrações. Funciona no
+ * celular, onde o Notion não deixa criar a conexão interna que o token pedia.
+ */
+export default function NotionConnection({ onSubmit, connecting, error }: Props) {
   return (
     <IntegrationConnectionLayout
       name="Notion"
-      title={connected ? "Seu Notion está conectado." : "Conectar seu Notion"}
-      description={connected
-        ? "Agora, volte à Mila para escolher a base que receberá seus dados."
-        : "Seu caderno de fornecedores e suas notas de compra, organizados na base que você escolher."}
+      title="Conectar seu Notion"
+      description="Seu caderno de fornecedores e suas notas de compra, organizados na base que você escolher."
       footer="Você também pode salvar seu caderno em uma planilha no Google Drive."
       brand={<>
           <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true">
@@ -35,47 +29,25 @@ export default function NotionConnection({ token, onTokenChange, onSubmit, conne
           <span>Notion</span>
       </>}
     >
+        <form className="notion-connect-panel" onSubmit={onSubmit} aria-busy={connecting}>
+          <h2>Autorização segura</h2>
+          <p className="notion-connect-panel-intro">Você entra na sua conta do Notion e autoriza por lá. Funciona no celular e no computador.</p>
 
-        {connected ? (
-          <div className="notion-connect-panel notion-connect-success" role="status">
-            <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m7 12 3 3 7-7" /></svg>
-            <h2>Conexão confirmada</h2>
-            <p>A Mila validou seu token com o Notion. Na conversa, ela vai ajudar você a escolher uma das bases compartilhadas.</p>
-            {waLink ? <a className="notion-connect-submit" href={waLink} target="_blank" rel="noopener noreferrer">Abrir WhatsApp</a> : null}
-            <Link className="connect-secondary" href="/workspace/integracoes">Ver integrações</Link>
-          </div>
-        ) : (
-          <form className="notion-connect-panel" onSubmit={onSubmit} aria-busy={connecting}>
-            <h2>Adicione sua conexão</h2>
-            <p className="notion-connect-panel-intro">Já tem uma conexão no Notion? Cole o token abaixo.</p>
+          <p className="connect-where">
+            <strong>Na tela do Notion:</strong> marque onde a mila pode guardar o que criar para você. Ela só enxerga o que você marcar.
+          </p>
 
-            <details className="notion-connect-help">
-              <summary>Como obter meu token?</summary>
-              <ol>
-                <li>No computador, abra <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener noreferrer">as conexões do Notion</a> e crie uma conexão interna no seu espaço de trabalho. Você precisa ser proprietário desse espaço. No celular o link abre o app do Notion, que não tem essa tela.</li>
-                <li>Copie o token da conexão. Ele funciona como uma chave de acesso.</li>
-                <li>No Notion, abra onde você quer guardar o que a Mila criar. No menu de opções (•••), em <strong>Conexões</strong>, adicione a conexão que você criou.</li>
-              </ol>
-              <p>A Mila só enxerga o que você compartilhar com a conexão.</p>
-              <a href="https://www.notion.com/help/create-integrations-with-the-notion-api" target="_blank" rel="noopener noreferrer">Ver instruções do Notion</a>
-            </details>
+          <p className="connect-scope">A mila lê, cria e atualiza conteúdo só ali. Para mudar o que ela enxerga, é só conectar de novo.</p>
 
-            <label className="notion-connect-label" htmlFor="notion-token">Token da conexão</label>
-            <div className="notion-connect-input-wrap">
-              <input id="notion-token" type={visible ? "text" : "password"} value={token} onChange={(event) => onTokenChange(event.target.value)} placeholder="Cole seu token do Notion" autoComplete="off" spellCheck={false} autoCapitalize="none" required disabled={connecting} aria-describedby={error ? "notion-token-note notion-connect-error" : "notion-token-note"} />
-              <button type="button" onClick={() => setVisible(!visible)} aria-controls="notion-token" aria-pressed={visible}>{visible ? "Ocultar" : "Mostrar"}</button>
-            </div>
-            <p id="notion-token-note" className="notion-connect-note">A conexão permite acesso apenas às bases de dados que você compartilhar com ela.</p>
+          {error ? <div className="connect-error" role="alert"><p>{error}</p>{/telefone|sessão/.test(error) ? <Link href="/login">Entrar na Mila</Link> : null}</div> : null}
 
-            {error ? <div id="notion-connect-error" className="notion-connect-error" role="alert"><p>{error}</p>{/telefone|sessão/.test(error) ? <Link href="/login">Entrar na Mila</Link> : null}</div> : null}
-
-            <button className="notion-connect-submit" type="submit" disabled={connecting || !token.trim()}>
-              {connecting ? "Validando conexão…" : "Conectar Notion"}
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" /></svg>
+          <div className="connect-actions">
+            <button className="notion-connect-submit" type="submit" disabled={connecting}>
+              {connecting ? "Abrindo o Notion…" : "Conectar com Notion"}
             </button>
-            <p className="notion-connect-validation">A Mila confere o token com o Notion antes de confirmar a conexão.</p>
-          </form>
-        )}
+            <Link href="/workspace/integracoes" className="connect-secondary">Voltar às integrações</Link>
+          </div>
+        </form>
     </IntegrationConnectionLayout>
   );
 }

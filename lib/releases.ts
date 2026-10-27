@@ -43,6 +43,12 @@ export const RELEASES: readonly Release[] = [
         title: "Sessão expirada nas integrações mostra como entrar de novo",
         description: "Quando a sessão expira, as integrações, o botão de desconectar e o catálogo da Meta avisam e levam ao login, em vez de mostrar um erro ou pedir para tentar mais tarde.",
       },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Google avisa quando falta a permissão do Drive",
+        description: "Se a caixa do Drive ficar desmarcada na tela do Google, a mila avisa na hora o que marcar, em vez de dizer depois, na planilha, que a conexão venceu.",
+      },
     ],
   },
   {

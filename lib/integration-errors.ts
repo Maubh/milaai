@@ -24,6 +24,10 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // sessão que nunca existiu), não no meio de uma conexão de integração.
   sessao_necessaria: "Entre com seu telefone para abrir sua área.",
   loja_divergente: "A conta autorizada não é a desta loja. Nada foi conectado.",
+  // O Google deixa desmarcar cada permissão; sem a do Drive a mila não cria a
+  // planilha. O Eve não grava a conexão e volta para cá com este código.
+  permissao_drive_faltando:
+    "Faltou a permissão do Drive. Conecte o Google de novo e, na tela do Google, deixe marcada a caixa que permite à mila criar arquivos no Drive. Nada foi conectado.",
   // State do OAuth
   estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",
   bad_state: "A autorização não pôde ser validada. Tente conectar de novo.",

@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.14",
+    date: "2026-10-27",
+    title: "Passo a passo do Notion corrigido",
+    summary: "O link da ajuda para criar a conexão do Notion abria uma tela que não existe mais.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Link certo para criar a conexão do Notion",
+        description: "Na tela de conectar o Notion, o passo a passo agora leva à tela atual de conexões do Notion e avisa que esse passo é feito no computador, porque o app do Notion no celular não tem essa tela.",
+      },
+    ],
+  },
+  {
     version: "0.6.13",
     date: "2026-10-27",
     title: "PDF também no Notion",

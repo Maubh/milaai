@@ -52,11 +52,11 @@ export default function NotionConnection({ token, onTokenChange, onSubmit, conne
             <details className="notion-connect-help">
               <summary>Como obter meu token?</summary>
               <ol>
-                <li>Abra <a href="https://www.notion.so/my-integrations" target="_blank" rel="noopener noreferrer">as conexões do Notion</a> e crie uma conexão interna no seu espaço de trabalho. Você precisa ser proprietário desse espaço.</li>
+                <li>No computador, abra <a href="https://www.notion.so/profile/integrations" target="_blank" rel="noopener noreferrer">as conexões do Notion</a> e crie uma conexão interna no seu espaço de trabalho. Você precisa ser proprietário desse espaço. No celular o link abre o app do Notion, que não tem essa tela.</li>
                 <li>Copie o token da conexão. Ele funciona como uma chave de acesso.</li>
-                <li>Abra a base que deseja usar no Notion. No menu de opções (•••), em <strong>Conexões</strong>, adicione a conexão que você criou.</li>
+                <li>No Notion, abra onde você quer guardar o que a Mila criar. No menu de opções (•••), em <strong>Conexões</strong>, adicione a conexão que você criou.</li>
               </ol>
-              <p>A Mila grava na base que você indicar; ela não cria uma base nova.</p>
+              <p>A Mila só enxerga o que você compartilhar com a conexão.</p>
               <a href="https://www.notion.com/help/create-integrations-with-the-notion-api" target="_blank" rel="noopener noreferrer">Ver instruções do Notion</a>
             </details>
 

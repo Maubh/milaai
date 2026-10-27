@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.11",
+    date: "2026-10-27",
+    title: "Seus arquivos ficam só com você",
+    summary: "Tudo o que a mila cria para você como arquivo fica no seu Google ou no seu Notion, e em nenhum outro lugar.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Arquivos só no seu Google ou Notion",
+        description: "A mila não usa mais sites de fora para te mandar arquivo. Planilhas e bases ficam no seu Google ou no seu Notion, e ela avisa onde salvou. PDF ainda não sai por aqui: se você pedir, ela oferece o mesmo conteúdo em planilha ou no Notion.",
+      },
+    ],
+  },
+  {
     version: "0.6.10",
     date: "2026-10-27",
     title: "Um bom dia é só um bom dia",

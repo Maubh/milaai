@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { formatTrialLastDay, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
 import { TextBone } from "@/components/WorkspaceSkeleton";
+import { PLANO_PDF } from "@/lib/google-workspace";
 import "./plano.css";
 
 export interface SessionData {
@@ -36,6 +37,7 @@ const PLANS = [
       "Legenda de Instagram para cada peça",
       "Leitura de notas de compra (XML e PDF)",
       "Caderno de fornecedores no WhatsApp, no Notion ou no Google Planilhas",
+      PLANO_PDF,
       "1 vitrine web ativa por vez, com fotos reais",
     ],
   },

@@ -1,6 +1,7 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { currentSessionToken } from "@/lib/server/mila-oauth";
-import { WORKSPACE_LOGIN_REDIRECT, shouldRedirectToLogin } from "@/lib/workspace-gate";
+import { shouldRedirectToLogin, workspaceLoginRedirect } from "@/lib/workspace-gate";
 import WorkspaceShell from "@/components/WorkspaceShell";
 import "./workspace.css";
 import "./workspace-polish.css";
@@ -29,7 +30,8 @@ export default async function WorkspaceLayout({ children }: { children: React.Re
     // Só ausência de crachá cai aqui. Falha do VPS não redireciona: quem trata
     // é a página, mostrando erro — senão o retorno do OAuth (?ok= / ?erro=)
     // morre num bounce e parece um loop de login.
-    redirect(WORKSPACE_LOGIN_REDIRECT);
+    // O layout não recebe o caminho; o middleware o repassa em `x-mila-path`.
+    redirect(workspaceLoginRedirect((await headers()).get("x-mila-path")));
   }
   return <WorkspaceShell>{children}</WorkspaceShell>;
 }

@@ -3,6 +3,7 @@
 import { useEffect, useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { integrationErrorText } from "@/lib/integration-errors";
+import { entrarDeNovo } from "@/lib/pos-login";
 import { META_SOURCES as FONTES } from "@/lib/meta-catalog";
 import "./meta-catalog.css";
 
@@ -60,6 +61,11 @@ interface CatalogoOpcao {
  * conta, a mila não escolhe sozinha: a lojista escolhe uma vez e a escolha vale
  * até ela trocar.
  */
+/** Sessão vencida no meio do catálogo: login e volta às integrações. */
+function semSessao(): void {
+  entrarDeNovo("/workspace/integracoes", "sessao_expirada");
+}
+
 function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancelar?: () => void }) {
   const router = useRouter();
   const [catalogos, setCatalogos] = useState<CatalogoOpcao[] | null>(null);
@@ -79,6 +85,7 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
           catalogs?: CatalogoOpcao[];
         };
         if (!ativo) return;
+        if (res.status === 401) return semSessao();
         if (!res.ok || !data.ok) {
           setErro(integrationErrorText(data.detail));
           setCatalogos([]);
@@ -112,6 +119,8 @@ function SeletorCatalogo({ atual, onCancelar }: { atual: string | null; onCancel
       if (res.ok && data.ok) {
         router.refresh();
         onCancelar?.();
+      } else if (res.status === 401) {
+        semSessao();
       } else {
         setErro(data.error || integrationErrorText(data.detail));
       }
@@ -262,6 +271,8 @@ export default function MetaCatalogManager({
       if (res.ok && data.ok) {
         setMensagemSucesso("Fonte oficial salva com sucesso.");
         router.refresh();
+      } else if (res.status === 401) {
+        semSessao();
       } else {
         setErro(data.error || integrationErrorText(data.detail));
       }
@@ -295,6 +306,7 @@ export default function MetaCatalogManager({
           ok?: boolean;
           detail?: string;
         };
+        if (resSave.status === 401) return semSessao();
         if (!resSave.ok || !dataSave.ok) {
           setErro(
             `Não foi possível salvar a fonte antes de sincronizar (${integrationErrorText(dataSave.detail)}). Ajuste a fonte e tente de novo.`,
@@ -348,6 +360,8 @@ export default function MetaCatalogManager({
           }`
         );
         router.refresh();
+      } else if (res.status === 401) {
+        semSessao();
       } else {
         setErro(data.mensagem || integrationErrorText(data.detail));
       }

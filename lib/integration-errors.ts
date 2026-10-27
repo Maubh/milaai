@@ -17,7 +17,9 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // login volta para a tela do conector.
   sessao_integracao:
     "Entre com seu telefone para conectar a integração. Depois do código, você volta para a tela de conexão.",
-  sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
+  // Retorno do OAuth sem sessão e sessão vencida dentro das integrações; o
+  // login devolve a lojista às integrações.
+  sessao_expirada: "Sua sessão expirou. Entre de novo e você volta às integrações.",
   // Mesma causa, outra porta: aqui a lojista bateu no workspace (link direto,
   // sessão que nunca existiu), não no meio de uma conexão de integração.
   sessao_necessaria: "Entre com seu telefone para abrir sua área.",

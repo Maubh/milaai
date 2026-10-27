@@ -4,6 +4,7 @@ import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IntegrationSwitch } from "@/components/IntegrationSwitch";
 import { integrationErrorText } from "@/lib/integration-errors";
+import { entrarDeNovo } from "@/lib/pos-login";
 
 /**
  * Desconectar uma integração: chama o revoke real (BFF → serviço de auth),
@@ -51,6 +52,8 @@ export default function DisconnectButton({
         dialogRef.current?.close();
         // O status vem do vault: reconsulta a página depois de revogar.
         router.refresh();
+      } else if (res.status === 401) {
+        entrarDeNovo("/workspace/integracoes", "sessao_expirada");
       } else {
         setErro(integrationErrorText(data.detail));
       }

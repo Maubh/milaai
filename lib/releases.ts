@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.4",
+    date: "2026-10-27",
+    title: "Sessão vencida leva ao login e volta às integrações",
+    summary: "Quando a sessão expira nas integrações, a mila leva você ao login e, depois do código, de volta às integrações.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Link das integrações volta às integrações depois do login",
+        description: "Se você abrir o link das integrações sem ter entrado, depois do código você chega direto nas integrações, e não na visão geral.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Sessão expirada nas integrações mostra como entrar de novo",
+        description: "Quando a sessão expira, as integrações, o botão de desconectar e o catálogo da Meta avisam e levam ao login, em vez de mostrar um erro ou pedir para tentar mais tarde.",
+      },
+    ],
+  },
+  {
     version: "0.6.3",
     date: "2026-10-27",
     title: "Link de conexão leva ao login e volta",

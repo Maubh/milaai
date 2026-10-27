@@ -38,7 +38,7 @@ import {
 import { integrationErrorText, isSafeAuthorizeUrl } from "../lib/integration-errors.ts";
 import { isSameOriginRequest, requestHost, sameOriginDenial } from "../lib/request-origin.ts";
 import { readJsonBounded } from "../lib/bounded-json.ts";
-import { WORKSPACE_LOGIN_REDIRECT, shouldRedirectToLogin } from "../lib/workspace-gate.ts";
+import { WORKSPACE_LOGIN_REDIRECT, shouldRedirectToLogin, workspaceLoginRedirect } from "../lib/workspace-gate.ts";
 import { shouldShowMissingPhoneNote } from "../lib/verify-ui.ts";
 
 test("cookie: apex e www emitem cookie de produção", () => {
@@ -516,6 +516,19 @@ test("gate do workspace: só o cookie autoriza, e o destino explica o motivo", (
   const texto = integrationErrorText("sessao_necessaria");
   assert.match(texto, /abrir sua área/i);
   assert.doesNotMatch(texto, /integra/i);
+});
+
+test("gate do workspace: o login volta para a tela pedida, só dentro da lista", () => {
+  // O link que a Mila mais manda: depois do código, a lojista cai nas
+  // integrações, não na visão geral.
+  assert.equal(
+    workspaceLoginRedirect("/workspace/integracoes"),
+    "/login?erro=sessao_necessaria&destino=%2Fworkspace%2Fintegracoes",
+  );
+  // Fora da lista (ou sem caminho), o login de sempre, sem destino.
+  assert.equal(workspaceLoginRedirect("/workspace"), WORKSPACE_LOGIN_REDIRECT);
+  assert.equal(workspaceLoginRedirect("//exemplo.com"), WORKSPACE_LOGIN_REDIRECT);
+  assert.equal(workspaceLoginRedirect(null), WORKSPACE_LOGIN_REDIRECT);
 });
 
 test("tela do código: só acusa 'sem número' depois de ler o storage", () => {

@@ -19,8 +19,8 @@ interface IntegrationConfig {
   /**
    * Ferramentas da suíte que a mila usa, com o ícone oficial, exibidas SOB o
    * nome da marca. Hoje só o Google usa isto (Drive e Planilhas) — no fluxo
-   * OAuth (`isApiKeyGuided: false`). O Notion, que usa chave colada, tem o
-   * `desc` + o passo a passo no lugar.
+   * OAuth (`isApiKeyGuided: false`). O Notion tem tela própria
+   * (`NotionConnection`), com o `desc` no lugar.
    */
   tools?: typeof FERRAMENTAS_GOOGLE;
   /** O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo. */
@@ -99,9 +99,8 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Notion",
     title: "Conectar Notion",
     desc: NOTION_DESC,
-    // Enquanto a integração usa token de conexão no vault, ela segue o mesmo
-    // fluxo protegido de chave colada do Jueri (não inicia OAuth inválido).
-    isApiKeyGuided: true,
+    // Botão "Conectar com Notion" (OAuth), como o Google: funciona no celular.
+    isApiKeyGuided: false,
   },
   meta: {
     nome: "Meta",
@@ -140,7 +139,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
     return true;
   }
 
-  /** Conectores sem OAuth (Jueri, Notion): a lojista cola a chave. */
+  /** Conector sem OAuth (Jueri): a lojista cola a chave. */
   async function handleGuidedKey(e: React.FormEvent) {
     e.preventDefault();
     setErro("");
@@ -216,7 +215,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   }
 
   if (key === "notion") {
-    return <NotionConnection token={apiKey} onTokenChange={setApiKey} onSubmit={handleGuidedKey} connecting={connecting} connected={connected} error={erro} />;
+    return <NotionConnection onSubmit={handleOAuth} connecting={connecting} error={erro} />;
   }
 
   return (
@@ -342,7 +341,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
               </div>
             </form>
           ) : (
-            /* Conectores OAuth padrão (Olist, Nuvemshop, Google, Meta) */
+            /* Conectores OAuth padrão (Olist, Nuvemshop, Google, Meta); o Notion tem tela própria */
             <form onSubmit={handleOAuth} aria-busy={connecting}>
               <h2>Autorização segura</h2>
               <p className="notion-connect-panel-intro">Você entra na conta do {info.nome} e autoriza por lá.</p>

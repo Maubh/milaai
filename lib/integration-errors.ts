@@ -64,6 +64,7 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   upstream_unreachable: "Não conseguimos falar com a mila agora. Tente de novo em instantes.",
   missing_auth_secret: "A conexão da mila não está configurada neste ambiente.",
   // Autorização do provedor
+  resposta_notion_invalida: "O Notion não concluiu a autorização. Se você já tinha conectado, a conexão anterior não foi alterada. Tente de novo.",
   access_denied: "Você cancelou a autorização. Nada foi conectado.",
   token_exchange_failed: "O provedor recusou a autorização. Tente conectar de novo.",
   token_exchange_error: "Não conseguimos concluir a autorização. Tente de novo.",

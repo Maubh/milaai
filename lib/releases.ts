@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.17",
+    date: "2026-10-27",
+    title: "Tabela na mesma página do PDF",
+    summary: "A mila consegue criar uma tabela na página que acabou de criar para seu PDF no Notion.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Tabela na mesma página do PDF",
+        description: "Depois de salvar um PDF no Notion, você pode pedir uma tabela na mesma página. A mila usa a página criada para o PDF como destino. Quando há dúvida sobre o local, ela pede o link da página antes de criar.",
+      },
+    ],
+  },
+  {
     version: "0.6.16",
     date: "2026-10-27",
     title: "Notion conectado com um toque",

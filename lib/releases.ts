@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.10",
+    date: "2026-10-27",
+    title: "Um bom dia é só um bom dia",
+    summary: "Quando você só cumprimenta a mila, ela responde e pergunta como pode ajudar, sem começar sozinha uma tarefa que você não pediu.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Cumprimento não dispara tarefa",
+        description: "Se você manda só \"bom dia\" ou \"boa tarde\", a mila responde o cumprimento e pergunta como pode ajudar. Se ela tinha te oferecido algo antes, ela pergunta se você quer seguir, em vez de já fazer.",
+      },
+    ],
+  },
+  {
     version: "0.6.9",
     date: "2026-10-27",
     title: "A mila responde mais rápido",

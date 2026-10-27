@@ -27,7 +27,7 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // O Google deixa desmarcar cada permissão; sem a do Drive a mila não cria a
   // planilha. O Eve não grava a conexão e volta para cá com este código.
   permissao_drive_faltando:
-    "Faltou a permissão do Drive. Conecte o Google de novo e, na tela do Google, deixe marcada a caixa que permite à mila criar arquivos no Drive. Nada foi conectado.",
+    "Faltou a permissão do Drive. Conecte o Google de novo e, na tela do Google, marque a caixa ao lado do ícone do Drive antes de tocar em Continuar. Nada foi conectado.",
   // State do OAuth
   estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",
   bad_state: "A autorização não pôde ser validada. Tente conectar de novo.",

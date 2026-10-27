@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.9",
+    date: "2026-10-27",
+    title: "A mila responde mais rápido",
+    summary: "Em conversas longas, a mila deixou de perder segundos conferindo o histórico antes de cada resposta.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Respostas mais rápidas no WhatsApp",
+        description: "A mila responde mais rápido, principalmente em conversas longas, que antes podiam levar quase um minuto para receber resposta.",
+      },
+    ],
+  },
+  {
     version: "0.6.8",
     date: "2026-10-27",
     title: "Carrossel, Reels e calendário de posts de volta no Pro",

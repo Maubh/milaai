@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.8",
+    date: "2026-10-27",
+    title: "Carrossel, Reels e calendário de posts de volta no Pro",
+    summary: "No Plano Pro, a mila volta a montar carrossel slide a slide, roteiro de Reels, planejamento da semana e calendário de posts para o seu Instagram.",
+    changes: [
+      {
+        type: "fix",
+        plan: "pro",
+        title: "Pedidos de Instagram do Pro atendidos",
+        description: "Quando você pede um carrossel slide a slide, um roteiro de Reels, o planejamento da semana ou o calendário de posts, a mila monta o conteúdo. Antes, mesmo no Plano Pro, ela podia responder que esse recurso era do Pro em vez de entregar.",
+      },
+    ],
+  },
+  {
     version: "0.6.7",
     date: "2026-10-27",
     title: "Resposta curta quando você se despede",

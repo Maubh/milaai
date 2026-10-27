@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.15",
+    date: "2026-10-27",
+    title: "A mila continua de onde vocês pararam",
+    summary: "Quando você volta depois de algumas horas, a mila responde mais rápido e continua o assunto que ficou em aberto.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Conversa retomada, resposta mais rápida",
+        description: "Depois de algumas horas sem mensagem, a mila começa uma conversa mais leve, que responde mais rápido, e leva junto o fim da conversa anterior. Se ela tinha perguntado algo, como o peso de uma peça, é só responder: ela continua o cálculo de onde parou.",
+      },
+    ],
+  },
+  {
     version: "0.6.14",
     date: "2026-10-27",
     title: "Passo a passo do Notion corrigido",

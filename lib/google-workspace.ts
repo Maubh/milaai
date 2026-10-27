@@ -93,3 +93,16 @@ export const GOOGLE_ESCOPO_NOTA =
   "nem lista seus outros arquivos do Drive, não recebe nem lê seu e-mail e não " +
   "acessa sua agenda ou seu calendário. Da conta Google ela recebe um " +
   "identificador que registra a conexão — a tela não mostra o endereço da conta.";
+
+/**
+ * Passo que a lojista precisa fazer na tela do Google, mostrado acima do botão.
+ *
+ * A tela de consentimento do Google lista o Drive com uma caixa que vem
+ * DESMARCADA. Quem toca em Continuar sem marcar conecta sem o `drive.file`, e a
+ * mila não cria a planilha (o Eve recusa essa conexão com
+ * `permissao_drive_faltando`). A caixa é descrita pelo ícone, não pelo texto
+ * do Google: a tela segue o idioma da conta e pode vir em inglês.
+ */
+export const GOOGLE_PASSO_CAIXA =
+  "na tela do Google, marque a caixa ao lado do ícone do Drive antes de tocar " +
+  "em Continuar. Ela vem desmarcada, e sem ela a mila não consegue criar a planilha.";

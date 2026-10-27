@@ -640,3 +640,13 @@ test("marquee: só o Google tem sub-ícones; o Notion fica como estava", () => {
   // E o Notion continua na faixa (não pode ser removido).
   assert.match(src, /id: "notion"/);
 });
+
+test("google: a tela de conexão avisa para marcar a caixa do Drive", () => {
+  // A caixa do Drive vem desmarcada na tela do Google; sem ela a conexão não
+  // serve para a planilha. O aviso descreve a caixa pelo ícone (a tela do
+  // Google pode vir em inglês) e aparece na tela de conexão do Google.
+  assert.match(GW.GOOGLE_PASSO_CAIXA, /marque a caixa ao lado do ícone do Drive/);
+  assert.match(GW.GOOGLE_PASSO_CAIXA, /vem desmarcada/);
+  const tela = readFileSync(new URL("../app/integrations/[app]/page.tsx", import.meta.url), "utf8");
+  assert.match(tela, /passoNoProvedor: GOOGLE_PASSO_CAIXA/);
+});

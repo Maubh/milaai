@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { use, useEffect, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
-import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
+import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_PASSO_CAIXA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
 import { entrarDeNovo } from "@/lib/pos-login";
@@ -25,6 +25,8 @@ interface IntegrationConfig {
   tools?: typeof FERRAMENTAS_GOOGLE;
   /** O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo. */
   escopoNota?: string;
+  /** O que a lojista precisa fazer na tela do provedor (Google: marcar a caixa do Drive). */
+  passoNoProvedor?: string;
   /** Rótulo personalizado do botão de ação primária (ex.: 'Continuar com o Facebook'). */
   buttonLabel?: string;
   isApiKeyGuided?: boolean;
@@ -90,6 +92,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
     tools: FERRAMENTAS_GOOGLE,
     // O que a mila faz e o que ela NÃO faz — a lojista autoriza sabendo.
     escopoNota: GOOGLE_ESCOPO_NOTA,
+    passoNoProvedor: GOOGLE_PASSO_CAIXA,
     isApiKeyGuided: false,
   },
   notion: {
@@ -366,6 +369,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
                   </>
                 )}
               </p>
+
+              {info.passoNoProvedor ? (
+                <p className="connect-where">
+                  <strong>Antes de continuar:</strong> {info.passoNoProvedor}
+                </p>
+              ) : null}
 
               {erro ? (
                 <p className="connect-error" role="alert">

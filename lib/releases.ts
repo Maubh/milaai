@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.6",
+    date: "2026-10-27",
+    title: "Tela do Google mostra a caixa que precisa marcar",
+    summary: "Antes de conectar o Google, a tela avisa para marcar a caixa do Drive, que vem desmarcada na tela do Google.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Aviso para marcar a caixa do Drive",
+        description: "Na tela de conexão do Google, a mila avisa para marcar a caixa ao lado do ícone do Drive antes de tocar em Continuar. Sem ela, a mila não consegue criar a sua planilha.",
+      },
+    ],
+  },
+  {
     version: "0.6.5",
     date: "2026-10-27",
     title: "A mila responde o seu bom dia",

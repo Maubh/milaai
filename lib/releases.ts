@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.5",
+    date: "2026-10-27",
+    title: "A mila responde o seu bom dia",
+    summary: "Quando você chega com bom dia, boa tarde ou boa noite, a mila responde com a mesma saudação antes de seguir com o seu pedido.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Bom dia, boa tarde e boa noite de volta",
+        description: "Se você cumprimenta a mila com bom dia, boa tarde ou boa noite no WhatsApp, ela responde com a mesma saudação e já segue com o que você pediu.",
+      },
+    ],
+  },
+  {
     version: "0.6.4",
     date: "2026-10-27",
     title: "Sessão vencida leva ao login e volta às integrações",

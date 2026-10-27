@@ -17,11 +17,17 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   // login volta para a tela do conector.
   sessao_integracao:
     "Entre com seu telefone para conectar a integração. Depois do código, você volta para a tela de conexão.",
-  sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
+  // Retorno do OAuth sem sessão e sessão vencida dentro das integrações; o
+  // login devolve a lojista às integrações.
+  sessao_expirada: "Sua sessão expirou. Entre de novo e você volta às integrações.",
   // Mesma causa, outra porta: aqui a lojista bateu no workspace (link direto,
   // sessão que nunca existiu), não no meio de uma conexão de integração.
   sessao_necessaria: "Entre com seu telefone para abrir sua área.",
   loja_divergente: "A conta autorizada não é a desta loja. Nada foi conectado.",
+  // O Google deixa desmarcar cada permissão; sem a do Drive a mila não cria a
+  // planilha. O Eve não grava a conexão e volta para cá com este código.
+  permissao_drive_faltando:
+    "Faltou a permissão do Drive. Conecte o Google de novo e, na tela do Google, deixe marcada a caixa que permite à mila criar arquivos no Drive. Nada foi conectado.",
   // State do OAuth
   estado_invalido: "A autorização não pôde ser validada. Tente conectar de novo.",
   bad_state: "A autorização não pôde ser validada. Tente conectar de novo.",

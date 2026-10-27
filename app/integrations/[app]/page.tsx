@@ -6,7 +6,7 @@ import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-erro
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
-import { guardarDestinoPosLogin } from "@/lib/pos-login";
+import { entrarDeNovo } from "@/lib/pos-login";
 import NotionConnection from "@/components/NotionConnection";
 import IntegrationConnectionLayout from "@/components/IntegrationConnectionLayout";
 import "../../workspace/workspace.css";
@@ -133,8 +133,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
    */
   function semSessao(status: number, detail?: string): boolean {
     if (status !== 401 && detail !== "no_session") return false;
-    guardarDestinoPosLogin(`/integrations/${key}`);
-    window.location.assign("/login?erro=sessao_integracao");
+    entrarDeNovo(`/integrations/${key}`, "sessao_integracao");
     return true;
   }
 

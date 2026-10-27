@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/lib/countries";
 import { saveTelefone } from "@/lib/onboarding";
 import { integrationErrorText } from "@/lib/integration-errors";
+import { guardarDestinoPosLogin } from "@/lib/pos-login";
 import TurnstileWidget from "@/components/TurnstileWidget";
 import "./auth.css";
 
@@ -36,6 +37,16 @@ function LoginInner() {
   const [erro, setErro] = useState<string | null>(() =>
     erroParam ? integrationErrorText(erroParam) : null,
   );
+
+  // Para onde a lojista volta depois do código. O servidor (porta do workspace,
+  // aviso de sessão vencida) manda `?destino=`; a lista fechada de
+  // `pos-login` descarta o resto. O retorno do OAuth sem sessão
+  // (`sessao_expirada`) não traz destino e volta para as integrações.
+  const destinoParam = searchParams.get("destino");
+  useEffect(() => {
+    if (destinoParam) guardarDestinoPosLogin(destinoParam);
+    else if (erroParam === "sessao_expirada") guardarDestinoPosLogin("/workspace/integracoes");
+  }, [destinoParam, erroParam]);
 
   const pais = findCountry(iso);
   const filtrados = useMemo(() => {

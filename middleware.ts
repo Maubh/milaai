@@ -31,6 +31,16 @@ export function middleware(req: NextRequest) {
     return NextResponse.rewrite(url);
   }
 
+  // 3. A porta do workspace (layout) não recebe o caminho pedido; sem ele, o
+  // login devolveria a lojista ao início em vez de, por ex., às integrações.
+  // Sobrescreve qualquer valor vindo do cliente; o destino ainda passa pela
+  // lista fechada de `pos-login`.
+  if (pathname.startsWith("/workspace")) {
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set("x-mila-path", pathname);
+    return NextResponse.next({ request: { headers: requestHeaders } });
+  }
+
   return NextResponse.next();
 }
 

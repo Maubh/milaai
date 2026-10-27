@@ -87,6 +87,9 @@ export default async function IntegracoesPage({
 
   let providers: ProviderStatus[] = [];
   let consultou = false;
+  // Cookie presente, mas a mila não reconhece mais a sessão (venceu). A porta
+  // do workspace só confere presença, então quem avisa é esta página.
+  let sessaoVencida = false;
   // Sem plano na resposta do vault a página não presume Pro.
   let userPlan: string | null = null;
   let storeName: string | null = null;
@@ -102,6 +105,8 @@ export default async function IntegracoesPage({
       }
       const safe = sanitizeOAuthResponse(data, ["providers"]);
       providers = sanitizeProviderList(safe.providers) as unknown as ProviderStatus[];
+    } else if (status === 401) {
+      sessaoVencida = true;
     }
   }
 
@@ -194,6 +199,13 @@ export default async function IntegracoesPage({
       />
       {!token ? (
         <p className="ledger-notice" role="status">Entre com o WhatsApp para ver as conexões desta loja.</p>
+      ) : sessaoVencida ? (
+        <div className="ledger-notice" data-tone="error" role="status">
+          <span>Sua sessão expirou. Entre de novo para ver e conectar as integrações.</span>
+          <Link href="/login?erro=sessao_expirada&destino=%2Fworkspace%2Fintegracoes" className="ledger-button">
+            Entrar de novo
+          </Link>
+        </div>
       ) : !consultou ? (
         <p className="ledger-notice" data-tone="error" role="status">Não deu para ler as conexões agora. Tente de novo daqui a pouco.</p>
       ) : null}

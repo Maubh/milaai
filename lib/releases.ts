@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.18",
+    date: "2026-10-27",
+    title: "Catálogo Meta mais simples de configurar",
+    summary: "O Configurar do catálogo Meta abre só quando você pede, e Sincronizar sempre responde ao toque.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "pro",
+        title: "Catálogo Meta mais simples de configurar",
+        description: "Em Integrações, o painel Configurar do catálogo Meta não abre mais sozinho. Se ainda falta escolher a fonte dos produtos, tocar em Sincronizar abre o Configurar direto na escolha da fonte.",
+      },
+    ],
+  },
+  {
     version: "0.6.17",
     date: "2026-10-27",
     title: "Tabela na mesma página do PDF",

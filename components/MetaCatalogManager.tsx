@@ -238,8 +238,9 @@ export default function MetaCatalogManager({
     : true;
   const fonteSalva = !!meta.product_source;
   const syncBloqueado = fonteAtualObj?.providerId ? !fonteConectada : false;
-  // Configuração abre sozinha quando há algo a resolver: fonte não salva ou desconectada.
-  const [configAberta, setConfigAberta] = useState<boolean>(!fonteSalva || syncBloqueado);
+  // Configuração começa fechada; os avisos abaixo do resumo apontam para Configurar
+  // quando falta escolher a fonte ou ela está desconectada.
+  const [configAberta, setConfigAberta] = useState(false);
   const configId = useId();
   const motivoId = useId();
 
@@ -400,6 +401,12 @@ export default function MetaCatalogManager({
     : null;
   const temDetalhes = !!summary || !!meta.catalog_id;
 
+  // Sem fonte (ou com ela desconectada), Sincronizar leva à escolha da fonte em vez de ficar apagado.
+  function abrirEscolhaDaFonte() {
+    setConfigAberta(true);
+    requestAnimationFrame(() => document.getElementById("meta-product-source-select")?.focus());
+  }
+
   // Sem catálogo escolhido (ou trocando), a área mostra só a escolha do catálogo.
   if (!catalogId || trocandoCatalogo) {
     return (
@@ -439,8 +446,8 @@ export default function MetaCatalogManager({
           <button
             type="button"
             className="ledger-button ledger-button-primary meta-catalog-sync"
-            onClick={() => sincronizarAgora(false)}
-            disabled={!fonte || sincronizando || salvando || syncBloqueado}
+            onClick={() => (!fonte || syncBloqueado ? abrirEscolhaDaFonte() : sincronizarAgora(false))}
+            disabled={sincronizando || salvando}
             aria-describedby={motivoBloqueio ? motivoId : undefined}
           >
             {sincronizando ? <><span className="meta-sync-spinner" aria-hidden="true" /> Sincronizando…</> : "Sincronizar"}

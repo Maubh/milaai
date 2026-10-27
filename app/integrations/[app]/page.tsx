@@ -6,6 +6,7 @@ import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-erro
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
+import { guardarDestinoPosLogin } from "@/lib/pos-login";
 import NotionConnection from "@/components/NotionConnection";
 import IntegrationConnectionLayout from "@/components/IntegrationConnectionLayout";
 import "../../workspace/workspace.css";
@@ -125,6 +126,18 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   // Depois da montagem, como no workspace: o link verificado mora no storage.
   useEffect(() => { setWaLink(getVerifiedWaLink() ?? defaultWaLink()); }, []);
 
+  /**
+   * Sem sessão (link aberto direto do WhatsApp, num navegador onde ela nunca
+   * entrou, ou sessão vencida): em vez de um erro sem saída, leva ao login e
+   * guarda esta tela para o login devolver a lojista aqui.
+   */
+  function semSessao(status: number, detail?: string): boolean {
+    if (status !== 401 && detail !== "no_session") return false;
+    guardarDestinoPosLogin(`/integrations/${key}`);
+    window.location.assign("/login?erro=sessao_integracao");
+    return true;
+  }
+
   /** Conectores sem OAuth (Jueri, Notion): a lojista cola a chave. */
   async function handleGuidedKey(e: React.FormEvent) {
     e.preventDefault();
@@ -140,6 +153,8 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
       if (res.ok && data.ok) {
         setApiKey("");
         setConnected(true);
+      } else if (semSessao(res.status, data.detail)) {
+        return;
       } else {
         setErro(integrationErrorText(data.detail));
       }
@@ -162,6 +177,7 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
         window.location.assign(data.authorize_url);
         return;
       }
+      if (semSessao(res.status, data.detail)) return;
       setErro(
         res.ok && data.ok
           ? "Não foi possível validar o endereço de autorização. Tente novamente."

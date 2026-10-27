@@ -13,6 +13,10 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
     "Este conector ainda não foi habilitado pela mila. Nada foi conectado — avisamos quando liberar.",
   // Sessão
   no_session: "Entre com seu telefone antes de conectar uma integração.",
+  // A tela do conector manda para cá quando falta sessão; depois do código, o
+  // login volta para a tela do conector.
+  sessao_integracao:
+    "Entre com seu telefone para conectar a integração. Depois do código, você volta para a tela de conexão.",
   sessao_expirada: "Sua sessão expirou. Entre novamente para conectar a integração.",
   // Mesma causa, outra porta: aqui a lojista bateu no workspace (link direto,
   // sessão que nunca existiu), não no meio de uma conexão de integração.

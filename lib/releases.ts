@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.7",
+    date: "2026-10-27",
+    title: "Resposta curta quando você se despede",
+    summary: "Quando você só agradece ou avisa que vai fazer algo, a mila responde curto, sem aviso de espera e sem puxar outro assunto.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Resposta curta ao seu obrigada",
+        description: "Se você agradece, se despede ou diz que vai fazer e depois avisa, a mila responde em uma linha e não manda mais o \"Só um minutinho que já te trago o retorno\".",
+      },
+    ],
+  },
+  {
     version: "0.6.6",
     date: "2026-10-27",
     title: "Tela do Google mostra a caixa que precisa marcar",

@@ -40,7 +40,7 @@ export const FERRAMENTAS_GOOGLE: readonly FerramentaGoogle[] = [
     slug: "drive",
     nome: "Drive",
     icone: "/integrations/google-drive.png",
-    uso: "é onde fica a planilha do caderno",
+    uso: "é onde ficam a planilha do caderno e os PDFs que você pedir",
   },
   {
     slug: "sheets",
@@ -66,9 +66,15 @@ export const GOOGLE_TITULO = "Conectar Drive e Planilhas";
  *   - sem destino escolhido, o caderno fica salvo e consultável no WhatsApp.
  */
 export const GOOGLE_DESC =
-  "Drive e Planilhas — se você escolher o Google, a mila cria a planilha do " +
-  "caderno de fornecedores no seu Drive e mexe só nela. Sem escolher destino, " +
-  "o caderno fica salvo e consultável no WhatsApp.";
+  "Drive e Planilhas — se você escolher o Google, a mila cria no seu Drive a " +
+  "planilha do caderno de fornecedores e os PDFs que você pedir, e mexe só " +
+  "nesses arquivos. Sem escolher destino, o caderno fica salvo e consultável no WhatsApp.";
+
+/** PDF gerado pela mila (`gerar_pdf` no Eve): desenhado no código dela e salvo
+ *  só no Drive da lojista, com o mesmo escopo `drive.file` da planilha. Vale
+ *  para os dois planos (`docs/especificacao_planos.md` do Eve). */
+export const PLANO_PDF =
+  "PDF da lista de produtos, da tabela de preços ou de um relatório, salvo no seu Google Drive";
 
 /** Linha única do caderno de fornecedores no plano: onde ele fica (WhatsApp) e
  *  para onde pode ser espelhado (Google ou Notion). Antes eram duas linhas, uma
@@ -89,7 +95,8 @@ export const PLANO_GOOGLE =
  * (openid) — então a negação é limpa e não precisa de ressalva.
  */
 export const GOOGLE_ESCOPO_NOTA =
-  "A mila cria e mantém a planilha do seu caderno de fornecedores. Ela não abre " +
+  "A mila cria e mantém a planilha do seu caderno de fornecedores e salva os PDFs " +
+  "que você pedir. Ela não abre " +
   "nem lista seus outros arquivos do Drive, não recebe nem lê seu e-mail e não " +
   "acessa sua agenda ou seu calendário. Da conta Google ela recebe um " +
   "identificador que registra a conexão — a tela não mostra o endereço da conta.";
@@ -105,4 +112,4 @@ export const GOOGLE_ESCOPO_NOTA =
  */
 export const GOOGLE_PASSO_CAIXA =
   "na tela do Google, marque a caixa ao lado do ícone do Drive antes de tocar " +
-  "em Continuar. Ela vem desmarcada, e sem ela a mila não consegue criar a planilha.";
+  "em Continuar. Ela vem desmarcada, e sem ela a mila não consegue criar a planilha nem salvar o PDF.";

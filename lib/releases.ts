@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.12",
+    date: "2026-10-27",
+    title: "PDF salvo no seu Google Drive",
+    summary: "Peça um PDF no WhatsApp e a mila monta e salva no seu Google Drive, com o link para abrir e compartilhar.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "A mila faz PDF",
+        description: "Peça a lista dos seus produtos com SKU, a tabela de preços ou um relatório em PDF. A mila monta o arquivo, salva no seu Google Drive e manda o link. O PDF é só seu: abre para você e para quem você compartilhar. Se o Google ainda não estiver conectado, ela manda o link para conectar.",
+      },
+    ],
+  },
+  {
     version: "0.6.11",
     date: "2026-10-27",
     title: "Seus arquivos ficam só com você",

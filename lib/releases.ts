@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.3",
+    date: "2026-10-27",
+    title: "Link de conexão leva ao login e volta",
+    summary: "Quem abre o link de um conector sem ter entrado no site vai para o login e, depois do código, volta para a tela de conexão.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Conectar o Google pelo link do WhatsApp",
+        description: "Se você ainda não entrou no site, o botão de conectar leva ao login e, depois do código, volta para a tela de conexão, em vez de mostrar um erro.",
+      },
+    ],
+  },
+  {
     version: "0.6.2",
     date: "2026-10-24",
     internal: true,

@@ -25,3 +25,11 @@ test("pós-login: destino fora da lista vira o início do workspace", () => {
   s.setItem("mila_pos_login", "//exemplo.com");
   assert.equal(consumirDestinoPosLogin(s), "/workspace", "valor plantado no storage não redireciona");
 });
+
+test("pós-login: o link de um conector volta para a tela do conector", () => {
+  const s = storageFalso();
+  guardarDestinoPosLogin("/integrations/google", s);
+  assert.equal(consumirDestinoPosLogin(s), "/integrations/google");
+  guardarDestinoPosLogin("/integrations/qualquer", s);
+  assert.equal(consumirDestinoPosLogin(s), "/workspace", "conector fora da lista não vira destino");
+});

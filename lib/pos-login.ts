@@ -2,12 +2,16 @@
  * Destino depois do login. O link de assinatura que a Mila manda no WhatsApp
  * (`/assinar`) leva à tela de plano; sem sessão, o workspace manda para o login,
  * e o login devolve a lojista para onde ela queria ir, não para o início.
+ * O mesmo vale para o link de um conector (`/integrations/google`, que a Mila
+ * manda quando a planilha precisa do Google): sem sessão, o botão de conectar
+ * leva ao login, e o login volta para a tela do conector.
  *
  * Só destinos desta lista são aceitos: um valor arbitrário no storage viraria
  * redirecionamento aberto.
  */
 const CHAVE = "mila_pos_login";
-const DESTINOS = new Set(["/workspace/plano"]);
+const CONECTORES = ["google", "nuvemshop", "olist", "meta", "jueri", "notion"];
+const DESTINOS = new Set(["/workspace/plano", ...CONECTORES.map((c) => `/integrations/${c}`)]);
 const PADRAO = "/workspace";
 
 type Armazenamento = Pick<Storage, "getItem" | "setItem" | "removeItem">;

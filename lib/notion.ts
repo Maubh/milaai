@@ -29,4 +29,5 @@
 export const NOTION_DESC =
   "Bases de dados — a mila grava o caderno de fornecedores e as notas de compra " +
   "na base do Notion que você indicar (ela não cria a base). O caderno, se você " +
-  "quiser, pode ir em vez disso para uma planilha no Google Drive.";
+  "quiser, pode ir em vez disso para uma planilha no Google Drive. Os PDFs que " +
+  "você pedir também podem ficar no seu Notion, onde você escolher.";

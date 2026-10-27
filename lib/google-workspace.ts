@@ -71,10 +71,10 @@ export const GOOGLE_DESC =
   "nesses arquivos. Sem escolher destino, o caderno fica salvo e consultável no WhatsApp.";
 
 /** PDF gerado pela mila (`gerar_pdf` no Eve): desenhado no código dela e salvo
- *  só no Drive da lojista, com o mesmo escopo `drive.file` da planilha. Vale
- *  para os dois planos (`docs/especificacao_planos.md` do Eve). */
+ *  só no Drive da lojista (mesmo escopo `drive.file` da planilha) ou no Notion
+ *  dela. Vale para os dois planos (`docs/especificacao_planos.md` do Eve). */
 export const PLANO_PDF =
-  "PDF da lista de produtos, da tabela de preços ou de um relatório, salvo no seu Google Drive";
+  "PDF da lista de produtos, da tabela de preços ou de um relatório, salvo no seu Google Drive ou no seu Notion";
 
 /** Linha única do caderno de fornecedores no plano: onde ele fica (WhatsApp) e
  *  para onde pode ser espelhado (Google ou Notion). Antes eram duas linhas, uma

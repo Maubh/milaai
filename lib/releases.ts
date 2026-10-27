@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.13",
+    date: "2026-10-27",
+    title: "PDF também no Notion",
+    summary: "O PDF que você pede à mila agora também pode ficar no seu Notion, além do Google Drive.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Escolha onde salvar o PDF",
+        description: "Se você usa o Notion, a mila salva o PDF numa página nova dentro da página que você escolher. Com o Google e o Notion conectados, ela pergunta onde você prefere. O PDF continua só seu.",
+      },
+    ],
+  },
+  {
     version: "0.6.12",
     date: "2026-10-27",
     title: "PDF salvo no seu Google Drive",

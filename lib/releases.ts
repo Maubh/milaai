@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.23",
+    date: "2026-10-28",
+    title: "A mila lê o seu Notion",
+    summary: "Agora a mila abre as páginas, as bases e os cards do seu Notion para usar o que você já planejou lá.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "A mila lê páginas, bases e cards do Notion",
+        description: "Peça para a mila abrir algo do seu Notion, como \"entra no Creator Lab Planner, no menu Carrossel, e lê o card O que ninguém te conta\". Ela lê o texto da página e os campos do card e usa isso na conversa. Ela só lê: nada do que você já tem no Notion é alterado, e ela vê só as páginas que você liberou ao conectar.",
+      },
+    ],
+  },
+  {
     version: "0.6.22",
     date: "2026-10-28",
     title: "A mila volta a responder depois de uma falha",

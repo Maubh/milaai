@@ -103,6 +103,8 @@ export const AUTHORIZE_HOSTS = [
   "facebook.com",
   "trello.com",
   "www.trello.com",
+  "auth.atlassian.com",
+  "www.trello.com",
 ];
 
 /** Só deixamos o browser sair para um host de provedor conhecido, via https. */

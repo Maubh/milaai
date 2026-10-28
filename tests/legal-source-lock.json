@@ -154,7 +154,7 @@
   "site/lib/fatura-aberta.ts": "59683920ae9e85f3c9b6de501d2c978cd4bd33dab0375be81c36f4ef9d54e0d5",
   "site/lib/google-workspace.ts": "3bb3d230bbf3279bcbe2a76466cf2fa0ed17e274a9cca9b79dc7f73c3bb70cc1",
   "site/lib/integration-catalog.ts": "4859ad1922aafd224a2f95e4b9f025412b35b447458073899d8c87418aabb4f5",
-  "site/lib/integration-errors.ts": "9d596419e765f9965871cbfad8d8e99fedac75ba71b17761b24a1d9db22cf00f",
+  "site/lib/integration-errors.ts": "0601f700e040a8c90787227f9218c540fff71f04022611e3b2b518e94fb2b429",
   "site/lib/legal.ts": "46f914871731ce11befd89c08c49c5683bd640684a5800604c1cd30135b3bb4b",
   "site/lib/meta-catalog.ts": "581d9ce3472de1f857aec3418179b345e3acc0ade81b5eb9283b4efdc8dfcd80",
   "site/lib/notion.ts": "35be4e632ee4964311dd85c312f7be8eb887143e6c5504cb3f460ecdf26fc3e0",

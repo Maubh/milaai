@@ -68,6 +68,10 @@ export const INTEGRATION_ERRORS: Record<string, string> = {
   access_denied: "Você cancelou a autorização. Nada foi conectado.",
   token_exchange_failed: "O provedor recusou a autorização. Tente conectar de novo.",
   token_exchange_error: "Não conseguimos concluir a autorização. Tente de novo.",
+  trello_unreachable: "Não conseguimos falar com o Trello agora. Tente de novo em instantes.",
+  trello_token_exchange_failed: "O Trello recusou a autorização. Tente conectar de novo.",
+  trello_invalid_response: "O Trello respondeu de um jeito inesperado. Tente conectar de novo.",
+  oauth1_provider: "O Trello usa um fluxo de autorização próprio. Volte a esta tela e tente conectar de novo.",
   unauthorized: "Não foi possível validar a sessão com a mila. Entre novamente.",
   plan_pro_required: "Este conector é exclusivo do Plano Pro. Acesse o menu Plano para fazer upgrade.",
   // Catálogo da Meta
@@ -97,6 +101,8 @@ export const AUTHORIZE_HOSTS = [
   "nuvemshop.com.br",
   "www.facebook.com",
   "facebook.com",
+  "trello.com",
+  "www.trello.com",
 ];
 
 /** Só deixamos o browser sair para um host de provedor conhecido, via https. */

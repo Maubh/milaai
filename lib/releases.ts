@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.21",
+    date: "2026-10-28",
+    title: "A mila responde normalmente com o Trello",
+    summary: "Corrigimos uma falha que podia deixar a mila sem responder depois da chegada do Trello.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "A mila continua respondendo com o Trello disponível",
+        description: "Corrigimos uma falha que podia fazer a mila parar de responder às mensagens depois da chegada do Trello. Agora ela atende normalmente, com ou sem o Trello conectado.",
+      },
+    ],
+  },
+  {
     version: "0.6.20",
     internal: true,
     date: "2026-10-28",

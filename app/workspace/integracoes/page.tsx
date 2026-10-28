@@ -8,6 +8,7 @@ import MetaCatalogManager, { type LastSyncSummary } from "@/components/MetaCatal
 import { INTEGRACOES } from "@/lib/demo-data";
 import { rowStatus } from "@/lib/integration-catalog";
 import { integrationErrorText } from "@/lib/integration-errors";
+import { TRELLO_LOGO } from "@/lib/trello";
 import { SESSION_COOKIE } from "@/lib/server/mila-auth";
 import { proxyOAuth, sanitizeOAuthResponse, sanitizeProviderList } from "@/lib/server/mila-oauth";
 import "./integracoes.css";
@@ -46,7 +47,7 @@ const PRESENTATION: Record<string, { detail: string; description: string; logo?:
   meta: { detail: "Catálogo do Facebook e Instagram", description: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos na Meta." },
   google: { detail: "Drive e Planilhas", description: "Sua lista de fornecedores em uma planilha criada e mantida pela mila no seu Drive." },
   notion: { detail: "Bases de dados", description: "Sua lista de fornecedores e suas notas de compra na base que você indicar. A mila não cria a base." },
-  trello: { detail: "Quadros e cards", description: "Organize a rotina e as atividades da sua loja em cards pelo WhatsApp." },
+  trello: { detail: "Quadros e cards", description: "Organize a rotina e as atividades da sua loja em cards pelo WhatsApp.", logo: TRELLO_LOGO },
 };
 
 function ToolMark({ provider }: { provider: string }) {

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { PLANO_GOOGLE, PLANO_PDF } from "@/lib/google-workspace";
 import { CONECTORES_NAO_PRONTOs } from "@/lib/legal";
+import { PLANO_TRELLO } from "@/lib/trello";
 
 /** Linha do plano que fala de ERP. Fonte única: `lib/legal.ts` diz QUAIS
  *  conectores não estão prontos. Agora que Olist e Jueri estão disponíveis,
@@ -57,6 +58,7 @@ const PLANS: PlanItem[] = [
       // e Agenda sobreviveu aqui depois de já ter saído do resto do site.
       PLANO_GOOGLE,
       PLANO_PDF,
+      PLANO_TRELLO,
     ],
     ctaLabel: "Conhecer o Essencial",
     ctaHref: "/login",
@@ -72,6 +74,7 @@ const PLANS: PlanItem[] = [
     description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
+      PLANO_TRELLO,
       PLANO_NUVEMSHOP_PRO,
       PLANO_VITRINE_PRO,
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",

@@ -5,6 +5,7 @@ import { use, useEffect, useState } from "react";
 import { integrationErrorText, isSafeAuthorizeUrl } from "@/lib/integration-errors";
 import { FERRAMENTAS_GOOGLE, GOOGLE_DESC, GOOGLE_ESCOPO_NOTA, GOOGLE_PASSO_CAIXA, GOOGLE_TITULO } from "@/lib/google-workspace";
 import { NOTION_DESC } from "@/lib/notion";
+import { TRELLO_LOGO } from "@/lib/trello";
 import { defaultWaLink, getVerifiedWaLink } from "@/lib/onboarding";
 import { entrarDeNovo } from "@/lib/pos-login";
 import NotionConnection from "@/components/NotionConnection";
@@ -115,6 +116,7 @@ const KNOWN: Record<string, IntegrationConfig> = {
     nome: "Trello",
     title: "Conectar Trello",
     desc: "Organize a rotina e as atividades da sua loja em quadros e cards pelo WhatsApp.",
+    logo: TRELLO_LOGO,
     escopoNota: "A mila consulta seus quadros e, quando você pedir, cria ou atualiza cards no Trello conectado para acompanhar a rotina da loja. Ela acessa apenas a conta que você autorizar.",
     isApiKeyGuided: false,
   },

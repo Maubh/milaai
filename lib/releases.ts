@@ -27,6 +27,7 @@ export type Release = {
 export const RELEASES: readonly Release[] = [
   {
     version: "0.6.20",
+    internal: true,
     date: "2026-10-28",
     title: "Trello mais fácil de identificar",
     summary: "Os planos e as conexões mostram o Trello com mais clareza.",

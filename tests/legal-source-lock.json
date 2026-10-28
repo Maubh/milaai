@@ -164,7 +164,7 @@
   "site/lib/pos-login.ts": "9c6b3a442597a8c8872bb4b2f1c8a8e0b332a76b2512a698de39c35432a14903",
   "site/lib/pricing.ts": "fdafa3255771efddf706bfbe2b45837df3ad3df93f9daf2d16ae739592418e78",
   "site/lib/provider-status.ts": "d2a060859bd73bd399c131c5f7ae2156da65ce6aa7c7884dffac263b1c5833f4",
-  "site/lib/releases.ts": "a1610df43fa0d65c34dc5b9b3304a323d098b2818ef5cae7824936e989840bbf",
+  "site/lib/releases.ts": "734761d174ac41ae1b1682634684950ed401b922602583cad55422fc5e55e22f",
   "site/lib/request-origin.ts": "81d1c56f99aef9e123f43e7d74dfec0a9a7601b870a5af1f93e9b5118e9bbcf9",
   "site/lib/server/mila-auth.ts": "b71b131c162dafe724942bc6891580eb8b1c3ce1da7158dc70178b8bcf23e3ee",
   "site/lib/server/mila-oauth.ts": "2a2aab32f1648414b988c56c9e353ee1dad6caf67783ec4b45699d636442e256",

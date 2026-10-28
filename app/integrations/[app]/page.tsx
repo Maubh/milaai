@@ -111,6 +111,13 @@ const KNOWN: Record<string, IntegrationConfig> = {
       "A mila sincroniza seus produtos e fotos diretamente no catálogo de produtos da Meta (Facebook e Instagram). Ela acessa apenas os catálogos do seu negócio, em seu nome.",
     isApiKeyGuided: false,
   },
+  trello: {
+    nome: "Trello",
+    title: "Conectar Trello",
+    desc: "Organize a rotina e as atividades da sua loja em quadros e cards pelo WhatsApp.",
+    escopoNota: "A mila consulta seus quadros e, quando você pedir, cria ou atualiza cards no Trello conectado para acompanhar a rotina da loja. Ela acessa apenas a conta que você autorizar.",
+    isApiKeyGuided: false,
+  },
 };
 
 export default function IntegrationTransition({ params }: { params: Promise<{ app: string }> }) {

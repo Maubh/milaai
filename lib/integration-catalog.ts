@@ -16,6 +16,7 @@ export interface ProviderLive {
 export const GROUPS = [
   { id: "vendas", title: "Estoque e vendas", description: "As peças da sua loja, do estoque à vitrine.", providers: ["jueri", "olist", "nuvemshop", "meta"] },
   { id: "fornecedores", title: "Fornecedores e compras", description: "Escolha onde organizar seus fornecedores e compras.", providers: ["google", "notion"] },
+  { id: "organizacao", title: "Organização da loja", description: "Gestão da rotina e pendências em um quadro simples.", providers: ["trello"] },
 ] as const satisfies ReadonlyArray<{ id: string; title: string; description: string; providers: readonly string[] }>;
 
 const ORDER: readonly string[] = GROUPS.flatMap((g) => [...g.providers]);

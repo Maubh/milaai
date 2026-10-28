@@ -59,4 +59,10 @@ export const INTEGRACOES: Integracao[] = [
     status: "disponível",
     desc: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos no Facebook e Instagram.",
   },
+  {
+    id: "trello",
+    nome: "Trello",
+    status: "disponível",
+    desc: "Organize a rotina e as atividades da sua loja em quadros e cards pelo WhatsApp.",
+  },
 ];

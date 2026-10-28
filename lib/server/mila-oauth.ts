@@ -11,7 +11,7 @@ export async function currentSessionToken(): Promise<string | null> {
 export const GUIDED_PROVIDERS = ["jueri"] as const;
 
 /** Conectores OAuth de app. Whitelist única: nada de slug livre no path. */
-export const OAUTH_PROVIDERS = ["olist", "nuvemshop", "bling", "google", "notion", "meta"] as const;
+export const OAUTH_PROVIDERS = ["olist", "nuvemshop", "bling", "google", "notion", "meta", "trello"] as const;
 
 export const ALL_PROVIDERS = [...OAUTH_PROVIDERS, ...GUIDED_PROVIDERS] as const;
 
@@ -52,6 +52,7 @@ export async function proxyOAuth(
             { id: "nuvemshop", name: "Nuvemshop", mode: "oauth", connected: true, app_configured: true },
             { id: "google", name: "Google Workspace", mode: "oauth", connected: false, app_configured: true },
             { id: "notion", name: "Notion", mode: "oauth", connected: false, app_configured: true },
+            { id: "trello", name: "Trello", mode: "oauth", connected: false, app_configured: true },
             {
               id: "meta",
               name: "Meta",

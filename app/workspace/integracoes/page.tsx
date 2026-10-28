@@ -36,6 +36,7 @@ interface ProviderStatus {
 const GROUPS = [
   { id: "vendas", title: "Estoque e vendas", description: "As peças da sua loja, do estoque à vitrine.", providers: ["jueri", "olist", "nuvemshop", "meta"] },
   { id: "fornecedores", title: "Fornecedores e compras", description: "Escolha onde organizar seus fornecedores e compras.", providers: ["google", "notion"] },
+  { id: "organizacao", title: "Organização da loja", description: "Gestão da rotina e pendências em um quadro simples.", providers: ["trello"] },
 ];
 
 const PRESENTATION: Record<string, { detail: string; description: string; logo?: string }> = {
@@ -45,6 +46,7 @@ const PRESENTATION: Record<string, { detail: string; description: string; logo?:
   meta: { detail: "Catálogo do Facebook e Instagram", description: "Sincronize as peças e fotos da loja diretamente com o seu catálogo de produtos na Meta." },
   google: { detail: "Drive e Planilhas", description: "Sua lista de fornecedores em uma planilha criada e mantida pela mila no seu Drive." },
   notion: { detail: "Bases de dados", description: "Sua lista de fornecedores e suas notas de compra na base que você indicar. A mila não cria a base." },
+  trello: { detail: "Quadros e cards", description: "Organize a rotina e as atividades da sua loja em cards pelo WhatsApp." },
 };
 
 function ToolMark({ provider }: { provider: string }) {

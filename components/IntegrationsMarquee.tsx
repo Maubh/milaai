@@ -73,6 +73,17 @@ const INTEGRATIONS: IntegrationItem[] = [
     ),
   },
 
+  {
+    id: "trello",
+    name: "Trello",
+    icon: (
+      /* Ícone oficial do Trello (Simple Icons), no azul da marca. */
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="#0052CC" aria-hidden="true">
+        <path d="M21.5 0h-19A2.5 2.5 0 0 0 0 2.5v19A2.5 2.5 0 0 0 2.5 24h19a2.5 2.5 0 0 0 2.5-2.5v-19A2.5 2.5 0 0 0 21.5 0zM10.7 18.6c0 .5-.4.9-.9.9H4.6c-.5 0-.9-.4-.9-.9V5.4c0-.5.4-.9.9-.9h5.2c.5 0 .9.4.9.9v13.2zm9.6-5.1c0 .5-.4.9-.9.9h-5.2c-.5 0-.9-.4-.9-.9V5.4c0-.5.4-.9.9-.9h5.2c.5 0 .9.4.9.9v8.1z" />
+      </svg>
+    ),
+  },
+
 ];
 
 const PURPOSES: Record<string, string> = {
@@ -81,6 +92,7 @@ const PURPOSES: Record<string, string> = {
   nuvemshop: "Sua loja virtual",
   "google-workspace": "Lista de fornecedores",
   notion: "Fornecedores e notas de compra",
+  trello: "Quadros e rotina da loja",
 };
 
 export default function IntegrationsMarquee() {

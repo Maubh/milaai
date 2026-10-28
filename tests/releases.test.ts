@@ -42,6 +42,16 @@ test("só versões públicas chegam à lojista; acabamento fica no histórico t�
   assert.match(read("../components/ReleaseLink.tsx"), /hasUnreadRelease\(localStorage\.getItem/);
 });
 
+test("Trello: ajustes de logo e planos ficam internos, integração continua anunciada", async () => {
+  const { PUBLIC_RELEASES } = await import("../lib/releases.ts");
+  const cosmetic = RELEASES.find((release) => release.version === "0.6.20");
+  const integration = RELEASES.find((release) => release.version === "0.6.19");
+  assert.ok(cosmetic?.internal);
+  assert.ok(!PUBLIC_RELEASES.some((release) => release.version === "0.6.20"));
+  assert.ok(integration && !integration.internal);
+  assert.ok(PUBLIC_RELEASES.includes(integration));
+});
+
 test("não lido compara versões: deploy de acabamento não acende o aviso", async () => {
   const { hasUnreadRelease, LATEST_PUBLIC } = await import("../lib/releases.ts");
   const latest = LATEST_PUBLIC!.version;

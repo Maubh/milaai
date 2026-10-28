@@ -107,7 +107,7 @@ function preparar(): void {
     'import React from "react";\n' +
       'export default function Link(p){return React.createElement("a",{href:p.href},p.children);}\n',
   );
-  for (const dep of ["lib/legal.ts", "lib/google-workspace.ts", "lib/notion.ts"]) {
+  for (const dep of ["lib/legal.ts", "lib/google-workspace.ts", "lib/notion.ts", "lib/trello.ts"]) {
     try {
       transpilar(dep);
     } catch {

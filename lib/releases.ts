@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.20",
+    date: "2026-10-28",
+    title: "Trello mais fácil de identificar",
+    summary: "Os planos e as conexões mostram o Trello com mais clareza.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Trello claro nos dois planos e nas conexões",
+        description: "A gestão de tarefas no Trello pelo WhatsApp aparece nos planos Essencial e Pro, tanto na página inicial quanto em Meu plano. A logo do Trello também aparece na lista de integrações e na tela de conexão.",
+      },
+    ],
+  },
+  {
     version: "0.6.19",
     date: "2026-10-28",
     title: "Trello para gestão de tarefas da loja",

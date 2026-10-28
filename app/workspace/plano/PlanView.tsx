@@ -4,6 +4,7 @@ import { useState } from "react";
 import { formatTrialLastDay, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
 import { TextBone } from "@/components/WorkspaceSkeleton";
 import { PLANO_PDF } from "@/lib/google-workspace";
+import { PLANO_TRELLO } from "@/lib/trello";
 import "./plano.css";
 
 export interface SessionData {
@@ -38,6 +39,7 @@ const PLANS = [
       "Leitura de notas de compra (XML e PDF)",
       "Caderno de fornecedores no WhatsApp, no Notion ou no Google Planilhas",
       PLANO_PDF,
+      PLANO_TRELLO,
       "1 vitrine web ativa por vez, com fotos reais",
     ],
   },
@@ -48,6 +50,7 @@ const PLANS = [
     price: "69",
     features: [
       "Tudo do Essencial, e ainda:",
+      PLANO_TRELLO,
       "Nuvemshop (produtos e pedidos), Jueri e Olist; planilha pronta para a Phibo",
       "Vitrines web ilimitadas",
       "Carrosséis, roteiros de Reels e planejamento semanal para o Instagram",

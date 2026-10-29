@@ -52,6 +52,23 @@ test("Trello: ajustes de logo e planos ficam internos, integração continua anu
   assert.ok(PUBLIC_RELEASES.includes(integration));
 });
 
+test("Trello: listas e renovação são públicas nos dois planos, sem anunciar acabamento", async () => {
+  const { PUBLIC_RELEASES } = await import("../lib/releases.ts");
+  const release = PUBLIC_RELEASES.find((entry) => entry.version === "0.6.24");
+  assert.ok(release, "a melhoria do Trello precisa chegar às Atualizações");
+  assert.ok(release.changes.every((change) => change.plan === "all"));
+  assert.ok(release.changes.every((change) => ["new", "improvement"].includes(change.type)));
+  const copy = [release.title, release.summary, ...release.changes.flatMap((change) => [change.title, change.description])].join(" ");
+  assert.match(copy, /Trello/);
+  assert.match(copy, /tarefas/i);
+  assert.match(copy, /criar listas \(colunas\)/i);
+  assert.match(copy, /criar ou mover cards/i);
+  assert.match(copy, /WhatsApp/);
+  assert.match(copy, /renova o acesso automaticamente/i);
+  assert.match(copy, /autorização for revogada ou o prazo de renovação acabar/i);
+  assert.doesNotMatch(copy, /nunca.{0,40}reconect|\blogos?\b|\bUI\b|marquee|acabamento|alinhamento|espaçamento/i);
+});
+
 test("não lido compara versões: deploy de acabamento não acende o aviso", async () => {
   const { hasUnreadRelease, LATEST_PUBLIC } = await import("../lib/releases.ts");
   const latest = LATEST_PUBLIC!.version;

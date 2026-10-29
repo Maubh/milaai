@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.24",
+    date: "2026-10-29",
+    title: "Listas do Trello pelo WhatsApp e conexão renovada",
+    summary: "Crie listas e organize as tarefas no Trello pelo WhatsApp. A conexão agora renova o acesso automaticamente.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Crie listas e organize os cards pelo WhatsApp",
+        description: "Peça à mila para criar listas (colunas), como \"Pós-venda\", no seu quadro do Trello e criar ou mover cards para elas. Assim você organiza as tarefas da loja direto na conversa.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Conexão do Trello com renovação automática",
+        description: "A mila renova o acesso automaticamente, sem você precisar reconectar o Trello a cada vencimento. Se a autorização for revogada ou o prazo de renovação acabar, será preciso conectar de novo.",
+      },
+    ],
+  },
+  {
     version: "0.6.23",
     date: "2026-10-28",
     title: "A mila lê o seu Notion",

@@ -52,7 +52,7 @@ export const CONTATO_PRIVACIDADE = "contato@milaai.com.br";
 
 export const INSTAGRAM = "@usemila.ai";
 
-export const ATUALIZADO_EM = "16 de outubro de 2026";
+export const ATUALIZADO_EM = "30 de outubro de 2026";
 
 /**
  * Identificação do controlador (publicada em 2026-10-16 para a revisão do app
@@ -307,7 +307,8 @@ export const SUBCONTROLADORES: Array<{
     nome: "Cloudflare",
     papel:
       "DNS, túnel, proteção do endpoint e verificação anti-robô no login " +
-      "(Turnstile).",
+      "(Turnstile). Também guarda as cópias de segurança diárias dos dados da " +
+      "mila., cifradas antes de sair do nosso servidor e apagadas em 28 dias.",
     pais: "Estados Unidos",
     tocaDadoDoGoogle: false,
   },

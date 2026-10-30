@@ -12,7 +12,7 @@ Lojistas de joias, semijoias e moda. Na área logada (`/workspace`), a lojista j
 
 ## Product Purpose
 
-A mila. é uma assistente de negócios no WhatsApp. A conversa é o produto: a lojista manda foto, nota ou pergunta e a mila responde ali. O workspace web é o apoio administrativo: abre a conversa, conecta ferramentas da loja e mostra o plano vigente.
+A mila. é uma assistente pessoal de IA para a rotina da lojista, no WhatsApp. A conversa é o produto: a lojista manda foto, nota ou pergunta e a mila responde ali, ajudando com mercadorias, peças, fornecedores, conteúdo e tarefas ligadas às ferramentas conectadas. Precificação é uma das ajudas, não a identidade do produto. O workspace web é somente o apoio administrativo: abre a conversa, mantém os dados da loja, conecta ferramentas e mostra o plano vigente.
 
 ## Positioning
 

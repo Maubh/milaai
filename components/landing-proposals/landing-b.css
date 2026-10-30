@@ -1,0 +1,176 @@
+/* Prévia B · "A rotina ganha uma assistente".
+ * Composição aberta: o mockup do iPhone à esquerda e o título curto ao lado; a
+ * rotina contada em frases pautadas; uma frase sobre a conversa com três colunas;
+ * o mapa de integrações da landing atual; grupos por plano; oferta em folha única. */
+
+/* Topo com links de texto e régua; abaixo de 960px, os links descem para uma segunda linha. */
+.lpb-bar { padding-bottom: 8px; border-bottom: 1px solid var(--lp-rule); }
+.lpb-nav { grid-column: 1 / -1; grid-row: 2; min-width: 0; margin-left: -8px; }
+.lpb-nav ul { display: flex; flex-wrap: wrap; gap: 0 2px; }
+.lpb-nav-item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 8px;
+  border-radius: 10px;
+  color: var(--lp-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 6px;
+  transition: text-decoration-color 180ms var(--lp-ease), color 180ms var(--lp-ease);
+}
+.lpb-nav-item:hover { color: var(--lp-mineral); text-decoration-color: currentColor; }
+@media (min-width: 960px) {
+  .lpb-bar { padding-bottom: 12px; }
+  .lpb-nav { grid-column: 2; grid-row: 1; justify-self: center; margin-left: 0; }
+  .lpb-nav ul { flex-wrap: nowrap; gap: 4px; }
+  .lpb-nav-item { padding: 0 12px; font-size: 0.875rem; }
+}
+
+/* Abertura: telefone à esquerda no computador; no celular, texto antes do telefone. */
+.lpb-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "texto" "telefone";
+  gap: 32px;
+  padding: clamp(28px, 5vw, 56px) 0 clamp(48px, 7vw, 88px);
+}
+.lpb-hero-texto { grid-area: texto; min-width: 0; }
+.lpb-telefone { grid-area: telefone; }
+.lpb-title {
+  max-width: 14ch;
+  font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4.25rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+.lpb-lead { max-width: 46ch; margin-top: clamp(18px, 2.4vw, 28px); color: var(--lp-muted); font-size: clamp(1rem, 0.95rem + 0.3vw, 1.1875rem); line-height: 1.6; }
+.lpb-ctas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+.lpb-acesso { margin-top: 14px; color: var(--lp-muted); font-size: 0.8125rem; font-weight: 500; }
+@media (min-width: 760px) {
+  .lpb-hero {
+    grid-template-columns: minmax(0, 19rem) minmax(0, 1fr);
+    grid-template-areas: "telefone texto";
+    column-gap: clamp(40px, 7vw, 112px);
+    align-items: center;
+  }
+}
+
+/* Rotina em frases */
+.lpb-rotina { padding: clamp(40px, 6vw, 88px) 0; }
+.lpb-rotina-titulo { max-width: 22ch; }
+.lpb-frases { margin-top: clamp(24px, 4vw, 44px); border-bottom: 1px solid var(--lp-rule-strong); }
+.lpb-frases li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: clamp(16px, 2.4vw, 24px) 0;
+  border-top: 1px solid var(--lp-rule-strong);
+}
+.lpb-frase {
+  flex: 1 1 24rem;
+  max-width: 44ch;
+  min-width: 0;
+  font-size: clamp(1.125rem, 0.95rem + 0.9vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+/* Como a conversa ajuda */
+.lpb-ajuda { padding: clamp(40px, 6vw, 88px) 0; }
+.lpb-ajuda-titulo {
+  max-width: 24ch;
+  font-size: clamp(1.625rem, 1.1rem + 2.2vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+.lpb-ajuda-colunas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0 32px;
+  margin-top: clamp(24px, 4vw, 44px);
+}
+.lpb-ajuda-colunas li { display: grid; gap: 6px; align-content: start; padding: 18px 0 24px; border-top: 1px solid var(--lp-rule-strong); }
+.lpb-ajuda-item { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; }
+.lpb-ajuda-colunas p { color: var(--lp-muted); font-size: 0.9375rem; }
+.lpb-painel { max-width: 62ch; margin-top: 12px; color: var(--lp-muted); font-size: 0.875rem; }
+
+/* O que cada integração faz: grupos por atividade, grade aberta sobre o pano */
+.lpb-sobre { padding: clamp(48px, 7vw, 104px) 0; }
+.lpb-sobre-head { display: grid; gap: 12px; max-width: 46rem; margin-bottom: clamp(28px, 4vw, 48px); }
+.lpb-sobre-grupos { display: grid; gap: clamp(36px, 5vw, 56px); }
+.lpb-sobre-grupo { display: grid; gap: 20px 48px; padding-top: 20px; border-top: 2px solid var(--lp-mineral); }
+.lpb-sobre-grupo-topo { display: grid; gap: 6px; align-content: start; }
+.lpb-sobre-grupo-titulo { font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem); font-weight: 700; line-height: 1.25; letter-spacing: -0.02em; }
+.lpb-sobre-plano { color: var(--lp-muted); font-size: 0.8125rem; font-weight: 700; }
+.lpb-sobre-plano.is-pro { color: var(--lp-mineral); }
+.lpb-sobre-grupo-texto { max-width: 34ch; color: var(--lp-muted); font-size: 0.9375rem; }
+.lpb-sobre-itens { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 0 32px; }
+.lpb-sobre-itens li { display: grid; gap: 6px; align-content: start; padding: 20px 0 8px; border-top: 1px solid var(--lp-rule-mineral); }
+.lpb-sobre-logo { display: flex; align-items: center; min-height: 44px; }
+.lpb-sobre-nome { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; }
+.lpb-sobre-itens li > p { color: var(--lp-muted); font-size: 0.9375rem; }
+.lpb-sobre-nota { max-width: 72ch; margin-top: clamp(28px, 4vw, 40px); padding-top: 16px; border-top: 1px solid var(--lp-rule-mineral); color: var(--lp-muted); font-size: 0.875rem; }
+@media (min-width: 900px) {
+  .lpb-sobre-grupo { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
+  .lpb-sobre-itens { row-gap: 28px; }
+  .lpb-sobre-itens li { padding-top: 0; border-top: 0; }
+}
+
+/* Planos em folha única */
+.lpb-planos { padding: clamp(40px, 6vw, 88px) 0; }
+.lpb-planos .lp-h2 { max-width: 22ch; margin-bottom: clamp(24px, 4vw, 40px); }
+.lpb-planos-folha { overflow: hidden; }
+.lpb-planos-cabeca { display: grid; }
+.lpb-plano { display: grid; gap: 8px; align-content: start; justify-items: start; padding: clamp(22px, 3vw, 36px); }
+.lpb-plano + .lpb-plano { border-top: 1px solid var(--lp-rule); }
+.lpb-plano-preco { color: var(--lp-muted); font-weight: 700; font-variant-numeric: tabular-nums; }
+.lpb-plano-valor { color: var(--lp-mineral); font-size: clamp(2.75rem, 2.2rem + 2vw, 3.75rem); line-height: 1; letter-spacing: -0.03em; }
+.lpb-plano-resumo { max-width: 40ch; margin-bottom: 8px; color: var(--lp-muted); }
+@media (min-width: 640px) {
+  .lpb-planos-cabeca { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lpb-plano + .lpb-plano { border-top: 0; border-left: 1px solid var(--lp-rule); }
+}
+.lpb-recursos { border-top: 1px solid var(--lp-rule-strong); }
+.lpb-recursos li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px 20px;
+  padding: 12px clamp(22px, 3vw, 36px);
+  border-top: 1px solid var(--lp-rule);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+.lpb-recursos li:first-child { border-top: 0; }
+.lpb-recursos li > span:first-child { flex: 1 1 18rem; min-width: 0; }
+.lpb-planos-nota { padding: 14px clamp(22px, 3vw, 36px) 20px; border-top: 1px solid var(--lp-rule); }
+
+/* Dúvidas em duas colunas */
+.lpb-duvidas { padding: clamp(40px, 6vw, 88px) 0; }
+.lpb-duvidas-grade { display: grid; column-gap: 48px; margin-top: clamp(20px, 3vw, 32px); border-top: 1px solid var(--lp-rule-strong); }
+@media (min-width: 900px) {
+  .lpb-duvidas-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+}
+
+/* Fecho mineral de ponta a ponta */
+.lpb-final { margin-top: clamp(24px, 4vw, 48px); padding: clamp(56px, 8vw, 104px) 0; background: var(--lp-mineral); color: var(--lp-on-mineral); }
+.lpb-final :focus-visible { outline-color: var(--lp-on-mineral); }
+.lpb-final-inner { display: grid; justify-items: center; gap: 14px; text-align: center; }
+.lpb-final h2 { max-width: 20ch; font-size: clamp(2rem, 1.3rem + 3vw, 3.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.035em; }
+.lpb-final p { color: var(--lp-on-mineral-muted); }
+.lpb-final-ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+
+.lpb-footer { flex-direction: column; justify-content: center; text-align: center; border-top: 0; }
+.lpb-footer .lp-footer-nav { justify-content: center; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lpb-nav-item { transition: none; }
+}

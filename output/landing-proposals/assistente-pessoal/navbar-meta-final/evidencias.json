@@ -1,0 +1,112 @@
+{
+  "requisitos": [
+    "Navbar persistente na proposta A",
+    "Menu hambúrguer mobile na proposta A",
+    "Meta como sexto nó animado nas duas propostas",
+    "Faixa somente mineral #173F3B e marfim #F6F3ED oficiais, sem gradiente",
+    "Home continua5nós e intacta por default"
+  ],
+  "rodadas": [
+    {
+      "etapa": "navbar",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "meta-hamburger",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "paleta-correcao",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "revisao-final-fable",
+      "modelos": [
+        "claude-fable-5-1"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": "**Disposição: ship.**\n\nRevisei a versão corrigida com as 8 leituras permitidas (bloco do mapa em `proposals.css`, `CabecalhoFixo.tsx`, 120 primeiras linhas de `landing-a.css`, grep dos testes e as 4 capturas). Nenhum achado bloqueante.\n\n**Cores da seção de integrações (fonte exata)**\n- `components/landing-proposals/proposals.css:284` define o fundo da seção em `#173F3B` e o texto em `#F6F3ED`. Não há `linear-gradient`, mint ou sálvia em nenhum arquivo de `components/landing-proposals` (grep vazio para esses termos).\n- Nós em marfim `#F6F3ED` (linha 296), caption do hub e pulsos em marfim (linhas 293 a 295), feixes em marfim a 30%. Texto interno dos nós em `#1E2B28` e `#173F3B`.\n- O teste em `tests/landing-proposals.test.ts:644` só aceita `#173F3B`, `#F6F3ED`, `#1E2B28` e rgba do marfim no bloco. Não li o arquivo de tokens, então a origem de `#1E2B28` como tinta da marca fica atestada apenas pelo teste, não por mim.\n\n**Evidência visual**\n- `desktop.png`: fundo mineral uniforme, seis nós marfim legíveis, Meta com \"Sujeito à liberação\", caption \"No seu WhatsApp\" em marfim. Sem gradiente.\n- `mapa-320.png`: seis nós inteiros dentro da viewport, Meta e Notion sem corte, nota de ressalva abaixo da seção. Pulsos animados não são verificáveis em captura estática.\n- `mobile-fechado.png`: topo com marca, \"Entrar\" e botão hambúrguer, sem links em segunda linha.\n- `mobile-aberto.png`: gaveta com Rotina, Integrações, Planos, Dúvidas e Prévia A/B, ícone X no botão.\n\n**Correção do Tab (verificada no DOM, não só no listener)**\n- Em `CabecalhoFixo.tsx:84-116` a ordem é marca, `lp-bar-actions` (prévia, Entrar, botão toggle) e só depois `lpa-gaveta` com a nav. Tab após o toggle entra naturalmente no primeiro link da nav.\n- O listener `focusin` da linha 67 só fecha quando o foco sai do `header`; a gaveta está dentro dele, então Tab pela nav não fecha. Tab após o último item vai ao CTA do hero e fecha, que é o comportamento esperado.\n- Escape fecha e devolve foco ao botão (linhas 57 a 61), clique fora fecha por `pointerdown`, link fecha por `fecharAoNavegar`. `aria-expanded` e `aria-controls` presentes (linhas 92 e 93). Teste na linha 566 proíbe `tabIndex` forçado.\n\n**Meta e default da home**\n- Teste nas linhas 194 e 195 fixa `includeMeta = false` como default e seis nós só com a flag. `LandingA.tsx:107` passa `includeMeta`. Não executei os testes nem li `IntegrationsMarquee.tsx`, então o default da home está atestado pelo teste de fonte.\n\n**Limites do que verifiquei**\n- iPhone e head não foram tocados segundo o usuário. Não li esses arquivos.\n- Locks antigos de fonte legal seguem até o gate, conforme combinado.\n- Há um leve tom esverdeado no fundo marfim abaixo da seção em `desktop.png` e `mapa-320.png`. Fica fora do bloco de integrações e fora dos 8 itens lidos, então não afirmo origem nem classifico como achado."
+    }
+  ],
+  "capturas": [
+    {
+      "arquivo": "desktop.png",
+      "dimensoes": [
+        1440,
+        1000
+      ],
+      "sha256": "0a44db94df2f1f8f89ffcfb77f72183219e5b9db85c32b2a5cfc6f2a8a6293ec"
+    },
+    {
+      "arquivo": "mapa-320.png",
+      "dimensoes": [
+        320,
+        1100
+      ],
+      "sha256": "ad295015e85b9b91781769cf6bea5be4d7f3740d0465351944d4086bfccf3e20"
+    },
+    {
+      "arquivo": "mobile-aberto.png",
+      "dimensoes": [
+        390,
+        900
+      ],
+      "sha256": "e8c5ccaf4bc41f48cd82f3f5d8460e68d0ca6cdab285b1d0d451cf5817ffdebe"
+    },
+    {
+      "arquivo": "mobile-fechado.png",
+      "dimensoes": [
+        390,
+        900
+      ],
+      "sha256": "d789fd30342bca9396f3b3923e96e46c72f0061b42edb7a7ea515cd70cca3f5e"
+    }
+  ],
+  "testes": {
+    "total": 139,
+    "aprovados": 138,
+    "falhas": 0,
+    "ignorados": 1
+  },
+  "build": "next build isolado aprovado",
+  "runtime": {
+    "bg": "rgb(23, 63, 59)",
+    "fg": "rgb(246, 243, 237)",
+    "backgroundImage": "none",
+    "metaNodes": 6,
+    "pathCount": 6,
+    "pulseCount": 6,
+    "tabAposToggle": "#rotina",
+    "escapeFocus": "Menu de seções",
+    "fechaAoClicarFora": true,
+    "fechaAoNavegar": true,
+    "viewport320": {
+      "scrollWidth": 308,
+      "clientWidth": 308,
+      "headerBottom": 58,
+      "sectionTop": 74.117,
+      "metaBottom": 911.863,
+      "graphBottom": 919.766
+    }
+  },
+  "limites": [
+    "Backend OAuth real indisponível;1testeignorado preexistente",
+    "Script original iPhone preservado conforme pedido;não foi revisão de produto backend"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "pedido": [
+    "Cadastro nos três conectores com Pro, conexão e autorização",
+    "Diferenciar rotina e conversa",
+    "Retirar seção detalhada das integrações da proposta A",
+    "Preservar mockup e mapa animado"
+  ],
+  "rodadas": [
+    {
+      "etapa": "implementacao",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "revisao-fable",
+      "modelos": [
+        "claude-fable-5-1"
+      ],
+      "status": "success",
+      "erro": false,
+      "parecer": "**Disposição: ship.** Nenhum bug material nos dez itens lidos. Seguem a verificação por requisito e duas observações cosméticas, não bloqueantes.\n\n**Requisito 1, texto da peça nova**\n- Atendido. O `texto` e a `frase` em `lib/landing-proposals.ts:55-57` dizem \"no Pro, pode cadastrar a peça no Jueri, no Olist ou na Nuvemshop que você conectou e autorizou\" e fecham com o pedido na conversa. Não prometem os três ao mesmo tempo nem o Essencial.\n- O teste em `tests/landing-proposals.test.ts:82-88` trava exatamente essa redação nos dois campos, então A e B continuam com fonte compartilhada. A captura desktop-rotina.png mostra o texto renderizado íntegro na segunda linha da tabela.\n\n**Requisito 2, faixa mineral distinta da Rotina**\n- Atendido. A Rotina continua lista aberta e pautada em `LandingA.tsx:74-95`, com título à esquerda e fixo no desktop (`landing-a.css:83-86`).\n- A seção da conversa virou faixa com fundo mineral, título em cima, três colunas a partir de 900px com divisórias verticais, empilhadas abaixo disso com régua horizontal, e nota do painel no rodapé com régua própria (`landing-a.css:88-116`, `LandingA.tsx:97-112`).\n- As capturas confirmam a distinção real. desktop-conversa.png mostra o bloco escuro com três colunas e texto marfim legível. mobile-conversa.png e 320-conversa.png mostram empilhamento sem overflow horizontal, título quebrando em três linhas a 320px sem cortar. Não há vidro, botão, input ou aba na faixa, e o teste na linha 414 proíbe isso.\n\n**Requisito 3, remoção da seção de detalhes em A**\n- Atendido. `LandingA.tsx` não tem seção `#sobre-integracoes`, os atalhos do cabeçalho vão só para rotina, integrações, planos e dúvidas (`LandingA.tsx:21-26`), e o teste na linha 396 proíbe o id, o título e as classes antigas no HTML de A.\n- O CTA do mapa aponta para `#planos` com rótulo \"Conhecer os planos\" (`LandingA.tsx:114`), travado no teste da linha 366. mobile-conversa.png mostra o link renderizado logo abaixo do lead do mapa, sem âncora morta.\n- Mapa e iPhone preservados no código: `IntegrationsMarquee` renderizado na linha 114 e `PhoneDemo` na linha 71, com o teste da linha 394 exigindo o mockup no hero. As capturas mostram os cartões Jueri, Nuvemshop, Google Workspace, Olist, Notion e o nó central ligados por traços. Movimento não é comprovável por pixel, e o hero não está em nenhuma das cinco capturas, então o iPhone fica verificado só por código e teste.\n- Ressalvas Meta e Bling continuam logo após o mapa (`LandingA.tsx:115-117`) e os testes das linhas 384-385 exigem ambas no texto visível. Oferta 39/69 segue em `PLANOS` e na FAQ (`lib/landing-proposals.ts:169,283`).\n- O teste das linhas 376-383 só exige `GOOGLE_DESC` e `NOTION_DESC` inteiros em B. B continua obrigada a ter `#sobre-integracoes` depois do mapa e antes dos planos (linhas 433-434), e o CTA de B segue \"Ver o que cada integração faz\".\n- O índice em `app/propostas/page.tsx:18` descreve A como faixa mineral de três colunas e não menciona mais a seção de detalhes. A linha de B permanece com \"grupos por plano\".\n\n**Observações cosméticas, sem bloquear**\n- O comentário de abertura em `landing-a.css:3-4` ainda lista \"o que cada integração faz\" entre as seções da página. É documentação defasada, não afeta o render.\n- Em desktop-conversa.png, o título da terceira coluna quebra em duas linhas e o parágrafo começa mais baixo que nos vizinhos. É consequência natural do texto, não defeito de CSS. Se incomodar, um ajuste de `max-width` no título resolve. Não é escopo desta rodada.\n\n**Fora da revisão**\n- Não li `components/IntegrationsMarquee.tsx`, que aparece modificado no git. O teste das linhas 475-483 cobre o CTA da home sem props, então a regressão mais provável está protegida.\n- Falha nos locks de fonte é esperada até aceitar este delta, conforme combinado. Não há motivo para atualização jurídica ampla."
+    }
+  ],
+  "capturas": [
+    {
+      "arquivo": "320-conversa.png",
+      "dimensoes": [
+        320,
+        1500
+      ],
+      "sha256": "90a4de254664643919a59e34e15abed417ab74ca9910aa85eb68c0fdebaaaaee"
+    },
+    {
+      "arquivo": "desktop-conversa.png",
+      "dimensoes": [
+        1440,
+        1000
+      ],
+      "sha256": "51c216df61119c57ba5c9a0b68e83442d2df6c93d6b631b11a670fc9619698ee"
+    },
+    {
+      "arquivo": "desktop-rotina.png",
+      "dimensoes": [
+        1440,
+        1000
+      ],
+      "sha256": "7035cdd33bbcbd99e6a3ea5dc7d0ed9510d3a6cca7b7f3136eb7339fe3369380"
+    },
+    {
+      "arquivo": "mobile-conversa.png",
+      "dimensoes": [
+        390,
+        1500
+      ],
+      "sha256": "0e234d437ca072355a60f7d7d38f67cda373484cc222a2c6bdaaceb177878e6f"
+    },
+    {
+      "arquivo": "mobile-rotina.png",
+      "dimensoes": [
+        390,
+        1500
+      ],
+      "sha256": "2e58d2bc3d99028ae89802aec05431fee0283aa6da7de1000359e2b0481291ce"
+    }
+  ],
+  "build": "next build isolado aprovado",
+  "runtime": {
+    "feixes_ativos": 5,
+    "cta_mapa": "#planos",
+    "overflow_1440_390_320": false
+  },
+  "limite": "Cadastros baseados em escopo documentado na release 0.2.0; não houve teste backend real.",
+  "testes_finais": {
+    "total": 136,
+    "aprovados": 135,
+    "falhas": 0,
+    "ignorados": 1
+  },
+  "lock": "Somente 4 hashes de fontes desta rodada atualizados após revisão."
+}

@@ -18,6 +18,19 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.2.2",
+    date: "2026-10-28",
+    title: "Trello para organizar a rotina da loja",
+    summary: "Conecte seu quadro do Trello à mila e cuide de tarefas, compras e pendências pelo WhatsApp.",
+    changes: [
+      {
+        type: "new",
+        title: "Trello disponível no Essencial e no Pro",
+        description: "Conecte seu Trello e peça à mila para consultar quadros, listar cards, criar tarefas e atualizar pendências. A autorização é feita no painel e vale só para a sua loja.",
+      },
+    ],
+  },
+  {
     version: "0.2.1",
     date: "2026-10-20",
     title: "Integrações mais claras e novidades à mão",

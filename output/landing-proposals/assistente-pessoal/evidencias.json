@@ -1,0 +1,90 @@
+{
+  "rodadas": [
+    {
+      "etapa": "implementacao-assistente",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "resultado": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "refinamento-integracoes",
+      "modelos": [
+        "claude-opus-5-5"
+      ],
+      "resultado": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "revisao-fontes",
+      "modelos": [
+        "claude-fable-5-1"
+      ],
+      "resultado": "success",
+      "erro": false,
+      "parecer": null
+    },
+    {
+      "etapa": "veredito-copy",
+      "modelos": [
+        "claude-fable-5-1"
+      ],
+      "resultado": "success",
+      "erro": false,
+      "parecer": "**resolved.** `lib/landing-proposals.ts:97` agora diz \"Mande uma mensagem, foto ou nota de compra, como faria com alguém da equipe. A resposta chega na mesma conversa.\" Nenhuma ocorrência de \"áudio\" resta em `lib/landing-proposals.ts`. A regressão em `tests/landing-proposals.test.ts:103` recusa `/áudio/i` em COMO_AJUDA. A frase nova afirma só mensagem, foto e nota de compra, todos com fonte em PRODUCT.md:15. Pronto para o visual."
+    },
+    {
+      "etapa": "revisao-visual",
+      "modelos": [
+        "claude-fable-5-1"
+      ],
+      "resultado": "success",
+      "erro": false,
+      "parecer": "**disposition: ship** (no escopo das 8 capturas)\n\nNenhum achado material: não vi overflow, sobreposição, texto cortado dentro do viewport ou elemento encostado em borda. O card branco rejeitado foi resolvido de forma concreta nos dois layouts.\n\n**Critério resolvido: o bloco \"O que cada integração faz\"**\n\n- **Sem retângulo branco.** Em A e B, desktop e mobile, o bloco é aberto sobre o fundo mineral da página. A separação vem de filetes finos horizontais, não de contêiner. O \"card jogado no meio da tela\" sumiu.\n- **Respiro lateral correto.** Logos e nomes começam alinhados à margem do título \"O que cada integração faz\" e ao texto de apoio, tanto no desktop (x≈124) quanto no mobile (x≈16). Nada encosta na borda.\n- **Logos reais.** Jueri, Olist, Nuvemshop, Google Drive/Planilhas e Notion aparecem com as marcas, não com nomes em texto puro.\n- **Disclosure funciona.** No mobile A, \"Detalhes do Google\" aparece aberto, com o parágrafo explicativo abaixo e o ícone trocado para ×. No restante, fechado com +. Google e Notion são os únicos com detalhe, como combinado.\n- **Hierarquia de plano legível.** \"Pro\" e \"Essencial e Pro\" ficam à direita na lista de A e sob o título do grupo em B, sem competir com o nome da ferramenta.\n\n**Diferença A/B é real e legível**\n\n- **A** é uma lista única e corrida, 5 linhas, logo à esquerda, plano à direita. Título em duas linhas com texto de apoio ao lado.\n- **B** agrupa em dois blocos editoriais (\"Fornecedores e compras\" e \"Estoque e vendas\"), com coluna de rótulo à esquerda e grade de 2 e 3 colunas à direita. Filete mais escuro marca cada grupo. No mobile, a grade empilha sem quebrar.\n- Heros também diferem: A tem headline à esquerda e telefone à direita, com CTA duplo (\"Entrar com o WhatsApp\" e \"Ver como ela ajuda\"). B inverte, telefone à esquerda, headline maior e CTA único. Ambas comunicam \"assistente pessoal\" e \"WhatsApp\" na primeira linha.\n\n**Clareza do posicionamento**\n\n- As duas headlines dizem \"assistente pessoal\" e \"WhatsApp\" sem ambiguidade. O texto de apoio em A cita cadastro, descrição e integrações; em B cita \"como contaria para alguém da equipe\". Nenhum dos dois cai em UI operacional ou calculadora fora do WhatsApp.\n- \"Acesso piloto, por convite\" aparece nos dois, abaixo do CTA, em tom secundário correto.\n\n**IPhoneMockup preservado**\n\n- O mockup aparece intacto nos 4 heros, com barra de status, cabeçalho \"mila. ✨ sua assistente de negócios\", bolhas da conversa, rodapé de criptografia e campo \"Mensagem\". Legenda \"Conversa de demonstração, em loop. Exemplo ilustrativo.\" abaixo em todos.\n- As capturas mostram instantes diferentes do mesmo script (preço sugerido R$ 89,90 em A desktop e B mobile; salvar no Notion com margem de 46% em B desktop e A mobile). É o script original, conforme pedido de preservar.\n\n**Legibilidade e espaçamento**\n\n- Contraste do texto cinza-médio sobre fundo mineral é suficiente em todos os tamanhos. Descrições das integrações no mobile quebram em 2 linhas sem órfã feia.\n- Nota de rodapé sobre Meta e Bling está em corpo menor, separada por filete, sem competir com a lista.\n\n**Observações não bloqueantes (não exigem ação)**\n\n- Alturas dos logos variam (Jueri e Olist maiores, Nuvemshop e ícones Google menores). É característica das marcas, não quebra alinhamento.\n- Em B desktop, o filete acima da nota de rodapé para em metade da largura, enquanto em A vai até a margem direita. Lê como escolha editorial de B, não erro.\n- No mobile A, o link \"Ver como ela ajuda\" fica com recuo de alguns pixels em relação ao texto corrido acima. Pequeno, não material.\n\nNão certifico animação em movimento por pixels; o coordenador já verificou runtime. Nas capturas estáticas, os dois layouts estão prontos para entrega."
+    }
+  ],
+  "originais_verificados_intactos": [
+    "components/IPhoneMockup.tsx",
+    "components/integrations-beam.css",
+    "app/site.css",
+    "app/(site)/page.tsx"
+  ],
+  "testes": {
+    "total": 135,
+    "aprovados": 134,
+    "falhas": 0,
+    "ignorados": 1,
+    "limite": "Backend OAuth real indisponível; não comprova produção."
+  },
+  "build": "next build isolado aprovado",
+  "runtime_integracoes": {
+    "A": {
+      "feixes": 5,
+      "estado": "running"
+    },
+    "B": {
+      "feixes": 5,
+      "estado": "running",
+      "menor_largura_css": 320
+    }
+  },
+  "arquivos_capturas": [
+    "output/landing-proposals/assistente-pessoal/proposta-a-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-detalhes-google.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-integracoes-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-integracoes-mobile.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-mapa-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-mapa-mobile.png",
+    "output/landing-proposals/assistente-pessoal/proposta-a-mobile.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-320.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-integracoes-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-integracoes-mobile.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-mapa-320.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-mapa-desktop.png",
+    "output/landing-proposals/assistente-pessoal/proposta-b-mobile.png"
+  ]
+}

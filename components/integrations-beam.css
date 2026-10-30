@@ -55,3 +55,18 @@
 @media (prefers-reduced-motion: reduce) {
   .integrations-pulse { animation: none; display: none; }
 }
+
+/* Variante com Meta (prévias): três ferramentas de cada lado; a geometria de cinco nós acima não muda. */
+.integrations-graph.has-meta { height: 440px; }
+.integrations-graph.has-meta .integrations-node-jueri { top: 16%; }
+.integrations-graph.has-meta .integrations-node-olist { top: 50%; }
+.integrations-graph.has-meta .integrations-node-meta { left: 0; top: 84%; }
+.integrations-graph.has-meta .integrations-node-nuvemshop { top: 16%; }
+.integrations-graph.has-meta .integrations-node-google-workspace { top: 50%; }
+.integrations-graph.has-meta .integrations-node-notion { top: 84%; }
+.integrations-graph.has-meta .integrations-node-note { font-size: .6rem; font-weight: 600; color: var(--ink); opacity: .72; text-align: center; line-height: 1.3; }
+@media (max-width: 480px) {
+  .integrations-graph.has-meta { height: 440px; }
+  .integrations-graph.has-meta .integrations-node { width: 96px; }
+  .integrations-graph.has-meta .integrations-node-note { font-size: .56rem; }
+}

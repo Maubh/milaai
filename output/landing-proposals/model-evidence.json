@@ -1,0 +1,43 @@
+{
+  "implementation_model": [
+    "claude-opus-5-5"
+  ],
+  "session_id": "8bcd8cbe-1c2b-4344-8b8f-4c412a3fa0e7",
+  "status": "success",
+  "is_error": false,
+  "fallback_credit": null,
+  "scope": "Duas propostas de landing page em rotas separadas; home vigente e IPhoneMockup preservados.",
+  "no_commit_push_deploy": true,
+  "rounds": [
+    {
+      "round": "implementacao",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "is_error": false,
+      "fallback_credit": null,
+      "num_turns": 74
+    },
+    {
+      "round": "correcoes-revisao",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "is_error": false,
+      "fallback_credit": null,
+      "num_turns": 14
+    },
+    {
+      "round": "mockup-iphone",
+      "models": [
+        "claude-opus-5-5"
+      ],
+      "status": "success",
+      "is_error": false,
+      "fallback_credit": null,
+      "num_turns": 19
+    }
+  ]
+}

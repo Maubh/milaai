@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: "standalone",
   outputFileTracingRoot: new URL(".", import.meta.url).pathname,
   images: {
     remotePatterns: [
@@ -13,6 +14,14 @@ const nextConfig = {
         hostname: "**",
       },
     ],
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [{ key: "Strict-Transport-Security", value: "max-age=63072000" }],
+      },
+    ];
   },
   async redirects() {
     return [

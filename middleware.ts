@@ -1,15 +1,29 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { needsPublicHttps, publicSiteUrl } from "@/lib/public-site-url";
 
 export function middleware(req: NextRequest) {
   const url = req.nextUrl;
   const { pathname, search } = url;
+  const host = req.headers.get("host");
+
+  // TLS ends at Cloudflare. Redirect public HTTP without looping on the HTTP
+  // origin leg; local container liveness is deliberately outside this rule.
+  if (needsPublicHttps(host, req.headers.get("x-forwarded-proto"))) {
+    return NextResponse.redirect(publicSiteUrl(host, pathname, search)!, 308);
+  }
+
+  // Keep the previous middleware exclusions after HTTPS enforcement, so assets
+  // also keep the public HTTP -> HTTPS contract without changing their routing.
+  if (pathname.startsWith("/_next/static") || pathname.startsWith("/_next/image") || pathname.startsWith("/favicon.ico") || /\.(?:svg|png|jpg|jpeg|gif|webp|ico)/.test(pathname)) {
+    return NextResponse.next();
+  }
 
   // 1. Sanitiza URLs que chegam com asteriscos ou pontuação colada de markdown (ex: WhatsApp)
   // Exemplo: /workspace/integracoes* -> /workspace/integracoes
   if (/[*_]+$/.test(pathname) || pathname.includes("*")) {
     const cleanPath = pathname.replace(/[*_]+/g, "");
-    const destination = new URL(`${cleanPath || "/"}${search}`, req.url);
+    const destination = publicSiteUrl(host, cleanPath || "/", search) ?? new URL(`${cleanPath || "/"}${search}`, req.url);
     return NextResponse.redirect(destination, 308);
   }
 
@@ -45,14 +59,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - static files with extensions (e.g. .svg, .png, .jpg, .ico)
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)).*)",
-  ],
+  matcher: ["/:path*"],
 };

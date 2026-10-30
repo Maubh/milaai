@@ -9,4 +9,6 @@ out/
 .env
 .vercel
 .env*
+*.env
+**/secrets/
 core

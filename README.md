@@ -25,3 +25,7 @@ npm run dev
 ```
 
 Use `npm run build` para verificar a compilação. Os documentos de especificação anteriores permanecem no repositório como histórico e podem descrever o nome ou o escopo de versões passadas.
+
+## Hospedagem
+
+O fluxo de Next standalone em container, túnel exclusivo, envs e procedimento de rollout/rollback está em [`ops/container/README.md`](ops/container/README.md). Ele não altera nem reinicia o Eve; a Vercel continua disponível como fallback e hospeda o legado separado de `app.milaai.com.br`.

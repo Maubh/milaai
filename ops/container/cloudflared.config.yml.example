@@ -1,0 +1,17 @@
+# A NEW, locally managed tunnel, exclusively for the site.
+# The operator replaces this identifier outside the checkout.
+tunnel: REPLACE_WITH_NEW_SITE_TUNNEL_UUID
+credentials-file: /etc/cloudflared/tunnel.json
+metrics: 127.0.0.1:2000
+loglevel: info
+
+# Do not override httpHostHeader: Next needs the original public Host.
+# cloudflared must preserve the original X-Forwarded-Proto (http or https).
+ingress:
+  - hostname: milaai.com.br
+    service: http://site:3000
+  - hostname: www.milaai.com.br
+    service: http://site:3000
+  - hostname: vitrine.milaai.com.br
+    service: http://site:3000
+  - service: http_status:404

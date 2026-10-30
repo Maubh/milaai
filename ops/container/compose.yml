@@ -1,0 +1,85 @@
+name: milaai
+
+x-logging: &bounded-logs
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  site:
+    image: ${MILAAI_SITE_IMAGE:?Set a unique image tag for the reviewed release}
+    build:
+      context: ../..
+      dockerfile: ops/container/Dockerfile
+      args:
+        NODE_IMAGE: ${MILAAI_NODE_IMAGE:-node:24-trixie-slim}
+        NEXT_PUBLIC_MILA_WA_E164: ${NEXT_PUBLIC_MILA_WA_E164:?Preserve the public WhatsApp build value}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:?Preserve the public Turnstile build value}
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 45s
+    environment:
+      # Transport only. Public cookie domains, OAuth URLs and origins do not change.
+      MILA_AUTH_BASE: http://mila-eve:4274
+      MILA_AUTH_SECRET: ${MILA_AUTH_SECRET:?Set the existing auth shared secret}
+      MILA_INTERNAL_API_URL: http://mila-eve:4274
+      MILA_INTERNAL_HMAC_SECRET: ${MILA_INTERNAL_HMAC_SECRET:?Set the existing internal API secret}
+      TURNSTILE_SECRET_KEY: ${TURNSTILE_SECRET_KEY:?Set the existing Turnstile secret}
+      MILA_COOKIE_DOMAIN: ${MILA_COOKIE_DOMAIN:-}
+    networks:
+      - site
+      - eve
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health', { signal: AbortSignal.timeout(4000) }).then(r => process.exit(r.status === 200 ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging: *bounded-logs
+
+  cloudflared:
+    # Operator selects an approved version/digest; do not use latest.
+    image: ${MILAAI_CLOUDFLARED_IMAGE:?Set a pinned cloudflare/cloudflared image}
+    command: ["tunnel", "--no-autoupdate", "--config", "/etc/cloudflared/config.yml", "run"]
+    user: "65532:65532"
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 45s
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    depends_on:
+      site:
+        condition: service_healthy
+    networks:
+      - site
+    volumes:
+      - type: bind
+        source: ${MILAAI_TUNNEL_CONFIG_FILE:?Set an absolute external tunnel config path}
+        target: /etc/cloudflared/config.yml
+        read_only: true
+        bind:
+          create_host_path: false
+      - type: bind
+        source: ${MILAAI_TUNNEL_CREDENTIALS_FILE:?Set an absolute external tunnel credential path}
+        target: /etc/cloudflared/tunnel.json
+        read_only: true
+        bind:
+          create_host_path: false
+    healthcheck:
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "127.0.0.1:2000", "ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    logging: *bounded-logs
+
+networks:
+  site:
+    driver: bridge
+  eve:
+    external: true
+    name: mila-eve_default

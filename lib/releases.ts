@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.25",
+    date: "2026-10-30",
+    title: "Preço sempre calculado com o markup que você informar",
+    summary: "Quando você diz seu markup, o preço sai sempre da calculadora, com embalagem e taxa da sua loja.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Preço sai sempre da calculadora, mesmo quando você informa o markup na hora",
+        description: "Antes, quando você respondia seu markup na conversa, o preço podia sair como estimativa de cabeça, sem a embalagem e a taxa da sua loja. Agora o preço sai sempre calculado com tudo o que está cadastrado, e o markup que você informou fica salvo para as próximas peças.",
+      },
+    ],
+  },
+  {
     version: "0.6.24",
     date: "2026-10-29",
     title: "Listas do Trello pelo WhatsApp e conexão renovada",

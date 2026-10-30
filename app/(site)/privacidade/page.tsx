@@ -266,6 +266,12 @@ export default function PrivacidadePage() {
           registro por loja.
         </p>
         <p>
+          Cópia de segurança: uma vez por dia, os dados guardados no nosso
+          servidor são cifrados ali mesmo e enviados à Cloudflare. A chave que
+          abre essas cópias não fica no servidor. Cada cópia é guardada por 28
+          dias e então descartada.
+        </p>
+        <p>
           Nenhum sistema é perfeito, e respostas de IA podem errar: revise preço,
           estoque e textos importantes antes de usar.
         </p>

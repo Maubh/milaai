@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.27",
+    date: "2026-10-31",
+    title: "Reorganize as colunas do Trello pelo WhatsApp",
+    summary: "Mude a ordem das colunas dentro do mesmo quadro do Trello direto na conversa com a mila.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Colunas na ordem que faz sentido para a sua loja",
+        description: "Peça à mila pelo WhatsApp para colocar uma coluna no início ou no fim do quadro, ou antes ou depois de outra coluna do mesmo quadro. Por exemplo: \"coloca Pós-venda depois de Entregue\". Disponível no Essencial e no Pro.",
+      },
+    ],
+  },
+  {
     version: "0.6.26",
     date: "2026-10-31",
     title: "Conectar o Trello funciona com a sua conta",

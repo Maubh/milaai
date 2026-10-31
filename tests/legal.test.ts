@@ -1531,6 +1531,7 @@ Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja,
 Notion — a mila grava o caderno numa base que a loja já tem; não cria base.
 Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.
 Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.
+Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também nome, e-mail e telefone do comprador para responder à lojista; nesses dados a loja é a controladora e a mila atua como operadora, sem montar base de compradores.
 Disponíveis, com validação em andamento:
 Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
 Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.
@@ -1799,7 +1800,8 @@ const GOLDEN_FONTE = `{
     "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
     "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
     "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.",
-    "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello."
+    "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.",
+    "Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também nome, e-mail e telefone do comprador para responder à lojista; nesses dados a loja é a controladora e a mila atua como operadora, sem montar base de compradores."
   ],
   "CONECTORES_NAO_PRONTOs": [
     "Bling"

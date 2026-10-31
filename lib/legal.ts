@@ -437,7 +437,7 @@ export const CONECTORES_DISPONIVEIS = [
   "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
   "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.",
   "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.",
-  "Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também nome, e-mail e telefone do comprador para responder à lojista; nesses dados a loja é a controladora e a mila atua como operadora, sem montar base de compradores.",
+  "Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também o nome do comprador para responder à lojista (e-mail e telefone não são usados); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base de compradores.",
 ] as const;
 
 /** Construídos, mas ainda sem validação com credencial de produção. */

@@ -156,7 +156,7 @@
   "site/lib/google-workspace.ts": "3bb3d230bbf3279bcbe2a76466cf2fa0ed17e274a9cca9b79dc7f73c3bb70cc1",
   "site/lib/integration-catalog.ts": "4859ad1922aafd224a2f95e4b9f025412b35b447458073899d8c87418aabb4f5",
   "site/lib/integration-errors.ts": "0601f700e040a8c90787227f9218c540fff71f04022611e3b2b518e94fb2b429",
-  "site/lib/legal.ts": "bf30d2f4d0566201144e29ea5ff215b714ce13bf0982e53399c20ab9b6b89c6e",
+  "site/lib/legal.ts": "b70a3b13f2603ee3f58a449a7c6d8c8c4e57523de218a69d1efa6b28194510df",
   "site/lib/meta-catalog.ts": "581d9ce3472de1f857aec3418179b345e3acc0ade81b5eb9283b4efdc8dfcd80",
   "site/lib/notion.ts": "35be4e632ee4964311dd85c312f7be8eb887143e6c5504cb3f460ecdf26fc3e0",
   "site/lib/onboarding.ts": "2cbd84f8135e53c8ff82962188dd76d947cf8157439b7c9c47dcc97cc4eb1204",

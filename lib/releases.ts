@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.26",
+    date: "2026-10-31",
+    title: "Conectar o Trello funciona com a sua conta",
+    summary: "A conexão do Trello agora aceita qualquer conta e todos os seus quadros.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Conexão do Trello liberada para qualquer conta",
+        description: "Antes, ao conectar o Trello, a tela de autorização podia recusar a sua conta e a conexão não terminava. Agora a mila. pede a autorização direto no Trello, que aceita qualquer conta, e enxerga os quadros de todas as suas áreas de trabalho. Se você já tinha conectado, conecte de novo uma vez em Integrações.",
+      },
+    ],
+  },
+  {
     version: "0.6.25",
     date: "2026-10-30",
     title: "Preço sempre calculado com o markup que você informar",

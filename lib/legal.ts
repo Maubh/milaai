@@ -52,7 +52,7 @@ export const CONTATO_PRIVACIDADE = "contato@milaai.com.br";
 
 export const INSTAGRAM = "@usemila.ai";
 
-export const ATUALIZADO_EM = "30 de outubro de 2026";
+export const ATUALIZADO_EM = "31 de outubro de 2026";
 
 /**
  * Identificação do controlador (publicada em 2026-10-16 para a revisão do app
@@ -436,6 +436,7 @@ export const CONECTORES_DISPONIVEIS = [
   "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
   "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
   "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.",
+  "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.",
 ] as const;
 
 /** Construídos, mas ainda sem validação com credencial de produção. */

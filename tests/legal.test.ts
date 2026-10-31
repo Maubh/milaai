@@ -447,7 +447,7 @@ test("legal: os valores de runtime são exatamente os esperados", async () => {
   assert.ok((f.NAO_FEITO as unknown[]).length >= 4, "negações faltando");
   assert.ok((f.RETENCAO as unknown[]).length >= 4, "retenção faltando");
   assert.equal(f.DECISAO_AUTOMATIZADA, false);
-  assert.equal(f.ATUALIZADO_EM, "30 de outubro de 2026");
+  assert.equal(f.ATUALIZADO_EM, "31 de outubro de 2026");
   assert.equal(f.CONTROLADOR_NOME, "MVRO TECNOLOGIA E CONSULTORIA LTDA");
   assert.equal(f.CONTROLADOR_CNPJ, "32.736.745/0001-00");
   assert.equal(
@@ -1400,7 +1400,7 @@ function prosaDe(html: string): string {
 const GOLDEN_TEXTO: Record<string, string> = {
   "política": `← Voltar
 Política de privacidade
-Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de outubro de 2026.
+Como tratamos informações na mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 31 de outubro de 2026.
 1. Quem somos
 Esta política descreve o tratamento de dados no site
 milaai.com.br
@@ -1530,6 +1530,7 @@ Disponíveis hoje:
 Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).
 Notion — a mila grava o caderno numa base que a loja já tem; não cria base.
 Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.
+Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.
 Disponíveis, com validação em andamento:
 Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
 Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.
@@ -1593,7 +1594,7 @@ instruções de exclusão de dados
 Podemos atualizar esta política. A versão vigente fica sempre nesta página, com a data no topo. Mudanças materiais serão comunicadas de forma razoável (site e/ou WhatsApp).`,
   "termos": `← Voltar
 Termos de uso
-Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 30 de outubro de 2026.
+Regras da mila. — assistente de negócios no WhatsApp para lojas de joias e semijoias. Última atualização: 31 de outubro de 2026.
 1. Aceite
 Ao acessar milaai.com.br, solicitar código de verificação, usar o WhatsApp da mila. ou o workspace, você concorda com estes termos e com a
 política de privacidade
@@ -1647,7 +1648,7 @@ contato@milaai.com.br
 Estes textos foram redigidos com base nas práticas atuais do produto. Não substituem revisão por advogado antes de cobrança ampla ou constituição formal da empresa.`,
   "exclusão": `← Voltar
 Exclusão de dados
-Última atualização: 30 de outubro de 2026.
+Última atualização: 31 de outubro de 2026.
 A mila. é operada por
 MVRO TECNOLOGIA E CONSULTORIA LTDA
 , CNPJ 32.736.745/0001-00, Rua Esmeralda, 1520, Alphaville - Lagoa dos Ingleses, Nova Lima/MG, CEP 34018-052. Você pode pedir a exclusão dos seus dados a qualquer momento, como garante a LGPD (Lei 13.709/2018, art. 18).
@@ -1771,7 +1772,7 @@ function canonico(v: unknown, ind = 0): string {
  * Regenerar: `scripts/gerar_golden_legal.sh`.
  */
 const GOLDEN_FONTE = `{
-  "ATUALIZADO_EM": "30 de outubro de 2026",
+  "ATUALIZADO_EM": "31 de outubro de 2026",
   "BASES_LEGAIS": [
     {
       "base": "Execução de contrato (art. 7, V)",
@@ -1797,7 +1798,8 @@ const GOLDEN_FONTE = `{
   "CONECTORES_DISPONIVEIS": [
     "Google (Drive/Planilhas) — a mila cria a planilha do caderno na conta da loja, com o escopo drive.file (só o arquivo que ela mesma criou).",
     "Notion — a mila grava o caderno numa base que a loja já tem; não cria base.",
-    "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque."
+    "Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e estoque.",
+    "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello."
   ],
   "CONECTORES_NAO_PRONTOs": [
     "Bling"

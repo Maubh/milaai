@@ -26,6 +26,32 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.28",
+    date: "2026-11-01",
+    title: "Roteiro de Reels cena a cena e legendas conferidas",
+    summary: "A mila monta o Reels com o tempo de cada cena, mostra os posts que fugiram do normal no seu nicho e confere a legenda antes de entregar.",
+    changes: [
+      {
+        type: "new",
+        plan: "pro",
+        title: "Roteiro de Reels cena a cena",
+        description: "Peça um Reels de uma peça e a mila monta o roteiro: o gancho dos 2 primeiros segundos, cada cena com o tempo, o que filmar, o texto na tela e a fala, um final que puxa o replay, a capa e a legenda. Se você prefere não falar para a câmera, o roteiro sai só com texto na tela e o tipo de áudio.",
+      },
+      {
+        type: "improvement",
+        plan: "pro",
+        title: "Posts fora da curva na análise do nicho",
+        description: "Na análise do nicho e do seu perfil, a mila aponta os posts que renderam 3 vezes ou mais o normal da própria conta, em curtidas e comentários ou em visualizações de Reels. Assim aparece o perfil pequeno que acertou num post, e não só quem já tem muitos seguidores.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Legenda conferida antes de chegar a você",
+        description: "Antes de entregar uma legenda, a mila confere o que aparece no feed antes do \"mais\", deixa no máximo 5 hashtags (o limite do Instagram) e uma chamada só, e tira caracteres invisíveis que atrapalham quando você copia e cola.",
+      },
+    ],
+  },
+  {
     version: "0.6.27",
     date: "2026-10-31",
     title: "Reorganize as colunas do Trello pelo WhatsApp",

@@ -26,6 +26,38 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.28",
+    date: "2026-11-01",
+    title: "Roteiro de Reels cena a cena e legendas conferidas",
+    summary: "A mila monta o Reels com o tempo de cada cena, mostra os posts que fugiram do normal no seu nicho e confere a legenda antes de entregar.",
+    changes: [
+      {
+        type: "new",
+        plan: "pro",
+        title: "Roteiro de Reels cena a cena",
+        description: "Peça um Reels de uma peça e a mila monta o roteiro: o gancho dos 2 primeiros segundos, cada cena com o tempo, o que filmar, o texto na tela e a fala, um final que puxa o replay, a capa e a legenda. Se você prefere não falar para a câmera, o roteiro sai só com texto na tela e o tipo de áudio.",
+      },
+      {
+        type: "improvement",
+        plan: "pro",
+        title: "Posts fora da curva na análise do nicho",
+        description: "Na análise do nicho e do seu perfil, a mila aponta os posts que renderam 3 vezes ou mais o normal da própria conta, em curtidas e comentários ou em visualizações de Reels. Assim aparece o perfil pequeno que acertou num post, e não só quem já tem muitos seguidores.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Legenda conferida antes de chegar a você",
+        description: "Antes de entregar uma legenda, a mila confere o que aparece no feed antes do \"mais\", deixa no máximo 5 hashtags (o limite do Instagram) e uma chamada só, e tira caracteres invisíveis que atrapalham quando você copia e cola. Se você pedir mais hashtags, ela explica o limite e entrega só as 5 que conferiu, sem uma lista a mais. Para trocar uma delas por uma da sua cidade, ela pergunta a cidade e confere a legenda nova.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Respostas mais claras sobre estoque, preço e Trello",
+        description: "Se você pergunta pelo estoque de outra loja, a mila diz que só vê o catálogo desta conversa, sem dar as peças daqui como se fossem de lá. No preço, assim que você diz o markup ela já entrega o valor calculado; se falta a embalagem ou a taxa da maquininha, ela avisa e pergunta o valor, sem chutar um número de exemplo. E, se o Trello não responde, ela conta o que tentou e não afirma se a lista foi criada ou não.",
+      },
+    ],
+  },
+  {
     version: "0.6.27",
     date: "2026-10-31",
     title: "Reorganize as colunas do Trello pelo WhatsApp",

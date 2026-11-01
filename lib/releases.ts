@@ -47,7 +47,7 @@ export const RELEASES: readonly Release[] = [
         type: "improvement",
         plan: "all",
         title: "Legenda conferida antes de chegar a você",
-        description: "Antes de entregar uma legenda, a mila confere o que aparece no feed antes do \"mais\", deixa no máximo 5 hashtags (o limite do Instagram) e uma chamada só, e tira caracteres invisíveis que atrapalham quando você copia e cola.",
+        description: "Antes de entregar uma legenda, a mila confere o que aparece no feed antes do \"mais\", deixa no máximo 5 hashtags (o limite do Instagram) e uma chamada só, e tira caracteres invisíveis que atrapalham quando você copia e cola. Se você pedir mais hashtags, ela explica o limite e entrega só as 5 que conferiu, sem uma lista a mais.",
       },
     ],
   },

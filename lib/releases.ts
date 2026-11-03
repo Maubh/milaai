@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.29",
+    date: "2026-11-03",
+    title: "Boas-vindas mais curtas no WhatsApp",
+    summary: "No primeiro oi, a mila se apresenta em poucas linhas, chama você pelo nome e faz uma pergunta de cada vez.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Boas-vindas mais curtas e pelo seu nome",
+        description: "Na primeira mensagem, a mila se apresenta em poucas linhas, chama você pelo primeiro nome e conta com quais ferramentas se conecta. Em vez de três perguntas de uma vez, ela começa pelo nome da sua marca e segue com uma pergunta por mensagem: o Instagram da loja, o tipo de peça que você mais trabalha e, por fim, o convite para mandar a primeira peça.",
+      },
+    ],
+  },
+  {
     version: "0.6.28",
     date: "2026-11-01",
     title: "Roteiro de Reels cena a cena e legendas conferidas",

@@ -75,18 +75,6 @@ export const SCRIPTED_PROMPTS: ScriptedPrompt[] = [
       },
     ],
   },
-  {
-    id: "integracao",
-    short: "Como conecto meu Bling?",
-    question: "Como conecto meu Bling?",
-    reply: [
-      { from: "lojista", text: "Como conecto meu Bling?" },
-      {
-        from: "mila",
-        text: "Quando a integração existir, eu te mando um link direto de autorização aqui na conversa. Por enquanto é demonstração — abra a tela de transição para ver como ficaria:",
-      },
-    ],
-  },
 ];
 
 export const HERO_EXCHANGE: ChatLine[] = [

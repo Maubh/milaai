@@ -30,7 +30,7 @@ Fotos de peças, notas de compra, estoque, consignados, fornecedores, catálogo 
 - Integrações de estoque e vendas são do Plano Pro.
 - Plano, cobrança, papel e fim do teste vêm de `/api/session`; contratação gera pedido no Asaas (Pix ou cartão) via `/api/billing/order`.
 - Histórico de versões em `lib/releases.ts`.
-- Bling ainda não está disponível.
+- O Bling não é citado no site, nem como "em breve" (decisão de 2026-11-04).
 
 ## Brand Commitments
 

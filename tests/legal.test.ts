@@ -173,9 +173,8 @@ const CONGELADOS: Array<[string, string]> = [
   ["china", "China"],
   // Google não é usado para achar a loja
   ["google-vinculo", "sessão autenticada no WhatsApp"],
-  // conectores não prontos
+  // conectores disponíveis (os fora do site não aparecem: ver o teste abaixo)
   ["olist", "Olist"],
-  ["bling", "Bling"],
   // Meta app review (2026-10-16): identidade, permissões e canal de exclusão.
   ["controlador-nome", "MVRO TECNOLOGIA E CONSULTORIA LTDA"],
   ["controlador-cnpj", "32.736.745/0001-00"],
@@ -190,8 +189,9 @@ const CONGELADOS: Array<[string, string]> = [
 /** Trechos congelados que vivem FORA das páginas jurídicas (home/pricing). */
 const CONGELADOS_PRICING: Array<[string, string]> = [
   // A linha inteira do ERP fica congelada: é a que estava mentindo no ar
-  // ("Integração direta Jueri, Bling e Olist") quando o guard nasceu.
-  ["erp-ressalva", "Bling ainda não"],
+  // ("Integração direta Jueri, Bling e Olist") quando o guard nasceu. Desde
+  // 2026-11-04 ela cita só o que está disponível.
+  ["erp-linha", "Integração direta com ERP (Jueri e Olist disponíveis; planilha pronta para importar na Phibo)"],
   ["jueri-disponivel", "Jueri e Olist disponíveis"],
 ];
 
@@ -437,7 +437,7 @@ test("legal: os valores de runtime são exatamente os esperados", async () => {
     !(f.GOOGLE_ESCOPOS as string[]).includes("email"),
     "o escopo email não deve estar na lista",
   );
-  assert.deepEqual(f.CONECTORES_NAO_PRONTOs, ["Bling"]);
+  assert.deepEqual(f.CONECTORES_FORA_DO_SITE, ["Bling"]);
   // As listas não podem estar vazias — lista vazia faria os laços abaixo
   // passarem sem verificar nada.
   assert.ok((f.SUBCONTROLADORES as unknown[]).length >= 8, "subprocessadores faltando");
@@ -529,15 +529,14 @@ test("legal: a retenção aparece sem prometer expurgo automático", async () =>
   );
 });
 
-test("legal: conectores não prontos aparecem como NÃO disponíveis", async () => {
-  const h = texto(await htmlDe(PAGINAS[0].caminho));
-  for (const nome of ["Olist", "Bling"]) {
-    assert.ok(h.includes(nome), `${nome} precisa aparecer como não disponível`);
+test("legal: conectores fora do site não aparecem em página jurídica nenhuma", async () => {
+  const f = await fatos();
+  for (const pagina of PAGINAS) {
+    const h = texto(await htmlDe(pagina.caminho));
+    for (const nome of f.CONECTORES_FORA_DO_SITE as string[]) {
+      assert.ok(!new RegExp(`\\b${nome}\\b`, "i").test(h), `${pagina.caminho} cita ${nome}, que não é citado no site`);
+    }
   }
-  assert.ok(
-    /ainda não disponíveis|ainda não foram habilitados/i.test(h),
-    "os conectores não prontos precisam vir com a ressalva",
-  );
 });
 
 test("legal: Google com escopo, limite e cláusula de Limited Use", async () => {
@@ -773,18 +772,12 @@ test("legal: o pricing importa os fatos em vez de digitar à mão", () => {
     /from\s+["']@\/lib\/legal["']/,
     "PricingSection deve importar os fatos de lib/legal",
   );
-  // O nome do conector não pronto não pode aparecer sem a ressalva — em
-  // nenhuma forma (linha única, string solta, comentário de escape).
+  // Conector fora do site não aparece no código do pricing em forma nenhuma
+  // (linha única, string solta), nem com ressalva.
   const linha = pricing
     .split("\n")
     .filter((l) => /\b(Bling)\b/i.test(l) && !/^\s*(\/\/|\*)/.test(l));
-  for (const l of linha) {
-    assert.match(
-      l,
-      /ainda não|ainda nao|não dispon|nao dispon/i,
-      `PricingSection promete conector não pronto sem ressalva: ${l.trim()}`,
-    );
-  }
+  assert.deepEqual(linha, [], `PricingSection cita conector fora do site: ${linha.join(" | ")}`);
 });
 
 // ─────────────────────────────────────────── D. o produto não contradiz o texto
@@ -1073,7 +1066,7 @@ test("legal: nenhum prestador na China recebe dado das APIs do Google", async ()
 test("legal: o pricing renderizado não promete conector não pronto", async () => {
   // `PricingSection` é "use client", mas `renderToStaticMarkup` renderiza do
   // mesmo jeito (a diretiva é dica de build). Renderizar de verdade importa
-  // aqui: a linha do ERP é MONTADA em runtime (`CONECTORES_NAO_PRONTOs.join`),
+  // aqui: a linha do ERP já foi MONTADA em runtime (`CONECTORES_NAO_PRONTOs.join`),
   // então procurar o texto no fonte nunca acharia — foi o que me fez perder uma
   // rodada. O Grok apontou que o guard antigo nem abria este arquivo.
   preparar();
@@ -1089,18 +1082,10 @@ test("legal: o pricing renderizado não promete conector não pronto", async () 
     assert.ok(h.includes(frag), `pricing perdeu o trecho congelado "${nome}": ${frag}`);
   }
 
-  // E nenhuma menção a conector não pronto pode aparecer sem a ressalva, na
-  // mesma frase do HTML renderizado.
+  // E nenhum conector fora do site aparece no HTML renderizado, nem com ressalva.
   const f = await fatos();
-  for (const nome of f.CONECTORES_NAO_PRONTOs as string[]) {
-    for (const frase of h.split(/(?<=[.!?])\s+/)) {
-      if (!new RegExp(`\\b${nome}\\b`, "i").test(frase)) continue;
-      assert.match(
-        frase,
-        /ainda não|ainda nao|não dispon|nao dispon/i,
-        `pricing promete ${nome} sem ressalva: "${frase.trim()}"`,
-      );
-    }
+  for (const nome of f.CONECTORES_FORA_DO_SITE as string[]) {
+    assert.ok(!new RegExp(`\\b${nome}\\b`, "i").test(h), `pricing cita ${nome}, que não é citado no site`);
   }
 });
 
@@ -1284,7 +1269,6 @@ Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — n�
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros
 Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
-Estes conectores ainda não estão disponíveis para uso: §. As telas existem, mas o acesso ainda não foi habilitado.
 7. Uso aceitável
 Você se compromete a não:
 violar lei, direito de terceiros ou estes termos;
@@ -1535,7 +1519,6 @@ Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta pro
 Disponíveis, com validação em andamento:
 Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
 Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.
-Anunciados anteriormente e ainda não disponíveis: Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.
 10. Por quanto tempo guardamos
 Código de verificação (OTP)
 — Vida curta; expira sozinho. Alvo: minutos.
@@ -1621,7 +1604,6 @@ Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — n�
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros
 Conectores (Google, Notion, Jueri e outros que venham a ser liberados), quando disponíveis, são serviços de terceiros. Ao conectar, você autoriza a mila. a agir nos limites da permissão concedida e aceita os termos desses provedores. A mila. não controla indisponibilidade, mudança de API ou políticas deles.
-Estes conectores ainda não estão disponíveis para uso: Bling. As telas existem, mas o acesso ainda não foi habilitado.
 7. Uso aceitável
 Você se compromete a não:
 violar lei, direito de terceiros ou estes termos;
@@ -1803,7 +1785,7 @@ const GOLDEN_FONTE = `{
     "Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.",
     "Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também o nome do comprador para responder à lojista (e-mail e telefone não são usados); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base de compradores."
   ],
-  "CONECTORES_NAO_PRONTOs": [
+  "CONECTORES_FORA_DO_SITE": [
     "Bling"
   ],
   "CONECTORES_VALIDACAO_PENDENTE": [
@@ -1865,6 +1847,10 @@ const GOLDEN_FONTE = `{
     "informação sobre a possibilidade de não consentir e as consequências disso",
     "revogação do consentimento e oposição a tratamento fundado em legítimo interesse"
   ],
+  "ERP_DISPONIVEIS": [
+    "Jueri",
+    "Olist"
+  ],
   "EXPURGO_AUTOMATICO_ATIVO": false,
   "FUNCOES": [
     "Calcula preço de venda a partir do custo, do imposto e da margem que a lojista informa.",
@@ -1893,7 +1879,6 @@ const GOLDEN_FONTE = `{
     "O site não usa rastreadores de marketing: sem analytics de terceiros, pixel ou cookie de publicidade.",
     "Não há decisão totalmente automatizada que afete a lojista ou seus clientes."
   ],
-  "NAO_PRONTOs_FRASE": "Anunciados anteriormente e ainda não disponíveis: Bling. A tela de conexão existe, mas o acesso ainda não foi habilitado — não conte com eles para a operação da sua loja por enquanto.",
   "RETENCAO": [
     {
       "alvo": "minutos",

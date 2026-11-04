@@ -21,7 +21,6 @@ import {
   INSTAGRAM,
   ISOLAMENTO,
   NAO_FEITO,
-  NAO_PRONTOs_FRASE,
   RETENCAO,
   RETENCAO_NOTA,
   SUBCONTROLADORES,
@@ -214,7 +213,6 @@ export default function PrivacidadePage() {
             <li key={c}>{c}</li>
           ))}
         </ul>
-        <p>{NAO_PRONTOs_FRASE}</p>
 
         <h2>10. Por quanto tempo guardamos</h2>
         <ul>

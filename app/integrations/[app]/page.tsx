@@ -59,13 +59,6 @@ const KNOWN: Record<string, IntegrationConfig> = {
     oQueEClienteId:
       "É o ID da sua empresa no Jueri (o mesmo número que aparece na doc da API).",
   },
-  bling: {
-    nome: "Bling",
-    title: "Conectar Bling ERP",
-    desc: "Notas fiscais, estoque e custos organizados por peça com a mila.",
-    logo: "/integrations/bling-ink.svg",
-    isApiKeyGuided: false,
-  },
   olist: {
     nome: "Olist",
     title: "Conectar Olist",
@@ -230,18 +223,12 @@ export default function IntegrationTransition({ params }: { params: Promise<{ ap
   return (
     <IntegrationConnectionLayout
       name={info.nome}
-      title={key === "bling" ? "Bling, em breve na Mila" : info.title}
+      title={info.title}
       description={info.desc}
       brand={info.logo ? <img src={info.logo} alt={info.nome} /> : <span>{info.nome}</span>}
     >
         <div className="notion-connect-panel" aria-label={`Conectar ${info.nome}`}>
-          {key === "bling" ? (
-            <>
-              <h2>Estamos preparando essa conexão</h2>
-              <p className="notion-connect-panel-intro">A integração estará disponível após a aprovação do app pela Bling.</p>
-              <Link href="/workspace/integracoes" className="notion-connect-submit">Ver outras integrações</Link>
-            </>
-          ) : connected ? (
+          {connected ? (
             <div className="notion-connect-success" role="status">
               <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m7 12 3 3 7-7" /></svg>
               <h2>{info.nome} conectado</h2>

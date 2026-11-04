@@ -15,3 +15,7 @@ Toda mudança que a lojista percebe entra em `lib/releases.ts` na mesma entrega 
 
 - `npm test`. Arquivo de fonte alterado ou novo precisa do hash atualizado em `tests/legal-source-lock.json`.
 - `tests/releases.test.ts` confere que a versão do `package.json` é a primeira de `RELEASES` (pública ou interna) e que só `PUBLIC_RELEASES` chega à lojista.
+
+## Ponytail
+
+O plugin ponytail (`.claude/settings.json`) vem ligado neste repositório: a menor mudança que resolve a tarefa inteira. As regras deste arquivo e do `AGENTS.md` do Eve contam como parte da tarefa e vêm antes dele: a nota em `lib/releases.ts`, o hash em `tests/legal-source-lock.json` e o `npm test` nunca são cortados por serem "extras".

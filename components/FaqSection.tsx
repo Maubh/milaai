@@ -73,10 +73,10 @@ const FAQ_ITEMS: FaqItem[] = [
     ),
   },
   {
-    question: "Preciso cadastrar cartão de crédito para começar?",
+    question: "Como faço para começar?",
     answer: (
       <>
-        Não. Você entra com seu número de WhatsApp e já começa a testar a experiência na hora, sem compromisso e sem precisar cadastrar cartão.
+        Neste momento a <span className="mila-highlight">mila</span> está em piloto, com acesso por convite. Você entra com o seu número de WhatsApp, sem cadastrar cartão. Se o número ainda não estiver liberado, a tela de entrada avisa e você pode pedir o seu convite.
       </>
     ),
   },

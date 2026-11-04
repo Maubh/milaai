@@ -164,7 +164,7 @@ export default function OverviewView({ session, providers, waLink, onRetry }: { 
           </ul>
         ) : (
           // O aviso de falha fica acima, uma vez só; aqui só o escopo do que foi lido.
-          <p className="overview-steps-empty">{reading.failed.length === 2 ? "Sem dados para sugerir passos agora." : "Nenhum próximo passo identificado com os dados disponíveis."}</p>
+          <p className="overview-steps-empty">{reading.failed.length === 2 ? "Sem dados para sugerir passos agora." : "Tudo em dia por aqui. Quando faltar um dado ou uma conexão, o próximo passo aparece aqui."}</p>
         )}
       </section>
     </div>

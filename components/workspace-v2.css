@@ -1,0 +1,26 @@
+/*
+ * Área logada no visual do site novo (polimento, 2026-11): fundo creme liso, títulos
+ * em peso 500 com letras juntas como no site, preços sem negrito, botão de conversa
+ * compacto e cards da visão geral com peso diferente. Preso a .desk-shell.
+ */
+
+/* fundo liso: sem as manchas de cor atrás do conteúdo */
+.desk-shell::before { background: none; }
+
+/* títulos: a tipografia do site */
+.desk-shell .ledger-title { font-weight: 500; letter-spacing: -0.04em; line-height: 1.05; }
+.desk-shell :is(.ledger-section-head h2, .dados-secao-head h2, .releases-timeline h2, .plan-column h3,
+  .desk-full-title, .overview-chat h2, .overview-tile-value, .disconnect-dialog-title) {
+  font-weight: 500; letter-spacing: -0.02em;
+}
+.desk-shell .plan-price { font-weight: 500; letter-spacing: -0.04em; }
+
+/* conversa com a mila: um círculo no canto, que não cobre as linhas da página */
+.desk-shell .desk-main { padding-bottom: 96px; }
+.desk-shell .desk-chat { width: 56px; height: 56px; padding: 0; justify-content: center; border-radius: 50%; }
+.desk-shell .desk-chat-label { display: none; }
+
+/* visão geral: integrações pesam mais que plano e atualização */
+@media (min-width: 900px) {
+  .desk-shell .overview-tiles { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr); }
+}

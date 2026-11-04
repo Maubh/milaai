@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.35",
+    internal: true,
+    date: "2026-11-04",
+    title: "Área da loja no visual do site",
+    summary: "Fundo liso, títulos na tipografia do site e botão de conversa mais discreto.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Acabamento da área da loja",
+        description: "Fundo creme sem manchas de cor, títulos e preços na tipografia do site, o botão de conversar com a mila vira um círculo no canto (e sai da visão geral, que já tem o cartão de conversa), integrações com mais destaque na visão geral e um texto mais claro quando não há próximo passo.",
+      },
+    ],
+  },
+  {
     version: "0.6.34",
     date: "2026-11-04",
     title: "Login e páginas do site no visual novo",

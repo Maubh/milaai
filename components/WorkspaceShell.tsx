@@ -14,6 +14,7 @@ import {
   getVerifiedWaLink,
 } from "@/lib/onboarding";
 import "./workspace-shell.css";
+import "./workspace-v2.css";
 
 // Destinos práticos, na ordem da produção. No desktop Atualizações mora no sino
 // do topo; no dock do celular entra como quinto destino, com o mesmo ponto de
@@ -280,6 +281,7 @@ function WorkspaceAccount({ name, store, initials, loggingOut, onLogout }: { nam
  */
 export default function WorkspaceShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   useTopOnNewPage();
   const [loggingOut, setLoggingOut] = useState(false);
   const [telefone, setTelefone] = useState("");
@@ -344,8 +346,9 @@ export default function WorkspaceShell({ children }: { children: React.ReactNode
         <div className="desk-main">{children}</div>
         <DeskDock />
         {/* Conversa com a mila: botão flutuante no canto inferior direito, fora da
-            navegação (acima do dock no celular). Só abre o WhatsApp; nada é enviado. */}
-        {waLink ? <a href={waLink} className="desk-chat" target="_blank" rel="noopener noreferrer" aria-label="Conversar com a mila no WhatsApp">
+            navegação (acima do dock no celular). Só abre o WhatsApp; nada é enviado.
+            Na visão geral ele não aparece: o cartão "Conversar com a mila" já faz isso. */}
+        {waLink && pathname !== "/workspace" ? <a href={waLink} className="desk-chat" target="_blank" rel="noopener noreferrer" aria-label="Conversar com a mila no WhatsApp">
           <WhatsAppIcon />
           <span className="desk-chat-label" aria-hidden="true">Conversar com a mila</span>
         </a> : null}

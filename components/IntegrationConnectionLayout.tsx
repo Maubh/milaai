@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import "./notion-connection.css";
+import "@/app/site-v2.css";
 
 interface Props {
   name: string;

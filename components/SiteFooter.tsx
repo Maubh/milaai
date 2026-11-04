@@ -1,16 +1,14 @@
 import Link from "next/link";
 
+/** Rodapé das páginas internas: o mesmo da home. */
 export default function SiteFooter() {
   return (
-    <footer className="site-footer-minimal">
-      <div className="wrap footer-minimal-inner">
+    <footer className="sf">
+      <div className="sf-inner">
+        <img className="sf-mark" src="/brand/vectors/wordmark-ivory.svg" alt="mila." width="72" height="26" />
         <p>
           © 2026 mila. Todos os direitos reservados. ·{" "}
-          <a
-            href="https://instagram.com/usemila.ai"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+          <a href="https://instagram.com/usemila.ai" target="_blank" rel="noopener noreferrer">
             @usemila.ai
           </a>
         </p>

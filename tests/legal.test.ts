@@ -2100,10 +2100,11 @@ const ENTORNO_REVISADO: Record<string, string> = {
   "app/globals.css": "84e3d5f415c9a5ae300726302eae47d7980ea67ca288d9c560531429d5497262",
   "app/layout.tsx": "813ab8bb4dca69c6e268fb81b0fe7c4c4283a12f24a47b56781f54dcfbf0da4f",
   "app/site.css": "276948370cd787f0cd31164f0b3417ac5d8b06d8d1d04719cff3c90fcfe0cfb2",
+  "app/site-v2.css": "3e5aa3e779992b4d5d52d58c3fe66203d1b612b135d4fee7449698784afc9c98",
   "app/workspace/workspace.css": "8dcf6352f84a4755bcd434a8b5abc9500b2024c0098d397a0c01454ccd8be02b",
   "components/BrandLogo.tsx": "eadd3ecf16e11bb0fc69d40c528727afc971142daec9367c51266b1f633fabb2",
-  "components/SiteFooter.tsx": "419606c3e9ac75a18e41e3928d87409279985a216f27b250bfebc2bed8ed60c4",
-  "components/SiteHeader.tsx": "979315fd1d70a365c1a7005f482eaf9e5a55649b8f68d5eef4d52265008369e2"
+  "components/SiteFooter.tsx": "e60798a81d807e44dad1eb351c3aadbff7abc8e85adcfacbbbfc0e721cae6d4a",
+  "components/SiteHeader.tsx": "5e5b6b1f1c2713322aabd3fe4495ed9f2295bdd0099afb405649f6c0d0bf039c"
 };
 test("legal: layout, componentes do entorno e CSS permanecem revisados", () => {
   for (const [rel, hash] of Object.entries(ENTORNO_REVISADO)) {

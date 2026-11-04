@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.34",
+    date: "2026-11-04",
+    title: "Login e páginas do site no visual novo",
+    summary: "O login, as telas de conexão das ferramentas e as páginas de termos e privacidade seguem o visual da página inicial.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Mesmo visual em todo o site",
+        description: "O menu, o rodapé, os títulos, os botões e os campos do login, das telas de conexão das ferramentas e das páginas de termos, privacidade e exclusão de dados agora seguem a página inicial.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Conversa simulada substituída pela página inicial",
+        description: "A página de conversa simulada saiu do site: as conversas de exemplo agora estão na página inicial, e o endereço antigo leva para ela.",
+      },
+    ],
+  },
+  {
     version: "0.6.33",
     date: "2026-11-04",
     title: "Site novo da mila",

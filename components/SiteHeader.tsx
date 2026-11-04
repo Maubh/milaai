@@ -1,95 +1,35 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import BrandLogo from "@/components/BrandLogo";
 import "@/app/site.css";
+import "@/app/site-v2.css";
 
+/**
+ * Menu das páginas internas (termos, privacidade, login...): a pílula da home, no tom claro,
+ * sem os atalhos das seções da home. Marca, volta ao site e, fora do login, o botão Começar.
+ */
 export default function SiteHeader() {
-  const pathname = usePathname();
-  const isAuth = pathname?.startsWith("/login");
-  const [open, setOpen] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        buttonRef.current?.focus();
-      }
-    };
-    const onPointer = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (
-        panelRef.current && !panelRef.current.contains(target) &&
-        buttonRef.current && !buttonRef.current.contains(target)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    document.addEventListener("pointerdown", onPointer);
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.removeEventListener("pointerdown", onPointer);
-    };
-  }, [open]);
+  const isAuth = usePathname()?.startsWith("/login");
 
   return (
-    <header className="site-header site-header-minimal">
-      <div className="wrap site-header-inner">
-        <Link href="/" className="brand brand-small" aria-label="mila. — início">
-          <BrandLogo height={24} alt="" />
+    <header className="sh">
+      <Link href="/" className="sh-mark" aria-label="mila. — início">
+        <img src="/brand/vectors/wordmark-mineral.svg" alt="" width="88" height="32" />
+      </Link>
+      <div className="sh-right">
+        <Link href="/" className="sh-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M19 12H5m6 6-6-6 6-6" />
+          </svg>
+          Voltar ao site
         </Link>
         {!isAuth && (
-          <>
-            <nav className="site-header-nav" aria-label="Navegação principal">
-              <Link href="/#planos" className="site-header-link">
-                Planos
-              </Link>
-              <Link href="/#faq" className="site-header-link">
-                Dúvidas
-              </Link>
-              <Link href="/login" className="site-header-btn">
-                Começar
-              </Link>
-            </nav>
-            <button
-              ref={buttonRef}
-              type="button"
-              className="site-header-toggle"
-              aria-expanded={open}
-              aria-controls="site-header-menu"
-              aria-label={open ? "Fechar menu" : "Abrir menu"}
-              onClick={() => setOpen((v) => !v)}
-            >
-              <span aria-hidden="true" className={open ? "is-open" : ""}>
-                <i />
-                <i />
-                <i />
-              </span>
-            </button>
-          </>
+          <Link href="/login" className="sh-cta">
+            Começar
+          </Link>
         )}
       </div>
-      {!isAuth && (
-        <div ref={panelRef} className="site-header-menuwrap" hidden={!open}>
-          <nav id="site-header-menu" className="site-header-menu" aria-label="Menu móvel">
-            <Link href="/#planos" className="site-header-menu-link" onClick={() => setOpen(false)}>
-              Planos
-            </Link>
-            <Link href="/#faq" className="site-header-menu-link" onClick={() => setOpen(false)}>
-              Dúvidas
-            </Link>
-            <Link href="/login" className="site-header-menu-btn" onClick={() => setOpen(false)}>
-              Começar
-            </Link>
-          </nav>
-        </div>
-      )}
     </header>
   );
 }

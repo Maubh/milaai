@@ -34,7 +34,7 @@ interface PlanItem {
 }
 
 /** VIP/Escala fora da oferta atual. */
-const PLANS: PlanItem[] = [
+export const PLANS: PlanItem[] = [
   {
     id: "essencial",
     name: "Essencial",

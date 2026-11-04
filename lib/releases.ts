@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.33",
+    date: "2026-11-04",
+    title: "Site novo da mila",
+    summary: "A página inicial mostra, com conversas de exemplo, como a mila ajuda no dia a dia da loja.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Página inicial refeita",
+        description: "A página inicial do site mostra seis momentos do dia da loja com a conversa de exemplo no WhatsApp, as ferramentas que a mila conecta, os planos lado a lado e as dúvidas mais comuns. Uma seta leva de uma parte à outra, no computador e no celular.",
+      },
+    ],
+  },
+  {
     version: "0.6.32",
     internal: true,
     date: "2026-11-04",

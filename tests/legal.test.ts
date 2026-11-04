@@ -1264,7 +1264,7 @@ Você pode enviar textos, imagens e arquivos (“entradas”). A mila. pode gera
 Você garante ter direito de enviar o conteúdo e de autorizar o uso das contas conectadas.
 Saídas de IA podem conter erros. Não use preço, estoque, prazo ou texto gerado sem revisão humana quando isso importar para a sua loja.
 Quando esse controle estiver disponível e houver ações que alteram dados, pediremos confirmação ligada à prévia da ação. Um “sim” solto no chat sobre outro assunto não conta como autorização.
-Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — não é orientação real de preço.
+As conversas de exemplo do site são ilustrativas — não são orientação real de preço.
 5. Planos e pagamento
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros
@@ -1599,7 +1599,7 @@ Você pode enviar textos, imagens e arquivos (“entradas”). A mila. pode gera
 Você garante ter direito de enviar o conteúdo e de autorizar o uso das contas conectadas.
 Saídas de IA podem conter erros. Não use preço, estoque, prazo ou texto gerado sem revisão humana quando isso importar para a sua loja.
 Quando esse controle estiver disponível e houver ações que alteram dados, pediremos confirmação ligada à prévia da ação. Um “sim” solto no chat sobre outro assunto não conta como autorização.
-Conteúdo do mockup do site e da rota de conversa simulada é ilustrativo — não é orientação real de preço.
+As conversas de exemplo do site são ilustrativas — não são orientação real de preço.
 5. Planos e pagamento
 Os planos publicados no site (por exemplo Essencial e Pro) descrevem a intenção comercial do produto. No piloto, founders e convidados podem ter acesso sem cobrança ou em condições especiais. Quando a cobrança estiver ativa, preços, ciclo e cancelamento serão confirmados no checkout ou no WhatsApp antes da cobrança.
 6. Integrações de terceiros

@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.36",
+    internal: true,
+    date: "2026-11-04",
+    title: "Termos sem a conversa simulada",
+    summary: "Os termos de uso citam as conversas de exemplo do site no lugar da página de conversa simulada, que saiu do ar.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Termos atualizados",
+        description: "A seção 4 dos termos de uso deixa de citar a página de conversa simulada, que saiu do site, e passa a falar das conversas de exemplo da página inicial.",
+      },
+    ],
+  },
+  {
     version: "0.6.35",
     internal: true,
     date: "2026-11-04",

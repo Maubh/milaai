@@ -83,8 +83,8 @@ export default function TermosPage() {
             no chat sobre outro assunto não conta como autorização.
           </li>
           <li>
-            Conteúdo do mockup do site e da rota de conversa simulada é
-            ilustrativo — não é orientação real de preço.
+            As conversas de exemplo do site são ilustrativas — não são
+            orientação real de preço.
           </li>
         </ul>
 

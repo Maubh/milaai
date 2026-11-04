@@ -3,14 +3,23 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import BrandLogo from "@/components/BrandLogo";
 import "@/app/site.css";
+import "@/app/site-v2.css";
 
+/** As seções da home, as mesmas do menu dela. */
+const SECOES = [
+  { href: "/#rotina", label: "Rotina" },
+  { href: "/#integracoes", label: "Integrações" },
+  { href: "/#planos", label: "Planos" },
+  { href: "/#duvidas", label: "Dúvidas" },
+];
+
+/** Menu das páginas internas: a pílula da home, no tom claro. No login, só a marca e a volta ao site. */
 export default function SiteHeader() {
   const pathname = usePathname();
   const isAuth = pathname?.startsWith("/login");
   const [open, setOpen] = useState(false);
-  const panelRef = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -22,13 +31,7 @@ export default function SiteHeader() {
       }
     };
     const onPointer = (e: PointerEvent) => {
-      const target = e.target as Node;
-      if (
-        panelRef.current && !panelRef.current.contains(target) &&
-        buttonRef.current && !buttonRef.current.contains(target)
-      ) {
-        setOpen(false);
-      }
+      if (navRef.current && !navRef.current.contains(e.target as Node)) setOpen(false);
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("pointerdown", onPointer);
@@ -39,56 +42,50 @@ export default function SiteHeader() {
   }, [open]);
 
   return (
-    <header className="site-header site-header-minimal">
-      <div className="wrap site-header-inner">
-        <Link href="/" className="brand brand-small" aria-label="mila. — início">
-          <BrandLogo height={24} alt="" />
+    <header ref={navRef} className="sh" data-open={open}>
+      <Link href="/" className="sh-mark" aria-label="mila. — início">
+        <img src="/brand/vectors/wordmark-mineral.svg" alt="" width="88" height="32" />
+      </Link>
+      {isAuth ? (
+        <Link href="/" className="sh-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M19 12H5m6 6-6-6 6-6" />
+          </svg>
+          Voltar ao site
         </Link>
-        {!isAuth && (
-          <>
-            <nav className="site-header-nav" aria-label="Navegação principal">
-              <Link href="/#planos" className="site-header-link">
-                Planos
-              </Link>
-              <Link href="/#faq" className="site-header-link">
-                Dúvidas
-              </Link>
-              <Link href="/login" className="site-header-btn">
-                Começar
-              </Link>
-            </nav>
+      ) : (
+        <>
+          <ul className="sh-links">
+            {SECOES.map((s) => (
+              <li key={s.href}>
+                <Link href={s.href}>{s.label}</Link>
+              </li>
+            ))}
+          </ul>
+          <div className="sh-right">
+            <Link href="/login" className="sh-cta">
+              Começar
+            </Link>
             <button
               ref={buttonRef}
               type="button"
-              className="site-header-toggle"
+              className="sh-toggle"
               aria-expanded={open}
-              aria-controls="site-header-menu"
+              aria-controls="sh-drawer"
               aria-label={open ? "Fechar menu" : "Abrir menu"}
               onClick={() => setOpen((v) => !v)}
             >
-              <span aria-hidden="true" className={open ? "is-open" : ""}>
-                <i />
-                <i />
-                <i />
-              </span>
+              <span />
             </button>
-          </>
-        )}
-      </div>
-      {!isAuth && (
-        <div ref={panelRef} className="site-header-menuwrap" hidden={!open}>
-          <nav id="site-header-menu" className="site-header-menu" aria-label="Menu móvel">
-            <Link href="/#planos" className="site-header-menu-link" onClick={() => setOpen(false)}>
-              Planos
-            </Link>
-            <Link href="/#faq" className="site-header-menu-link" onClick={() => setOpen(false)}>
-              Dúvidas
-            </Link>
-            <Link href="/login" className="site-header-menu-btn" onClick={() => setOpen(false)}>
-              Começar
-            </Link>
+          </div>
+          <nav id="sh-drawer" className="sh-drawer" aria-label="Seções">
+            {SECOES.map((s) => (
+              <Link key={s.href} href={s.href} onClick={() => setOpen(false)}>
+                {s.label}
+              </Link>
+            ))}
           </nav>
-        </div>
+        </>
       )}
     </header>
   );

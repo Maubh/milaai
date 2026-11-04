@@ -30,6 +30,12 @@ const nextConfig = {
         destination: "/login/verify",
         permanent: false,
       },
+      // a conversa simulada saiu do site; links antigos caem na home, onde está a conversa de exemplo
+      {
+        source: "/conversa",
+        destination: "/",
+        permanent: true,
+      },
     ];
   },
 };

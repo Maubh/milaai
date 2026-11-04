@@ -26,13 +26,6 @@
 }
 .sh-mark { display: flex; align-items: center; height: 44px; text-decoration: none; color: inherit; }
 .sh-mark img { height: 22px; width: auto; display: block; }
-.sh-links { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
-.sh-links a {
-  display: inline-flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 999px;
-  font-size: 14px; font-weight: 500; text-decoration: none; color: inherit; opacity: 0.78;
-  transition: opacity 0.2s, background 0.2s;
-}
-.sh-links a:hover { opacity: 1; background: rgba(127, 140, 136, 0.14); }
 .sh-right { display: flex; align-items: center; gap: 8px; }
 .sh-cta {
   display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 999px;
@@ -47,40 +40,10 @@
 }
 .sh-back:hover { background: rgba(23, 63, 59, 0.06); }
 .sh-back svg { width: 16px; height: 16px; }
-.sh-toggle {
-  display: none; width: 44px; height: 44px; border-radius: 999px; border: 0; background: transparent; color: inherit; cursor: pointer;
-  align-items: center; justify-content: center;
-}
-.sh-toggle span, .sh-toggle span::before, .sh-toggle span::after {
-  display: block; width: 18px; height: 1.5px; background: currentColor; border-radius: 2px; position: relative;
-  transition: transform 0.3s var(--ease-out), background 0.2s;
-}
-.sh-toggle span::before, .sh-toggle span::after { content: ""; position: absolute; left: 0; }
-.sh-toggle span::before { top: -6px; }
-.sh-toggle span::after { top: 6px; }
-.sh[data-open="true"] .sh-toggle span { background: transparent; }
-.sh[data-open="true"] .sh-toggle span::before { transform: translateY(6px) rotate(45deg); }
-.sh[data-open="true"] .sh-toggle span::after { transform: translateY(-6px) rotate(-45deg); }
-.sh-drawer { display: none; }
-
-@media (max-width: 860px) {
+@media (max-width: 520px) {
   .sh { padding-left: 18px; }
-  .sh-links { display: none; }
-  .sh-toggle { display: inline-flex; }
+  .sh-back { padding: 0 12px; }
   .sh-cta { padding: 0 16px; }
-  .sh-drawer {
-    display: block; position: absolute; top: calc(100% + 8px); left: 0; right: 0; padding: 8px; border-radius: 24px;
-    background: rgba(251, 249, 245, 0.97); color: var(--ink);
-    box-shadow: 0 18px 50px rgba(6, 20, 18, 0.22), inset 0 0 0 1px rgba(30, 43, 40, 0.06);
-    opacity: 0; transform: translateY(-6px); pointer-events: none; visibility: hidden;
-    transition: opacity 0.25s var(--ease-state), transform 0.35s var(--ease-out), visibility 0s 0.35s;
-  }
-  .sh[data-open="true"] .sh-drawer { opacity: 1; transform: none; pointer-events: auto; visibility: visible; transition-delay: 0s; }
-  .sh-drawer a {
-    display: flex; align-items: center; height: 52px; padding: 0 18px; border-radius: 16px;
-    font-size: 17px; font-weight: 600; text-decoration: none; color: inherit;
-  }
-  .sh-drawer a:hover { background: rgba(23, 63, 59, 0.06); }
 }
 
 /* ---------- rodapé: o da home ---------- */
@@ -103,13 +66,11 @@
 
 /* ---------- títulos e texto ---------- */
 .site-shell .auth-minimal-title,
-.site-shell .conversa-title,
 .notion-connect-page h1 {
   font-family: var(--sans); font-weight: 500; letter-spacing: -0.04em; line-height: 1.02;
   font-size: clamp(34px, 4.2vw, 56px); text-wrap: balance;
 }
 .site-shell .auth-minimal-lede,
-.site-shell .conversa-lede,
 .notion-connect-page .notion-connect-intro { color: var(--muted); font-size: 17px; line-height: 1.6; }
 .site-shell .auth-minimal { padding-top: clamp(40px, 7vw, 88px); padding-bottom: clamp(56px, 8vw, 112px); }
 .site-shell .auth-minimal-back a,

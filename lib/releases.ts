@@ -26,6 +26,33 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.36",
+    internal: true,
+    date: "2026-11-04",
+    title: "Termos sem a conversa simulada e seta do celular",
+    summary: "Os termos de uso citam as conversas de exemplo do site no lugar da página de conversa simulada, que saiu do ar.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Termos atualizados",
+        description: "A seção 4 dos termos de uso deixa de citar a página de conversa simulada, que saiu do site, e passa a falar das conversas de exemplo da página inicial.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Seta da página inicial centralizada no celular",
+        description: "No celular, a seta abaixo do texto da página inicial fica com o mesmo espaço até o texto e até o celular de exemplo.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Nome da mila no login",
+        description: "O título da tela de entrada escreve o nome como a marca: \"Começar com a mila.\".",
+      },
+    ],
+  },
+  {
     version: "0.6.35",
     internal: true,
     date: "2026-11-04",

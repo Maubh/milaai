@@ -553,7 +553,7 @@
   /* copy starts under the nav (no vertical centring), so the phone shows below it */
   .lp .hero-copy { min-height: 0; justify-content: flex-start; padding: 100px 0 0; }
   .lp .hero-copy > .cue {
-    display: grid; place-items: center; align-self: center; width: 52px; height: 52px; margin-top: 20px; border: 0; padding: 0; border-radius: 50%; cursor: pointer;
+    display: grid; place-items: center; align-self: center; width: 52px; height: 52px; margin: 20px 0 14px; border: 0; padding: 0; border-radius: 50%; cursor: pointer;
     background: rgba(246, 243, 237, 0.08); color: var(--ivory); box-shadow: inset 0 0 0 1px rgba(246, 243, 237, 0.2);
   }
   .lp .hero-copy > .cue svg { width: 18px; height: 18px; animation: nudge 1.6s var(--ease-out) 1.6s 3; }

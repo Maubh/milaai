@@ -136,7 +136,7 @@ function LoginInner() {
       <p className="auth-minimal-back auth-minimal-back-top">
         <Link href="/">← Voltar</Link>
       </p>
-      <h1 className="auth-minimal-title">Começar com a <span className="mila-highlight">mila</span></h1>
+      <h1 className="auth-minimal-title">Começar com a <span className="mila-highlight">mila.</span></h1>
       <p className="auth-minimal-lede">
         Informe o WhatsApp da sua loja. Vamos enviar um código de 6 dígitos para você começar.
       </p>

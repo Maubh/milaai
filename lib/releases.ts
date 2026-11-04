@@ -44,6 +44,12 @@ export const RELEASES: readonly Release[] = [
         title: "Seta da página inicial centralizada no celular",
         description: "No celular, a seta abaixo do texto da página inicial fica com o mesmo espaço até o texto e até o celular de exemplo.",
       },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Nome da mila no login",
+        description: "O título da tela de entrada escreve o nome como a marca: \"Começar com a mila.\".",
+      },
     ],
   },
   {

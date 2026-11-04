@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.30",
+    internal: true,
+    date: "2026-11-04",
+    title: "Pergunta sobre como começar corrigida",
+    summary: "O FAQ do site explica que o acesso está em piloto, por convite.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Como começar, sem promessa de teste imediato",
+        description: "A pergunta sobre cartão de crédito prometia teste na hora. Agora o FAQ diz que a mila está em piloto, com acesso por convite, e que a entrada é pelo número de WhatsApp, sem cartão.",
+      },
+    ],
+  },
+  {
     version: "0.6.29",
     date: "2026-11-03",
     title: "Boas-vindas mais curtas no WhatsApp",

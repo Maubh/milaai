@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.32",
+    internal: true,
+    date: "2026-11-04",
+    title: "Como começar, para o lançamento",
+    summary: "O FAQ explica como começar sem falar da fase de testes.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Como começar",
+        description: "A resposta sobre como começar deixa de citar o piloto e o convite: você entra com o número de WhatsApp, escolhe o plano e começa a conversar com a mila.",
+      },
+    ],
+  },
+  {
     version: "0.6.31",
     internal: true,
     date: "2026-11-04",

@@ -76,7 +76,7 @@ const FAQ_ITEMS: FaqItem[] = [
     question: "Como faço para começar?",
     answer: (
       <>
-        Neste momento a <span className="mila-highlight">mila</span> está em piloto, com acesso por convite. Você entra com o seu número de WhatsApp, sem cadastrar cartão. Se o número ainda não estiver liberado, a tela de entrada avisa e você pode pedir o seu convite.
+        Você entra com o seu número de WhatsApp, escolhe o Essencial ou o Pro e já começa a conversar com a <span className="mila-highlight">mila</span> no WhatsApp que você usa todo dia.
       </>
     ),
   },

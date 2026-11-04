@@ -66,7 +66,7 @@ function SimulatorInner() {
         </div>
 
         <div>
-          <ChatPanel lines={lines} showIntegrationLink={activeId === "integracao"} />
+          <ChatPanel lines={lines} />
           <div ref={bottomRef} />
           <div className="work-actions">
             <Link href="/workspace" className="btn btn-plum btn-sm">

@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import {
   ATUALIZADO_EM,
-  CONECTORES_NAO_PRONTOs,
   CONTATO_PRIVACIDADE,
   INSTAGRAM,
 } from "@/lib/legal";
@@ -105,11 +104,6 @@ export default function TermosPage() {
           conectar, você autoriza a mila. a agir nos limites da permissão
           concedida e aceita os termos desses provedores. A mila. não controla
           indisponibilidade, mudança de API ou políticas deles.
-        </p>
-        <p>
-          Estes conectores ainda não estão disponíveis para uso:{" "}
-          {CONECTORES_NAO_PRONTOs.join(", ")}. As telas existem, mas o acesso
-          ainda não foi habilitado.
         </p>
 
         <h2>7. Uso aceitável</h2>

@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.31",
+    internal: true,
+    date: "2026-11-04",
+    title: "Site sem menção ao Bling",
+    summary: "O site cita só as integrações disponíveis.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Bling fora do site",
+        description: "O card do Pro, os termos, a política de privacidade e a conversa de demonstração deixaram de citar o Bling, que não está disponível. A tela de conexão do Bling saiu do ar.",
+      },
+    ],
+  },
+  {
     version: "0.6.30",
     internal: true,
     date: "2026-11-04",

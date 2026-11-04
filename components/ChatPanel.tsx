@@ -1,15 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import type { ChatLine } from "@/lib/conversation";
 
 interface Props {
   lines: ChatLine[];
   title?: string;
-  showIntegrationLink?: boolean;
 }
 
-export default function ChatPanel({ lines, title = "mila · simulação", showIntegrationLink }: Props) {
+export default function ChatPanel({ lines, title = "mila · simulação" }: Props) {
   return (
     <div className="chat-panel" role="log" aria-label={`${title}: conversa simulada`} aria-live="polite">
       <div className="chat-panel-head">
@@ -20,12 +18,6 @@ export default function ChatPanel({ lines, title = "mila · simulação", showIn
         {lines.map((line, i) => (
           <p key={i} className={line.from === "lojista" ? "bubble out" : "bubble in"}>
             {line.text}
-            {showIntegrationLink && line.from === "mila" && i === lines.length - 1 ? (
-              <>
-                {" "}
-                <Link href="/integrations/bling">Ver tela de conexão do Bling</Link>
-              </>
-            ) : null}
           </p>
         ))}
       </div>

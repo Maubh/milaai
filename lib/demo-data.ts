@@ -24,12 +24,6 @@ export const INTEGRACOES: Integracao[] = [
     desc: "Gestão especializada de joias e semijoias, consignados, estoque e custos.",
   },
   {
-    id: "bling",
-    nome: "Bling",
-    status: "disponível",
-    desc: "Trazer notas, estoque e custos sem digitar tudo de novo.",
-  },
-  {
     id: "olist",
     nome: "Olist",
     status: "disponível",

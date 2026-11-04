@@ -446,16 +446,13 @@ export const CONECTORES_VALIDACAO_PENDENTE = [
   "Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.",
 ] as const;
 
-/** Anunciados em algum momento e que NÃO funcionam: a tela genérica de conexão
- *  existe, mas o app OAuth não foi criado e a conexão devolve erro 501.
- *  Estado medido em produção: app_credentials bling=false. */
-export const CONECTORES_NAO_PRONTOs = ["Bling"] as const;
+/** Conectores que o site NÃO cita (decisão de 2026-11-04): o Bling não tem app
+ *  OAuth em produção, então não aparece em página nenhuma, nem como "em breve".
+ *  O guard em `tests/legal.test.ts` confere que nenhum deles aparece no site. */
+export const CONECTORES_FORA_DO_SITE = ["Bling"] as const;
 
-/** Frase única que apresenta os não prontos — o guard exige que ela exista. */
-export const NAO_PRONTOs_FRASE =
-  "Anunciados anteriormente e ainda não disponíveis: Bling. A tela de " +
-  "conexão existe, mas o acesso ainda não foi habilitado — não conte com eles " +
-  "para a operação da sua loja por enquanto.";
+/** ERPs com integração direta disponível, como o card do Pro os cita. */
+export const ERP_DISPONIVEIS = ["Jueri", "Olist"] as const;
 
 
 /** Sentinela de fim de arquivo. O guard lê este arquivo para comparar a lista

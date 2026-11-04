@@ -288,12 +288,9 @@ verificar "r3: contato montado em runtime (join)"
 python3 - "$PRICING" <<'PY'
 import sys, pathlib
 p = pathlib.Path(sys.argv[1]); t = p.read_text()
-alvo = 'CONECTORES_NAO_PRONTOs.join(" e ") +\n  " ainda não)";'
+alvo = '"Integração direta com ERP (" + ERP_DISPONIVEIS.join(" e ") + " disponíveis; planilha pronta para importar na Phibo)";'
 assert alvo in t, "alvo r4 não encontrado"
-t = t.replace(alvo, '"")";').replace(
-    'export const PLANO_ERP =\n  "Integração direta com ERP (Jueri disponível; " +\n  ',
-    'export const PLANO_ERP =\n  "Integração direta Jueri, Bling e Olist (entrada de notas e estoque)";\nconst _U =\n  ')
-p.write_text(t)
+p.write_text(t.replace(alvo, '"Integração direta Jueri, Bling e Olist (entrada de notas e estoque)";'))
 PY
 verificar "r4: pricing promete 'Jueri, Bling e Olist' sem ressalva"
 

@@ -2,16 +2,13 @@
 import Link from "next/link";
 
 import { PLANO_GOOGLE, PLANO_PDF } from "@/lib/google-workspace";
-import { CONECTORES_NAO_PRONTOs } from "@/lib/legal";
 import { PLANO_TRELLO } from "@/lib/trello";
+import { ERP_DISPONIVEIS } from "@/lib/legal";
 
-/** Linha do plano que fala de ERP. Fonte única: `lib/legal.ts` diz QUAIS
- *  conectores não estão prontos. Agora que Olist e Jueri estão disponíveis,
- *  apenas o Bling permanece como próximo da fila. */
+/** Linha do plano que fala de ERP: só o que está disponível, vindo de
+ *  `lib/legal.ts`. Conector que não está pronto não é citado. */
 export const PLANO_ERP =
-  "Integração direta com ERP (Jueri e Olist disponíveis; planilha pronta para importar na Phibo; " +
-  CONECTORES_NAO_PRONTOs.join(" e ") +
-  " ainda não)";
+  "Integração direta com ERP (" + ERP_DISPONIVEIS.join(" e ") + " disponíveis; planilha pronta para importar na Phibo)";
 
 export const PLANO_VITRINE_ESSENCIAL =
   "Vitrine web interativa (1 ativa por vez) com fotos reais";

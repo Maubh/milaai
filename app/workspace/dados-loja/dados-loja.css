@@ -127,6 +127,21 @@
 }
 
 /* Marca: fontes por papel (busca no Google Fonts + fontes enviadas). */
+/* Papel com fonte enviada: a busca do Google fica bloqueada e a tela diz por quê. */
+.dados-fonte-bloqueio {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--color-ledger-rule-strong);
+  border-radius: 0.5rem;
+  color: var(--color-ledger-muted);
+  font-size: var(--text-workspace-sm);
+}
+.dados-fonte-bloqueio strong { color: var(--color-ledger-ink); }
+.dados-fonte-fechar { margin-top: 0.25rem; }
 .dados-fonte-escolhida {
   display: flex;
   align-items: center;

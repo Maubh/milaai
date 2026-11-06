@@ -76,6 +76,8 @@ function EscolhaFonte({
   google,
   enviadas,
   nomeLoja,
+  fonteEnviada,
+  onVoltarPadrao,
 }: {
   campo: CampoFonte;
   rotulo: string;
@@ -85,6 +87,9 @@ function EscolhaFonte({
   google: readonly FonteGoogle[];
   enviadas: readonly FonteEnviada[];
   nomeLoja: string;
+  /** Família da fonte enviada que está em uso neste papel: a escolha do Google fica bloqueada. */
+  fonteEnviada?: string | null;
+  onVoltarPadrao?: () => void;
 }) {
   const [busca, setBusca] = useState("");
   const [aberta, setAberta] = useState(false);
@@ -129,9 +134,18 @@ function EscolhaFonte({
           <button type="button" className="ledger-button ledger-button-quiet" onClick={() => escolher("")}>Usar a padrão</button>
         ) : null}
       </div>
+      {fonteEnviada ? (
+        <div className="dados-fonte-bloqueio" role="note">
+          <span>
+            Esta vitrine usa a sua fonte enviada <strong>{fonteEnviada}</strong>. Para escolher uma do Google Fonts, volte para a padrão antes.
+          </span>
+          <button type="button" className="ledger-button" onClick={onVoltarPadrao}>Voltar para a padrão</button>
+        </div>
+      ) : null}
       <input
         type="search"
         role="combobox"
+        disabled={Boolean(fonteEnviada)}
         aria-labelledby={`rotulo-${campo}`}
         aria-expanded={aberta}
         aria-controls={idLista}
@@ -207,10 +221,12 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
   const [rascunho, setRascunho] = useState<Record<string, string>>({});
   const [google, setGoogle] = useState<FonteGoogle[]>([...FONTES_RESERVA]);
   const [enviando, setEnviando] = useState<string | null>(null);
-  const [fontePendente, setFontePendente] = useState<{ arquivo: File; familia: string } | null>(null);
+  const [fontePendente, setFontePendente] = useState<{ arquivo: File; familia: string; papel: CampoFonte | null } | null>(null);
   const inputLogo = useRef<HTMLInputElement>(null);
   const inputIdentidade = useRef<HTMLInputElement>(null);
   const inputFonte = useRef<HTMLInputElement>(null);
+  // Papel (título, subtítulo ou corpo) do próximo arquivo de fonte escolhido.
+  const papelUpload = useRef<CampoFonte | null>(null);
 
   const ler = useCallback(async () => {
     setEstado({ status: "loading" });
@@ -322,7 +338,7 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
     }
   }
 
-  async function enviar(tipo: "logo" | "identidade" | "fonte", arquivo: File, familia?: string) {
+  async function enviar(tipo: "logo" | "identidade" | "fonte", arquivo: File, familia?: string, papel?: CampoFonte | null) {
     const limite = LIMITES_ARQUIVO[tipo];
     if (arquivo.size > limite.bytes) {
       p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("file_too_large", tipo) });
@@ -342,9 +358,27 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
         p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(data.detail, data.campo) });
         return;
       }
-      setEstado({ status: "ready", ...projetarMarca(data) });
+      let marcaAtual = projetarMarca(data);
+      setEstado({ status: "ready", ...marcaAtual });
       setFontePendente(null);
-      p.setAviso({ secao: "marca", ok: true, texto: tipo === "logo" ? "Logo salvo." : tipo === "fonte" ? "Fonte enviada. Escolha onde usar em Editar." : "Arquivo salvo." });
+      if (tipo === "fonte" && papel && familia) {
+        // Fonte enviada para um papel: já passa a ser a fonte desse papel.
+        const nova = marcaAtual.marca.fontes_enviadas.find((f) => f.familia === familia);
+        if (nova) {
+          const r = await fetch("/api/marca", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ [papel]: nova.valor }) });
+          const d = await r.json().catch(() => ({}));
+          if (r.ok && d.ok === true) {
+            marcaAtual = projetarMarca(d);
+            setEstado({ status: "ready", ...marcaAtual });
+          }
+        }
+      }
+      const rotuloPapel = papel ? PAPEIS_FONTE.find((x) => x.campo === papel)?.rotulo.toLowerCase() : null;
+      p.setAviso({
+        secao: "marca",
+        ok: true,
+        texto: tipo === "logo" ? "Logo salvo." : tipo === "fonte" ? (rotuloPapel ? `Fonte enviada e em uso no ${rotuloPapel}.` : "Fonte enviada. Escolha onde usar em Editar.") : "Arquivo salvo.",
+      });
     } catch {
       p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(null) });
     } finally {
@@ -380,7 +414,7 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
     if (!arquivo) return;
     if (tipo === "fonte") {
       const sugestao = familiaValida(arquivo.name.replace(/\.[a-z0-9]+$/i, "").replace(/[_-]+/g, " ")) ?? "";
-      setFontePendente({ arquivo, familia: sugestao });
+      setFontePendente({ arquivo, familia: sugestao, papel: papelUpload.current });
       return;
     }
     enviar(tipo, arquivo);
@@ -440,6 +474,12 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
                 google={google}
                 enviadas={marca.fontes_enviadas}
                 nomeLoja={nomeLoja}
+                fonteEnviada={
+                  (rascunho[papel.campo] ?? "").startsWith("arquivo:")
+                    ? marca.fontes_enviadas.find((f) => f.valor === rascunho[papel.campo])?.familia ?? "sua fonte"
+                    : null
+                }
+                onVoltarPadrao={() => setRascunho((r) => ({ ...r, [papel.campo]: "" }))}
               />
             ))
           ) : (
@@ -557,6 +597,9 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
             )}
             {fontePendente ? (
               <div className="dados-marca-fonte-nova">
+                {fontePendente.papel ? (
+                  <span className="dados-campo-ajuda">Vai ser a fonte do {PAPEIS_FONTE.find((x) => x.campo === fontePendente.papel)?.rotulo.toLowerCase()}.</span>
+                ) : null}
                 <label className="dados-campo">
                   <span className="dados-campo-rotulo">Nome da fonte</span>
                   <input type="text" maxLength={40} value={fontePendente.familia} onChange={(e) => setFontePendente({ ...fontePendente, familia: e.target.value })} />
@@ -572,7 +615,7 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
                         p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("invalid_field", "familia") });
                         return;
                       }
-                      enviar("fonte", fontePendente.arquivo, familia);
+                      enviar("fonte", fontePendente.arquivo, familia, fontePendente.papel);
                     }}
                   >
                     {enviando === "fonte" ? "Enviando…" : `Enviar ${fontePendente.arquivo.name}`}
@@ -582,14 +625,20 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
               </div>
             ) : (
               <div className="dados-marca-acoes">
-                <button
-                  type="button"
-                  className="ledger-button"
-                  disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
-                  onClick={() => inputFonte.current?.click()}
-                >
-                  Enviar fonte
-                </button>
+                {PAPEIS_FONTE.map((papel) => (
+                  <button
+                    key={papel.campo}
+                    type="button"
+                    className="ledger-button"
+                    disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
+                    onClick={() => {
+                      papelUpload.current = papel.campo;
+                      inputFonte.current?.click();
+                    }}
+                  >
+                    Enviar fonte do {papel.rotulo.toLowerCase()}
+                  </button>
+                ))}
                 <input ref={inputFonte} type="file" accept={LIMITES_ARQUIVO.fonte.aceita} hidden onChange={arquivoEscolhido("fonte")} aria-label="Arquivo da fonte" />
               </div>
             )}

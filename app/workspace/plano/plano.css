@@ -14,29 +14,42 @@
   gap: var(--space-workspace-lg);
   padding-top: var(--space-workspace-lg);
 }
+/* Cards como na home (components/landing/landing.css): Essencial claro, Pro escuro. */
 .plan-column {
-  display: grid;
-  grid-template-rows: auto auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: var(--space-workspace-md);
   padding: var(--space-workspace-xl);
-  border-radius: var(--radius-desk-inset);
+  border-radius: var(--radius-desk-panel);
   background: var(--color-desk-inset);
   min-width: 0;
 }
-.plan-column[data-current="true"] { background: var(--color-desk-panel); box-shadow: inset 0 0 0 1.5px var(--color-ledger-mineral); }
+.plan-column[data-current="true"][data-plan="essencial"] { background: var(--color-desk-panel); box-shadow: inset 0 0 0 1.5px var(--color-ledger-mineral); }
+.plan-column[data-plan="pro"] { background: var(--color-ledger-mineral); color: var(--color-ledger-mineral-ink); }
 .plan-column-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-workspace-sm); }
 .plan-column h3 { font-size: var(--text-workspace-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
+.plan-current-tag { display: inline-flex; align-items: center; gap: 8px; font-size: var(--text-workspace-sm); font-weight: 600; color: var(--color-ledger-positive); }
+.plan-current-tag::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.plan-column[data-plan="pro"] .plan-current-tag { color: var(--color-ledger-mineral-muted); }
 .plan-blurb { color: var(--color-ledger-muted); line-height: 1.55; }
+.plan-column[data-plan="pro"] .plan-blurb { color: var(--color-ledger-mineral-muted); }
 .plan-price { font-size: var(--text-platform-price); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--color-ledger-mineral); font-variant-numeric: tabular-nums; }
 .plan-price span { font-size: var(--text-workspace-sm); font-weight: 500; letter-spacing: 0; color: var(--color-ledger-muted); }
-.plan-features { display: grid; margin: 0; padding: 0; list-style: none; border-top: var(--rule-ledger) solid var(--color-ledger-rule); align-content: start; }
-.plan-features li { padding-block: var(--space-workspace-sm); border-bottom: var(--rule-ledger) solid var(--color-ledger-rule); line-height: 1.5; overflow-wrap: anywhere; }
-.plan-features li:last-child { border-bottom: 0; }
+.plan-column[data-plan="pro"] .plan-price { color: var(--color-ledger-mineral-ink); }
+.plan-column[data-plan="pro"] .plan-price span { color: var(--color-ledger-mineral-muted); }
+.plan-features { display: grid; gap: 12px; flex: 1; margin: 0; padding: var(--space-workspace-md) 0 0; list-style: none; border-top: var(--rule-ledger) solid var(--color-ledger-rule-strong); align-content: start; }
+.plan-features li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+.plan-features svg { width: 16px; height: 16px; margin-top: 4px; color: var(--color-ledger-positive); }
+.plan-column[data-plan="pro"] .plan-features { border-top-color: oklch(96.6% 0.008 85 / 0.16); }
+.plan-column[data-plan="pro"] .plan-features svg { color: var(--color-ledger-mineral-muted); }
 .plan-column-action { padding-top: var(--space-workspace-sm); }
 .plan-action { width: 100%; white-space: normal; text-align: center; }
-.plan-features { border-top-color: var(--color-ledger-rule-strong); }
 .plan-action:not(:disabled) { background: var(--color-desk-panel); }
 .plan-action.ledger-button-primary:not(:disabled) { background: var(--color-ledger-mineral); }
+/* No Pro escuro, o botão continua claro para ler como botão. */
+.plan-column[data-plan="pro"] .plan-action:not(:disabled),
+.plan-column[data-plan="pro"] .plan-action.ledger-button-primary:not(:disabled),
+.plan-column[data-plan="pro"] .plan-action:disabled { background: var(--color-desk-panel); color: var(--color-ledger-mineral); opacity: 1; }
 .plan-pay-note { margin-top: var(--space-workspace-lg); color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); }
 
 @media (max-width: 720px) {

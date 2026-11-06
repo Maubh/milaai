@@ -66,7 +66,6 @@ export const PLANS: PlanItem[] = [
     description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
-      PLANO_TRELLO,
       PLANO_NUVEMSHOP_PRO,
       PLANO_VITRINE_PRO,
       "Balanço mensal de compras e projeção de faturamento no WhatsApp",

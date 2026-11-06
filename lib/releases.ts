@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.41",
+    date: "2026-11-06",
+    title: "Planos iguais aos da página inicial",
+    summary: "Os cards de Meu plano seguem os mesmos textos e o mesmo desenho dos planos da página inicial.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Cards de planos alinhados com a página inicial",
+        description: "Meu plano mostra o que cada plano inclui com a mesma lista da página inicial, e o Pro aparece com tudo do Essencial mais os recursos dele.",
+      },
+    ],
+    internal: true,
+  },
+  {
     version: "0.6.40",
     date: "2026-11-06",
     title: "Planos sem valores por enquanto",

@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { CONTATO_MILA, CONTRATACAO_ABERTA, PRECOS, formatTrialLastDay, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
 import { TextBone } from "@/components/WorkspaceSkeleton";
-import { PLANO_PDF } from "@/lib/google-workspace";
-import { PLANO_TRELLO } from "@/lib/trello";
+import { PLANS } from "@/components/PricingSection";
 import "./plano.css";
 
 export interface SessionData {
@@ -22,43 +21,8 @@ export interface SessionData {
   acesso_pausado?: boolean;
 }
 
-// Listas de recursos da produção (main), sem promessa a mais nem a menos.
-const PLANS = [
-  {
-    id: "essencial" as const,
-    name: "Plano Essencial",
-    blurb: "Preço com margem, Raio-X e descrição de peças.",
-    features: [
-      "Preço a partir da foto e do custo da peça",
-      "Raio-X da margem, com a taxa da maquininha e a embalagem",
-      "Custo da peça comprada no bruto: peso, milésimos de banho e perdas",
-      "Radar de preços dos concorrentes no Google Shopping",
-      "Descrições prontas para a loja virtual",
-      "Legenda de Instagram para cada peça",
-      "Leitura de notas de compra (XML e PDF)",
-      "Caderno de fornecedores no WhatsApp, no Notion ou no Google Planilhas",
-      PLANO_PDF,
-      PLANO_TRELLO,
-      "1 vitrine web ativa por vez, com fotos reais",
-    ],
-  },
-  {
-    id: "pro" as const,
-    name: "Plano Pro",
-    blurb: "Estoque, ERP e fechamento no WhatsApp.",
-    features: [
-      "Tudo do Essencial, e ainda:",
-      PLANO_TRELLO,
-      "Nuvemshop (produtos e pedidos), Jueri e Olist; planilha pronta para a Phibo",
-      "Vitrines web ilimitadas, com as fontes da sua marca",
-      "Carrosséis, roteiros de Reels e planejamento semanal para o Instagram",
-      "Leitura do nicho e dos concorrentes no Instagram (4 análises por mês)",
-      "Pesquisa de fornecedores pelo site, catálogo ou Instagram",
-      "Balanço no WhatsApp no dia 15 e no último dia do mês",
-      "Aviso de carência de fornecedor",
-    ],
-  },
-];
+// Os mesmos cards da home (components/PricingSection.tsx): uma fonte só para o que cada plano inclui.
+const CHECK_PATH = "M16.5 5.5L7.8 14.2L3.5 10";
 
 export interface OrderResult {
   ok: boolean;
@@ -245,15 +209,18 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
         <div className="plan-compare">
           {PLANS.map((plan) => {
             const isCurrent = !!status && isShownCurrentPlan(status, plan.id);
-            return <article className="plan-column" key={plan.id} data-current={isCurrent} aria-labelledby={`plan-${plan.id}`}>
+            return <article className="plan-column" key={plan.id} data-plan={plan.id} data-current={isCurrent} aria-labelledby={`plan-${plan.id}`}>
               <div className="plan-column-head">
-                <h3 id={`plan-${plan.id}`}>{plan.name}</h3>
-                {isCurrent ? <span className="ledger-state" data-tone="positive">Seu plano</span> : null}
+                <h3 id={`plan-${plan.id}`}>{`Plano ${plan.name}`}</h3>
+                {isCurrent ? <span className="plan-current-tag">Seu plano</span> : null}
               </div>
-              <p className="plan-blurb">{plan.blurb}</p>
-              {PRECOS[plan.id] ? <p className="plan-price">R$&nbsp;{PRECOS[plan.id]} <span>/mês</span></p> : null}
+              <p className="plan-blurb">{plan.description}</p>
+              {PRECOS[plan.id] ? <p className="plan-price"><span className="plan-price-cur">R$</span> {PRECOS[plan.id]} <span>/mês</span></p> : null}
               <ul className="plan-features">
-                {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+                {plan.features.map((feature) => <li key={feature}>
+                  <svg viewBox="0 0 20 20" width="16" height="16" fill="none" aria-hidden="true" focusable="false"><path d={CHECK_PATH} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  <span>{feature}</span>
+                </li>)}
               </ul>
               <div className="plan-column-action">{action(plan.id)}</div>
             </article>;

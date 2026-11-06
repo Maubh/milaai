@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { fontesDaVitrine, type FonteVitrineEnviada } from "../../../../lib/marca";
 import {
   ROTULO_ENTREGA,
   chaveLinha,
@@ -44,6 +45,8 @@ export interface LojaVitrine {
   corDestaque: string;
   tipografiaHeading: string;
   tipografiaBody: string;
+  tipografiaSubtitulo?: string | null;
+  fontesEnviadas?: FonteVitrineEnviada[] | null;
   logoUrl?: string | null;
   plano: string;
 }
@@ -156,16 +159,26 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
     setFotoAtivaIndex(0);
   };
 
+  const fontes = fontesDaVitrine(loja);
+
   return (
     <div
       className="vitrine-container"
       style={{
-        fontFamily: loja.tipografiaBody || "inherit",
+        // Fontes da marca: título, subtítulo e corpo (vitrine.css usa as variáveis).
+        fontFamily: fontes.corpo,
+        ["--fonte-titulo" as string]: fontes.titulo,
+        ["--fonte-subtitulo" as string]: fontes.subtitulo,
+        ["--fonte-corpo" as string]: fontes.corpo,
         // Cores da loja para a sacola e a barra do pedido (vitrine.css).
         ["--loja-primaria" as string]: loja.corPrimaria || "#1F2937",
         ["--loja-destaque" as string]: loja.corDestaque || "#D97706",
       }}
     >
+      {fontes.links.map((href) => (
+        <link key={href} rel="stylesheet" href={href} precedence="fontes-vitrine" />
+      ))}
+      {fontes.fontFace ? <style>{fontes.fontFace}</style> : null}
       {/* Header Fixo */}
       <header className="vitrine-header">
         <div className="vitrine-header-inner">
@@ -209,7 +222,6 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
         <h2
           className="vitrine-title"
           style={{
-            fontFamily: loja.tipografiaHeading || "inherit",
             color: loja.corPrimaria || "#1F2937",
           }}
         >
@@ -477,7 +489,7 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="vitrine-sacola-head">
-              <h2 className="vitrine-sacola-title" style={{ fontFamily: loja.tipografiaHeading || "inherit" }}>Seu pedido</h2>
+              <h2 className="vitrine-sacola-title">Seu pedido</h2>
               <button className="vitrine-modal-close" onClick={fecharSacola} aria-label="Voltar ao catálogo">
                 ✕
               </button>

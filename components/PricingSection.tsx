@@ -14,7 +14,7 @@ export const PLANO_VITRINE_ESSENCIAL =
   "Vitrine web interativa (1 ativa por vez) com fotos reais";
 
 export const PLANO_VITRINE_PRO =
-  "Vitrines web ilimitadas com fotos reais";
+  "Vitrines web ilimitadas com fotos reais e as fontes da sua marca";
 
 export const PLANO_NUVEMSHOP_PRO =
   "Integração com Nuvemshop: consulta de estoque, preços e pedidos e publicação de produtos direto no WhatsApp";

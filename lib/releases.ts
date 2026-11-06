@@ -26,6 +26,32 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.38",
+    date: "2026-11-06",
+    title: "Marca da loja em Dados da loja",
+    summary: "A seção Marca reúne cores, logo, identidade visual e, no Pro, as fontes da sua marca. A vitrine passa a usar tudo isso.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Seção Marca com logo e identidade visual",
+        description: "Em Dados da loja, a seção Marca guarda as cores, o logo e os arquivos de identidade visual (manual da marca, paleta). O nome da vitrine é o nome da loja e os pedidos chegam no seu WhatsApp, sem precisar preencher de novo.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Fontes da marca na vitrine",
+        description: "Escolha a fonte do título, do subtítulo e do corpo no Google Fonts ou envie o arquivo da sua fonte. A vitrine usa as fontes que você escolher.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Montserrat como fonte padrão",
+        description: "Sem fonte escolhida, a vitrine usa a Montserrat.",
+      },
+    ],
+  },
+  {
     version: "0.6.37",
     date: "2026-11-06",
     title: "Sacola na vitrine web",

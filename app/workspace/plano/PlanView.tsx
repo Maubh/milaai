@@ -52,7 +52,7 @@ const PLANS = [
       "Tudo do Essencial, e ainda:",
       PLANO_TRELLO,
       "Nuvemshop (produtos e pedidos), Jueri e Olist; planilha pronta para a Phibo",
-      "Vitrines web ilimitadas",
+      "Vitrines web ilimitadas, com as fontes da sua marca",
       "Carrosséis, roteiros de Reels e planejamento semanal para o Instagram",
       "Leitura do nicho e dos concorrentes no Instagram (4 análises por mês)",
       "Pesquisa de fornecedores pelo site, catálogo ou Instagram",

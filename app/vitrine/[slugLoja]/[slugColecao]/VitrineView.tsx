@@ -2,6 +2,21 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import {
+  ROTULO_ENTREGA,
+  chaveLinha,
+  descreverEscolhas,
+  gerarCodigoPedido,
+  montarMensagemPedido,
+  quantidadeSacola,
+  totalSacola,
+  variacaoFaltando,
+  variacoesValidas,
+  type Escolhas,
+  type ItemSacola,
+  type ModoEntrega,
+  type VariacaoPeca,
+} from "../../../../lib/pedido_vitrine";
 
 export interface ItemVitrine {
   nome: string;
@@ -10,6 +25,14 @@ export interface ItemVitrine {
   fotos?: string[] | null;
   descricao?: string | null;
   sku?: string | null;
+  variacoes?: VariacaoPeca[] | null;
+}
+
+/** Linha da sacola: a peça e o que a cliente escolheu em cada variação. */
+interface LinhaSacola {
+  idx: number;
+  escolhas: Escolhas;
+  qtd: number;
 }
 
 export interface LojaVitrine {
@@ -40,7 +63,80 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
   const [itemSelecionado, setItemSelecionado] = useState<ItemVitrine | null>(null);
   const [fotoAtivaIndex, setFotoAtivaIndex] = useState<number>(0);
 
+  // Sacola: uma linha por peça + escolhas (só na sessão da página).
+  const [sacola, setSacola] = useState<Record<string, LinhaSacola>>({});
+  const [escolhas, setEscolhas] = useState<Escolhas>({});
+  const [sacolaAberta, setSacolaAberta] = useState(false);
+  const [codigoPedido, setCodigoPedido] = useState("");
+  const [nomeCliente, setNomeCliente] = useState("");
+  const [entrega, setEntrega] = useState<ModoEntrega>("combinar");
+  const [observacao, setObservacao] = useState("");
+  const [copiado, setCopiado] = useState(false);
+
   const whatsappLimpo = (loja.whatsappContato || "").replace(/\D/g, "");
+
+  const variacoesDe = (item: ItemVitrine) => variacoesValidas(item.variacoes);
+
+  const itensSacola: ItemSacola[] = Object.values(sacola).flatMap((l) => {
+    const item = vitrine.itens[l.idx];
+    if (!item) return [];
+    const variacao = descreverEscolhas(variacoesDe(item), l.escolhas);
+    return [{ nome: item.nome, precoVenda: item.precoVenda, sku: item.sku ?? null, qtd: l.qtd, variacao }];
+  });
+  const qtdSacola = quantidadeSacola(itensSacola);
+  const qtdDaPeca = (idx: number) =>
+    Object.values(sacola).reduce((soma, l) => soma + (l.idx === idx ? l.qtd : 0), 0);
+
+  const mudarQtdLinha = (chave: string, delta: number) => {
+    setSacola((atual) => {
+      const linha = atual[chave];
+      if (!linha) return atual;
+      const nova = { ...atual };
+      const qtd = linha.qtd + delta;
+      if (qtd <= 0) delete nova[chave];
+      else nova[chave] = { ...linha, qtd };
+      return nova;
+    });
+  };
+
+  const porNoPedido = (idx: number, escolhidas: Escolhas) => {
+    const item = vitrine.itens[idx];
+    if (!item) return;
+    const vars = variacoesDe(item);
+    if (variacaoFaltando(vars, escolhidas)) return;
+    const chave = chaveLinha(idx, vars, escolhidas);
+    setSacola((atual) => ({
+      ...atual,
+      [chave]: { idx, escolhas: { ...escolhidas }, qtd: (atual[chave]?.qtd ?? 0) + 1 },
+    }));
+  };
+
+  const abrirSacola = () => {
+    setCodigoPedido(gerarCodigoPedido());
+    setCopiado(false);
+    setSacolaAberta(true);
+  };
+
+  const fecharSacola = () => setSacolaAberta(false);
+
+  const textoPedido = montarMensagemPedido({
+    nomeLoja: loja.nomeExibicao,
+    codigo: codigoPedido,
+    itens: itensSacola,
+    formatarPreco: (v) => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(v),
+    nomeCliente,
+    entrega,
+    observacao,
+  });
+
+  const copiarPedido = async () => {
+    try {
+      await navigator.clipboard.writeText(textoPedido);
+      setCopiado(true);
+    } catch {
+      setCopiado(false);
+    }
+  };
 
   const formatarPreco = (valor: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -52,6 +148,7 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
   const abrirModalItem = (item: ItemVitrine) => {
     setItemSelecionado(item);
     setFotoAtivaIndex(0);
+    setEscolhas({});
   };
 
   const fecharModalItem = () => {
@@ -64,6 +161,9 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
       className="vitrine-container"
       style={{
         fontFamily: loja.tipografiaBody || "inherit",
+        // Cores da loja para a sacola e a barra do pedido (vitrine.css).
+        ["--loja-primaria" as string]: loja.corPrimaria || "#1F2937",
+        ["--loja-destaque" as string]: loja.corDestaque || "#D97706",
       }}
     >
       {/* Header Fixo */}
@@ -161,6 +261,23 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
                       {formatarPreco(item.precoVenda)}
                     </p>
                   </div>
+
+                  <button
+                    type="button"
+                    className="vitrine-card-btn vitrine-card-btn-sacola"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      // Peça com variação abre o detalhe para a cliente escolher.
+                      if (variacoesDe(item).length > 0) abrirModalItem(item);
+                      else porNoPedido(idx, {});
+                    }}
+                  >
+                    {qtdDaPeca(idx) > 0
+                      ? `✓ No pedido (${qtdDaPeca(idx)})`
+                      : variacoesDe(item).length > 0
+                        ? "Escolher opções"
+                        : "+ Pôr no pedido"}
+                  </button>
 
                   {/* Botão de Fechamento no WhatsApp */}
                   <Link
@@ -274,6 +391,42 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
                 </p>
               )}
 
+              {variacoesDe(itemSelecionado).map((v) => (
+                <div key={v.nome} className="vitrine-variacao" role="group" aria-label={v.nome}>
+                  <span className="vitrine-variacao-nome">{v.nome}</span>
+                  <div className="vitrine-variacao-opcoes">
+                    {v.opcoes.map((o) => (
+                      <button
+                        key={o}
+                        type="button"
+                        className={`vitrine-variacao-opcao${escolhas[v.nome] === o ? " ativa" : ""}`}
+                        aria-pressed={escolhas[v.nome] === o}
+                        onClick={() => setEscolhas((atual) => ({ ...atual, [v.nome]: o }))}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {(() => {
+                const faltando = variacaoFaltando(variacoesDe(itemSelecionado), escolhas);
+                return (
+                  <button
+                    type="button"
+                    className="vitrine-modal-cta vitrine-modal-cta-sacola"
+                    disabled={faltando !== null}
+                    onClick={() => {
+                      const idx = vitrine.itens.indexOf(itemSelecionado);
+                      if (idx >= 0) porNoPedido(idx, escolhas);
+                    }}
+                  >
+                    {faltando ? `Escolha ${faltando.toLowerCase()}` : "+ Pôr no pedido"}
+                  </button>
+                );
+              })()}
+
               {/* Botão de Fechamento Direto no Modal */}
               <Link
                 href={`https://wa.me/${whatsappLimpo}?text=${encodeURIComponent(
@@ -292,6 +445,149 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
                 <span>Pedir esta peça pelo WhatsApp</span>
               </Link>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Barra do pedido: aparece só quando há peças escolhidas */}
+      {qtdSacola > 0 && !sacolaAberta && (
+        <div className="vitrine-pedido-barra">
+          <div className="vitrine-pedido-barra-resumo">
+            <strong>{qtdSacola} {qtdSacola === 1 ? "peça escolhida" : "peças escolhidas"}</strong>
+            <span>{formatarPreco(totalSacola(itensSacola))}</span>
+          </div>
+          <button
+            type="button"
+            className="vitrine-pedido-barra-btn"
+            onClick={abrirSacola}
+            style={{ backgroundColor: loja.corPrimaria || "#1F2937" }}
+          >
+            Revisar pedido →
+          </button>
+        </div>
+      )}
+
+      {/* Pedido: lista, dados e mensagem pronta para o WhatsApp */}
+      {sacolaAberta && (
+        <div className="vitrine-sacola-overlay" onClick={fecharSacola}>
+          <div
+            className="vitrine-sacola-panel"
+            role="dialog"
+            aria-label="Seu pedido"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="vitrine-sacola-head">
+              <h2 className="vitrine-sacola-title" style={{ fontFamily: loja.tipografiaHeading || "inherit" }}>Seu pedido</h2>
+              <button className="vitrine-modal-close" onClick={fecharSacola} aria-label="Voltar ao catálogo">
+                ✕
+              </button>
+            </div>
+
+            {itensSacola.length === 0 ? (
+              <p className="vitrine-sacola-vazia">
+                Nenhuma peça escolhida ainda. Toque em “Pôr no pedido” nas peças que gostar.
+              </p>
+            ) : (
+              <>
+                <ul className="vitrine-sacola-lista">
+                  {Object.entries(sacola).map(([chave, linha]) => {
+                    const item = vitrine.itens[linha.idx];
+                    if (!item) return null;
+                    const variacao = descreverEscolhas(variacoesDe(item), linha.escolhas);
+                    return (
+                      <li key={chave} className="vitrine-sacola-item">
+                        <div className="vitrine-sacola-item-info">
+                          <span className="vitrine-sacola-item-nome">{item.nome}</span>
+                          {variacao && <span className="vitrine-sacola-item-variacao">{variacao}</span>}
+                          {item.sku && <span className="vitrine-sacola-item-ref">REF {item.sku}</span>}
+                          <span className="vitrine-sacola-item-preco">{formatarPreco(item.precoVenda)}</span>
+                        </div>
+                        <div className="vitrine-sacola-item-controles">
+                          <button type="button" onClick={() => mudarQtdLinha(chave, -1)} aria-label="Diminuir">−</button>
+                          <span>{linha.qtd}</span>
+                          <button type="button" onClick={() => mudarQtdLinha(chave, 1)} aria-label="Aumentar">+</button>
+                          <button
+                            type="button"
+                            className="vitrine-sacola-remover"
+                            onClick={() => setSacola((atual) => {
+                              const nova = { ...atual };
+                              delete nova[chave];
+                              return nova;
+                            })}
+                          >
+                            Remover
+                          </button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+
+                <div className="vitrine-sacola-total">
+                  <span>{qtdSacola} {qtdSacola === 1 ? "peça" : "peças"}</span>
+                  <strong>{formatarPreco(totalSacola(itensSacola))}</strong>
+                </div>
+
+                <div className="vitrine-sacola-form">
+                  <label className="vitrine-sacola-campo">
+                    <span>Para quem é o pedido?</span>
+                    <input
+                      type="text"
+                      value={nomeCliente}
+                      onChange={(e) => setNomeCliente(e.target.value)}
+                      placeholder="Seu nome"
+                    />
+                  </label>
+
+                  <label className="vitrine-sacola-campo">
+                    <span>Recebimento</span>
+                    <select value={entrega} onChange={(e) => setEntrega(e.target.value as ModoEntrega)}>
+                      {(Object.keys(ROTULO_ENTREGA) as ModoEntrega[]).map((modo) => (
+                        <option key={modo} value={modo}>{ROTULO_ENTREGA[modo]}</option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="vitrine-sacola-campo">
+                    <span>Recado para a loja (opcional)</span>
+                    <textarea
+                      rows={2}
+                      value={observacao}
+                      onChange={(e) => setObservacao(e.target.value)}
+                      placeholder="Tamanho, cor, melhor horário…"
+                    />
+                  </label>
+                </div>
+
+                <details className="vitrine-sacola-previa">
+                  <summary>Prévia da mensagem</summary>
+                  <pre className="vitrine-sacola-msg">{textoPedido}</pre>
+                </details>
+
+                <div className="vitrine-sacola-acoes">
+                  <button
+                    type="button"
+                    className="vitrine-sacola-copiar"
+                    onClick={copiarPedido}
+                  >
+                    {copiado ? "✓ Mensagem copiada" : "Copiar mensagem"}
+                  </button>
+                  <Link
+                    href={`https://wa.me/${whatsappLimpo}?text=${encodeURIComponent(textoPedido)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="vitrine-sacola-enviar"
+                    style={{ backgroundColor: loja.corPrimaria || "#1F2937" }}
+                  >
+                    <span>💬</span> Mandar no WhatsApp
+                  </Link>
+                </div>
+
+                <p className="vitrine-sacola-aviso">
+                  Nada é cobrado aqui: {loja.nomeExibicao} confirma estoque, pagamento e envio pelo WhatsApp.
+                </p>
+              </>
+            )}
           </div>
         </div>
       )}

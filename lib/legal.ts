@@ -442,7 +442,7 @@ export const CONECTORES_DISPONIVEIS = [
 
 /** Construídos, mas ainda sem validação com credencial de produção. */
 export const CONECTORES_VALIDACAO_PENDENTE = [
-  "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.",
+  "Jueri (Plano Pro) — a tela de conexão está pronta e a mila consulta peças e estoque (com preço, cor e fotos), consultoras, clientes e pedidos, só leitura. De clientes e consultoras, lê o nome, a cidade, o status e o vínculo para responder à lojista (CPF, RG, e-mail, telefone e endereço não são lidos); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base própria. A validação com a credencial real da loja ainda está pendente.",
   "Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.",
 ] as const;
 

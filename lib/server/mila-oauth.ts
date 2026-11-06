@@ -86,7 +86,6 @@ export async function proxyOAuth(
             instagram: "@lojasandbox",
             custo_embalagem: 6,
             taxa_cartao_percent: 3.99,
-            markup_padrao: 3,
             tipo_banho: null,
             observacoes: null,
           },
@@ -95,6 +94,26 @@ export async function proxyOAuth(
     }
     if (path.includes("/workspace/concorrentes")) {
       return { status: 200, data: { ok: true, concorrentes: ["concorrente.um", "concorrente_dois"], analise_no_plano: false } };
+    }
+    // Marca da vitrine de exemplo; sessão Essencial, então sem fonte da marca.
+    if (path.includes("/workspace/marca-vitrine")) {
+      return {
+        status: 200,
+        data: {
+          ok: true,
+          marca: {
+            cadastrada: true,
+            nome_exibicao: "Loja Sandbox",
+            whatsapp: "5531999990000",
+            cor_primaria: "#0F6E6E",
+            cor_destaque: null,
+            fonte: null,
+            link_vitrine: "https://vitrine.milaai.com.br/loja-sandbox",
+          },
+          fontes: [],
+          fonte_no_plano: false,
+        },
+      };
     }
     if (path.includes("/meta/catalog/source")) {
       return {

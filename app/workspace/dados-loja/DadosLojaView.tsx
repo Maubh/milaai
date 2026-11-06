@@ -7,7 +7,6 @@ import { acessoConcorrentes, type AcessoConcorrentes } from "@/lib/concorrentes-
 import { ProBloqueado } from "@/components/PlanLock";
 import {
   contaDoInstagram,
-  formatarMarkup,
   formatarPercentual,
   formatarReais,
   lerNumeroDigitado,
@@ -22,9 +21,10 @@ import {
   type CampoDadosLoja,
   type DadosLoja,
 } from "@/lib/dados-loja";
+import { formatarWhatsapp, mensagemDaMarca, normalizarCorHex, projetarMarca, type LeituraMarca } from "@/lib/marca-vitrine";
 import "./dados-loja.css";
 
-type Tipo = "reais" | "percentual" | "markup" | "texto" | "textoLongo" | "instagram" | "site";
+type Tipo = "reais" | "percentual" | "texto" | "textoLongo" | "instagram" | "site";
 
 interface Campo {
   chave: CampoDadosLoja;
@@ -58,9 +58,8 @@ const SECOES: Secao[] = [
     id: "precificacao",
     titulo: "Precificação",
     nome: "precificação",
-    descricao: "O ponto de partida quando a mila calcula o preço de uma peça.",
+    descricao: "O ponto de partida quando a mila calcula o preço de uma peça. O markup você escolhe a cada peça, na conversa.",
     campos: [
-      { chave: "markup_padrao", rotulo: "Markup padrão (x)", tipo: "markup", ajuda: "Quantas vezes o custo (ex.: 3 para 3x)." },
       { chave: "tipo_banho", rotulo: "Banho padrão", tipo: "texto", ajuda: "Ex.: Ouro 18k, 10 milésimos." },
     ],
   },
@@ -82,7 +81,6 @@ function valorParaTela(campo: Campo, dados: DadosLoja): string | null {
   const v = dados[campo.chave];
   if (campo.tipo === "reais") return formatarReais(v as number | null);
   if (campo.tipo === "percentual") return formatarPercentual(v as number | null);
-  if (campo.tipo === "markup") return formatarMarkup(v as number | null);
   if (campo.tipo === "site") return v ? siteParaTela(v as string) : null;
   return (v as string | null) ?? null;
 }
@@ -110,6 +108,14 @@ const SITE_NAO_SALVO = "O site ainda não foi salvo. Tente de novo em alguns min
 
 type LeituraDados = { status: "loading" } | { status: "error"; texto: string; detalhe: string | null } | { status: "ready"; dados: DadosLoja };
 type LeituraConcorrentes = { status: "loading" } | { status: "ready"; lista: string[]; acesso: AcessoConcorrentes };
+type EstadoMarca = { status: "loading" } | { status: "erro" } | ({ status: "ready" } & LeituraMarca);
+
+const DESCRICAO_MARCA = "Nome, WhatsApp, cores e fonte da sua vitrine web. A vitrine usa a cara da sua loja, e a mila também usa estes dados quando cria uma vitrine.";
+
+/** Amostra da cor ao lado do código. */
+function Amostra({ cor }: { cor: string }) {
+  return <span className="dados-cor-amostra" style={{ backgroundColor: cor }} aria-hidden="true" />;
+}
 
 /**
  * Dados da loja como em produção, no shell da proposta A. A página e o
@@ -119,6 +125,7 @@ type LeituraConcorrentes = { status: "loading" } | { status: "ready"; lista: str
 export default function DadosLojaView({ pending = false }: { pending?: boolean }) {
   const [leitura, setLeitura] = useState<LeituraDados>({ status: "loading" });
   const [conc, setConc] = useState<LeituraConcorrentes>({ status: "loading" });
+  const [marca, setMarca] = useState<EstadoMarca>({ status: "loading" });
   const [editando, setEditando] = useState<string | null>(null);
   const [rascunho, setRascunho] = useState<Record<string, string>>({});
   const [salvando, setSalvando] = useState(false);
@@ -152,11 +159,27 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
     }
   }, []);
 
+  const lerMarca = useCallback(async () => {
+    setMarca({ status: "loading" });
+    try {
+      const r = await fetch("/api/marca-vitrine");
+      const d = await r.json().catch(() => ({}));
+      if (!r.ok || d.ok !== true) {
+        setMarca({ status: "erro" });
+        return;
+      }
+      setMarca({ status: "ready", ...projetarMarca(d) });
+    } catch {
+      setMarca({ status: "erro" });
+    }
+  }, []);
+
   useEffect(() => {
     if (pending) return;
     lerDados();
     lerConcorrentes();
-  }, [pending, lerDados, lerConcorrentes]);
+    lerMarca();
+  }, [pending, lerDados, lerConcorrentes, lerMarca]);
 
   const dados = leitura.status === "ready" ? leitura.dados : null;
 
@@ -174,8 +197,20 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
     if (id) document.querySelector<HTMLElement>(`#secao-${id} ~ .dados-secao-acao button`)?.focus();
   }, [editando]);
 
-  function abrir(secao: Secao | "concorrentes") {
+  function abrir(secao: Secao | "concorrentes" | "marca") {
     setAviso(null);
+    if (secao === "marca") {
+      const m = marca.status === "ready" ? marca.marca : null;
+      setRascunho({
+        nome_exibicao: m?.nome_exibicao ?? "",
+        whatsapp: formatarWhatsapp(m?.whatsapp ?? null) ?? "",
+        cor_primaria: m?.cor_primaria ?? "",
+        cor_destaque: m?.cor_destaque ?? "",
+        fonte: m?.fonte ?? "",
+      });
+      setEditando("marca");
+      return;
+    }
     if (secao === "concorrentes") {
       const lista = conc.status === "ready" ? conc.lista : [];
       const r: Record<string, string> = {};
@@ -197,7 +232,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
       const bruto = (rascunho[c.chave] ?? "").trim();
       const atual = valorParaRascunho(c, dados);
       if (bruto === atual) continue;
-      if (["reais", "percentual", "markup"].includes(c.tipo)) {
+      if (["reais", "percentual"].includes(c.tipo)) {
         if (!bruto) continue; // número não se apaga por aqui; só se troca
         const n = lerNumeroDigitado(bruto);
         if (n === null) {
@@ -299,6 +334,52 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
     }
   }
 
+  async function salvarMarca() {
+    if (marca.status !== "ready") return;
+    const m = marca.marca;
+    const corpo: Record<string, string> = {};
+    const nome = (rascunho.nome_exibicao ?? "").trim();
+    if (nome && nome !== (m.nome_exibicao ?? "")) corpo.nome_exibicao = nome;
+    const whats = (rascunho.whatsapp ?? "").replace(/\D/g, "");
+    if (whats && whats !== (m.whatsapp ?? "").replace(/^55/, "") && whats !== m.whatsapp) corpo.whatsapp = whats;
+    for (const campo of ["cor_primaria", "cor_destaque"] as const) {
+      const bruto = (rascunho[campo] ?? "").trim();
+      if (!bruto) continue;
+      const hex = normalizarCorHex(bruto);
+      if (!hex) {
+        setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("invalid_field", campo) });
+        return;
+      }
+      if (hex !== m[campo]) corpo[campo] = hex;
+    }
+    const fonte = (rascunho.fonte ?? "").trim();
+    if (marca.fonteNoPlano && fonte && fonte !== (m.fonte ?? "")) corpo.fonte = fonte;
+    if (Object.keys(corpo).length === 0) {
+      setEditando(null);
+      return;
+    }
+    setSalvando(true);
+    try {
+      const res = await fetch("/api/marca-vitrine", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(corpo),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok !== true) {
+        setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(data.detail, data.campo) });
+        return;
+      }
+      setMarca({ status: "ready", ...projetarMarca(data) });
+      setEditando(null);
+      setAviso({ secao: "marca", ok: true, texto: "Salvo. A vitrine e a mila já usam a marca nova." });
+    } catch {
+      setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(null) });
+    } finally {
+      setSalvando(false);
+    }
+  }
+
   const avisoDa = (id: string) =>
     aviso?.secao === id ? (
       <p className={`dados-aviso${aviso.ok ? " is-ok" : " is-erro"}`} role={aviso.ok ? "status" : "alert"}>
@@ -369,7 +450,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
             {cabecalho(
               "vazio",
               "A mila ainda não conhece os números da sua loja",
-              "Comece pela taxa da maquininha e pelo markup: com eles, todo preço que a mila sugerir já sai com a sua margem. O que você salvar aqui vale na hora, e dá para mudar também pelo WhatsApp.",
+              "Comece pela taxa da maquininha e pelo custo da embalagem: com eles, todo preço que a mila calcular já desconta o que você paga. O markup você escolhe a cada peça, na conversa. O que você salvar aqui vale na hora, e dá para mudar também pelo WhatsApp.",
               <button type="button" className="ledger-button ledger-button-primary" onClick={() => abrir(SECOES[0])}>Informar custos e taxas</button>,
               true,
             )}
@@ -401,7 +482,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
                     ) : (
                       <input
                         type="text"
-                        inputMode={["reais", "percentual", "markup"].includes(c.tipo) ? "decimal" : c.tipo === "site" ? "url" : "text"}
+                        inputMode={["reais", "percentual"].includes(c.tipo) ? "decimal" : c.tipo === "site" ? "url" : "text"}
                         autoComplete={c.tipo === "site" ? "url" : undefined}
                         autoCapitalize={c.tipo === "site" ? "none" : undefined}
                         spellCheck={c.tipo === "site" ? false : undefined}
@@ -438,6 +519,141 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
             )}
           </section>
         )) : null}
+
+        {leitura.status === "error" ? null : marca.status === "loading" ? (
+          <section className="desk-panel dados-secao" aria-labelledby="secao-marca" aria-busy="true">
+            {cabecalho("marca", "Marca da vitrine", DESCRICAO_MARCA, null)}
+            <dl className="ledger-rows dados-lista">
+              <div className="ledger-row dados-item"><dt className="ledger-row-label">Cor principal</dt><dd className="ledger-row-value"><TextBone w="10ch" /></dd></div>
+            </dl>
+          </section>
+        ) : marca.status === "erro" ? (
+          <section className="desk-panel dados-secao" aria-labelledby="secao-marca">
+            {cabecalho(
+              "marca",
+              "Marca da vitrine",
+              DESCRICAO_MARCA,
+              <button type="button" className="ledger-button" onClick={lerMarca} aria-label="Tentar de novo ler a marca da vitrine">Tentar de novo</button>,
+              true,
+            )}
+            <p className="ledger-notice dados-nota" role="status">Não deu para ler a marca da vitrine agora. Ela continua salva.</p>
+          </section>
+        ) : (
+          <section className="desk-panel dados-secao" aria-labelledby="secao-marca">
+            {cabecalho("marca", "Marca da vitrine", DESCRICAO_MARCA, editar("marca", "marca da vitrine", () => abrir("marca")), editando === "marca")}
+            {editando === "marca" ? (
+              <form
+                id="form-marca"
+                className="dados-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  salvarMarca();
+                }}
+              >
+                <label className="dados-campo">
+                  <span className="dados-campo-rotulo">Nome na vitrine</span>
+                  <input type="text" maxLength={60} value={rascunho.nome_exibicao ?? ""} onChange={(e) => setRascunho({ ...rascunho, nome_exibicao: e.target.value })} />
+                </label>
+                <label className="dados-campo">
+                  <span className="dados-campo-rotulo">WhatsApp que recebe os pedidos</span>
+                  <input
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(31) 99999-0000"
+                    maxLength={20}
+                    value={rascunho.whatsapp ?? ""}
+                    onChange={(e) => setRascunho({ ...rascunho, whatsapp: e.target.value })}
+                  />
+                  <span className="dados-campo-ajuda">Os pedidos da sacola da vitrine chegam neste número.</span>
+                </label>
+                {(["cor_primaria", "cor_destaque"] as const).map((campo) => {
+                  const rotulo = campo === "cor_primaria" ? "Cor principal" : "Cor de destaque";
+                  const hex = normalizarCorHex(rascunho[campo] ?? "");
+                  return (
+                    <div key={campo} className="dados-campo">
+                      <span className="dados-campo-rotulo" id={`rotulo-${campo}`}>{rotulo}</span>
+                      <div className="dados-cor-campo">
+                        <input
+                          type="color"
+                          aria-label={`Escolher ${rotulo.toLowerCase()}`}
+                          value={(hex ?? "#1F2937").toLowerCase()}
+                          onChange={(e) => setRascunho({ ...rascunho, [campo]: e.target.value.toUpperCase() })}
+                        />
+                        <input
+                          type="text"
+                          aria-labelledby={`rotulo-${campo}`}
+                          placeholder="#B76E79"
+                          maxLength={7}
+                          autoCapitalize="characters"
+                          spellCheck={false}
+                          value={rascunho[campo] ?? ""}
+                          onChange={(e) => setRascunho({ ...rascunho, [campo]: e.target.value })}
+                        />
+                      </div>
+                      <span className="dados-campo-ajuda">{campo === "cor_primaria" ? "Botões e detalhes da vitrine." : "Preços e total do pedido."}</span>
+                    </div>
+                  );
+                })}
+                {marca.fonteNoPlano ? (
+                  <label className="dados-campo">
+                    <span className="dados-campo-rotulo">Fonte da marca</span>
+                    <select value={rascunho.fonte ?? ""} onChange={(e) => setRascunho({ ...rascunho, fonte: e.target.value })}>
+                      <option value="">Padrão (Inter)</option>
+                      {marca.fontes.map((f) => (
+                        <option key={f} value={f}>{f}</option>
+                      ))}
+                    </select>
+                  </label>
+                ) : (
+                  <p className="dados-campo-ajuda">A fonte da marca é do Plano Pro. No Essencial, a vitrine usa a fonte padrão.</p>
+                )}
+                {avisoDa("marca")}
+              </form>
+            ) : (
+              <>
+                <dl className="ledger-rows dados-lista">
+                  <div className="ledger-row dados-item">
+                    <dt className="ledger-row-label">Nome na vitrine</dt>
+                    <dd className={`ledger-row-value${marca.marca.nome_exibicao ? "" : " is-vazio"}`}>{marca.marca.nome_exibicao ?? "Não informado"}</dd>
+                  </div>
+                  <div className="ledger-row dados-item">
+                    <dt className="ledger-row-label">WhatsApp dos pedidos</dt>
+                    <dd className={`ledger-row-value${marca.marca.whatsapp ? "" : " is-vazio"}`}>{formatarWhatsapp(marca.marca.whatsapp) ?? "Não informado"}</dd>
+                  </div>
+                  {(["cor_primaria", "cor_destaque"] as const).map((campo) => (
+                    <div key={campo} className="ledger-row dados-item">
+                      <dt className="ledger-row-label">{campo === "cor_primaria" ? "Cor principal" : "Cor de destaque"}</dt>
+                      <dd className={`ledger-row-value${marca.marca[campo] ? "" : " is-vazio"}`}>
+                        {marca.marca[campo] ? (
+                          <span className="dados-cor"><Amostra cor={marca.marca[campo]!} />{marca.marca[campo]}</span>
+                        ) : (
+                          "Não informada"
+                        )}
+                      </dd>
+                    </div>
+                  ))}
+                  <div className="ledger-row dados-item">
+                    <dt className="ledger-row-label">Fonte</dt>
+                    <dd className="ledger-row-value">{marca.marca.fonte ?? (marca.fonteNoPlano ? "Padrão (Inter)" : "Padrão (fonte da marca no Plano Pro)")}</dd>
+                  </div>
+                  {marca.marca.link_vitrine ? (
+                    <div className="ledger-row dados-item">
+                      <dt className="ledger-row-label">Link da vitrine</dt>
+                      <dd className="ledger-row-value">
+                        <a href={marca.marca.link_vitrine} target="_blank" rel="noopener noreferrer" className="dados-site">{marca.marca.link_vitrine.replace("https://", "")}</a>
+                      </dd>
+                    </div>
+                  ) : null}
+                </dl>
+                {!marca.marca.cor_primaria ? (
+                  <p className="dados-campo-ajuda">Sem as cores da marca, a vitrine sai com cores neutras. Informe aqui ou mande o código da cor para a mila no WhatsApp.</p>
+                ) : null}
+                {avisoDa("marca")}
+              </>
+            )}
+          </section>
+        )}
 
         {leitura.status === "error" ? null : conc.status === "loading" ? (
           <section className="desk-panel dados-secao" aria-labelledby="secao-concorrentes" aria-busy="true">

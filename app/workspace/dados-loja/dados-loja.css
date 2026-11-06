@@ -91,3 +91,37 @@
 
 /* Site da loja: link para o endereço salvo, quebrando em qualquer ponto em tela estreita. */
 .dados-site { color: var(--color-ledger-mineral); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; overflow-wrap: anywhere; }
+
+/* Marca da vitrine: amostra de cor ao lado do código, e seletor + código no formulário. */
+.dados-cor {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dados-cor-amostra {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 0.3rem;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.dados-cor-campo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dados-cor-campo input[type="color"] {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0.15rem;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.dados-cor-campo input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}

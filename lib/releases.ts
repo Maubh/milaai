@@ -26,6 +26,68 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.37",
+    date: "2026-11-06",
+    title: "Sacola na vitrine web",
+    summary: "A vitrine ganha uma sacola: a cliente escolhe as peças e a mensagem do pedido já sai pronta para o seu WhatsApp.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Sacola com pedido pronto",
+        description: "Na vitrine, a cliente toca em “Pôr no pedido”, escolhe quantidades e vê o total. No fim, ela copia a mensagem ou manda direto no seu WhatsApp, com código, peças, valores e forma de receber. A sacola usa as cores e a fonte da sua marca, e nada é cobrado na vitrine.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Variações das peças na vitrine",
+        description: "Peças com cor, tamanho ou outra variação mostram as opções na vitrine, e a cliente escolhe antes de pôr no pedido. A escolha vai na mensagem (ex.: “Anel Solar (Tamanho 16 · Cor Prata)”). Antes de publicar, a mila mostra a lista de peças, preços e variações e só publica depois do seu ok.",
+      },
+      {
+        type: "improvement",
+        plan: "pro",
+        title: "Vitrine montada com as peças da Nuvemshop ou da Olist",
+        description: "Se você tem peças na Nuvemshop, na Olist/Tiny ou no Jueri, a mila pergunta de onde a vitrine deve partir e puxa de lá nome, preço, foto e variações (do Jueri, por enquanto, só nome, preço e estoque). Peça sem foto fica de fora até ganhar foto, e quando o preço muda conforme a variação, a mila pergunta antes.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Jueri: consultoras, clientes e pedidos",
+        description: "Com o Jueri conectado, você pergunta à mila sobre pedidos (em aberto, por período, valores e comissão), consultoras e clientes. As peças do Jueri passam a vir com preço de varejo e atacado, cor e fotos. Por cuidado com os dados, a mila não lê CPF, e-mail, telefone nem endereço de clientes e consultoras.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Vitrine mais larga no computador",
+        description: "No computador, a vitrine usa mais da tela e mostra 4 peças por linha (3 no tablet). No celular continuam 2 por linha.",
+      },
+      {
+        type: "new",
+        plan: "all",
+        title: "Marca da vitrine em Dados da loja",
+        description: "Em Dados da loja, a seção Marca da vitrine mostra e deixa você mudar o nome da vitrine, o WhatsApp que recebe os pedidos, a cor principal e a de destaque (com amostra e seletor de cor) e, no Pro, a fonte da marca. É o mesmo cadastro que a mila usa pelo WhatsApp, e o link da sua vitrine fica ali também.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Vitrine com as cores da sua marca",
+        description: "Antes da primeira vitrine, a mila pede as cores da sua marca. Se você mandar o código da cor na conversa (ex.: #B76E79), ela guarda na hora e a vitrine passa a usar essa cor.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Dados da loja contados na conversa ficam salvos",
+        description: "Quando você conta no WhatsApp a taxa do cartão, o Instagram, o site da loja ou outro dado fixo, a mila já salva em Dados da loja. Simulações como “e se a taxa fosse 6%?” não mudam nada.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Markup escolhido a cada peça",
+        description: "Saiu o markup padrão de Dados da loja, porque o markup muda de peça para peça. Agora a mila pergunta o markup em cada preço. Ela pode lembrar o que você usou antes (“nos brincos você usou 3x, quer o mesmo?”), mas nunca calcula sem você dizer. Por isso, o balanço do mês deixa de trazer a estimativa de vendas que usava o markup salvo.",
+      },
+    ],
+  },
+  {
     version: "0.6.36",
     internal: true,
     date: "2026-11-04",

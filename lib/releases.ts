@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.39",
+    date: "2026-11-06",
+    title: "Logo parada entre as páginas",
+    summary: "A logo e o topo da área logada não saem do lugar ao trocar de página.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Logo parada ao trocar de página",
+        description: "Ao ir de Visão geral para Dados da loja, a logo deixava de ficar no mesmo lugar porque a barra de rolagem aparecia. Agora a área logada reserva esse espaço desde o início.",
+      },
+    ],
+    internal: true,
+  },
+  {
     version: "0.6.38",
     date: "2026-11-06",
     title: "Marca da loja em Dados da loja",

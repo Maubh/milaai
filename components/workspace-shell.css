@@ -16,6 +16,9 @@
   scrollbar-color: var(--color-ledger-rule-strong) transparent;
   overflow-x: clip;
 }
+/* Barra de rolagem sempre reservada na área logada: sem isso, a barra que aparece numa página
+   mais longa estreita a largura útil e a logo (centralizada) anda de lugar ao trocar de página. */
+html:has(.desk-shell) { scrollbar-gutter: stable; }
 /* Lavagem suave atrás das superfícies translúcidas: só cor, nenhum conteúdo. */
 .desk-shell::before {
   content: "";

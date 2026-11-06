@@ -70,22 +70,23 @@ test("trello: a copy canônica promete gestão de tarefas pelo WhatsApp", () => 
   assert.equal(PLANO_TRELLO, "Gestão de tarefas no Trello pelo WhatsApp");
 });
 
-for (const [surface, path, headings] of [
-  ["home", "components/PricingSection.tsx", ['<span class="pricing-plan-name">Essencial</span>', '<span class="pricing-plan-name">Pro</span>']],
-  ["Meu plano", "app/workspace/plano/PlanView.tsx", ['<h3 id="plan-essencial">Plano Essencial</h3>', '<h3 id="plan-pro">Plano Pro</h3>']],
+for (const [surface, path, essencial, pro] of [
+  ["home", "components/PricingSection.tsx", '<span class="pricing-plan-name">Essencial</span>', '<span class="pricing-plan-name">Pro</span>'],
+  ["Meu plano", "app/workspace/plano/PlanView.tsx", '<h3 id="plan-essencial">Plano Essencial</h3>', '<h3 id="plan-pro">Plano Pro</h3>'],
 ] as const) {
-  test(`trello: Essencial e Pro de ${surface} exibem e usam a copy compartilhada`, () => {
+  test(`trello: Essencial de ${surface} exibe a copy compartilhada e o Pro não a repete`, () => {
     const actual = cards(renderPlans(path));
     const sentinel = "TRELLO_COPY_COMPARTILHADA";
     const instrumented = cards(renderPlans(path, sentinel));
-    for (const heading of headings) {
+    // O Pro começa com "Tudo do Essencial": o Trello aparece só no Essencial.
+    for (const [heading, expected] of [[essencial, 1], [pro, 0]] as const) {
       const card = actual.find((card) => card.includes(heading));
       assert.ok(card, `card ausente: ${heading}`);
-      assert.equal(items(card).filter((item) => item === PLANO_TRELLO).length, 1,
-        `${heading}: Trello precisa aparecer explicitamente na lista de recursos`);
+      assert.equal(items(card).filter((item) => item === PLANO_TRELLO).length, expected,
+        `${heading}: Trello precisa aparecer ${expected} vez(es) na lista de recursos`);
       const changed = instrumented.find((card) => card.includes(heading));
       assert.ok(changed, `card instrumentado ausente: ${heading}`);
-      assert.equal(items(changed).filter((item) => item === sentinel).length, 1,
+      assert.equal(items(changed).filter((item) => item === sentinel).length, expected,
         `${heading}: a frase precisa vir de lib/trello.ts, não de literal ou comentário`);
       assert.ok(!changed.includes(PLANO_TRELLO), "não repetir a frase à mão");
     }

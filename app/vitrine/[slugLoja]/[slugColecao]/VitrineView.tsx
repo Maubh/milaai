@@ -285,19 +285,23 @@ export default function VitrineView({ loja, vitrine, template, exemplo = false }
 
       <header className="vitrine-header">
         <div className="vitrine-header-inner">
-          <div className="vitrine-brand">
-            {loja.logoUrl ? (
+          {loja.logoUrl ? (
+            // Com logo, a barra mostra só a logo; o nome da loja fica para leitores de tela.
+            <div className="vitrine-brand vitrine-brand-so-logo">
               <img src={loja.logoUrl} alt={`Logo de ${nomeLoja}`} className="vitrine-logo" />
-            ) : (
+              <h1 className="sr-only">{loja.nomeExibicao}</h1>
+            </div>
+          ) : (
+            <div className="vitrine-brand">
               <div className="vitrine-logo-placeholder" aria-hidden="true">
                 {(loja.nomeExibicao || "LO").substring(0, 2).toUpperCase()}
               </div>
-            )}
-            <div className="vitrine-brand-texto">
-              <h1 className="vitrine-store-name">{loja.nomeExibicao}</h1>
-              <p className="vitrine-collection-subtitle">{vitrine.tituloColecao}</p>
+              <div className="vitrine-brand-texto">
+                <h1 className="vitrine-store-name">{loja.nomeExibicao}</h1>
+                <p className="vitrine-collection-subtitle">{vitrine.tituloColecao}</p>
+              </div>
             </div>
-          </div>
+          )}
 
           <BotaoWhatsApp texto={`Olá, ${nomeLoja}! Estava vendo seu catálogo (${vitrine.tituloColecao}) e gostaria de tirar uma dúvida.`} className="vitrine-header-contact">
             <IconeWhatsApp />

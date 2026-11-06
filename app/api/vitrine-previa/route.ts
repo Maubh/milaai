@@ -21,6 +21,11 @@ export async function GET() {
     return NextResponse.json({ ok: false, detail: typeof data.detail === "string" ? data.detail : "marca_indisponivel" }, { status: status === 200 ? 502 : status, headers: SEM_CACHE });
   }
   const { marca } = projetarMarca(data);
+  // Fonte enviada vem como `arquivo:<id>`: a prévia precisa do nome da família para aplicá-la.
+  const familiaDe = (v: string | null | undefined): string => {
+    if (!v?.startsWith("arquivo:")) return v ?? "";
+    return marca.fontes_enviadas.find((f) => f.valor === v)?.familia ?? "";
+  };
   const slug = marca.link_vitrine ? marca.link_vitrine.split("/").pop() ?? null : null;
   const ativa = slug ? vitrineAtiva(await getShowcase(slug)) : null;
 
@@ -39,9 +44,9 @@ export async function GET() {
             corPrimaria: marca.cor_primaria ?? "",
             corSecundaria: "",
             corDestaque: marca.cor_destaque ?? "",
-            tipografiaHeading: marca.fonte_titulo ?? "",
-            tipografiaSubtitulo: marca.fonte_subtitulo ?? "",
-            tipografiaBody: marca.fonte_corpo ?? "",
+            tipografiaHeading: familiaDe(marca.fonte_titulo),
+            tipografiaSubtitulo: familiaDe(marca.fonte_subtitulo),
+            tipografiaBody: familiaDe(marca.fonte_corpo),
             fontesEnviadas: marca.fontes_enviadas.map((f) => ({ familia: f.familia, url: f.url, formato: f.formato })),
             logoUrl: marca.logo_url,
             plano: "",

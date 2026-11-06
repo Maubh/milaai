@@ -131,13 +131,12 @@ body {
   min-width: 0;
 }
 
+/* A logo é a marca: sem moldura circular, inteira (contain), com a altura da barra. */
 .vitrine-logo {
-  width: 44px;
   height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1.5px solid var(--vitrine-card-bg);
-  box-shadow: 0 2px 6px var(--vitrine-sombra-cor);
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 

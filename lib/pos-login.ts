@@ -17,6 +17,7 @@ const CONECTORES = ["google", "nuvemshop", "olist", "meta", "jueri", "notion"];
 const DESTINOS = new Set([
   "/workspace/plano",
   "/workspace/integracoes",
+  "/workspace/vitrine",
   ...CONECTORES.map((c) => `/integrations/${c}`),
 ]);
 const PADRAO = "/workspace";

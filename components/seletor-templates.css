@@ -1,0 +1,101 @@
+/* Hallmark · seletor de layout da vitrine · três rádios com nome e descrição, partilhados pela galeria pública e pela área logada · tokens herdados do contexto (vitrine ou workspace) */
+
+:root {
+  --seletor-borda-padrao: #d4d4d8;
+  --seletor-tinta-padrao: #18181b;
+  --seletor-muted-padrao: #52525b;
+  --seletor-fundo-padrao: #fffefc;
+  --seletor-foco-padrao: #1d4ed8;
+}
+
+/* Herda os tokens da vitrine quando está nela; o workspace redefine os seus. */
+.seletor-templates {
+  --seletor-borda: var(--vitrine-border, var(--seletor-borda-padrao));
+  --seletor-tinta: var(--vitrine-text-main, var(--seletor-tinta-padrao));
+  --seletor-muted: var(--vitrine-text-muted, var(--seletor-muted-padrao));
+  --seletor-fundo: var(--vitrine-card-bg, var(--seletor-fundo-padrao));
+  --seletor-foco: var(--vitrine-foco, var(--seletor-foco-padrao));
+  --seletor-marcado: var(--vitrine-text-main, var(--seletor-tinta-padrao));
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.seletor-templates-legenda {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--seletor-muted);
+}
+
+.seletor-templates-opcoes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+.seletor-template {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "radio nome" "radio desc";
+  column-gap: 0.65rem;
+  row-gap: 0.15rem;
+  align-items: start;
+  min-height: 48px;
+  padding: 0.75rem 0.9rem;
+  border: 1.5px solid var(--seletor-borda);
+  border-radius: 0.75rem;
+  background: var(--seletor-fundo);
+  color: var(--seletor-tinta);
+  cursor: pointer;
+}
+
+.seletor-template.is-marcado {
+  border-color: var(--seletor-marcado);
+  box-shadow: inset 0 0 0 1px var(--seletor-marcado);
+}
+
+.seletor-template:has(.seletor-template-radio:focus-visible) {
+  outline: 3px solid var(--seletor-foco);
+  outline-offset: 2px;
+}
+
+.seletor-template-radio {
+  grid-area: radio;
+  width: 20px;
+  height: 20px;
+  margin: 0.1rem 0 0;
+  accent-color: var(--seletor-marcado);
+}
+
+.seletor-template-nome {
+  grid-area: nome;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.seletor-template-atual {
+  font-weight: 500;
+  color: var(--seletor-muted);
+}
+
+.seletor-template-desc {
+  grid-area: desc;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--seletor-muted);
+}
+
+.seletor-templates:disabled .seletor-template {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+@media (min-width: 640px) {
+  .seletor-templates-opcoes {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

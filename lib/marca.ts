@@ -8,6 +8,8 @@
  * a lojista digita e mensagens de erro, testados fora do Next.
  */
 
+import { templateDaVitrine, type TemplateVitrine } from "./vitrine.ts";
+
 export interface ArquivoMarca {
   id: number;
   nome: string;
@@ -49,6 +51,8 @@ export interface Marca {
   logo_url: string | null;
   identidade: ArquivoMarca[];
   link_vitrine: string | null;
+  /** Layout da vitrine (`classico`, `editorial`, `minimalista`); `classico` quando o serviço ainda não manda. */
+  template: TemplateVitrine;
 }
 
 export interface LeituraMarca {
@@ -58,7 +62,7 @@ export interface LeituraMarca {
   armazenamento: boolean;
 }
 
-export const CAMPOS_MARCA = ["cor_primaria", "cor_destaque", "fonte_titulo", "fonte_subtitulo", "fonte_corpo"] as const;
+export const CAMPOS_MARCA = ["cor_primaria", "cor_destaque", "fonte_titulo", "fonte_subtitulo", "fonte_corpo", "template"] as const;
 export type CampoMarca = (typeof CAMPOS_MARCA)[number];
 
 /** Limites do serviço (cabem no corpo de uma requisição do site). */
@@ -168,6 +172,7 @@ export function projetarMarca(bruto: unknown): LeituraMarca {
       logo_url: httpsOuNada(m.logo_url),
       identidade: Array.isArray(m.identidade) ? m.identidade.map(arquivo).filter((a): a is ArquivoMarca => a !== null) : [],
       link_vitrine: linkVitrine(m.link_vitrine),
+      template: templateDaVitrine(m.template),
     },
     fonteNoPlano: d.fonte_no_plano === true,
     armazenamento: d.armazenamento === true,
@@ -237,6 +242,8 @@ export function mensagemDaMarca(detail: unknown, campo?: unknown): string {
     case "plan_pro_required":
       return "As fontes da marca são do Plano Pro.";
     case "nothing_to_update":
+      // Só o layout enviado e o serviço não o reconheceu: ele ainda não grava esse campo.
+      if (campo === "template") return "O serviço ainda não grava o layout da vitrine. Tente de novo mais tarde.";
       return "Nada mudou.";
     case "no_session":
       return "Sua sessão expirou. Entre de novo para salvar.";

@@ -62,6 +62,12 @@ export const RELEASES: readonly Release[] = [
         description: "No computador, a vitrine usa mais da tela e mostra 4 peças por linha (3 no tablet). No celular continuam 2 por linha.",
       },
       {
+        type: "new",
+        plan: "all",
+        title: "Marca da vitrine em Dados da loja",
+        description: "Em Dados da loja, a seção Marca da vitrine mostra e deixa você mudar o nome da vitrine, o WhatsApp que recebe os pedidos, a cor principal e a de destaque (com amostra e seletor de cor) e, no Pro, a fonte da marca. É o mesmo cadastro que a mila usa pelo WhatsApp, e o link da sua vitrine fica ali também.",
+      },
+      {
         type: "improvement",
         plan: "all",
         title: "Vitrine com as cores da sua marca",

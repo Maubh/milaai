@@ -92,6 +92,34 @@ export function familiaValida(v: string): string | null {
   return /^[\p{L}\p{N}][\p{L}\p{N} -]{0,39}$/u.test(limpo) ? limpo : null;
 }
 
+/** Marcas técnicas do nome do arquivo que não fazem parte do nome da fonte. */
+const RUIDO_NOME_FONTE = new Set(["variablefont", "variable", "vf", "wght", "wdth", "opsz", "slnt", "ital", "webfont", "web"]);
+
+/**
+ * Nome da fonte a partir do nome do arquivo, sem a lojista digitar nada:
+ * "CormorantGaramond-Italic-VariableFont_wght.ttf" vira "Cormorant Garamond Italic".
+ * Não repete o nome de outra fonte já enviada (ganha " 2", " 3"…).
+ */
+export function nomeDaFonteDoArquivo(nomeArquivo: string, existentes: readonly string[] = []): string {
+  // Tira o ruído antes de separar CamelCase ("VariableFont" sai inteiro, não vira "Variable Font").
+  const palavras = nomeArquivo
+    .replace(/\.[a-z0-9]+$/i, "")
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((p) => p && !RUIDO_NOME_FONTE.has(p.toLowerCase()))
+    .flatMap((p) => p.replace(/([\p{Ll}\p{N}])(\p{Lu})/gu, "$1 $2").split(" "));
+  let nome = "";
+  for (const p of palavras) {
+    const proximo = nome ? `${nome} ${p}` : p;
+    if (proximo.length > 34) break;
+    nome = proximo;
+  }
+  const base = familiaValida(nome) ?? "Fonte enviada";
+  const usados = new Set(existentes.map((e) => e.toLowerCase()));
+  if (!usados.has(base.toLowerCase())) return base;
+  for (let i = 2; i < 100; i++) if (!usados.has(`${base} ${i}`.toLowerCase())) return `${base} ${i}`;
+  return base;
+}
+
 /** Mesma regra do serviço: "#B76E79", "b76e79" ou "#FA0" viram "#RRGGBB". */
 export function normalizarCorHex(valor: string): string | null {
   const m = valor.trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i);

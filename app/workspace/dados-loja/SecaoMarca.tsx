@@ -10,11 +10,11 @@ import {
   LIMITES_ARQUIVO,
   PAPEIS_FONTE,
   base64DeBytes,
-  familiaValida,
   filtrarFontes,
   formatarTamanho,
   formatarWhatsapp,
   mensagemDaMarca,
+  nomeDaFonteDoArquivo,
   normalizarCorHex,
   projetarMarca,
   rotuloFonte,
@@ -28,7 +28,7 @@ import {
 type EstadoMarca = { status: "loading" } | { status: "erro" } | ({ status: "ready" } & LeituraMarca);
 type Aviso = { secao: string; ok: boolean; texto: string } | null;
 
-const DESCRICAO = "Cores, fontes, logo e identidade visual da sua loja. A vitrine usa estes dados, e a mila também usa quando cria algo com a sua marca.";
+const DESCRICAO = "Cores, fontes, logo e identidade visual da sua loja. A vitrine usa as cores, as fontes e o logo daqui.";
 
 /** Amostra da cor ao lado do código. */
 function Amostra({ cor }: { cor: string }) {
@@ -221,7 +221,6 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
   const [rascunho, setRascunho] = useState<Record<string, string>>({});
   const [google, setGoogle] = useState<FonteGoogle[]>([...FONTES_RESERVA]);
   const [enviando, setEnviando] = useState<string | null>(null);
-  const [fontePendente, setFontePendente] = useState<{ arquivo: File; familia: string; papel: CampoFonte | null } | null>(null);
   const inputLogo = useRef<HTMLInputElement>(null);
   const inputIdentidade = useRef<HTMLInputElement>(null);
   const inputFonte = useRef<HTMLInputElement>(null);
@@ -360,7 +359,6 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
       }
       let marcaAtual = projetarMarca(data);
       setEstado({ status: "ready", ...marcaAtual });
-      setFontePendente(null);
       if (tipo === "fonte" && papel && familia) {
         // Fonte enviada para um papel: já passa a ser a fonte desse papel.
         const nova = marcaAtual.marca.fontes_enviadas.find((f) => f.familia === familia);
@@ -413,8 +411,8 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
     e.target.value = "";
     if (!arquivo) return;
     if (tipo === "fonte") {
-      const sugestao = familiaValida(arquivo.name.replace(/\.[a-z0-9]+$/i, "").replace(/[_-]+/g, " ")) ?? "";
-      setFontePendente({ arquivo, familia: sugestao, papel: papelUpload.current });
+      // O nome sai do arquivo: a lojista só escolhe o papel e o arquivo.
+      enviar("fonte", arquivo, nomeDaFonteDoArquivo(arquivo.name, marca.fontes_enviadas.map((f) => f.familia)), papelUpload.current);
       return;
     }
     enviar(tipo, arquivo);
@@ -576,7 +574,9 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
             </button>
             <input ref={inputIdentidade} type="file" accept={LIMITES_ARQUIVO.identidade.aceita} hidden onChange={arquivoEscolhido("identidade")} aria-label="Arquivo de identidade visual" />
           </div>
-          <span className="dados-campo-ajuda">PDF, PNG, JPG ou WebP, até 3 MB cada, até {LIMITES_ARQUIVO.identidade.maximo} arquivos.</span>
+          <span className="dados-campo-ajuda">
+            PDF, PNG, JPG ou WebP, até 3 MB cada, até {LIMITES_ARQUIVO.identidade.maximo} arquivos. A vitrine não lê estes arquivos sozinha: peça à mila no WhatsApp para ler o seu manual em PDF. Ela sugere as cores e as fontes que achar nele e só aplica depois do seu ok.
+          </span>
         </div>
 
         {fonteNoPlano ? (
@@ -595,53 +595,23 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
             ) : (
               <span className="dados-vazio">Se a sua fonte não está no Google Fonts, envie o arquivo dela aqui.</span>
             )}
-            {fontePendente ? (
-              <div className="dados-marca-fonte-nova">
-                {fontePendente.papel ? (
-                  <span className="dados-campo-ajuda">Vai ser a fonte do {PAPEIS_FONTE.find((x) => x.campo === fontePendente.papel)?.rotulo.toLowerCase()}.</span>
-                ) : null}
-                <label className="dados-campo">
-                  <span className="dados-campo-rotulo">Nome da fonte</span>
-                  <input type="text" maxLength={40} value={fontePendente.familia} onChange={(e) => setFontePendente({ ...fontePendente, familia: e.target.value })} />
-                </label>
-                <div className="dados-marca-acoes">
-                  <button
-                    type="button"
-                    className="ledger-button ledger-button-primary"
-                    disabled={ocupado}
-                    onClick={() => {
-                      const familia = familiaValida(fontePendente.familia);
-                      if (!familia) {
-                        p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("invalid_field", "familia") });
-                        return;
-                      }
-                      enviar("fonte", fontePendente.arquivo, familia, fontePendente.papel);
-                    }}
-                  >
-                    {enviando === "fonte" ? "Enviando…" : `Enviar ${fontePendente.arquivo.name}`}
-                  </button>
-                  <button type="button" className="ledger-button ledger-button-quiet" disabled={ocupado} onClick={() => setFontePendente(null)}>Cancelar</button>
-                </div>
-              </div>
-            ) : (
-              <div className="dados-marca-acoes">
-                {PAPEIS_FONTE.map((papel) => (
-                  <button
-                    key={papel.campo}
-                    type="button"
-                    className="ledger-button"
-                    disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
-                    onClick={() => {
-                      papelUpload.current = papel.campo;
-                      inputFonte.current?.click();
-                    }}
-                  >
-                    Enviar fonte do {papel.rotulo.toLowerCase()}
-                  </button>
-                ))}
-                <input ref={inputFonte} type="file" accept={LIMITES_ARQUIVO.fonte.aceita} hidden onChange={arquivoEscolhido("fonte")} aria-label="Arquivo da fonte" />
-              </div>
-            )}
+            <div className="dados-marca-acoes">
+              {PAPEIS_FONTE.map((papel) => (
+                <button
+                  key={papel.campo}
+                  type="button"
+                  className="ledger-button"
+                  disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
+                  onClick={() => {
+                    papelUpload.current = papel.campo;
+                    inputFonte.current?.click();
+                  }}
+                >
+                  {enviando === "fonte" && papelUpload.current === papel.campo ? "Enviando…" : `Enviar fonte do ${papel.rotulo.toLowerCase()}`}
+                </button>
+              ))}
+              <input ref={inputFonte} type="file" accept={LIMITES_ARQUIVO.fonte.aceita} hidden onChange={arquivoEscolhido("fonte")} aria-label="Arquivo da fonte" />
+            </div>
             <span className="dados-campo-ajuda">
               WOFF2, WOFF, TTF ou OTF, até 2 MB. A fonte fica pública no link da vitrine: envie só fontes que você tem licença para usar na web.
             </span>

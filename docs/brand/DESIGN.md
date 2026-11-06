@@ -12,8 +12,24 @@ de negócios da lojista no WhatsApp e no Telegram. O único elemento de profundi
 
 ## Mundo próprio
 
-Papel quente `#F5F1EA`, tinta ameixa `#24191F`, vinho `#4D1F2D`, ouro `#B99A62` só no detalhe
-da marca ou no traço do CTA. Títulos e corpo em Manrope legível; sem grandes gradientes,
+Paleta da marca (fonte: `public/brand/brand-tokens.css` e `public/brand/tokens.json`):
+
+| Token | Cor | Uso |
+|---|---|---|
+| Mineral | `#173F3B` | superfícies escuras (hero, planos Pro, rodapé), logotipo e botões |
+| Marfim | `#F6F3ED` | fundo claro das seções e texto sobre o mineral |
+| Areia | `#D9CBB8` | detalhes e rótulos sobre o mineral |
+| Tinta | `#1E2B28` | texto |
+| Sálvia | `#8FA89B` | segunda linha dos títulos e marcadores (sobre fundo claro, `#6F8A7D`) |
+| Branco | `#FFFFFF` | cartões e balões de conversa |
+
+Os tons de apoio da landing (`components/landing/landing.css`) derivam do mineral:
+`#10302D` e `#0C2522` nos degradês escuros, `#FBF9F5` como papel e `#5A6763` no texto
+secundário. A paleta antiga (ameixa `#24191F`, vinho `#4D1F2D`, ouro `#B99A62`, papel
+`#F5F1EA`) saiu de uso; `--plum`, `--wine` e `--gold` em `app/globals.css` são só apelidos
+dos tokens acima.
+
+Títulos e corpo em Manrope legível; sem grandes gradientes,
 pílulas, labels em caixa alta, card boxes ou sombras decorativas. Header só com a palavra
 `mila.` pequena, à esquerda, sem nav e sem CTA competindo com o principal. Footer mínimo:
 marca, estado de prévia, copyright — nenhum link.

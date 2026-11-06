@@ -35,7 +35,7 @@ export const RELEASES: readonly Release[] = [
         type: "new",
         plan: "pro",
         title: "Fonte própria direto no título, subtítulo ou corpo",
-        description: "Em Dados da loja, na seção Marca, envie a fonte já escolhendo onde ela vai: título, subtítulo ou corpo. Enquanto uma fonte enviada estiver em uso, a busca do Google Fonts daquele campo fica bloqueada e a tela explica por quê; para voltar, toque em Voltar para a padrão.",
+        description: "Em Dados da loja, na seção Marca, envie a fonte já escolhendo onde ela vai: título, subtítulo ou corpo. O nome sai do próprio arquivo, sem precisar digitar. Enquanto uma fonte enviada estiver em uso, a busca do Google Fonts daquele campo fica bloqueada e a tela explica por quê; para voltar, toque em Voltar para a padrão.",
       },
       {
         type: "fix",
@@ -47,7 +47,7 @@ export const RELEASES: readonly Release[] = [
         type: "fix",
         plan: "pro",
         title: "Prévia com as suas fontes enviadas",
-        description: "A prévia da vitrine agora usa as fontes que você enviou, e não a fonte padrão. A lista de fontes também fecha ao tocar fora dela.",
+        description: "A prévia da vitrine agora usa as fontes que você enviou, e não a fonte padrão. A lista de fontes também fecha ao tocar fora dela. O texto da identidade visual agora diz o que a vitrine usa: as cores e as fontes dos campos acima, ou o que a mila sugerir a partir do seu manual.",
       },
       {
         type: "fix",

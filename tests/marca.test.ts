@@ -6,6 +6,7 @@ import {
   formatarTamanho,
   formatarWhatsapp,
   mensagemDaMarca,
+  nomeDaFonteDoArquivo,
   normalizarCorHex,
   projetarFontesGoogle,
   projetarMarca,
@@ -123,4 +124,13 @@ test("vitrine: carrega as fontes de cada papel; fonte enviada vira @font-face; M
   assert.equal(f.links.some((l) => l.includes("Bella")), false, "fonte enviada não vai ao Google Fonts");
   assert.ok(f.links.some((l) => l.includes("DM+Serif+Text")) && f.links.some((l) => l.includes("Lora")));
   assert.match(fontesDaVitrine({ tipografiaHeading: "x</style><script>" }).titulo, /^"Montserrat"/, "nome inválido cai na reserva");
+});
+
+test("nome da fonte sai do arquivo, sem a lojista digitar", () => {
+  assert.equal(nomeDaFonteDoArquivo("CormorantGaramond-Italic-VariableFont_wght.ttf"), "Cormorant Garamond Italic");
+  assert.equal(nomeDaFonteDoArquivo("playfair_display-regular.woff2"), "playfair display regular");
+  assert.equal(nomeDaFonteDoArquivo("MinhaFonte.otf", ["Minha Fonte"]), "Minha Fonte 2", "não repete o nome de outra fonte enviada");
+  assert.equal(nomeDaFonteDoArquivo("___.ttf"), "Fonte enviada", "arquivo sem nome aproveitável");
+  const longo = nomeDaFonteDoArquivo("SuperExtraLongFamilyNameWithManyWords-BoldCondensedItalic.ttf");
+  assert.ok(longo.length <= 40 && familiaValida(longo) === longo, "nome longo é cortado e continua válido para o serviço");
 });

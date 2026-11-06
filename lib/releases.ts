@@ -26,6 +26,38 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.44",
+    date: "2026-11-06",
+    title: "Logo e fontes da marca na vitrine",
+    summary: "A vitrine mostra a sua logo inteira no topo, e as fontes que você envia já entram no título, no subtítulo ou no corpo.",
+    changes: [
+      {
+        type: "new",
+        plan: "pro",
+        title: "Fonte própria direto no título, subtítulo ou corpo",
+        description: "Em Dados da loja, na seção Marca, envie a fonte já escolhendo onde ela vai: título, subtítulo ou corpo. Enquanto uma fonte enviada estiver em uso, a busca do Google Fonts daquele campo fica bloqueada e a tela explica por quê; para voltar, toque em Voltar para a padrão.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Logo inteira no topo da vitrine",
+        description: "Com logo cadastrada, o topo da vitrine mostra só a sua logo, inteira, sem o recorte redondo e sem repetir o nome da loja.",
+      },
+      {
+        type: "fix",
+        plan: "pro",
+        title: "Prévia com as suas fontes enviadas",
+        description: "A prévia da vitrine agora usa as fontes que você enviou, e não a fonte padrão. A lista de fontes também fecha ao tocar fora dela.",
+      },
+      {
+        type: "fix",
+        plan: "all",
+        title: "Botão Revisar pedido legível",
+        description: "Na vitrine, o botão Revisar pedido não some mais em marcas de cor escura.",
+      },
+    ],
+  },
+  {
     version: "0.6.43",
     date: "2026-11-06",
     title: "Escolha o layout da sua vitrine",

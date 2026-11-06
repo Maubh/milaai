@@ -8,7 +8,7 @@
   border-bottom: var(--rule-ledger) solid var(--color-ledger-rule-strong);
 }
 .vitrine-ws .dados-secao-head h2 { text-wrap: balance; font-size: var(--text-workspace-heading); font-weight: 700; letter-spacing: -0.02em; line-height: 1.3; }
-.vitrine-ws .dados-secao-head p { max-width: 64ch; color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.5; }
+.vitrine-ws .dados-secao-head p { max-width: none; color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); line-height: 1.5; }
 
 .vitrine-ws-carregando { margin-top: var(--space-workspace-lg); }
 .vitrine-ws-erro { display: grid; gap: var(--space-workspace-md); justify-items: start; margin-top: var(--space-workspace-lg); }
@@ -24,6 +24,17 @@
   --seletor-fundo: var(--color-ledger-surface);
   --seletor-foco: var(--color-ledger-focus);
   --seletor-marcado: var(--color-ledger-mineral);
+}
+
+/* Na mesa, cada layout ocupa a linha toda: a descrição cabe em uma ou duas linhas, sem quebrar à toa. */
+.vitrine-ws .seletor-templates .seletor-templates-opcoes { grid-template-columns: minmax(0, 1fr); }
+
+/* Salvar desabilitado (layout já em uso): texto legível, sem fundo escuro e sem trocar de cor no hover. */
+.vitrine-ws .ledger-button-primary:disabled,
+.vitrine-ws .ledger-button-primary:disabled:hover {
+  background: var(--color-ledger-surface);
+  border-color: var(--color-ledger-rule-strong);
+  color: var(--color-ledger-muted);
 }
 
 .vitrine-ws-abas {

@@ -45,6 +45,12 @@ export const RELEASES: readonly Release[] = [
       },
       {
         type: "improvement",
+        plan: "pro",
+        title: "Vitrine montada com as peças da Nuvemshop ou da Olist",
+        description: "Se você tem peças na Nuvemshop, na Olist/Tiny ou no Jueri, a mila pergunta de onde a vitrine deve partir e puxa de lá nome, preço, foto e variações (do Jueri, por enquanto, só nome, preço e estoque). Peça sem foto fica de fora até ganhar foto, e quando o preço muda conforme a variação, a mila pergunta antes.",
+      },
+      {
+        type: "improvement",
         plan: "all",
         title: "Vitrine mais larga no computador",
         description: "No computador, a vitrine usa mais da tela e mostra 4 peças por linha (3 no tablet). No celular continuam 2 por linha.",

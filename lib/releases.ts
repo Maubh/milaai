@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.42",
+    date: "2026-11-06",
+    title: "Vitrine com o seu WhatsApp, sem pergunta",
+    summary: "A Mila já sabe o seu WhatsApp e não pede mais o número para criar a vitrine.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Pedidos da vitrine no WhatsApp da dona",
+        description: "A Mila não pede mais o seu WhatsApp para criar a vitrine. Os pedidos já chegam no número da dona da loja, e antes de publicar ela confirma esse número com você. Se quiser que cheguem em outro, é só dizer.",
+      },
+    ],
+  },
+  {
     version: "0.6.41",
     date: "2026-11-06",
     title: "Planos iguais aos da página inicial",

@@ -85,7 +85,8 @@ body {
   max-width: 100%;
 }
 
-.vitrine-container button {
+/* :where() zera a especificidade: a cor de cada botão vem da regra da própria classe (ex.: "Revisar pedido" sobre a marca), e não do texto herdado da barra. */
+:where(.vitrine-container button) {
   font: inherit;
   color: inherit;
 }

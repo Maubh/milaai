@@ -95,23 +95,29 @@ export async function proxyOAuth(
     if (path.includes("/workspace/concorrentes")) {
       return { status: 200, data: { ok: true, concorrentes: ["concorrente.um", "concorrente_dois"], analise_no_plano: false } };
     }
-    // Marca da vitrine de exemplo; sessão Essencial, então sem fonte da marca.
-    if (path.includes("/workspace/marca-vitrine")) {
+    // Marca de exemplo; sessão Essencial, então sem fonte da marca. O sandbox
+    // não guarda nada: envio e remoção de arquivo devolvem esta mesma marca.
+    if (path.includes("/workspace/marca")) {
       return {
         status: 200,
         data: {
           ok: true,
           marca: {
             cadastrada: true,
-            nome_exibicao: "Loja Sandbox",
+            nome_loja: "Loja Sandbox",
             whatsapp: "5531999990000",
             cor_primaria: "#0F6E6E",
             cor_destaque: null,
-            fonte: null,
+            fonte_titulo: null,
+            fonte_subtitulo: null,
+            fonte_corpo: null,
+            fontes_enviadas: [],
+            logo_url: null,
+            identidade: [],
             link_vitrine: "https://vitrine.milaai.com.br/loja-sandbox",
           },
-          fontes: [],
           fonte_no_plano: false,
+          armazenamento: true,
         },
       };
     }

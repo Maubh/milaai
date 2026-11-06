@@ -904,3 +904,29 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* Fontes da marca: título, subtítulo e corpo (variáveis definidas no contêiner). */
+.vitrine-title,
+.vitrine-modal-title,
+.vitrine-sacola-title {
+  font-family: var(--fonte-titulo, inherit);
+}
+
+.vitrine-store-name,
+.vitrine-collection-subtitle,
+.vitrine-card-title {
+  font-family: var(--fonte-subtitulo, inherit);
+}
+
+/* Celular: com fontes mais largas (Montserrat, a padrão), o texto do botão
+   do card quebra em duas linhas em vez de vazar do botão. */
+@media (max-width: 480px) {
+  .vitrine-card-btn {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.45rem;
+    min-width: 0;
+  }
+}

@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TextBone } from "@/components/WorkspaceSkeleton";
+import { DESCRICAO_TEMPLATE } from "@/lib/vitrine";
 import {
   FONTES_RESERVA,
   FONTE_PADRAO,
@@ -429,6 +431,14 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
                 </dd>
               </div>
             ))}
+            <div className="ledger-row dados-item">
+              <dt className="ledger-row-label">Layout da vitrine</dt>
+              <dd className="ledger-row-value">
+                {DESCRICAO_TEMPLATE[marca.template].nome}
+                {" · "}
+                <Link href="/workspace/vitrine" className="dados-site">Escolher layout e ver prévia</Link>
+              </dd>
+            </div>
             {marca.link_vitrine ? (
               <div className="ledger-row dados-item">
                 <dt className="ledger-row-label">Link da vitrine</dt>

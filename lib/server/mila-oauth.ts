@@ -115,6 +115,7 @@ export async function proxyOAuth(
             logo_url: null,
             identidade: [],
             link_vitrine: "https://vitrine.milaai.com.br/loja-sandbox",
+            template: "classico",
           },
           fonte_no_plano: false,
           armazenamento: true,

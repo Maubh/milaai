@@ -1,0 +1,89 @@
+/* Hallmark · galeria dos layouts da vitrine · entrada pública por loja: as três abas e a vitrine de exemplo com a marca dela · theme: neutros da vitrine · genre editorial */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V3 · weakest: V, a galeria repete a vitrine de propósito, porque a lojista vê o layout real; a entrada é só a escolha */
+/* Hallmark · waive 39b · na vitrine de exemplo o card inteiro é o botão que abre a peça · a foto é o alvo de toque, como na vitrine real */
+/* Hallmark · waive 79 · a entrada da galeria é a escolha entre três layouts, centrada na tela · a prévia começa na tela seguinte de propósito */
+/* Hallmark · dismissed 77 · entrada e prévia são as duas partes da galeria; não é uma landing */
+/* Hallmark · dismissed 58 · 92 palavras: nome e descrição curta dos três layouts são o conteúdo pedido da entrada */
+
+.galeria {
+  background: var(--vitrine-bg);
+  color: var(--vitrine-text-main);
+  min-height: 100vh;
+}
+
+.galeria-topo {
+  border-bottom: 1px solid var(--vitrine-border);
+  background: var(--vitrine-card-bg);
+}
+
+.galeria-topo-inner {
+  max-width: var(--vitrine-largura-larga);
+  margin: 0 auto;
+  padding: 1.5rem 1rem 1.25rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.galeria-titulo {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+
+.galeria-texto {
+  margin: 0;
+  color: var(--vitrine-text-muted);
+  max-width: 56ch;
+  line-height: 1.5;
+}
+
+.galeria-escolher {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 0.75rem;
+  background: var(--vitrine-text-main);
+  color: var(--vitrine-bg);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.galeria-escolher:focus-visible {
+  outline: 3px solid var(--vitrine-foco);
+  outline-offset: 2px;
+}
+
+/* A prévia é a vitrine inteira, com o próprio header colado abaixo do topo. */
+.galeria-previa .vitrine-header {
+  position: static;
+}
+
+@media (min-width: 768px) {
+  .galeria-topo-inner {
+    padding: 2.5rem 1.5rem 1.75rem;
+  }
+
+  .galeria-titulo {
+    font-size: 2.1rem;
+  }
+}
+
+/* No computador a entrada é uma tela só: a escolha; a prévia vem a seguir. */
+@media (min-width: 1024px) {
+  .galeria-topo {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  .galeria-topo-inner {
+    width: 100%;
+    gap: 1rem;
+  }
+}

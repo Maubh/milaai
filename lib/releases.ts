@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.43",
+    date: "2026-11-06",
+    title: "Escolha o layout da sua vitrine",
+    summary: "A vitrine ganha três layouts, todos com as cores, as fontes e o logo da sua marca: Clássico, Editorial e Minimalista.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Três layouts para a vitrine",
+        description: "Clássico (cards com foto, preço e botão), Editorial (uma peça em destaque abre a coleção, com mais respiro) e Minimalista (grade limpa, fotos grandes e pouco texto). Escolha em Dados da loja, na nova página Vitrine, e veja a prévia dos três antes de decidir. Quem não escolher continua no Clássico.",
+      },
+      {
+        type: "new",
+        plan: "all",
+        title: "Galeria dos layouts pelo link",
+        description: "A mila pode mandar no WhatsApp um link que mostra os três layouts já com a sua marca, com peças de exemplo, para você escolher sem entrar na área logada.",
+      },
+    ],
+  },
+  {
     version: "0.6.42",
     date: "2026-11-06",
     title: "Vitrine com o seu WhatsApp, sem pergunta",

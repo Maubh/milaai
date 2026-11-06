@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.45",
+    date: "2026-11-06",
+    title: "Manual da marca pelo WhatsApp",
+    summary: "Mande o manual da sua marca em PDF no WhatsApp: a mila guarda e sugere as cores da vitrine a partir dele.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Manual da marca pelo WhatsApp",
+        description: "Mande o manual da marca (ou o design system) em PDF na conversa com a mila e diga que é da sua marca. Ela guarda o arquivo na identidade visual, mostra as cores que achou nele e sugere qual vai nos botões e qual nos preços. Só aplica na vitrine depois do seu ok. O manual que você enviou pelo site também vale: é só pedir para ela usar.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "A mila olha o seu manual antes de pedir as cores",
+        description: "Ao montar a vitrine sem as cores definidas, a mila primeiro procura o manual que você enviou. Se não tiver, ela pede o manual em PDF ou os códigos das cores.",
+      },
+    ],
+  },
+  {
     version: "0.6.44",
     date: "2026-11-06",
     title: "Logo e fontes da marca na vitrine",

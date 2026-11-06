@@ -96,8 +96,32 @@ function EscolhaFonte({
     setAberta(false);
   };
   const idLista = `lista-${campo}`;
+  const campoRef = useRef<HTMLDivElement>(null);
+  // A lista fecha com Esc, com clique/toque fora dela ou com o botão "Fechar lista" (no celular não há Esc).
+  useEffect(() => {
+    if (!aberta) return;
+    const fechaFora = (e: PointerEvent) => {
+      if (campoRef.current && !campoRef.current.contains(e.target as Node)) setAberta(false);
+    };
+    const fechaEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setAberta(false);
+    };
+    document.addEventListener("pointerdown", fechaFora);
+    document.addEventListener("keydown", fechaEsc);
+    return () => {
+      document.removeEventListener("pointerdown", fechaFora);
+      document.removeEventListener("keydown", fechaEsc);
+    };
+  }, [aberta]);
   return (
-    <div className="dados-campo dados-fonte-campo">
+    <div
+      ref={campoRef}
+      className="dados-campo dados-fonte-campo"
+      onBlur={(e) => {
+        // Foco saindo do campo inteiro (Tab) fecha a lista; foco que fica nas opções não.
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setAberta(false);
+      }}
+    >
       <span className="dados-campo-rotulo" id={`rotulo-${campo}`}>Fonte do {rotulo.toLowerCase()}</span>
       <div className="dados-fonte-escolhida">
         <PreviaFonte valor={valor || null} enviadas={enviadas} texto={rotuloFonte(valor || null, enviadas)} />
@@ -123,7 +147,13 @@ function EscolhaFonte({
         }}
       />
       {aberta ? (
-        <ul className="dados-fonte-lista" id={idLista} role="listbox" aria-label={`Fontes para o ${rotulo.toLowerCase()}`}>
+        <ul
+          className="dados-fonte-lista"
+          id={idLista}
+          role="listbox"
+          aria-label={`Fontes para o ${rotulo.toLowerCase()}`}
+          onMouseDown={(e) => e.preventDefault()}
+        >
           {minhas.map((f) => (
             <li key={f.valor}>
               <button type="button" role="option" aria-selected={valor === f.valor} onClick={() => escolher(f.valor)}>
@@ -140,6 +170,11 @@ function EscolhaFonte({
           ))}
           {minhas.length + resultados.length === 0 ? <li className="dados-fonte-vazio">Nenhuma fonte com esse nome.</li> : null}
         </ul>
+      ) : null}
+      {aberta ? (
+        <button type="button" className="ledger-button ledger-button-quiet dados-fonte-fechar" aria-controls={idLista} onClick={() => setAberta(false)}>
+          Fechar lista
+        </button>
       ) : null}
       <span className="dados-campo-ajuda">
         {ajuda} Prévia: <PreviaFonte valor={valor || null} enviadas={enviadas} texto={nomeLoja} />

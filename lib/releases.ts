@@ -49,6 +49,12 @@ export const RELEASES: readonly Release[] = [
         title: "Dados da loja contados na conversa ficam salvos",
         description: "Quando você conta no WhatsApp a taxa do cartão, o Instagram, o site da loja ou outro dado fixo, a mila já salva em Dados da loja. Simulações como “e se a taxa fosse 6%?” não mudam nada.",
       },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Markup escolhido a cada peça",
+        description: "Saiu o markup padrão de Dados da loja, porque o markup muda de peça para peça. Agora a mila pergunta o markup em cada preço. Ela pode lembrar o que você usou antes (“nos brincos você usou 3x, quer o mesmo?”), mas nunca calcula sem você dizer. Por isso, o balanço do mês deixa de trazer a estimativa de vendas que usava o markup salvo.",
+      },
     ],
   },
   {

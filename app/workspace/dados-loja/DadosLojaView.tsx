@@ -7,7 +7,6 @@ import { acessoConcorrentes, type AcessoConcorrentes } from "@/lib/concorrentes-
 import { ProBloqueado } from "@/components/PlanLock";
 import {
   contaDoInstagram,
-  formatarMarkup,
   formatarPercentual,
   formatarReais,
   lerNumeroDigitado,
@@ -24,7 +23,7 @@ import {
 } from "@/lib/dados-loja";
 import "./dados-loja.css";
 
-type Tipo = "reais" | "percentual" | "markup" | "texto" | "textoLongo" | "instagram" | "site";
+type Tipo = "reais" | "percentual" | "texto" | "textoLongo" | "instagram" | "site";
 
 interface Campo {
   chave: CampoDadosLoja;
@@ -58,9 +57,8 @@ const SECOES: Secao[] = [
     id: "precificacao",
     titulo: "Precificação",
     nome: "precificação",
-    descricao: "O ponto de partida quando a mila calcula o preço de uma peça.",
+    descricao: "O ponto de partida quando a mila calcula o preço de uma peça. O markup você escolhe a cada peça, na conversa.",
     campos: [
-      { chave: "markup_padrao", rotulo: "Markup padrão (x)", tipo: "markup", ajuda: "Quantas vezes o custo (ex.: 3 para 3x)." },
       { chave: "tipo_banho", rotulo: "Banho padrão", tipo: "texto", ajuda: "Ex.: Ouro 18k, 10 milésimos." },
     ],
   },
@@ -82,7 +80,6 @@ function valorParaTela(campo: Campo, dados: DadosLoja): string | null {
   const v = dados[campo.chave];
   if (campo.tipo === "reais") return formatarReais(v as number | null);
   if (campo.tipo === "percentual") return formatarPercentual(v as number | null);
-  if (campo.tipo === "markup") return formatarMarkup(v as number | null);
   if (campo.tipo === "site") return v ? siteParaTela(v as string) : null;
   return (v as string | null) ?? null;
 }
@@ -197,7 +194,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
       const bruto = (rascunho[c.chave] ?? "").trim();
       const atual = valorParaRascunho(c, dados);
       if (bruto === atual) continue;
-      if (["reais", "percentual", "markup"].includes(c.tipo)) {
+      if (["reais", "percentual"].includes(c.tipo)) {
         if (!bruto) continue; // número não se apaga por aqui; só se troca
         const n = lerNumeroDigitado(bruto);
         if (n === null) {
@@ -369,7 +366,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
             {cabecalho(
               "vazio",
               "A mila ainda não conhece os números da sua loja",
-              "Comece pela taxa da maquininha e pelo markup: com eles, todo preço que a mila sugerir já sai com a sua margem. O que você salvar aqui vale na hora, e dá para mudar também pelo WhatsApp.",
+              "Comece pela taxa da maquininha e pelo custo da embalagem: com eles, todo preço que a mila calcular já desconta o que você paga. O markup você escolhe a cada peça, na conversa. O que você salvar aqui vale na hora, e dá para mudar também pelo WhatsApp.",
               <button type="button" className="ledger-button ledger-button-primary" onClick={() => abrir(SECOES[0])}>Informar custos e taxas</button>,
               true,
             )}
@@ -401,7 +398,7 @@ export default function DadosLojaView({ pending = false }: { pending?: boolean }
                     ) : (
                       <input
                         type="text"
-                        inputMode={["reais", "percentual", "markup"].includes(c.tipo) ? "decimal" : c.tipo === "site" ? "url" : "text"}
+                        inputMode={["reais", "percentual"].includes(c.tipo) ? "decimal" : c.tipo === "site" ? "url" : "text"}
                         autoComplete={c.tipo === "site" ? "url" : undefined}
                         autoCapitalize={c.tipo === "site" ? "none" : undefined}
                         spellCheck={c.tipo === "site" ? false : undefined}

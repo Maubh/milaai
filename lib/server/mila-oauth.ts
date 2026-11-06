@@ -86,7 +86,6 @@ export async function proxyOAuth(
             instagram: "@lojasandbox",
             custo_embalagem: 6,
             taxa_cartao_percent: 3.99,
-            markup_padrao: 3,
             tipo_banho: null,
             observacoes: null,
           },

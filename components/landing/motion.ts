@@ -30,8 +30,8 @@ const PRECO_CURTO =
   "Calculado! O preço sugerido ficou em <b>R$&nbsp;90,00</b>, com margem de contribuição estimada de 63%, sem tributos nem custos fixos.<br><br>";
 
 const HERO: Step[] = [
-  { who: "me", html: T.photo("mila, chegou essa argola. Custo R$&nbsp;22,00. Usa os dados do perfil e me passa um preço pra vender?", "10:12") },
-  { who: "mila", html: T.text("mila", `${PRECO_CURTO}Usei o markup, a taxa e a embalagem salvos no seu perfil. Quer que eu cadastre 1 unidade no estoque?`, "10:12") },
+  { who: "me", html: T.photo("mila, chegou essa argola. Custo R$&nbsp;22,00, markup 3x. Me passa um preço pra vender?", "10:12") },
+  { who: "mila", html: T.text("mila", `${PRECO_CURTO}Usei o seu markup de 3x, com a taxa e a embalagem salvas no seu perfil. Quer que eu cadastre 1 unidade no estoque?`, "10:12") },
   { who: "me", html: T.text("me", "Pode cadastrar 1 unidade no estoque", "10:13") },
   { who: "mila", html: T.text("mila", "Pronto. Cadastrei a argola com 1 unidade e deixei a descrição técnica salva no catálogo. Onde você quer salvar agora?<br><br>• Nuvemshop<br>• Google Planilhas<br>• Notion<br>• Planilha para importar na Phibo", "10:13") },
   { who: "me", html: T.text("me", "Salva no Notion, por favor!", "10:14") },

@@ -3,7 +3,6 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import {
   contaDoInstagram,
-  formatarMarkup,
   formatarPercentual,
   formatarReais,
   lerNumeroDigitado,
@@ -21,7 +20,7 @@ test("dados da loja: projeta só os campos conhecidos, com o tipo certo", () => 
     nome_loja: " Irali semijoias ",
     taxa_cartao_percent: 17,
     custo_embalagem: 13,
-    markup_padrao: null,
+    markup_padrao: 3,
     tipo_banho: "",
     token: "segredo",
     observacoes: 5,
@@ -32,11 +31,11 @@ test("dados da loja: projeta só os campos conhecidos, com o tipo certo", () => 
     site_loja: null,
     custo_embalagem: 13,
     taxa_cartao_percent: 17,
-    markup_padrao: null,
     tipo_banho: null,
     observacoes: null,
   });
   assert.equal("token" in d, false, "campo desconhecido nunca chega à tela");
+  assert.equal("markup_padrao" in d, false, "markup varia por peça: não é dado da loja");
   assert.equal(projetarDadosLoja(null).nome_loja, null);
 });
 
@@ -52,10 +51,9 @@ test("dados da loja: número digitado aceita vírgula, R$, % e x", () => {
   assert.equal(lerNumeroDigitado("-2"), null);
 });
 
-test("dados da loja: formata em reais, % e x; vazio continua vazio", () => {
+test("dados da loja: formata em reais e %; vazio continua vazio", () => {
   assert.equal(formatarReais(13)?.replace(/\s/g, " "), "R$ 13,00");
   assert.equal(formatarPercentual(3.99), "3,99%");
-  assert.equal(formatarMarkup(3), "3x");
   assert.equal(formatarPercentual(null), null);
 });
 

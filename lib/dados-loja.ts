@@ -1,6 +1,6 @@
 /**
  * Dados da loja (`/workspace/dados-loja`): o mesmo perfil que a mila usa e
- * edita pelo WhatsApp (taxa de cartão, markup, embalagem, banho, nome,
+ * edita pelo WhatsApp (taxa de cartão, embalagem, banho, nome,
  * Instagram, site, observações) e os concorrentes no Instagram.
  *
  * Módulo puro (sem `next/*`): a projeção do que vem do serviço, a leitura dos
@@ -13,13 +13,13 @@ export interface DadosLoja {
   site_loja: string | null;
   custo_embalagem: number | null;
   taxa_cartao_percent: number | null;
-  markup_padrao: number | null;
   tipo_banho: string | null;
   observacoes: string | null;
 }
 
 export const CAMPOS_TEXTO = ["nome_loja", "instagram", "site_loja", "tipo_banho", "observacoes"] as const;
-export const CAMPOS_NUMERO = ["custo_embalagem", "taxa_cartao_percent", "markup_padrao"] as const;
+// Sem markup padrão: o markup varia por peça e a mila pergunta a cada cálculo.
+export const CAMPOS_NUMERO = ["custo_embalagem", "taxa_cartao_percent"] as const;
 export type CampoDadosLoja = (typeof CAMPOS_TEXTO)[number] | (typeof CAMPOS_NUMERO)[number];
 
 /** Até quantos concorrentes a loja mapeia (o serviço confirma o número). */
@@ -43,7 +43,6 @@ export function projetarDadosLoja(bruto: unknown): DadosLoja {
     site_loja: normalizarSiteDaLoja(texto(d.site_loja) ?? ""),
     custo_embalagem: numero(d.custo_embalagem),
     taxa_cartao_percent: numero(d.taxa_cartao_percent),
-    markup_padrao: numero(d.markup_padrao),
     tipo_banho: texto(d.tipo_banho),
     observacoes: texto(d.observacoes),
   };
@@ -119,17 +118,12 @@ export function formatarPercentual(v: number | null): string | null {
   return v === null ? null : `${DECIMAL.format(v)}%`;
 }
 
-export function formatarMarkup(v: number | null): string | null {
-  return v === null ? null : `${DECIMAL.format(v)}x`;
-}
-
 const NOMES_CAMPOS: Record<CampoDadosLoja, string> = {
   nome_loja: "Nome da loja",
   instagram: "Instagram da loja",
   site_loja: "Site da loja",
   custo_embalagem: "Custo de embalagem",
   taxa_cartao_percent: "Taxa usada no preço",
-  markup_padrao: "Markup padrão",
   tipo_banho: "Banho padrão",
   observacoes: "Observações",
 };
@@ -137,7 +131,6 @@ const NOMES_CAMPOS: Record<CampoDadosLoja, string> = {
 const LIMITES: Partial<Record<CampoDadosLoja, string>> = {
   custo_embalagem: "entre R$ 0 e R$ 1.000",
   taxa_cartao_percent: "entre 0% e 20%",
-  markup_padrao: "entre 1x e 20x",
   nome_loja: "com até 80 caracteres",
   tipo_banho: "com até 120 caracteres",
   observacoes: "com até 1.000 caracteres",

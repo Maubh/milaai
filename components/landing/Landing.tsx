@@ -155,9 +155,9 @@ export default function Landing() {
         <section className="memoria" aria-labelledby="memoria-label">
           <div className="lp-wrap">
             <span className="label" id="memoria-label">Ela lembra por você</span>
-            <p className="manifest" id="manifest">Você conta uma vez a taxa da maquininha, o custo da embalagem e o seu markup. A mila guarda tudo, usa na próxima conta, e você ajusta quando quiser na sua área da loja.</p>
+            <p className="manifest" id="manifest">Você conta uma vez a taxa da maquininha e o custo da embalagem. A mila guarda, usa na próxima conta e pergunta o markup de cada peça, sem chutar. Você ajusta quando quiser na sua área da loja.</p>
             <div className="memoria-foot">
-              <span>Taxa da maquininha</span><span>Embalagem e banho</span><span>Markup padrão</span>
+              <span>Taxa da maquininha</span><span>Embalagem e banho</span><span>Markup que você escolhe</span>
             </div>
           </div>
         </section>

@@ -1,4 +1,4 @@
-import type { LojaExpirada } from "@/lib/vitrine";
+import { corOuReserva, tintaSobre, type LojaExpirada } from "@/lib/vitrine";
 
 /**
  * Vitrine que passou da data de validade. A API devolve 410 com os dados
@@ -14,13 +14,13 @@ export default function VitrineExpirada({
 }) {
   const nome = loja.nomeExibicao || "a loja";
   const whatsapp = (loja.whatsappContato || "").replace(/\D/g, "");
-  const cor = loja.corPrimaria || "#1F2937";
+  const cor = corOuReserva(loja.corPrimaria, "#1F2937");
   const mensagem = tituloColecao
     ? `Olá, ${nome}! Tentei abrir o catálogo "${tituloColecao}", mas ele expirou. Pode me mandar o catálogo atualizado?`
     : `Olá, ${nome}! Tentei abrir seu catálogo, mas ele expirou. Pode me mandar o catálogo atualizado?`;
 
   return (
-    <div className="vitrine-container">
+    <div className="vitrine-container" style={{ ["--loja-primaria" as string]: cor, ["--loja-primaria-tinta" as string]: tintaSobre(cor) }}>
       <main className="vitrine-expirada">
         {loja.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element

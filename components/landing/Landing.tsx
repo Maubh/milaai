@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { PLANS } from "@/components/PricingSection";
+import { CONTATO_MILA, CONTRATACAO_ABERTA, PRECOS } from "@/lib/planos-site";
 import { startLanding } from "./motion";
 import "./landing.css";
 
@@ -207,7 +208,7 @@ export default function Landing() {
               <article className="lp-plan reveal">
                 <div className="plan-top"><h3>Essencial</h3></div>
                 <p className="for">Precificação, margem e descrição de peças desde o primeiro dia.</p>
-                <div className="lp-price"><span className="cur">R$</span><span className="amt lp-num">39</span><span className="per">/mês</span></div>
+                {PRECOS.essencial ? <div className="lp-price"><span className="cur">R$</span><span className="amt lp-num">{PRECOS.essencial}</span><span className="per">/mês</span></div> : null}
                 <Feats features={PLANS[0].features} />
                 <button className="feats-more" type="button" aria-haspopup="dialog">Ver tudo o que inclui</button>
                 <a className="lp-btn btn-mineral" href="/login">Conhecer o Essencial <span className="arrow"><svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
@@ -215,7 +216,7 @@ export default function Landing() {
               <article className="lp-plan pro-plan reveal" style={{"--d": ".1s"} as React.CSSProperties}>
                 <div className="plan-top"><h3>Pro</h3><span className="label" style={{"color": "var(--sage)"} as React.CSSProperties}>Para a loja que cresce</span></div>
                 <p className="for">Visão contínua de estoque, fornecedores, faturamento e conteúdo.</p>
-                <div className="lp-price"><span className="cur">R$</span><span className="amt lp-num">69</span><span className="per">/mês</span></div>
+                {PRECOS.pro ? <div className="lp-price"><span className="cur">R$</span><span className="amt lp-num">{PRECOS.pro}</span><span className="per">/mês</span></div> : null}
                 <Feats features={PLANS[1].features} />
                 <button className="feats-more" type="button" aria-haspopup="dialog">Ver tudo o que inclui</button>
                 <a className="lp-btn btn-ivory" href="/login">Conhecer o Pro <span className="arrow"><svg aria-hidden="true"><use href="#arrow"/></svg></span></a>
@@ -249,9 +250,11 @@ export default function Landing() {
               <details><summary>Preciso instalar algum aplicativo?<span className="plus" aria-hidden="true"></span></summary>
                 <p className="a">Não. A rotina com a mila acontece no aplicativo que você já usa o dia todo: o <strong>WhatsApp</strong>. Você manda mensagens, fotos de peças e notas fiscais e recebe as respostas e os arquivos ali mesmo.</p></details>
               <details><summary>Qual é a diferença entre o Essencial e o Pro?<span className="plus" aria-hidden="true"></span></summary>
-                <p className="a">O <strong>Essencial (R$ 39/mês)</strong> cobre precificação com margem real, radar de concorrentes, leitor de notas, legenda de Instagram, caderno de fornecedores, PDF salvo no Google Drive ou no Notion e 1 vitrine web ativa. O <strong>Pro (R$ 69/mês)</strong> soma Nuvemshop no WhatsApp, vitrines ilimitadas, ERPs (Jueri, Olist e planilha para a Phibo), projeção de faturamento, pesquisa de fornecedores e marketing de Instagram.</p></details>
+                <p className="a">O <strong>Essencial</strong> cobre precificação com margem real, radar de concorrentes, leitor de notas, legenda de Instagram, caderno de fornecedores, PDF salvo no Google Drive ou no Notion e 1 vitrine web ativa. O <strong>Pro</strong> soma Nuvemshop no WhatsApp, vitrines ilimitadas, ERPs (Jueri, Olist e planilha para a Phibo), projeção de faturamento, pesquisa de fornecedores e marketing de Instagram.</p></details>
               <details><summary>Como faço para começar?<span className="plus" aria-hidden="true"></span></summary>
-                <p className="a">Você entra com o seu número de WhatsApp, escolhe o Essencial ou o Pro e já começa a conversar com a mila no WhatsApp que você usa todo dia.</p></details>
+                <p className="a">{CONTRATACAO_ABERTA
+                  ? "Você entra com o seu número de WhatsApp, escolhe o Essencial ou o Pro e já começa a conversar com a mila no WhatsApp que você usa todo dia."
+                  : `Por enquanto, a mila atende as lojas do programa piloto, e a contratação pelo site abre em breve. Para participar, escreva para ${CONTATO_MILA}.`}</p></details>
             </div>
           </div>
         </section>

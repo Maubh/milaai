@@ -4,6 +4,7 @@ import Link from "next/link";
 import { PLANO_GOOGLE, PLANO_PDF } from "@/lib/google-workspace";
 import { PLANO_TRELLO } from "@/lib/trello";
 import { ERP_DISPONIVEIS } from "@/lib/legal";
+import { PRECOS } from "@/lib/planos-site";
 
 /** Linha do plano que fala de ERP: só o que está disponível, vindo de
  *  `lib/legal.ts`. Conector que não está pronto não é citado. */
@@ -20,11 +21,9 @@ export const PLANO_NUVEMSHOP_PRO =
   "Integração com Nuvemshop: consulta de estoque, preços e pedidos e publicação de produtos direto no WhatsApp";
 
 interface PlanItem {
-  id: string;
+  id: "essencial" | "pro";
   name: string;
   tagline: string;
-  price: string;
-  period: string;
   description: string;
   features: string[];
   ctaLabel: string;
@@ -39,8 +38,6 @@ export const PLANS: PlanItem[] = [
     id: "essencial",
     name: "Essencial",
     tagline: "Essencial",
-    price: "39",
-    period: "/mês",
     description: "Precificação, margem e descrição de peças desde o primeiro dia",
     features: [
       "Precificação ilimitada com Raio-X e margem real",
@@ -66,8 +63,6 @@ export const PLANS: PlanItem[] = [
     name: "Pro",
     tagline: "Destaque",
     badge: "Recomendado",
-    price: "69",
-    period: "/mês",
     description: "Visão contínua de estoque, fornecedores, faturamento e conteúdo",
     features: [
       "Tudo do Essencial",
@@ -116,11 +111,11 @@ export default function PricingSection() {
               <div className="pricing-card-top">
                 <span className="pricing-plan-name">{plan.name}</span>
                 <p className="pricing-plan-desc">“{plan.description}”</p>
-                <div className="pricing-plan-price-row">
+                {PRECOS[plan.id] ? <div className="pricing-plan-price-row">
                   <span className="pricing-currency">R$</span>
-                  <span className="pricing-amount num">{plan.price}</span>
-                  <span className="pricing-period">{plan.period}</span>
-                </div>
+                  <span className="pricing-amount num">{PRECOS[plan.id]}</span>
+                  <span className="pricing-period">/mês</span>
+                </div> : null}
               </div>
 
               <div className="pricing-card-divider" />

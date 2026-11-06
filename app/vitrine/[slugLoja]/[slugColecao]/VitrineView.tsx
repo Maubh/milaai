@@ -4,12 +4,18 @@ import { useState } from "react";
 import Link from "next/link";
 import {
   ROTULO_ENTREGA,
+  chaveLinha,
+  descreverEscolhas,
   gerarCodigoPedido,
   montarMensagemPedido,
   quantidadeSacola,
   totalSacola,
+  variacaoFaltando,
+  variacoesValidas,
+  type Escolhas,
   type ItemSacola,
   type ModoEntrega,
+  type VariacaoPeca,
 } from "../../../../lib/pedido_vitrine";
 
 export interface ItemVitrine {
@@ -19,6 +25,14 @@ export interface ItemVitrine {
   fotos?: string[] | null;
   descricao?: string | null;
   sku?: string | null;
+  variacoes?: VariacaoPeca[] | null;
+}
+
+/** Linha da sacola: a peça e o que a cliente escolheu em cada variação. */
+interface LinhaSacola {
+  idx: number;
+  escolhas: Escolhas;
+  qtd: number;
 }
 
 export interface LojaVitrine {
@@ -49,8 +63,9 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
   const [itemSelecionado, setItemSelecionado] = useState<ItemVitrine | null>(null);
   const [fotoAtivaIndex, setFotoAtivaIndex] = useState<number>(0);
 
-  // Sacola: quantidade por índice da peça em vitrine.itens (só na sessão da página).
-  const [sacola, setSacola] = useState<Record<number, number>>({});
+  // Sacola: uma linha por peça + escolhas (só na sessão da página).
+  const [sacola, setSacola] = useState<Record<string, LinhaSacola>>({});
+  const [escolhas, setEscolhas] = useState<Escolhas>({});
   const [sacolaAberta, setSacolaAberta] = useState(false);
   const [codigoPedido, setCodigoPedido] = useState("");
   const [nomeCliente, setNomeCliente] = useState("");
@@ -60,20 +75,40 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
 
   const whatsappLimpo = (loja.whatsappContato || "").replace(/\D/g, "");
 
-  const itensSacola: ItemSacola[] = Object.entries(sacola).flatMap(([idx, qtd]) => {
-    const item = vitrine.itens[Number(idx)];
-    return item ? [{ nome: item.nome, precoVenda: item.precoVenda, sku: item.sku ?? null, qtd }] : [];
+  const variacoesDe = (item: ItemVitrine) => variacoesValidas(item.variacoes);
+
+  const itensSacola: ItemSacola[] = Object.values(sacola).flatMap((l) => {
+    const item = vitrine.itens[l.idx];
+    if (!item) return [];
+    const variacao = descreverEscolhas(variacoesDe(item), l.escolhas);
+    return [{ nome: item.nome, precoVenda: item.precoVenda, sku: item.sku ?? null, qtd: l.qtd, variacao }];
   });
   const qtdSacola = quantidadeSacola(itensSacola);
+  const qtdDaPeca = (idx: number) =>
+    Object.values(sacola).reduce((soma, l) => soma + (l.idx === idx ? l.qtd : 0), 0);
 
-  const mudarQtdSacola = (idx: number, delta: number) => {
+  const mudarQtdLinha = (chave: string, delta: number) => {
     setSacola((atual) => {
+      const linha = atual[chave];
+      if (!linha) return atual;
       const nova = { ...atual };
-      const qtd = (atual[idx] || 0) + delta;
-      if (qtd <= 0) delete nova[idx];
-      else nova[idx] = qtd;
+      const qtd = linha.qtd + delta;
+      if (qtd <= 0) delete nova[chave];
+      else nova[chave] = { ...linha, qtd };
       return nova;
     });
+  };
+
+  const porNoPedido = (idx: number, escolhidas: Escolhas) => {
+    const item = vitrine.itens[idx];
+    if (!item) return;
+    const vars = variacoesDe(item);
+    if (variacaoFaltando(vars, escolhidas)) return;
+    const chave = chaveLinha(idx, vars, escolhidas);
+    setSacola((atual) => ({
+      ...atual,
+      [chave]: { idx, escolhas: { ...escolhidas }, qtd: (atual[chave]?.qtd ?? 0) + 1 },
+    }));
   };
 
   const abrirSacola = () => {
@@ -113,6 +148,7 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
   const abrirModalItem = (item: ItemVitrine) => {
     setItemSelecionado(item);
     setFotoAtivaIndex(0);
+    setEscolhas({});
   };
 
   const fecharModalItem = () => {
@@ -231,10 +267,16 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
                     className="vitrine-card-btn vitrine-card-btn-sacola"
                     onClick={(e) => {
                       e.stopPropagation();
-                      mudarQtdSacola(idx, 1);
+                      // Peça com variação abre o detalhe para a cliente escolher.
+                      if (variacoesDe(item).length > 0) abrirModalItem(item);
+                      else porNoPedido(idx, {});
                     }}
                   >
-                    {sacola[idx] ? `✓ No pedido (${sacola[idx]})` : "+ Pôr no pedido"}
+                    {qtdDaPeca(idx) > 0
+                      ? `✓ No pedido (${qtdDaPeca(idx)})`
+                      : variacoesDe(item).length > 0
+                        ? "Escolher opções"
+                        : "+ Pôr no pedido"}
                   </button>
 
                   {/* Botão de Fechamento no WhatsApp */}
@@ -349,16 +391,41 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
                 </p>
               )}
 
-              <button
-                type="button"
-                className="vitrine-modal-cta vitrine-modal-cta-sacola"
-                onClick={() => {
-                  const idx = vitrine.itens.indexOf(itemSelecionado);
-                  if (idx >= 0) mudarQtdSacola(idx, 1);
-                }}
-              >
-                + Pôr no pedido
-              </button>
+              {variacoesDe(itemSelecionado).map((v) => (
+                <div key={v.nome} className="vitrine-variacao" role="group" aria-label={v.nome}>
+                  <span className="vitrine-variacao-nome">{v.nome}</span>
+                  <div className="vitrine-variacao-opcoes">
+                    {v.opcoes.map((o) => (
+                      <button
+                        key={o}
+                        type="button"
+                        className={`vitrine-variacao-opcao${escolhas[v.nome] === o ? " ativa" : ""}`}
+                        aria-pressed={escolhas[v.nome] === o}
+                        onClick={() => setEscolhas((atual) => ({ ...atual, [v.nome]: o }))}
+                      >
+                        {o}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {(() => {
+                const faltando = variacaoFaltando(variacoesDe(itemSelecionado), escolhas);
+                return (
+                  <button
+                    type="button"
+                    className="vitrine-modal-cta vitrine-modal-cta-sacola"
+                    disabled={faltando !== null}
+                    onClick={() => {
+                      const idx = vitrine.itens.indexOf(itemSelecionado);
+                      if (idx >= 0) porNoPedido(idx, escolhas);
+                    }}
+                  >
+                    {faltando ? `Escolha ${faltando.toLowerCase()}` : "+ Pôr no pedido"}
+                  </button>
+                );
+              })()}
 
               {/* Botão de Fechamento Direto no Modal */}
               <Link
@@ -423,26 +490,28 @@ export default function VitrineView({ loja, vitrine }: VitrineViewProps) {
             ) : (
               <>
                 <ul className="vitrine-sacola-lista">
-                  {Object.entries(sacola).map(([idx, qtd]) => {
-                    const item = vitrine.itens[Number(idx)];
+                  {Object.entries(sacola).map(([chave, linha]) => {
+                    const item = vitrine.itens[linha.idx];
                     if (!item) return null;
+                    const variacao = descreverEscolhas(variacoesDe(item), linha.escolhas);
                     return (
-                      <li key={idx} className="vitrine-sacola-item">
+                      <li key={chave} className="vitrine-sacola-item">
                         <div className="vitrine-sacola-item-info">
                           <span className="vitrine-sacola-item-nome">{item.nome}</span>
+                          {variacao && <span className="vitrine-sacola-item-variacao">{variacao}</span>}
                           {item.sku && <span className="vitrine-sacola-item-ref">REF {item.sku}</span>}
                           <span className="vitrine-sacola-item-preco">{formatarPreco(item.precoVenda)}</span>
                         </div>
                         <div className="vitrine-sacola-item-controles">
-                          <button type="button" onClick={() => mudarQtdSacola(Number(idx), -1)} aria-label="Diminuir">−</button>
-                          <span>{qtd}</span>
-                          <button type="button" onClick={() => mudarQtdSacola(Number(idx), 1)} aria-label="Aumentar">+</button>
+                          <button type="button" onClick={() => mudarQtdLinha(chave, -1)} aria-label="Diminuir">−</button>
+                          <span>{linha.qtd}</span>
+                          <button type="button" onClick={() => mudarQtdLinha(chave, 1)} aria-label="Aumentar">+</button>
                           <button
                             type="button"
                             className="vitrine-sacola-remover"
                             onClick={() => setSacola((atual) => {
                               const nova = { ...atual };
-                              delete nova[Number(idx)];
+                              delete nova[chave];
                               return nova;
                             })}
                           >

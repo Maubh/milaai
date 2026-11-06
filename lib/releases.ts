@@ -40,6 +40,18 @@ export const RELEASES: readonly Release[] = [
       {
         type: "improvement",
         plan: "all",
+        title: "Variações das peças na vitrine",
+        description: "Peças com cor, tamanho ou outra variação mostram as opções na vitrine, e a cliente escolhe antes de pôr no pedido. A escolha vai na mensagem (ex.: “Anel Solar (Tamanho 16 · Cor Prata)”). Antes de publicar, a mila mostra a lista de peças, preços e variações e só publica depois do seu ok.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Vitrine mais larga no computador",
+        description: "No computador, a vitrine usa mais da tela e mostra 4 peças por linha (3 no tablet). No celular continuam 2 por linha.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
         title: "Vitrine com as cores da sua marca",
         description: "Antes da primeira vitrine, a mila pede as cores da sua marca. Se você mandar o código da cor na conversa (ex.: #B76E79), ela guarda na hora e a vitrine passa a usar essa cor.",
       },

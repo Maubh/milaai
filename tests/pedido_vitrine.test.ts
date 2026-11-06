@@ -62,3 +62,38 @@ test("retirada sem nome nem observação não gera linhas vazias de rótulo", ()
   assert.match(msg, /Recebimento: Retirar na loja/);
   assert.doesNotMatch(msg, /Para:/);
 });
+
+test("variações: falta escolher, descrição e linha separada por escolha", async () => {
+  const { variacoesValidas, variacaoFaltando, descreverEscolhas, chaveLinha } = await import("../lib/pedido_vitrine.ts");
+  const vars = variacoesValidas([
+    { nome: "Tamanho", opcoes: ["16", "18"] },
+    { nome: "Cor", opcoes: ["Dourado", "Prata"] },
+    { nome: "", opcoes: ["x"] },
+    { nome: "Vazia", opcoes: [] },
+    "lixo",
+  ]);
+  assert.deepEqual(vars.map((v) => v.nome), ["Tamanho", "Cor"], "só as bem formadas");
+  assert.equal(variacaoFaltando(vars, {}), "Tamanho");
+  assert.equal(variacaoFaltando(vars, { Tamanho: "16" }), "Cor");
+  assert.equal(variacaoFaltando(vars, { Tamanho: "16", Cor: "Azul" }), "Cor", "opção que não existe não vale");
+  assert.equal(variacaoFaltando(vars, { Tamanho: "16", Cor: "Prata" }), null);
+  assert.equal(descreverEscolhas(vars, { Cor: "Prata", Tamanho: "16" }), "Tamanho 16 · Cor Prata");
+  assert.equal(descreverEscolhas([], {}), null);
+  assert.notEqual(chaveLinha(0, vars, { Tamanho: "16", Cor: "Prata" }), chaveLinha(0, vars, { Tamanho: "18", Cor: "Prata" }));
+  assert.equal(chaveLinha(2, [], {}), "2");
+});
+
+test("mensagem mostra a variação escolhida de cada linha", () => {
+  const msg = montarMensagemPedido({
+    nomeLoja: "Loja",
+    codigo: "PED-AAAA",
+    itens: [
+      { nome: "Anel Solar", precoVenda: 189, qtd: 1, variacao: "Tamanho 16 · Cor Prata" },
+      { nome: "Anel Solar", precoVenda: 189, qtd: 2, variacao: "Tamanho 18 · Cor Prata" },
+    ],
+    formatarPreco,
+    entrega: "combinar",
+  });
+  assert.match(msg, /1\) Anel Solar \(Tamanho 16 · Cor Prata\)/);
+  assert.match(msg, /2\) Anel Solar \(Tamanho 18 · Cor Prata\)/);
+});

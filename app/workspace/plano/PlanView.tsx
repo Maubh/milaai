@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { formatTrialLastDay, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
+import { CONTATO_MILA, CONTRATACAO_ABERTA, PRECOS, formatTrialLastDay, isShownCurrentPlan, readPlanStatus } from "@/lib/plan-status";
 import { TextBone } from "@/components/WorkspaceSkeleton";
 import { PLANO_PDF } from "@/lib/google-workspace";
 import { PLANO_TRELLO } from "@/lib/trello";
@@ -28,7 +28,6 @@ const PLANS = [
     id: "essencial" as const,
     name: "Plano Essencial",
     blurb: "Preço com margem, Raio-X e descrição de peças.",
-    price: "39",
     features: [
       "Preço a partir da foto e do custo da peça",
       "Raio-X da margem, com a taxa da maquininha e a embalagem",
@@ -47,7 +46,6 @@ const PLANS = [
     id: "pro" as const,
     name: "Plano Pro",
     blurb: "Estoque, ERP e fechamento no WhatsApp.",
-    price: "69",
     features: [
       "Tudo do Essencial, e ainda:",
       PLANO_TRELLO,
@@ -96,13 +94,13 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
   const lede = !status
     ? "O plano da sua conta e os planos disponíveis."
     : status.kind === "trial"
-      ? "O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua."
+      ? CONTRATACAO_ABERTA ? "O plano que está valendo hoje. Quando o teste acabar, você escolhe se continua." : "O plano que está valendo hoje no seu período de teste."
       : status.kind === "trial_ended"
-        ? "Seu teste acabou. Escolha um plano para continuar."
+        ? CONTRATACAO_ABERTA ? "Seu teste acabou. Escolha um plano para continuar." : "Seu teste acabou. A contratação pelo site abre em breve."
         : status.kind === "late"
           ? "A fatura do seu plano está em aberto."
           : status.kind === "canceled"
-            ? "Sua assinatura não está ativa. Escolha um plano para voltar."
+            ? CONTRATACAO_ABERTA ? "Sua assinatura não está ativa. Escolha um plano para voltar." : "Sua assinatura não está ativa. A contratação pelo site abre em breve."
             : status.kind === "paid"
               ? "O plano que está valendo hoje e a situação da assinatura."
               : "O plano que está valendo hoje na sua conta.";
@@ -114,6 +112,8 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
     const other = planId === "pro" ? "Pro" : "Essencial";
     if (isShownCurrentPlan(status, planId)) return <button className="ledger-button plan-action" disabled>Seu plano agora</button>;
     if (status.hiringLocked) return <button className="ledger-button plan-action" disabled>Sem cobrança</button>;
+    // Contratação pelo site fechada enquanto os valores não estão definidos (lib/plan-status.ts).
+    if (!CONTRATACAO_ABERTA) return <button className="ledger-button plan-action" disabled>Contratação em breve</button>;
     if (status.kind === "paid" || status.kind === "late") return <button className="ledger-button plan-action" disabled>Troca de plano em breve</button>;
     // Durante o teste já dá para contratar: o pagamento confirmado vira `pago`.
     return <button
@@ -170,9 +170,9 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
               <dt className="ledger-row-label">Situação</dt>
               <dd className="ledger-row-value">
                 <span className="ledger-state" data-tone={status.kind === "trial_ended" || status.kind === "late" || status.kind === "canceled" ? "error" : "positive"}>{status.situation}</span>
-                {status.kind === "trial" ? <small>Você está no período de teste do Pro, sem cobrança{ultimoDia ? <>, até <strong>{ultimoDia}</strong></> : null}. Jueri, Olist, alerta de carência e balanço no WhatsApp já valem. Se quiser, já pode contratar abaixo: a primeira cobrança vence no dia da contratação e o WhatsApp segue sem pausa quando o teste acabar.</small> : null}
-                {status.kind === "trial_ended" ? <small>O período de teste acabou{ultimoDia ? ` em ${ultimoDia}` : ""}. Peças e cálculos continuam guardados. Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp e este painel voltam na hora.</small> : null}
-                {status.kind === "canceled" ? <small>Sua assinatura não está ativa. Peças e cálculos continuam guardados. Escolha Essencial ou Pro abaixo para voltar.</small> : null}
+                {status.kind === "trial" ? <small>Você está no período de teste do Pro, sem cobrança{ultimoDia ? <>, até <strong>{ultimoDia}</strong></> : null}. Jueri, Olist, alerta de carência e balanço no WhatsApp já valem.{CONTRATACAO_ABERTA ? " Se quiser, já pode contratar abaixo: a primeira cobrança vence no dia da contratação e o WhatsApp segue sem pausa quando o teste acabar." : ` A contratação pelo site abre em breve; para falar sobre o seu plano, escreva para ${CONTATO_MILA}.`}</small> : null}
+                {status.kind === "trial_ended" ? <small>O período de teste acabou{ultimoDia ? ` em ${ultimoDia}` : ""}. Peças e cálculos continuam guardados. {CONTRATACAO_ABERTA ? "Escolha Essencial ou Pro abaixo. Depois do pagamento, o WhatsApp e este painel voltam na hora." : `Para continuar, escreva para ${CONTATO_MILA}.`}</small> : null}
+                {status.kind === "canceled" ? <small>Sua assinatura não está ativa. Peças e cálculos continuam guardados. {CONTRATACAO_ABERTA ? "Escolha Essencial ou Pro abaixo para voltar." : `Para voltar, escreva para ${CONTATO_MILA}.`}</small> : null}
                 {fatura ? <small>{fatura.pausado
                   ? "A fatura do seu plano está em aberto há mais de 7 dias, então o atendimento pelo WhatsApp está pausado. Peças, cálculos e fornecedores continuam guardados: assim que o pagamento cair, a mila volta na hora."
                   : `A fatura do seu plano ${status.currentPlan === "pro" ? "Pro" : "Essencial"} venceu e ainda não foi paga.${fatura.pausaEm ? ` O atendimento pelo WhatsApp segue até ${fatura.pausaEm}; depois, pausa até o pagamento cair.` : ""}`}</small> : null}
@@ -240,7 +240,7 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
       <section className="ledger-section desk-panel" aria-labelledby="plan-compare-title">
         <div className="ledger-section-head">
           <h2 id="plan-compare-title">Planos</h2>
-          <p>Valores por mês.</p>
+          <p>{PRECOS.essencial && PRECOS.pro ? "Valores por mês." : "Os valores dos planos serão anunciados em breve."}</p>
         </div>
         <div className="plan-compare">
           {PLANS.map((plan) => {
@@ -251,7 +251,7 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
                 {isCurrent ? <span className="ledger-state" data-tone="positive">Seu plano</span> : null}
               </div>
               <p className="plan-blurb">{plan.blurb}</p>
-              <p className="plan-price">R$&nbsp;{plan.price} <span>/mês</span></p>
+              {PRECOS[plan.id] ? <p className="plan-price">R$&nbsp;{PRECOS[plan.id]} <span>/mês</span></p> : null}
               <ul className="plan-features">
                 {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
               </ul>
@@ -259,7 +259,7 @@ export default function PlanView({ session, loading, failed, orderingPlan = null
             </article>;
           })}
         </div>
-        <p className="plan-pay-note">Pagamento no Asaas, por Pix, boleto ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.</p>
+        {CONTRATACAO_ABERTA ? <p className="plan-pay-note">Pagamento no Asaas, por Pix, boleto ou cartão. Quando cair, o plano entra na hora no WhatsApp e aqui.</p> : null}
       </section>
       </div>
     </div>

@@ -9,6 +9,9 @@
  */
 
 import { lerFaturaAberta, type FaturaAberta } from "./fatura-aberta.ts";
+import { CONTATO_MILA } from "./planos-site.ts";
+
+export { CONTATO_MILA, CONTRATACAO_ABERTA, PRECOS } from "./planos-site.ts";
 
 export interface PlanSession {
   plan?: string | null;
@@ -101,6 +104,9 @@ export function formatTrialLastDay(trialEnd: Date): string {
  */
 export function orderErrorText(status: number, detail?: unknown): string {
   const code = typeof detail === "string" ? detail : "";
+  if (code === "hiring_paused") {
+    return `A contratação pelo site ainda não abriu. Para falar sobre o seu plano, escreva para ${CONTATO_MILA}.`;
+  }
   if (status === 401 || code === "no_session") {
     return "Sua sessão expirou. Entre de novo com o WhatsApp e tente contratar outra vez.";
   }

@@ -26,6 +26,21 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.40",
+    date: "2026-11-06",
+    title: "Planos sem valores por enquanto",
+    summary: "Enquanto os valores dos planos são definidos, o site e a área logada mostram o que cada plano inclui, sem preço e sem contratação pelo site.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Planos sem valores e contratação em breve",
+        description: "A página inicial e Meu plano deixam de mostrar preço. A contratação pelo site abre quando os valores forem definidos; até lá, quem quiser falar sobre o plano escreve para contato@milaai.com.br.",
+      },
+    ],
+    internal: true,
+  },
+  {
     version: "0.6.39",
     date: "2026-11-06",
     title: "Logo parada entre as páginas",

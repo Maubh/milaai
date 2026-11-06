@@ -26,6 +26,32 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.37",
+    date: "2026-11-06",
+    title: "Sacola na vitrine web",
+    summary: "A vitrine ganha uma sacola: a cliente escolhe as peças e a mensagem do pedido já sai pronta para o seu WhatsApp.",
+    changes: [
+      {
+        type: "new",
+        plan: "all",
+        title: "Sacola com pedido pronto",
+        description: "Na vitrine, a cliente toca em “Pôr no pedido”, escolhe quantidades e vê o total. No fim, ela copia a mensagem ou manda direto no seu WhatsApp, com código, peças, valores e forma de receber. A sacola usa as cores e a fonte da sua marca, e nada é cobrado na vitrine.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Vitrine com as cores da sua marca",
+        description: "Antes da primeira vitrine, a mila pede as cores da sua marca. Se você mandar o código da cor na conversa (ex.: #B76E79), ela guarda na hora e a vitrine passa a usar essa cor.",
+      },
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Dados da loja contados na conversa ficam salvos",
+        description: "Quando você conta no WhatsApp a taxa do cartão, o Instagram, o site da loja ou outro dado fixo, a mila já salva em Dados da loja. Simulações como “e se a taxa fosse 6%?” não mudam nada.",
+      },
+    ],
+  },
+  {
     version: "0.6.36",
     internal: true,
     date: "2026-11-04",

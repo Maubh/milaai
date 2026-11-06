@@ -50,6 +50,12 @@ export const RELEASES: readonly Release[] = [
         description: "Se você tem peças na Nuvemshop, na Olist/Tiny ou no Jueri, a mila pergunta de onde a vitrine deve partir e puxa de lá nome, preço, foto e variações (do Jueri, por enquanto, só nome, preço e estoque). Peça sem foto fica de fora até ganhar foto, e quando o preço muda conforme a variação, a mila pergunta antes.",
       },
       {
+        type: "new",
+        plan: "pro",
+        title: "Jueri: consultoras, clientes e pedidos",
+        description: "Com o Jueri conectado, você pergunta à mila sobre pedidos (em aberto, por período, valores e comissão), consultoras e clientes. As peças do Jueri passam a vir com preço de varejo e atacado, cor e fotos. Por cuidado com os dados, a mila não lê CPF, e-mail, telefone nem endereço de clientes e consultoras.",
+      },
+      {
         type: "improvement",
         plan: "all",
         title: "Vitrine mais larga no computador",

@@ -1517,7 +1517,7 @@ Olist (Tiny ERP) — conexão direta OAuth para sincronização de catálogo e e
 Trello — a mila lê quadros, listas e cards e, quando a lojista pede, cria listas e cards ou edita cards; não apaga nada e não guarda dados do perfil da conta Trello.
 Nuvemshop (Plano Pro) — conexão OAuth com a loja virtual: a mila consulta produtos, estoque e pedidos e, quando a lojista pede, cadastra produtos ou altera preço, estoque, SKU, nome e descrição. Ao consultar pedidos, lê também o nome do comprador para responder à lojista (e-mail e telefone não são usados); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base de compradores.
 Disponíveis, com validação em andamento:
-Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.
+Jueri (Plano Pro) — a tela de conexão está pronta e a mila consulta peças e estoque (com preço, cor e fotos), consultoras, clientes e pedidos, só leitura. De clientes e consultoras, lê o nome, a cidade, o status e o vínculo para responder à lojista (CPF, RG, e-mail, telefone e endereço não são lidos); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base própria. A validação com a credencial real da loja ainda está pendente.
 Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas.
 10. Por quanto tempo guardamos
 Código de verificação (OTP)
@@ -1789,7 +1789,7 @@ const GOLDEN_FONTE = `{
     "Bling"
   ],
   "CONECTORES_VALIDACAO_PENDENTE": [
-    "Jueri — a tela de conexão está pronta e a mila responde consultas de estoque; a validação com a credencial real da loja ainda está pendente.",
+    "Jueri (Plano Pro) — a tela de conexão está pronta e a mila consulta peças e estoque (com preço, cor e fotos), consultoras, clientes e pedidos, só leitura. De clientes e consultoras, lê o nome, a cidade, o status e o vínculo para responder à lojista (CPF, RG, e-mail, telefone e endereço não são lidos); nesse dado a loja é a controladora e a mila atua como operadora, sem montar base própria. A validação com a credencial real da loja ainda está pendente.",
     "Meta (Facebook/Instagram): sincronização do catálogo de produtos via Login do Facebook para Empresas."
   ],
   "CONTATO_PRIVACIDADE": "contato@milaai.com.br",

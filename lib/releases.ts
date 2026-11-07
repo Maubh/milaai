@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.47",
+    date: "2026-11-07",
+    title: "Suas fontes organizadas por parte da vitrine",
+    summary: "Em Suas fontes, cada parte da vitrine (título, subtítulo e corpo) mostra a fonte em uso e o botão para trocar.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "pro",
+        title: "Fonte de cada parte da vitrine à vista",
+        description: "Em Dados da loja, na seção Marca, Suas fontes mostra uma linha para o título, o subtítulo e o corpo, com a fonte que cada um usa. Dá para enviar ou trocar o arquivo de cada parte e voltar para a padrão. Arquivos enviados que não estão em uso aparecem separados, com a opção Usar em título, subtítulo ou corpo.",
+      },
+    ],
+  },
+  {
     version: "0.6.46",
     date: "2026-11-07",
     title: "Fonte enviada não volta mais para a padrão",

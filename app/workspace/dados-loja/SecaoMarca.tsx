@@ -386,6 +386,28 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
     }
   }
 
+  async function usarFonte(campo: CampoFonte, valor: string) {
+    p.setAviso(null);
+    setEnviando(`fonte-${campo}`);
+    try {
+      const res = await fetch("/api/marca", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ [campo]: valor }) });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.ok !== true) {
+        p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(data.detail, data.campo) });
+        return;
+      }
+      setEstado({ status: "ready", ...projetarMarca(data) });
+      const noRascunho = valor === FONTE_PADRAO ? "" : valor;
+      setRascunho((atual) => ({ ...atual, [campo]: noRascunho }));
+      inicial.current = { ...inicial.current, [campo]: noRascunho };
+      p.setAviso({ secao: "marca", ok: true, texto: "Fonte atualizada. A vitrine já usa a nova." });
+    } catch {
+      p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca(null) });
+    } finally {
+      setEnviando(null);
+    }
+  }
+
   async function remover(tipo: "logo" | "identidade" | "fonte", id?: number) {
     setEnviando(`remover-${tipo}-${id ?? ""}`);
     p.setAviso(null);
@@ -584,36 +606,74 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
         {fonteNoPlano ? (
           <div className="dados-marca-bloco">
             <h3>Suas fontes</h3>
-            {marca.fontes_enviadas.length ? (
-              <ul className="dados-marca-lista">
-                {marca.fontes_enviadas.map((f) => (
-                  <li key={f.id}>
-                    <PreviaFonte valor={f.valor} enviadas={marca.fontes_enviadas} texto={f.familia} />
-                    <small>{f.formato.toUpperCase()}</small>
-                    <button type="button" className="ledger-button ledger-button-quiet" disabled={ocupado} onClick={() => remover("fonte", f.id)} aria-label={`Tirar a fonte ${f.familia}`}>Tirar</button>
+            <span className="dados-campo-ajuda">Para cada parte da vitrine, a fonte em uso. Envie o arquivo quando a sua fonte não está no Google Fonts.</span>
+            <ul className="dados-fontes-papeis">
+              {PAPEIS_FONTE.map((papel) => {
+                const valor = marca[papel.campo];
+                const enviada = marca.fontes_enviadas.find((f) => f.valor === valor);
+                return (
+                  <li key={papel.campo}>
+                    <div className="dados-fontes-papel-info">
+                      <span className="dados-campo-rotulo">{papel.rotulo}</span>
+                      <PreviaFonte valor={valor} enviadas={marca.fontes_enviadas} texto={rotuloFonte(valor, marca.fontes_enviadas)} />
+                      <small>{papel.ajuda}</small>
+                    </div>
+                    <div className="dados-marca-acoes">
+                      <button
+                        type="button"
+                        className="ledger-button"
+                        disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
+                        onClick={() => {
+                          papelUpload.current = papel.campo;
+                          inputFonte.current?.click();
+                        }}
+                        aria-label={`Enviar fonte do ${papel.rotulo.toLowerCase()}`}
+                      >
+                        {enviando === "fonte" && papelUpload.current === papel.campo ? "Enviando…" : enviada ? "Trocar arquivo" : "Enviar fonte"}
+                      </button>
+                      {enviada ? (
+                        <button type="button" className="ledger-button ledger-button-quiet" disabled={ocupado} onClick={() => usarFonte(papel.campo, FONTE_PADRAO)}>
+                          Voltar para a padrão
+                        </button>
+                      ) : null}
+                    </div>
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <span className="dados-vazio">Se a sua fonte não está no Google Fonts, envie o arquivo dela aqui.</span>
-            )}
-            <div className="dados-marca-acoes">
-              {PAPEIS_FONTE.map((papel) => (
-                <button
-                  key={papel.campo}
-                  type="button"
-                  className="ledger-button"
-                  disabled={!armazenamento || ocupado || marca.fontes_enviadas.length >= LIMITES_ARQUIVO.fonte.maximo}
-                  onClick={() => {
-                    papelUpload.current = papel.campo;
-                    inputFonte.current?.click();
-                  }}
-                >
-                  {enviando === "fonte" && papelUpload.current === papel.campo ? "Enviando…" : `Enviar fonte do ${papel.rotulo.toLowerCase()}`}
-                </button>
-              ))}
-              <input ref={inputFonte} type="file" accept={LIMITES_ARQUIVO.fonte.aceita} hidden onChange={arquivoEscolhido("fonte")} aria-label="Arquivo da fonte" />
-            </div>
+                );
+              })}
+            </ul>
+            {(() => {
+              const emUso = new Set(PAPEIS_FONTE.map((papel) => marca[papel.campo]));
+              const semUso = marca.fontes_enviadas.filter((f) => !emUso.has(f.valor));
+              return semUso.length ? (
+                <div className="dados-fontes-sem-uso">
+                  <span className="dados-campo-rotulo">Arquivos enviados sem uso</span>
+                  <ul className="dados-marca-lista">
+                    {semUso.map((f) => (
+                      <li key={f.id}>
+                        <PreviaFonte valor={f.valor} enviadas={marca.fontes_enviadas} texto={f.familia} />
+                        <small>{f.formato.toUpperCase()}</small>
+                        <select
+                          className="dados-fonte-usar"
+                          aria-label={`Usar a fonte ${f.familia} em`}
+                          value=""
+                          disabled={ocupado}
+                          onChange={(e) => {
+                            if (e.target.value) usarFonte(e.target.value as CampoFonte, f.valor);
+                          }}
+                        >
+                          <option value="">Usar em…</option>
+                          {PAPEIS_FONTE.map((papel) => (
+                            <option key={papel.campo} value={papel.campo}>{papel.rotulo}</option>
+                          ))}
+                        </select>
+                        <button type="button" className="ledger-button ledger-button-quiet" disabled={ocupado} onClick={() => remover("fonte", f.id)} aria-label={`Tirar a fonte ${f.familia}`}>Tirar</button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null;
+            })()}
+            <input ref={inputFonte} type="file" accept={LIMITES_ARQUIVO.fonte.aceita} hidden onChange={arquivoEscolhido("fonte")} aria-label="Arquivo da fonte" />
             <span className="dados-campo-ajuda">
               WOFF2, WOFF, TTF ou OTF, até 2 MB. A fonte fica pública no link da vitrine: envie só fontes que você tem licença para usar na web.
             </span>

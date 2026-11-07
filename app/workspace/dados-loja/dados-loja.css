@@ -256,3 +256,36 @@
   overflow-wrap: anywhere;
 }
 
+
+/* Suas fontes: uma linha por parte da vitrine (título, subtítulo, corpo), com a fonte em uso. */
+.dados-fontes-papeis {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+.dados-fontes-papeis > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--color-ledger-rule);
+}
+.dados-fontes-papeis > li:last-child { border-bottom: 1px solid var(--color-ledger-rule); }
+.dados-fontes-papel-info { display: grid; gap: 0.15rem; min-width: 0; }
+.dados-fontes-papel-info small { color: var(--color-ledger-muted); font-size: var(--text-workspace-sm); }
+.dados-fontes-sem-uso { display: grid; gap: 0.35rem; margin-top: 0.75rem; }
+.dados-fonte-usar {
+  min-height: 44px;
+  padding: 0 0.6rem;
+  border: 1px solid var(--color-ledger-rule-strong);
+  border-radius: 0.5rem;
+  background: var(--color-ledger-surface);
+  color: var(--color-ledger-ink);
+  font: inherit;
+  font-size: var(--text-workspace-sm);
+}
+.dados-fonte-usar:focus-visible { outline: 2px solid var(--color-ledger-focus); outline-offset: 2px; }

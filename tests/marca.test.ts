@@ -5,6 +5,7 @@ import {
   filtrarFontes,
   formatarTamanho,
   formatarWhatsapp,
+  camposParaSalvar,
   mensagemDaMarca,
   nomeDaFonteDoArquivo,
   normalizarCorHex,
@@ -133,4 +134,17 @@ test("nome da fonte sai do arquivo, sem a lojista digitar", () => {
   assert.equal(nomeDaFonteDoArquivo("___.ttf"), "Fonte enviada", "arquivo sem nome aproveitável");
   const longo = nomeDaFonteDoArquivo("SuperExtraLongFamilyNameWithManyWords-BoldCondensedItalic.ttf");
   assert.ok(longo.length <= 40 && familiaValida(longo) === longo, "nome longo é cortado e continua válido para o serviço");
+});
+
+test("Salvar da Marca só manda o que mudou: rascunho velho não desfaz a fonte enviada", () => {
+  // Caso real (Ritrovarsi): abriu Editar, enviou a fonte do título (arquivo:4) e salvou as cores.
+  const inicial = { cor_primaria: "", cor_destaque: "", fonte_titulo: "", fonte_subtitulo: "", fonte_corpo: "" };
+  const rascunho = { ...inicial, cor_primaria: "#6b3666" };
+  const marca = { cor_primaria: null, cor_destaque: null, fonte_titulo: "arquivo:4", fonte_subtitulo: null, fonte_corpo: null };
+  assert.deepEqual(camposParaSalvar(rascunho, inicial, marca, true), { corpo: { cor_primaria: "#6B3666" } });
+  // Trocar a fonte de propósito continua funcionando, inclusive voltar para a padrão.
+  assert.deepEqual(camposParaSalvar({ ...inicial, fonte_titulo: "arquivo:4" }, { ...inicial, fonte_titulo: "arquivo:4", fonte_corpo: "Lora" }, { ...marca, fonte_corpo: "Lora" }, true), { corpo: { fonte_corpo: "Montserrat" } });
+  assert.deepEqual(camposParaSalvar({ ...inicial, cor_destaque: "rosé" }, inicial, marca, true), { invalido: "cor_destaque" });
+  // Sem fonte no plano, fonte nunca vai.
+  assert.deepEqual(camposParaSalvar({ ...inicial, fonte_titulo: "Lora" }, inicial, marca, false), { corpo: {} });
 });

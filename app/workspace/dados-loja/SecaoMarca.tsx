@@ -13,6 +13,7 @@ import {
   filtrarFontes,
   formatarTamanho,
   formatarWhatsapp,
+  camposParaSalvar,
   mensagemDaMarca,
   nomeDaFonteDoArquivo,
   normalizarCorHex,
@@ -219,6 +220,9 @@ export interface SecaoMarcaProps {
 export default function SecaoMarca(p: SecaoMarcaProps) {
   const [estado, setEstado] = useState<EstadoMarca>({ status: "loading" });
   const [rascunho, setRascunho] = useState<Record<string, string>>({});
+  // Valores ao abrir a edição: Salvar só manda o que a lojista mudou. Comparar com a marca
+  // atual fazia um rascunho velho (aberto antes de enviar uma fonte) gravar Montserrat por cima.
+  const inicial = useRef<Record<string, string>>({});
   const [google, setGoogle] = useState<FonteGoogle[]>([...FONTES_RESERVA]);
   const [enviando, setEnviando] = useState<string | null>(null);
   const inputLogo = useRef<HTMLInputElement>(null);
@@ -285,36 +289,25 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
 
   function abrir() {
     p.setAviso(null);
-    setRascunho({
+    const valores = {
       cor_primaria: marca.cor_primaria ?? "",
       cor_destaque: marca.cor_destaque ?? "",
       fonte_titulo: marca.fonte_titulo ?? "",
       fonte_subtitulo: marca.fonte_subtitulo ?? "",
       fonte_corpo: marca.fonte_corpo ?? "",
-    });
+    };
+    inicial.current = valores;
+    setRascunho(valores);
     p.setEditando("marca");
   }
 
   async function salvar() {
-    const corpo: Record<string, string> = {};
-    for (const campo of ["cor_primaria", "cor_destaque"] as const) {
-      const bruto = (rascunho[campo] ?? "").trim();
-      if (!bruto) continue;
-      const hex = normalizarCorHex(bruto);
-      if (!hex) {
-        p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("invalid_field", campo) });
-        return;
-      }
-      if (hex !== marca[campo]) corpo[campo] = hex;
+    const pedido = camposParaSalvar(rascunho, inicial.current, marca, fonteNoPlano);
+    if ("invalido" in pedido) {
+      p.setAviso({ secao: "marca", ok: false, texto: mensagemDaMarca("invalid_field", pedido.invalido) });
+      return;
     }
-    if (fonteNoPlano) {
-      for (const { campo } of PAPEIS_FONTE) {
-        // Vazio = padrão: grava a Montserrat explicitamente para trocar uma fonte escolhida antes.
-        const novo = (rascunho[campo] ?? "").trim() || FONTE_PADRAO;
-        const atual = marca[campo] ?? FONTE_PADRAO;
-        if (novo !== atual) corpo[campo] = novo;
-      }
-    }
+    const corpo = pedido.corpo;
     if (Object.keys(corpo).length === 0) {
       p.setEditando(null);
       return;
@@ -359,6 +352,7 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
       }
       let marcaAtual = projetarMarca(data);
       setEstado({ status: "ready", ...marcaAtual });
+      let emUso = false;
       if (tipo === "fonte" && papel && familia) {
         // Fonte enviada para um papel: já passa a ser a fonte desse papel.
         const nova = marcaAtual.marca.fontes_enviadas.find((f) => f.familia === familia);
@@ -368,10 +362,18 @@ export default function SecaoMarca(p: SecaoMarcaProps) {
           if (r.ok && d.ok === true) {
             marcaAtual = projetarMarca(d);
             setEstado({ status: "ready", ...marcaAtual });
+            // Edição aberta: o rascunho passa a ter a fonte nova, e Salvar não a desfaz.
+            setRascunho((atual) => ({ ...atual, [papel]: nova.valor }));
+            inicial.current = { ...inicial.current, [papel]: nova.valor };
+            emUso = true;
           }
         }
       }
       const rotuloPapel = papel ? PAPEIS_FONTE.find((x) => x.campo === papel)?.rotulo.toLowerCase() : null;
+      if (tipo === "fonte" && rotuloPapel && !emUso) {
+        p.setAviso({ secao: "marca", ok: false, texto: `A fonte foi enviada, mas não consegui usá-la no ${rotuloPapel}. Escolha em Editar.` });
+        return;
+      }
       p.setAviso({
         secao: "marca",
         ok: true,

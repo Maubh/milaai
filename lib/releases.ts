@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.46",
+    date: "2026-11-07",
+    title: "Fonte enviada não volta mais para a padrão",
+    summary: "Salvar as cores da marca não troca mais a fonte que você acabou de enviar.",
+    changes: [
+      {
+        type: "fix",
+        plan: "pro",
+        title: "Fonte enviada continua no lugar ao salvar",
+        description: "Se você enviasse uma fonte com a edição da Marca aberta e depois salvasse as cores, a fonte voltava para a Montserrat. Agora o Salvar só grava o que você mudou, e a fonte enviada continua no título, no subtítulo ou no corpo. Se a fonte não puder ser usada no lugar escolhido, a tela avisa.",
+      },
+    ],
+  },
+  {
     version: "0.6.45",
     date: "2026-11-06",
     title: "Manual da marca pelo WhatsApp",

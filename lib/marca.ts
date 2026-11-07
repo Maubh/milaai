@@ -368,3 +368,35 @@ export function fontesDaVitrine(loja: {
     corpo: pilha(papeis.corpo),
   };
 }
+
+/**
+ * O que o Salvar da seção Marca manda: só os campos que a lojista mudou nesta
+ * edição (comparando com os valores de quando ela abriu). Um rascunho aberto
+ * antes de enviar uma fonte não grava mais Montserrat por cima dela.
+ */
+export function camposParaSalvar(
+  rascunho: Record<string, string>,
+  inicial: Record<string, string>,
+  marca: Partial<Record<"cor_primaria" | "cor_destaque" | CampoFonte, string | null>>,
+  fonteNoPlano: boolean,
+): { corpo: Record<string, string> } | { invalido: string } {
+  const corpo: Record<string, string> = {};
+  const mudou = (campo: string) => (rascunho[campo] ?? "").trim() !== (inicial[campo] ?? "").trim();
+  for (const campo of ["cor_primaria", "cor_destaque"] as const) {
+    if (!mudou(campo)) continue;
+    const bruto = (rascunho[campo] ?? "").trim();
+    if (!bruto) continue;
+    const hex = normalizarCorHex(bruto);
+    if (!hex) return { invalido: campo };
+    if (hex !== marca[campo]) corpo[campo] = hex;
+  }
+  if (fonteNoPlano) {
+    for (const { campo } of PAPEIS_FONTE) {
+      if (!mudou(campo)) continue;
+      // Vazio = padrão: grava a Montserrat explicitamente para trocar uma fonte escolhida antes.
+      const novo = (rascunho[campo] ?? "").trim() || FONTE_PADRAO;
+      if (novo !== (marca[campo] ?? FONTE_PADRAO)) corpo[campo] = novo;
+    }
+  }
+  return { corpo };
+}

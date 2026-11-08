@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.49",
+    date: "2026-11-08",
+    title: "Botões da vitrine com a cor da sua marca",
+    summary: "Na vitrine, o botão No pedido mostra o texto na cor certa, e os botões reagem ao passar o mouse.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Texto do botão No pedido legível no layout Minimalista",
+        description: "No layout Minimalista, o botão No pedido tinha fundo na cor da sua marca, mas texto preto. Agora o texto usa a cor que contrasta com a sua marca (branco sobre uma cor escura). No computador, passar o mouse em Pôr no pedido enche o botão com a cor da marca e deixa o texto em branco; os botões já cheios escurecem um pouco.",
+      },
+    ],
+  },
+  {
     version: "0.6.48",
     date: "2026-11-07",
     title: "Pedido da vitrine mais claro para a cliente",

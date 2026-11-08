@@ -105,6 +105,15 @@ export default function VitrineView({ loja, vitrine, template, exemplo = false }
   });
   const qtdSacola = quantidadeSacola(itensSacola);
   const qtdDaPeca = (idx: number) => Object.values(sacola).reduce((soma, l) => soma + (l.idx === idx ? l.qtd : 0), 0);
+  const linhasDaPeca = (idx: number) => Object.entries(sacola).filter(([, l]) => l.idx === idx);
+
+  const retirarLinha = (chave: string) => {
+    setSacola((atual) => {
+      const nova = { ...atual };
+      delete nova[chave];
+      return nova;
+    });
+  };
 
   const mudarQtdLinha = (chave: string, delta: number) => {
     setSacola((atual) => {
@@ -218,10 +227,15 @@ export default function VitrineView({ loja, vitrine, template, exemplo = false }
       <button
         type="button"
         className={`${className}${no > 0 ? " is-no-pedido" : ""}`}
-        aria-label={layout === "minimalista" ? `${comVariacao ? "Escolher opções de" : "Pôr no pedido"} ${item.nome}` : undefined}
+        aria-label={
+          layout === "minimalista"
+            ? `${no > 0 ? "No pedido, ver ou retirar" : comVariacao ? "Escolher opções de" : "Pôr no pedido"} ${item.nome}`
+            : undefined
+        }
         onClick={(e) => {
-          // Peça com variação abre o detalhe para a cliente escolher.
-          if (comVariacao) abrirModalItem(item, e.currentTarget);
+          // Peça já no pedido ou com variação abre o detalhe: lá a cliente vê o
+          // que já pôs, retira ou escolhe as opções.
+          if (no > 0 || comVariacao) abrirModalItem(item, e.currentTarget);
           else porNoPedido(idx, {});
         }}
       >
@@ -428,20 +442,61 @@ export default function VitrineView({ loja, vitrine, template, exemplo = false }
               ))}
 
               {(() => {
-                const faltando = variacaoFaltando(variacoesDe(itemSelecionado), escolhas);
+                const idx = indice(itemSelecionado);
+                const vars = variacoesDe(itemSelecionado);
+                const linhas = linhasDaPeca(idx);
+                const faltando = variacaoFaltando(vars, escolhas);
                 return (
-                  <button
-                    type="button"
-                    className="vitrine-modal-cta vitrine-modal-cta-sacola"
-                    disabled={faltando !== null}
-                    onClick={() => {
-                      const idx = indice(itemSelecionado);
-                      if (idx >= 0) porNoPedido(idx, escolhas);
-                    }}
-                  >
-                    <IconeMais />
-                    <span>{faltando ? `Escolha ${faltando.toLowerCase()}` : "Pôr no pedido"}</span>
-                  </button>
+                  <>
+                    {linhas.length > 0 && (
+                      <div className="vitrine-modal-no-pedido">
+                        <p className="vitrine-modal-no-pedido-titulo">
+                          <IconeCheck />
+                          <span>Já está no seu pedido</span>
+                        </p>
+                        <ul className="vitrine-modal-no-pedido-lista">
+                          {linhas.map(([chave, linha]) => {
+                            const variacao = descreverEscolhas(vars, linha.escolhas);
+                            return (
+                              <li key={chave} className="vitrine-modal-no-pedido-linha">
+                                <span>
+                                  {variacao ? `${variacao} · ` : ""}
+                                  {linha.qtd} {linha.qtd === 1 ? "unidade" : "unidades"}
+                                </span>
+                                <button
+                                  type="button"
+                                  className="vitrine-modal-retirar"
+                                  onClick={() => retirarLinha(chave)}
+                                  aria-label={`Retirar ${itemSelecionado.nome}${variacao ? ` (${variacao})` : ""} do pedido`}
+                                >
+                                  Retirar
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                    <button
+                      type="button"
+                      className="vitrine-modal-cta vitrine-modal-cta-sacola"
+                      disabled={faltando !== null}
+                      onClick={() => {
+                        if (idx < 0) return;
+                        porNoPedido(idx, escolhas);
+                        fecharModalItem();
+                      }}
+                    >
+                      <IconeMais />
+                      <span>
+                        {faltando
+                          ? `Escolha ${faltando.toLowerCase()}`
+                          : linhas.length > 0 && vars.length === 0
+                            ? "Pôr mais uma no pedido"
+                            : "Pôr no pedido"}
+                      </span>
+                    </button>
+                  </>
                 );
               })()}
 
@@ -504,13 +559,7 @@ export default function VitrineView({ loja, vitrine, template, exemplo = false }
                             type="button"
                             className="vitrine-sacola-remover"
                             aria-label={`Remover ${item.nome}`}
-                            onClick={() =>
-                              setSacola((atual) => {
-                                const nova = { ...atual };
-                                delete nova[chave];
-                                return nova;
-                              })
-                            }
+                            onClick={() => retirarLinha(chave)}
                           >
                             Remover
                           </button>

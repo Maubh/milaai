@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.48",
+    date: "2026-11-07",
+    title: "Pedido da vitrine mais claro para a cliente",
+    summary: "Na vitrine, a peça que a cliente já pôs no pedido aparece marcada nos detalhes, com a opção de retirar.",
+    changes: [
+      {
+        type: "fix",
+        plan: "all",
+        title: "Detalhes da peça mostram o que já está no pedido",
+        description: "Ao tocar em Pôr no pedido nos detalhes da peça, a janela fecha e a cliente volta para a vitrine. Se ela abrir uma peça que já está no pedido, ou tocar em No pedido, vê o que já escolheu (com a cor ou o tamanho, quando houver) e pode retirar dali mesmo.",
+      },
+    ],
+  },
+  {
     version: "0.6.47",
     date: "2026-11-07",
     title: "Suas fontes organizadas por parte da vitrine",

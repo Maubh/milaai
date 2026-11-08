@@ -367,15 +367,11 @@ body {
   background-color: var(--loja-primaria);
   color: var(--loja-primaria-tinta);
   cursor: pointer;
-  transition: opacity 0.15s ease, transform 0.1s ease;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease, transform 0.1s ease;
 }
 
 .vitrine-card-btn svg {
   flex-shrink: 0;
-}
-
-.vitrine-card-btn:hover {
-  opacity: 0.92;
 }
 
 .vitrine-card-btn:active {
@@ -622,6 +618,7 @@ body {
   color: var(--loja-primaria-tinta);
   cursor: pointer;
   box-shadow: 0 4px 12px var(--vitrine-sombra-cor-media);
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
 }
 
 .vitrine-modal-cta-sacola {
@@ -777,6 +774,7 @@ body {
   color: var(--loja-primaria-tinta);
   cursor: pointer;
   white-space: nowrap;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
 }
 
 .vitrine-sacola-overlay {
@@ -964,6 +962,7 @@ body {
   font-weight: 700;
   text-decoration: none;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, filter 0.15s ease;
 }
 
 .vitrine-sacola-copiar {
@@ -1247,6 +1246,28 @@ body {
 
 [data-template="minimalista"] .vitrine-card-btn-sacola.is-no-pedido {
   border-color: var(--loja-primaria);
+  color: var(--loja-primaria-tinta);
+}
+
+/* Hover dos botões (depois dos layouts, para valer em todos): o de contorno
+   enche com a cor da loja e o texto vira a tinta dela; o já cheio escurece. */
+@media (hover: hover) {
+  .vitrine-card-btn-sacola:hover,
+  .vitrine-card-btn-ver:hover,
+  .vitrine-modal-cta-sacola:not(:disabled):hover,
+  .vitrine-sacola-copiar:hover {
+    background-color: var(--loja-primaria);
+    border-color: var(--loja-primaria);
+    color: var(--loja-primaria-tinta);
+  }
+
+  .vitrine-card-btn-sacola.is-no-pedido:hover,
+  .vitrine-card-btn-whatsapp:not(:disabled):hover,
+  .vitrine-modal-cta-whatsapp:not(:disabled):hover,
+  .vitrine-pedido-barra-btn:hover,
+  .vitrine-sacola-enviar:not(:disabled):hover {
+    filter: brightness(0.88);
+  }
 }
 
 [data-template="minimalista"] .vitrine-footer {

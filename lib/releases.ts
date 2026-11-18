@@ -26,6 +26,20 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.50",
+    date: "2026-11-18",
+    title: "Link da vitrine sai sozinho",
+    summary: "Ao criar a vitrine, a mila já manda o link junto, sem você ter que pedir.",
+    changes: [
+      {
+        type: "improvement",
+        plan: "all",
+        title: "Link da vitrine na resposta",
+        description: "Quando a mila cria a sua vitrine, o link vem na mesma resposta, junto com o seu contato. Você não precisa pedir o link nem informar o WhatsApp de novo.",
+      },
+    ],
+  },
+  {
     version: "0.6.49",
     date: "2026-11-08",
     title: "Botões da vitrine com a cor da sua marca",

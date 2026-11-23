@@ -26,6 +26,26 @@ export type Release = {
 // Newest first. Preserve published entries when adding the next release.
 export const RELEASES: readonly Release[] = [
   {
+    version: "0.6.51",
+    date: "2026-11-23",
+    title: "Inativar e excluir peça no Jueri",
+    summary: "Agora a mila tira uma peça de circulação no seu Jueri, inativando ou excluindo, só depois de você confirmar.",
+    changes: [
+      {
+        type: "new",
+        plan: "pro",
+        title: "Inativar uma peça no Jueri",
+        description: "Peça pela mila para descadastrar uma peça e ela pergunta se você quer inativar ou excluir. Inativar tira a peça de circulação, mantém o histórico e dá para reativar quando quiser. A mila só diz que ficou inativa depois de conferir no Jueri.",
+      },
+      {
+        type: "new",
+        plan: "pro",
+        title: "Excluir uma peça no Jueri",
+        description: "Se você escolher excluir, a mila mostra o nome da peça e pede o seu sim antes de apagar, porque não tem volta. Depois ela confere no Jueri e, se o Jueri não apagar de verdade, conta o que aconteceu em vez de dizer que deu certo.",
+      },
+    ],
+  },
+  {
     version: "0.6.50",
     date: "2026-11-18",
     title: "Link da vitrine sai sozinho",
